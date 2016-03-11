@@ -1,20 +1,19 @@
-/*drop table SystemParameters;
-drop table SystemParameter
-drop table SubService;
+--Following scripts drop all tables.
+drop table SystemParameter;
 drop table ServiceMultiselect;
 drop table Reservation;
 drop table Service;
 drop table Payment;
-drop table Principal;
-alter table object drop Constraint "OBJECT_TYPEIDTOTYPE_ID"
+drop table Person;
+drop table Role;
 drop table Type;
-drop table object;*/
+drop table object;
 
 CREATE Table Object
 (
     ID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    InternalName    VARCHAR(255),
-    TypeID          BIGINT    NOT NULL,
+    InternalName    VARCHAR(255)                UNIQUE,
+    TypeID          BIGINT          NOT NULL,
     IsDeleted       INTEGER,
     CreatedDate     DATE,
     CreatedBy       BIGINT,
@@ -27,30 +26,43 @@ CREATE Table Object
 CREATE TABLE Type
 (
     ID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    ObjectID        BIGINT          NOT NULL,
-    Title           VARCHAR(255)    NOT NULL,
+    ObjectID        BIGINT          NOT NULL    UNIQUE,
+    Title           VARCHAR(255)    NOT NULL    UNIQUE,
     Description     VARCHAR(255),
     OPT_LOCK_VERSION INTEGER,
     FOREIGN KEY (ObjectID) REFERENCES Object (ID),
     PRIMARY KEY (ID)
 );
 
-CREATE TABLE Principal
+CREATE TABLE Person
 (
     ID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    ObjectID        BIGINT          NOT NULL,
-    Username        VARCHAR(35)    NOT NULL,
-    Password        VARCHAR(35)    NOT NULL,
-    Role            VARCHAR(35)    NOT NULL,
+    ObjectID        BIGINT          NOT NULL        UNIQUE,
+    Username        VARCHAR(255)    NOT NULL        UNIQUE,
+    Password        VARCHAR(255)    NOT NULL,
+    Role            BIGINT          NOT NULL,
     Priority        INTEGER         NOT NULL,
     Points          DECIMAL         NOT NULL,
     FacebookID      BIGINT,
-    FirstName       VARCHAR(35),
-    MiddleName      VARCHAR(35),
-    LastName        VARCHAR(35),
+    FirstName       VARCHAR(255),
+    MiddleName      VARCHAR(255),
+    LastName        VARCHAR(255),
     Address         VARCHAR(255),
+    PersonalID      VARCHAR(255)    NOT NULL        UNIQUE,
     MembershipDue   DATE            NOT NULL,
     OPT_LOCK_VERSION INTEGER,
+    FOREIGN KEY (ObjectID) REFERENCES Object (ID),
+    FOREIGN KEY (Role) REFERENCES Object (ID),
+    PRIMARY KEY (ID)
+);
+
+CREATE TABLE Role
+(
+    ID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+    ObjectID            BIGINT          NOT NULL        UNIQUE,
+    Title               VARCHAR(255)    NOT NULL        UNIQUE,
+    Description         VARCHAR(255),
+    OPT_LOCK_VERSION    INTEGER,
     FOREIGN KEY (ObjectID) REFERENCES Object (ID),
     PRIMARY KEY (ID)
 );
@@ -58,13 +70,14 @@ CREATE TABLE Principal
 CREATE TABLE Payment
 (
     ID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    ObjectID            BIGINT          NOT NULL,
+    ObjectID            BIGINT          NOT NULL        UNIQUE,
+    PaymentReg          VARCHAR(255)    NOT NULL        UNIQUE,
     PrincipalID         BIGINT          NOT NULL,
     PrincipalVersionID  BIGINT          NOT NULL,
     PaymentPrice        DECIMAL         NOT NULL,
     PaymentDate         Date            NOT NULL,
     PaidWithMoney       INTEGER         NOT NULL,
-    OPT_LOCK_VERSION INTEGER,
+    OPT_LOCK_VERSION    INTEGER,
     FOREIGN KEY (ObjectID) REFERENCES Object (ID),
     FOREIGN KEY (PrincipalID) REFERENCES Object (ID),
     FOREIGN KEY (PrincipalVersionID) REFERENCES Principal (ID),
@@ -74,13 +87,14 @@ CREATE TABLE Payment
 CREATE TABLE Service
 (
     ID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    ObjectID        BIGINT         NOT NULL,
+    ObjectID        BIGINT         NOT NULL         UNIQUE,
+    ServiceReg      VARCHAR(255)   NOT NULL         UNIQUE,
     IsActive        INTEGER        NOT NULL,
     StartDate       Date           NOT NULL,
     EndDate         Date           NOT NULL,
     WeekPrice       Decimal        NOT NULL,
     NumberOfPlaces  INTEGER,
-    OPT_LOCK_VERSION INTEGER,
+    OPT_LOCK_VERSION    INTEGER,
     FOREIGN KEY (ObjectID)  REFERENCES Object (ID),
     PRIMARY KEY (ID)
 );
@@ -88,26 +102,27 @@ CREATE TABLE Service
 CREATE TABLE Reservation
 (
     ID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    ObjectID            BIGINT          NOT NULL,
+    ObjectID            BIGINT          NOT NULL    UNIQUE,
+    ReservationReg      VARCHAR(255)    NOT NULL    UNIQUE,
     ServiceID           BIGINT          NOT NULL,
     ServiceVersionID    BIGINT          NOT NULL,
-    PrincipalID         BIGINT          NOT NULL,
-    PrincipalVersionID  BIGINT          NOT NULL,
+    PersonID            BIGINT          NOT NULL,
+    PersonVersionID     BIGINT          NOT NULL,
     StartDate           Date            NOT NULL,
     EndDate             Date            NOT NULL,
     OPT_LOCK_VERSION INTEGER,
     FOREIGN KEY (ObjectID) REFERENCES Object (ID),
     FOREIGN KEY (ServiceID) REFERENCES Object (ID),
-    FOREIGN KEY (PrincipalID) REFERENCES Object (ID),
+    FOREIGN KEY (PersonID) REFERENCES Object (ID),
     FOREIGN KEY (ServiceVersionID) REFERENCES Service (ID),
-    FOREIGN KEY (PrincipalVersionID) REFERENCES Principal (ID),
+    FOREIGN KEY (PersonVersionID) REFERENCES Person (ID),
     PRIMARY KEY (ID)
 );
 
 CREATE TABLE ServiceMultiselect
 (
     ID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    ObjectID         BIGINT         NOT NULL,
+    ObjectID         BIGINT         NOT NULL        UNIQUE,
     ParentID         BIGINT         NOT NULL,
     ParentVersionID  BIGINT         NOT NULL,
     ChildID          BIGINT         NOT NULL,
@@ -124,8 +139,8 @@ CREATE TABLE ServiceMultiselect
 CREATE TABLE SystemParameter
 (
     ID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    ObjectID        BIGINT          NOT NULL, 
-    Title           VARCHAR(255)    NOT NULL,
+    ObjectID        BIGINT          NOT NULL        UNIQUE, 
+    Title           VARCHAR(255)    NOT NULL        UNIQUE,
     Description     VARCHAR(255),
     Value           INT             NOT NULL,
     OPT_LOCK_VERSION INTEGER,
@@ -133,4 +148,6 @@ CREATE TABLE SystemParameter
     PRIMARY KEY (ID)
 );
 
-ALTER TABLE Object ADD CONSTRAINT Object_TypeIDToType_ID  FOREIGN KEY (TypeID) REFERENCES Type (ID);
+ALTER TABLE Object ADD CONSTRAINT Object_TypeID_To_Type_ID  FOREIGN KEY (TypeID) REFERENCES Object (ID);
+ALTER TABLE Object ADD CONSTRAINT Object_CreatedByID_To_Type_ID  FOREIGN KEY (CreatedBy) REFERENCES Object (ID);
+ALTER TABLE Object ADD CONSTRAINT Object_DeletedBY_To_Type_ID  FOREIGN KEY (DeletedBy) REFERENCES Object (ID);
