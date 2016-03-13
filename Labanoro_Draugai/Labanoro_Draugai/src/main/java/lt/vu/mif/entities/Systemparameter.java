@@ -6,6 +6,7 @@
 package lt.vu.mif.entities;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -124,19 +125,24 @@ public class Systemparameter implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        int hash = 5;
+        hash = 79 * hash + Objects.hashCode(this.title);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Systemparameter)) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        Systemparameter other = (Systemparameter) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Systemparameter other = (Systemparameter) obj;
+        if (!Objects.equals(this.title, other.title)) {
             return false;
         }
         return true;
@@ -145,6 +151,5 @@ public class Systemparameter implements Serializable {
     @Override
     public String toString() {
         return "lt.vu.mif.entities.Systemparameter[ id=" + id + " ]";
-    }
-    
+    } 
 }
