@@ -24,6 +24,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import javax.validation.constraints.Size;
 
 /**
@@ -60,6 +61,7 @@ public class Objecttable implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date deleteddate;
     @Column(name = "OPT_LOCK_VERSION")
+    @Version
     private Integer optLockVersion;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "objectid")
     private Role role;

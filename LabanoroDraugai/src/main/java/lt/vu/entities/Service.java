@@ -22,6 +22,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -75,6 +76,7 @@ public class Service implements Serializable {
     @Column(name = "NUMBEROFPLACES")
     private Integer numberofplaces;
     @Column(name = "OPT_LOCK_VERSION")
+    @Version
     private Integer optLockVersion;
     @ManyToMany(mappedBy = "serviceList")
     private List<House> houseList;
