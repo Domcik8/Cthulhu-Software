@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lt.vu.entities;
+package lt.vu.mif.entities;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -212,7 +212,7 @@ public class Service implements Serializable {
 
     @Override
     public String toString() {
-        return "lt.vu.entities.Service[ id=" + id + " ]";
+        return "lt.vu.mif.entities.Service[ id=" + id + " ]";
     }
     
 }

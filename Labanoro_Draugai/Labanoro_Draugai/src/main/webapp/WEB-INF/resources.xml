@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <Resource id="LabanoroDB" type="javax.sql.DataSource">#Sun Mar 13 12:00:21 EET 2016
+jdbcDriver=org.apache.derby.jdbc.ClientDriver
+password=LabanoroDB
+userName=LabanoroDB
+jdbcUrl=jdbc\:derby\://localhost\:1527/LabanoroDB
+</Resource>
+</resources>

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lt.vu.entities;
+package lt.vu.mif.entities;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -26,14 +26,14 @@ import javax.validation.constraints.Size;
  * @author Dominik Lisovski
  */
 @Entity
-@Table(name = "TYPE")
+@Table(name = "ROLE")
 @NamedQueries({
-    @NamedQuery(name = "Type.findAll", query = "SELECT t FROM Type t"),
-    @NamedQuery(name = "Type.findById", query = "SELECT t FROM Type t WHERE t.id = :id"),
-    @NamedQuery(name = "Type.findByTitle", query = "SELECT t FROM Type t WHERE t.title = :title"),
-    @NamedQuery(name = "Type.findByDescription", query = "SELECT t FROM Type t WHERE t.description = :description"),
-    @NamedQuery(name = "Type.findByOptLockVersion", query = "SELECT t FROM Type t WHERE t.optLockVersion = :optLockVersion")})
-public class Type implements Serializable {
+    @NamedQuery(name = "Role.findAll", query = "SELECT r FROM Role r"),
+    @NamedQuery(name = "Role.findById", query = "SELECT r FROM Role r WHERE r.id = :id"),
+    @NamedQuery(name = "Role.findByTitle", query = "SELECT r FROM Role r WHERE r.title = :title"),
+    @NamedQuery(name = "Role.findByDescription", query = "SELECT r FROM Role r WHERE r.description = :description"),
+    @NamedQuery(name = "Role.findByOptLockVersion", query = "SELECT r FROM Role r WHERE r.optLockVersion = :optLockVersion")})
+public class Role implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -56,14 +56,14 @@ public class Type implements Serializable {
     @OneToOne(optional = false)
     private Objecttable objectid;
 
-    public Type() {
+    public Role() {
     }
 
-    public Type(Long id) {
+    public Role(Long id) {
         this.id = id;
     }
 
-    public Type(Long id, String title) {
+    public Role(Long id, String title) {
         this.id = id;
         this.title = title;
     }
@@ -118,10 +118,10 @@ public class Type implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Type)) {
+        if (!(object instanceof Role)) {
             return false;
         }
-        Type other = (Type) object;
+        Role other = (Role) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -130,7 +130,7 @@ public class Type implements Serializable {
 
     @Override
     public String toString() {
-        return "lt.vu.entities.Type[ id=" + id + " ]";
+        return "lt.vu.mif.entities.Role[ id=" + id + " ]";
     }
     
 }

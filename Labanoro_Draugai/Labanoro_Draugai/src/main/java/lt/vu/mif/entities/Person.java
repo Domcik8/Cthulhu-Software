@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lt.vu.entities;
+package lt.vu.mif.entities;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -289,7 +289,7 @@ public class Person implements Serializable {
 
     @Override
     public String toString() {
-        return "lt.vu.entities.Person[ id=" + id + " ]";
+        return "lt.vu.mif.entities.Person[ id=" + id + " ]";
     }
     
 }

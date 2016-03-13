@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lt.vu.entities;
+package lt.vu.mif.entities;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -26,15 +26,14 @@ import javax.validation.constraints.Size;
  * @author Dominik Lisovski
  */
 @Entity
-@Table(name = "SYSTEMPARAMETER")
+@Table(name = "TYPE")
 @NamedQueries({
-    @NamedQuery(name = "Systemparameter.findAll", query = "SELECT s FROM Systemparameter s"),
-    @NamedQuery(name = "Systemparameter.findById", query = "SELECT s FROM Systemparameter s WHERE s.id = :id"),
-    @NamedQuery(name = "Systemparameter.findByTitle", query = "SELECT s FROM Systemparameter s WHERE s.title = :title"),
-    @NamedQuery(name = "Systemparameter.findByDescription", query = "SELECT s FROM Systemparameter s WHERE s.description = :description"),
-    @NamedQuery(name = "Systemparameter.findByValue", query = "SELECT s FROM Systemparameter s WHERE s.value = :value"),
-    @NamedQuery(name = "Systemparameter.findByOptLockVersion", query = "SELECT s FROM Systemparameter s WHERE s.optLockVersion = :optLockVersion")})
-public class Systemparameter implements Serializable {
+    @NamedQuery(name = "Type.findAll", query = "SELECT t FROM Type t"),
+    @NamedQuery(name = "Type.findById", query = "SELECT t FROM Type t WHERE t.id = :id"),
+    @NamedQuery(name = "Type.findByTitle", query = "SELECT t FROM Type t WHERE t.title = :title"),
+    @NamedQuery(name = "Type.findByDescription", query = "SELECT t FROM Type t WHERE t.description = :description"),
+    @NamedQuery(name = "Type.findByOptLockVersion", query = "SELECT t FROM Type t WHERE t.optLockVersion = :optLockVersion")})
+public class Type implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -50,10 +49,6 @@ public class Systemparameter implements Serializable {
     @Size(max = 255)
     @Column(name = "DESCRIPTION")
     private String description;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "VALUE")
-    private int value;
     @Column(name = "OPT_LOCK_VERSION")
     @Version
     private Integer optLockVersion;
@@ -61,17 +56,16 @@ public class Systemparameter implements Serializable {
     @OneToOne(optional = false)
     private Objecttable objectid;
 
-    public Systemparameter() {
+    public Type() {
     }
 
-    public Systemparameter(Long id) {
+    public Type(Long id) {
         this.id = id;
     }
 
-    public Systemparameter(Long id, String title, int value) {
+    public Type(Long id, String title) {
         this.id = id;
         this.title = title;
-        this.value = value;
     }
 
     public Long getId() {
@@ -96,14 +90,6 @@ public class Systemparameter implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    public void setValue(int value) {
-        this.value = value;
     }
 
     public Integer getOptLockVersion() {
@@ -132,10 +118,10 @@ public class Systemparameter implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Systemparameter)) {
+        if (!(object instanceof Type)) {
             return false;
         }
-        Systemparameter other = (Systemparameter) object;
+        Type other = (Type) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -144,7 +130,7 @@ public class Systemparameter implements Serializable {
 
     @Override
     public String toString() {
-        return "lt.vu.entities.Systemparameter[ id=" + id + " ]";
+        return "lt.vu.mif.entities.Type[ id=" + id + " ]";
     }
     
 }

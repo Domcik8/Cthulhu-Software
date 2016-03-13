@@ -21,17 +21,17 @@
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
-     <data-source>
-        <name>java:app/env/StudentsDataSource</name>
+    <data-source>
+        <name>java:app/env/LabanoroDB</name>
         <class-name>org.apache.derby.jdbc.ClientXADataSource</class-name>
         <server-name>localhost</server-name>
         <port-number>1527</port-number>
-        <database-name>StudentsDB</database-name>
-        <user>APP</user>
-        <password>APP</password>
+        <database-name>LabanoroDB</database-name>
+        <user>LabanoroDB</user>
+        <password>LabanoroDB</password>
         <property>
             <name>connectionAttributes</name>
             <value>;create=true</value>
         </property>
-    </data-source> 
+    </data-source>
 </web-app>
