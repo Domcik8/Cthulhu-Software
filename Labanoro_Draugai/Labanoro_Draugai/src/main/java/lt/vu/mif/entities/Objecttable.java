@@ -53,7 +53,7 @@ public class Objecttable implements Serializable {
     @Column(name = "INTERNALNAME")
     private String internalname;
     @Column(name = "ISDELETED")
-    private Integer isDeleted;
+    private Integer isdeleted;
     @Column(name = "CREATEDDATE")
     @Temporal(TemporalType.DATE)
     private Date createddate;
@@ -126,12 +126,12 @@ public class Objecttable implements Serializable {
         this.internalname = internalname;
     }
 
-    public Integer getIsDeleted() {
-        return isDeleted;
+    public Integer getIsdeleted() {
+        return isdeleted;
     }
 
-    public void setIsDeleted(Integer isDeleted) {
-        this.isDeleted = isDeleted;
+    public void setIsdeleted(Integer isdeleted) {
+        this.isdeleted = isdeleted;
     }
 
     public Date getCreateddate() {
