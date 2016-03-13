@@ -8,7 +8,6 @@ package lt.vu.mif.entities;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -199,24 +198,19 @@ public class House implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 29 * hash + Objects.hashCode(this.housereg);
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof House)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final House other = (House) obj;
-        if (!Objects.equals(this.housereg, other.housereg)) {
+        House other = (House) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -224,7 +218,7 @@ public class House implements Serializable {
 
     @Override
     public String toString() {
-        return "lt.vu.mif.entities.House[ id=" + housereg + " ]";
+        return "lt.vu.mif.entities.House[ id=" + id + " ]";
     }
     
 }
