@@ -2,5 +2,75 @@
     Created on : Mar 19, 2016, 7:56:52 PM
     Author     : NecrQ
 */
+.a {
+    text-decoration: none;
+}
 
+.button {
+    display: inline-block;
+    margin-bottom: 0; 
+    text-align: center;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    -webkit-user-select: none;
+}
 
+.layoutheader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1010;
+}
+
+.header {
+    position: relative;
+    background-color: #fff;
+    border-bottom: 1px solid #e6e6e6;
+    height: 42px;
+    max-height: 42px;
+    text-align: center;
+}
+
+.header-guest-logo-wrapper {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.header-guest-logo {
+    display: inline-block;
+    height: 41px;
+    padding-top: 9px; 
+}
+
+.header-guest-logo > img {
+    width: 155px;
+    height: 21px;
+}
+
+.header-guest-actions {
+    position: relative;
+    top: 3px;
+    z-index: 1;
+    float: right;
+    margin-right: 6px;
+}
+
+.header-guest-signup-link {
+    
+}
+
+.header-guest-login-link {
+    
+    
+}
