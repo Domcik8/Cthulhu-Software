@@ -2,3 +2,11 @@
     Created on : Mar 19, 2016, 7:56:52 PM
     Author     : NecrQ
 */
+body { 
+    padding-top: 65px; 
+}
+
+.ui-datascroller-item{
+    font-size: 20px;
+    
+}
