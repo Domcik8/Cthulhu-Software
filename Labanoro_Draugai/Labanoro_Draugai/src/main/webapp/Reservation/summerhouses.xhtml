@@ -6,8 +6,9 @@ and open the template in the editor.
 -->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
-    <head>
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
         <title>Vasarnamių rezervacija</title>
         <h:outputStylesheet library="css" name="custom.css"/>
         <script src="https://code.jquery.com/jquery-2.2.2.min.js"   integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI="   crossorigin="anonymous"></script>
@@ -15,10 +16,9 @@ and open the template in the editor.
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous"/>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"   integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw="   crossorigin="anonymous"></script>
-        
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </head>
-    <body>
+    </h:head>
+    <h:body>
         <!-- Navigation panel-->
         <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
             <div class="container-fluid">
@@ -49,6 +49,7 @@ and open the template in the editor.
             </div>
         </nav>
         <!-- End of Navigation panel -->
+        <!-- [script_start] Facebook authentication -->
         <script>
             // This is called with the results from from FB.getLoginStatus().
             function statusChangeCallback(response) {
@@ -130,5 +131,14 @@ and open the template in the editor.
             }
         </script>
         <!-- [script_end] Facebook authentication -->
-    </body>
+        <!-- Summerhouse list -->
+        <div class="container .col-md-8">
+            <p:dataScroller value="#{summerhouseManager.summerhouses}" var="house" chunkSize="5">
+                #{house.id}
+                #{house.housereg}
+            </p:dataScroller>
+        </div>
+        <!-- [end] Summerhouse list-->
+        
+    </h:body>
 </html>
