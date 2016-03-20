@@ -1,18 +1,24 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html">
-    <h:head>
-        <title>Klubas "Labanoro draugai"</title>
+    <head>
+        <title>Vasarnamių rezervacija</title>
         <h:outputStylesheet library="css" name="custom.css"/>
         <script src="https://code.jquery.com/jquery-2.2.2.min.js"   integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI="   crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"/>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous"/>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"   integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw="   crossorigin="anonymous"></script>
-    </h:head>
-    <h:body>
         
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
         <!-- Navigation panel-->
         <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
             <div class="container-fluid">
@@ -30,10 +36,10 @@
                 <div id="navbarCollapse" class="collapse navbar-collapse">
                     <h:form>
                         <ul class="nav navbar-nav">
-                            <li class="active"><a href="#">Home</a></li>
+                            <li><h:commandLink value="Home" action = "/index?faces-redirect=true"/></li>
                             <li><a href="#">Profile</a></li>
                             <li><a href="#">Messages</a></li>
-                            <li><h:commandLink value="Vasarnamiai" action = "/Reservation/summerhouses?faces-redirect=true"/></li>
+                            <li class="active"><h:commandLink value="Vasarnamiai" action = "/Reservation/summerhouses"/></li>
                         </ul>
                     </h:form>
                     <ul class="nav navbar-nav navbar-right">
@@ -43,8 +49,6 @@
             </div>
         </nav>
         <!-- End of Navigation panel -->
-        
-        <!-- [script] Facebook authentication -->
         <script>
             // This is called with the results from from FB.getLoginStatus().
             function statusChangeCallback(response) {
@@ -126,20 +130,5 @@
             }
         </script>
         <!-- [script_end] Facebook authentication -->
-        
-        <div class="container">
-            <br/>
-            #{pirmasKomponentas.sakykLabas()}
-            <br/>
-            #{pirmasKomponentas.getClass().name}
-            <br/>
-            #{antrasKomponentas.sakykLabas()}
-            <br/>
-            #{pirmasKomponentas.TestMethods()}
-        </div>
-        
-        
-        
-    </h:body>
+    </body>
 </html>
-
