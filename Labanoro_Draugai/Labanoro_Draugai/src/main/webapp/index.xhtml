@@ -16,76 +16,124 @@
     </h:head>
     <h:body>
         
-        <!-- Navigation panel-->
-        <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
-            <div class="container-fluid">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
-                    <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a href="" class="navbar-brand">Labanoro Draugai</a>    
-                </div>
-                <!-- Collection of nav links and other content for toggling -->
-                <div id="navbarCollapse" class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav">
-                        <li class="active"><a href="">Pagrindinis</a></li>
-                        <li><a href="#">Vasarnamiai</a></li>
-                        <li><a href="#">Paslaugos</a></li>
-                        <li><a href="Reservation/summerhouses.html">Rezervacijos</a></li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li>
-                            <a class="btn btn-default btn-outline btn-circle collapsed" data-toggle="collapse" href="#nav-profile" aria-expanded="false" aria-controls="nav-profile">Profile</a>
-                        </li>
-                        <li><a  class="fb-login-button" data-max-rows="1" data-show-faces="false" data-auto-logout-link="true" href="#"></a></li>
-                    </ul>
-                    
-                    
-                    <ul class="collapse nav navbar-nav navbar-right nav-collapse slide-down" role="search" id="nav-profile">
-                        <li><a href="#">Support</a></li>
-                        <li class="dropdown">
-                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="caret"></span></a>
-                          <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">My profile</a></li>
-                            <li><a href="#">My reservations</a></li>
-                            <li class="divider"></li>
-                            <li><a href="#">Settings</a></li>
-                            <li><a href="#" onclick="logoutFb()">Logout</a></li>
-                          </ul>
-                        </li>
-                    </ul>
-                </div>
+    <!-- Navigation panel-->
+    <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="" class="navbar-brand">Labanoro Draugai</a>    
             </div>
-        </nav>
-        <!-- End of Navigation panel -->
-                
-        <br/>
-        #{pirmasKomponentas.sakykLabas()}
-        <br/>
-        #{pirmasKomponentas.getClass().name}
-        <br/>
-        #{antrasKomponentas.sakykLabas()}
-        <br/>
-        #{pirmasKomponentas.TestMethods()}
-        <br/>
-        <div id="content">
-            Test
-            <button id="userInfoButton" onclick="getUserInfo()">Get user info</button>
-            <button id="changeTextButton" onclick="changeText()">Change Text</button>
-            <button id="login" onclick="loginFb()">Log in</button>
-            <button id="logout" onclick="logoutFb()">Log out</button>
-            <div id="status"></div>
-            <div id="test">aaa</div>
+            <!-- Collection of nav links and other content for toggling -->
+            <div id="navbarCollapse" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="">Pagrindinis</a></li>
+                    <li><a href="#">Vasarnamiai</a></li>
+                    <li><a href="#">Paslaugos</a></li>
+                    <li><a href="Reservation/summerhouses.html">Rezervacijos</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a class="btn btn-default btn-outline btn-circle collapsed" data-toggle="collapse" href="#nav-profile" aria-expanded="false" aria-controls="nav-profile">Profile</a>
+                    </li>
+                    <li><a  class="fb-login-button" data-max-rows="1" data-show-faces="false" data-auto-logout-link="true" href="#"></a></li>
+                </ul>
 
+
+                <ul class="collapse nav navbar-nav navbar-right nav-collapse slide-down" role="search" id="nav-profile">
+                    <li><a href="#">Support</a></li>
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="caret"></span></a>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">My profile</a></li>
+                        <li><a href="#">My reservations</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Settings</a></li>
+                        <li><a href="#" onclick="logoutFb()">Logout</a></li>
+                      </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- End of Navigation panel -->
+                
+        
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Learn to Create Websites</h1>
+            <p>In today's world internet is the most popular way of connecting with the people. At <a href="#" target="_blank">tutorialrepublic.com</a> you will learn the essential of web development technologies along with real life practice example, so that you can create your own website to connect with the people around the world.</p>
+            <p><a href="#" target="_blank" class="btn btn-success btn-lg">Get started today</a></p>
         </div>
         
-        <!-- scripts -->
-        <script src="resources/js/custom.js" type="text/javascript"/>
-        <!-- end of scripts -->
+        <div class="row">
+            <div class="col-sm-6 col-md-4 col-lg-2">
+                <h2>HTML</h2>
+                <p>HTML is a markup language that is used for creating web pages. The HTML tutorial section will help you understand the basics of HTML, so that you can create your own web pages or website.</p>
+                <p><a href="#" target="_blank" class="btn btn-success">Learn More &raquo;</a></p>
+            </div>
+            <div class="col-sm-6 col-md-4 col-lg-2">
+                <h2>CSS</h2>
+                <p>CSS is used for describing the presentation of web pages. The CSS tutorial section will help you learn the essentials of CSS, so that you can fine control the style and layout of your HTML document.</p>
+                <p><a href="#" target="_blank" class="btn btn-success">Learn More &raquo;</a></p>
+            </div>
+            <div class="clearfix visible-sm-block"></div>
+            <div class="col-sm-6 col-md-4 col-lg-2">
+                <h2>Bootstrap</h2>
+                <p>Bootstrap is a powerful front-end framework for faster and easier web development. The Bootstrap tutorial section will help you learn the techniques of Bootstrap so that you can create web your own website with much less efforts.</p>
+                <p><a href="#" target="_blank" class="btn btn-success">Learn More &raquo;</a></p>
+            </div>
+            <div class="clearfix visible-md-block"></div>
+            <div class="col-sm-6 col-md-4 col-lg-2">
+                <h2>References</h2>
+                <p>The references section outlines all the standard HTML tags and CSS properties along with other useful references such as color names and values, symbols and character entities, web safe fonts, language codes, HTTP messages and much more.</p>
+                <p><a href="#" target="_blank" class="btn btn-success">Learn More &raquo;</a></p>
+            </div>
+            <div class="clearfix visible-sm-block"></div>
+            <div class="col-sm-6 col-md-4 col-lg-2">
+                <h2>Examples</h2>
+                <p>The examples section encloses an extensive collection of examples on various topic that you can try and test yourself using online HTML editor.</p>
+                <p><a href="#" target="_blank" class="btn btn-success">Learn More &raquo;</a></p>
+            </div>
+            <div class="col-sm-6 col-md-4 col-lg-2">
+                <h2>FAQ</h2>
+                <p>The collection of Frequently Asked Questions (FAQ) provides brief answers to many common questions related to web design and development.</p>
+                <p><a href="#" target="_blank" class="btn btn-success">Learn More &raquo;</a></p>
+            </div>
+        </div>
+        <hr />
+        
+        <div class="row">
+            <div class="col-sm-6">
+                Test
+                <button id="userInfoButton" onclick="getUserInfo()">Get user info</button>
+                <button id="changeTextButton" onclick="changeText()">Change Text</button>
+                <button id="login" onclick="loginFb()">Log in</button>
+                <button id="logout" onclick="logoutFb()">Log out</button>
+                <div id="status"></div>
+                <div id="test">aaa</div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-sm-12">
+                <footer>
+                    <p>© Copyright 2016</p>
+                </footer>
+            </div>
+        </div>
+    </div>
+            
+    
+        
+    <!-- scripts -->
+    <script src="resources/js/custom.js" type="text/javascript"/>
+    <!-- end of scripts -->
         
     </h:body>
 </html>
