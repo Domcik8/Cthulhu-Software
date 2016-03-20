@@ -133,9 +133,19 @@ and open the template in the editor.
         <!-- [script_end] Facebook authentication -->
         <!-- Summerhouse list -->
         <div class="container .col-md-8">
-            <p:dataScroller value="#{summerhouseManager.summerhouses}" var="house" chunkSize="5">
-                #{house.id}
-                #{house.housereg}
+            <p:dataScroller value="#{summerhouseManager.summerhouses}" var="house" chunkSize="15" style="border:thin">
+                <h:panelGrid columns="2" style="width:100%" columnClasses="logo,detail">
+                    <span class="glyphicon glyphicon-bed" style="width: 30%"/>
+                    <p:outputPanel >
+                        <h:panelGrid columns="2" >
+                            <h:outputText value="Id:"/>
+                            <h:outputText value="#{house.id}"/>
+                            <h:outputText value="House reg:"/>
+                            <h:outputText value="#{house.housereg}"/>
+                        </h:panelGrid>
+                    </p:outputPanel>
+                </h:panelGrid>
+                <hr/>
             </p:dataScroller>
         </div>
         <!-- [end] Summerhouse list-->

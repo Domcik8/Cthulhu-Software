@@ -27,7 +27,7 @@ public class SummerhouseManager {
     @PostConstruct
     public void init() {
         List<House> houses = new ArrayList<>();
-        for(int i = 0; i < 20; i++){
+        for(int i = 0; i < 30; i++){
             houses.add(new House(Long.valueOf(i),"reg"+i,1,new Date(),new Date(),50));
         }
         summerhouses = houses;
