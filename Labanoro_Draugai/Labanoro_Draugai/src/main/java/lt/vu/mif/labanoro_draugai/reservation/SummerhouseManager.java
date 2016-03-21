@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lt.vu.mif.labanoro_draugai;
+package lt.vu.mif.labanoro_draugai.reservation;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,6 +12,8 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import lt.vu.mif.entities.House;
 
 /**
@@ -24,6 +26,9 @@ import lt.vu.mif.entities.House;
 public class SummerhouseManager {
     private List<House> summerhouses;
 
+    @PersistenceContext
+    EntityManager em;
+    
     @PostConstruct
     public void init() {
         List<House> houses = new ArrayList<>();
