@@ -62,9 +62,7 @@ and open the template in the editor.
                 </div>
             </div>
         </nav>
-        <!-- scripts -->
-        <h:outputScript library="js" name="custom.js" />
-        <!-- end of scripts -->
+        
         <!-- Summerhouse list -->
         <div class="container .col-md-8">
             <p:dataScroller value="#{summerhouseManager.summerhouses}" var="house" chunkSize="15" style="border:thin">
@@ -87,6 +85,8 @@ and open the template in the editor.
         
         
         
-        
+        <!-- scripts -->
+        <h:outputScript library="js" name="custom.js" />
+        <!-- end of scripts -->
     </h:body>
 </html>
