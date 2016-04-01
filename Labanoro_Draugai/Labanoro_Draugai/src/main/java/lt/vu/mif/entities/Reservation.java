@@ -8,7 +8,6 @@ package lt.vu.mif.entities;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,12 +20,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Version;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -41,6 +37,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Reservation.findByReservationreg", query = "SELECT r FROM Reservation r WHERE r.reservationreg = :reservationreg"),
     @NamedQuery(name = "Reservation.findByStartdate", query = "SELECT r FROM Reservation r WHERE r.startdate = :startdate"),
     @NamedQuery(name = "Reservation.findByEnddate", query = "SELECT r FROM Reservation r WHERE r.enddate = :enddate"),
+    @NamedQuery(name = "Reservation.findByIsdeleted", query = "SELECT r FROM Reservation r WHERE r.isdeleted = :isdeleted"),
     @NamedQuery(name = "Reservation.findByOptLockVersion", query = "SELECT r FROM Reservation r WHERE r.optLockVersion = :optLockVersion")})
 public class Reservation implements Serializable {
 
@@ -49,65 +46,47 @@ public class Reservation implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID")
-    private Long id;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
+    private Integer id;
+    @Size(max = 255)
     @Column(name = "RESERVATIONREG")
     private String reservationreg;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "STARTDATE")
     @Temporal(TemporalType.DATE)
     private Date startdate;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "ENDDATE")
     @Temporal(TemporalType.DATE)
     private Date enddate;
+    @Column(name = "ISDELETED")
+    private Integer isdeleted;
     @Column(name = "OPT_LOCK_VERSION")
-    @Version
     private Integer optLockVersion;
     @JoinTable(name = "MULTISELECTRESERVATIONTOSERVICE", joinColumns = {
         @JoinColumn(name = "PARENTID", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "CHILDID", referencedColumnName = "ID")})
     @ManyToMany
     private List<Service> serviceList;
-    @JoinColumn(name = "HOUSEVERSIONID", referencedColumnName = "ID")
-    @ManyToOne(optional = false)
-    private House houseversionid;
-    @JoinColumn(name = "PERSONID", referencedColumnName = "ID")
-    @ManyToOne(optional = false)
-    private Objecttable personid;
     @JoinColumn(name = "HOUSEID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
-    private Objecttable houseid;
-    @JoinColumn(name = "OBJECTID", referencedColumnName = "ID")
-    @OneToOne(optional = false)
-    private Objecttable objectid;
-    @JoinColumn(name = "PERSONVERSIONID", referencedColumnName = "ID")
+    private House houseid;
+    @JoinColumn(name = "PERSONID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
-    private Person personversionid;
+    private Person personid;
+    @JoinColumn(name = "TYPEID", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private Type typeid;
 
     public Reservation() {
     }
 
-    public Reservation(Long id) {
+    public Reservation(Integer id) {
         this.id = id;
     }
 
-    public Reservation(Long id, String reservationreg, Date startdate, Date enddate) {
-        this.id = id;
-        this.reservationreg = reservationreg;
-        this.startdate = startdate;
-        this.enddate = enddate;
-    }
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -135,6 +114,14 @@ public class Reservation implements Serializable {
         this.enddate = enddate;
     }
 
+    public Integer getIsdeleted() {
+        return isdeleted;
+    }
+
+    public void setIsdeleted(Integer isdeleted) {
+        this.isdeleted = isdeleted;
+    }
+
     public Integer getOptLockVersion() {
         return optLockVersion;
     }
@@ -151,70 +138,50 @@ public class Reservation implements Serializable {
         this.serviceList = serviceList;
     }
 
-    public House getHouseversionid() {
-        return houseversionid;
-    }
-
-    public void setHouseversionid(House houseversionid) {
-        this.houseversionid = houseversionid;
-    }
-
-    public Objecttable getPersonid() {
-        return personid;
-    }
-
-    public void setPersonid(Objecttable personid) {
-        this.personid = personid;
-    }
-
-    public Objecttable getHouseid() {
+    public House getHouseid() {
         return houseid;
     }
 
-    public void setHouseid(Objecttable houseid) {
+    public void setHouseid(House houseid) {
         this.houseid = houseid;
     }
 
-    public Objecttable getObjectid() {
-        return objectid;
+    public Person getPersonid() {
+        return personid;
     }
 
-    public void setObjectid(Objecttable objectid) {
-        this.objectid = objectid;
+    public void setPersonid(Person personid) {
+        this.personid = personid;
     }
 
-    public Person getPersonversionid() {
-        return personversionid;
+    public Type getTypeid() {
+        return typeid;
     }
 
-    public void setPersonversionid(Person personversionid) {
-        this.personversionid = personversionid;
+    public void setTypeid(Type typeid) {
+        this.typeid = typeid;
     }
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 17 * hash + Objects.hashCode(this.reservationreg);
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Reservation)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Reservation other = (Reservation) obj;
-        if (!Objects.equals(this.reservationreg, other.reservationreg)) {
+        Reservation other = (Reservation) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
     }
+
     @Override
     public String toString() {
         return "lt.vu.mif.entities.Reservation[ id=" + id + " ]";

@@ -1,3 +1,4 @@
+package lt.vu.mif.business;
 
 import java.util.Date;
 import javax.annotation.PostConstruct;

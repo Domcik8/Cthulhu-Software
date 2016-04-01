@@ -7,7 +7,6 @@ package lt.vu.mif.entities;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,12 +17,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Version;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -39,6 +35,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Payment.findByPaymentprice", query = "SELECT p FROM Payment p WHERE p.paymentprice = :paymentprice"),
     @NamedQuery(name = "Payment.findByPaymentdate", query = "SELECT p FROM Payment p WHERE p.paymentdate = :paymentdate"),
     @NamedQuery(name = "Payment.findByPaidwithmoney", query = "SELECT p FROM Payment p WHERE p.paidwithmoney = :paidwithmoney"),
+    @NamedQuery(name = "Payment.findByIsdeleted", query = "SELECT p FROM Payment p WHERE p.isdeleted = :isdeleted"),
     @NamedQuery(name = "Payment.findByOptLockVersion", query = "SELECT p FROM Payment p WHERE p.optLockVersion = :optLockVersion")})
 public class Payment implements Serializable {
 
@@ -47,58 +44,40 @@ public class Payment implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID")
-    private Long id;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
+    private Integer id;
+    @Size(max = 255)
     @Column(name = "PAYMENTREG")
     private String paymentreg;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "PAYMENTPRICE")
-    private int paymentprice;
-    @Basic(optional = false)
-    @NotNull
+    private Integer paymentprice;
     @Column(name = "PAYMENTDATE")
     @Temporal(TemporalType.DATE)
     private Date paymentdate;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "PAIDWITHMONEY")
-    private int paidwithmoney;
+    private Integer paidwithmoney;
+    @Column(name = "ISDELETED")
+    private Integer isdeleted;
     @Column(name = "OPT_LOCK_VERSION")
-    @Version
     private Integer optLockVersion;
     @JoinColumn(name = "PERSONID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
-    private Objecttable personid;
-    @JoinColumn(name = "OBJECTID", referencedColumnName = "ID")
-    @OneToOne(optional = false)
-    private Objecttable objectid;
-    @JoinColumn(name = "PERSONVERSIONID", referencedColumnName = "ID")
+    private Person personid;
+    @JoinColumn(name = "TYPEID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
-    private Person personversionid;
+    private Type typeid;
 
     public Payment() {
     }
 
-    public Payment(Long id) {
+    public Payment(Integer id) {
         this.id = id;
     }
 
-    public Payment(Long id, String paymentreg, int paymentprice, Date paymentdate, int paidwithmoney) {
-        this.id = id;
-        this.paymentreg = paymentreg;
-        this.paymentprice = paymentprice;
-        this.paymentdate = paymentdate;
-        this.paidwithmoney = paidwithmoney;
-    }
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -110,11 +89,11 @@ public class Payment implements Serializable {
         this.paymentreg = paymentreg;
     }
 
-    public int getPaymentprice() {
+    public Integer getPaymentprice() {
         return paymentprice;
     }
 
-    public void setPaymentprice(int paymentprice) {
+    public void setPaymentprice(Integer paymentprice) {
         this.paymentprice = paymentprice;
     }
 
@@ -126,12 +105,20 @@ public class Payment implements Serializable {
         this.paymentdate = paymentdate;
     }
 
-    public int getPaidwithmoney() {
+    public Integer getPaidwithmoney() {
         return paidwithmoney;
     }
 
-    public void setPaidwithmoney(int paidwithmoney) {
+    public void setPaidwithmoney(Integer paidwithmoney) {
         this.paidwithmoney = paidwithmoney;
+    }
+
+    public Integer getIsdeleted() {
+        return isdeleted;
+    }
+
+    public void setIsdeleted(Integer isdeleted) {
+        this.isdeleted = isdeleted;
     }
 
     public Integer getOptLockVersion() {
@@ -142,54 +129,42 @@ public class Payment implements Serializable {
         this.optLockVersion = optLockVersion;
     }
 
-    public Objecttable getPersonid() {
+    public Person getPersonid() {
         return personid;
     }
 
-    public void setPersonid(Objecttable personid) {
+    public void setPersonid(Person personid) {
         this.personid = personid;
     }
 
-    public Objecttable getObjectid() {
-        return objectid;
+    public Type getTypeid() {
+        return typeid;
     }
 
-    public void setObjectid(Objecttable objectid) {
-        this.objectid = objectid;
-    }
-
-    public Person getPersonversionid() {
-        return personversionid;
-    }
-
-    public void setPersonversionid(Person personversionid) {
-        this.personversionid = personversionid;
+    public void setTypeid(Type typeid) {
+        this.typeid = typeid;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 97 * hash + Objects.hashCode(this.paymentreg);
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Payment)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Payment other = (Payment) obj;
-        if (!Objects.equals(this.paymentreg, other.paymentreg)) {
+        Payment other = (Payment) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
     }
+
     @Override
     public String toString() {
         return "lt.vu.mif.entities.Payment[ id=" + id + " ]";

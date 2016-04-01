@@ -8,7 +8,6 @@ package lt.vu.mif.entities;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,14 +16,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Version;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -42,72 +39,59 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Service.findByEnddate", query = "SELECT s FROM Service s WHERE s.enddate = :enddate"),
     @NamedQuery(name = "Service.findByWeekprice", query = "SELECT s FROM Service s WHERE s.weekprice = :weekprice"),
     @NamedQuery(name = "Service.findByNumberofplaces", query = "SELECT s FROM Service s WHERE s.numberofplaces = :numberofplaces"),
+    @NamedQuery(name = "Service.findByIsdeleted", query = "SELECT s FROM Service s WHERE s.isdeleted = :isdeleted"),
     @NamedQuery(name = "Service.findByOptLockVersion", query = "SELECT s FROM Service s WHERE s.optLockVersion = :optLockVersion")})
 public class Service implements Serializable {
+
+    @Size(max = 255)
+    @Column(name = "TITLE")
+    private String title;
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID")
-    private Long id;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
+    private Integer id;
+    @Size(max = 255)
     @Column(name = "SERVICEREG")
     private String servicereg;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "ISACTIVE")
-    private int isactive;
-    @Basic(optional = false)
-    @NotNull
+    private Integer isactive;
     @Column(name = "STARTDATE")
     @Temporal(TemporalType.DATE)
     private Date startdate;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "ENDDATE")
     @Temporal(TemporalType.DATE)
     private Date enddate;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "WEEKPRICE")
-    private int weekprice;
+    private Integer weekprice;
     @Column(name = "NUMBEROFPLACES")
     private Integer numberofplaces;
+    @Column(name = "ISDELETED")
+    private Integer isdeleted;
     @Column(name = "OPT_LOCK_VERSION")
-    @Version
     private Integer optLockVersion;
     @ManyToMany(mappedBy = "serviceList")
     private List<House> houseList;
     @ManyToMany(mappedBy = "serviceList")
     private List<Reservation> reservationList;
-    @JoinColumn(name = "OBJECTID", referencedColumnName = "ID")
-    @OneToOne(optional = false)
-    private Objecttable objectid;
+    @JoinColumn(name = "TYPEID", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private Type typeid;
 
     public Service() {
     }
 
-    public Service(Long id) {
+    public Service(Integer id) {
         this.id = id;
     }
 
-    public Service(Long id, String servicereg, int isactive, Date startdate, Date enddate, int weekprice) {
-        this.id = id;
-        this.servicereg = servicereg;
-        this.isactive = isactive;
-        this.startdate = startdate;
-        this.enddate = enddate;
-        this.weekprice = weekprice;
-    }
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -119,11 +103,11 @@ public class Service implements Serializable {
         this.servicereg = servicereg;
     }
 
-    public int getIsactive() {
+    public Integer getIsactive() {
         return isactive;
     }
 
-    public void setIsactive(int isactive) {
+    public void setIsactive(Integer isactive) {
         this.isactive = isactive;
     }
 
@@ -143,11 +127,11 @@ public class Service implements Serializable {
         this.enddate = enddate;
     }
 
-    public int getWeekprice() {
+    public Integer getWeekprice() {
         return weekprice;
     }
 
-    public void setWeekprice(int weekprice) {
+    public void setWeekprice(Integer weekprice) {
         this.weekprice = weekprice;
     }
 
@@ -157,6 +141,14 @@ public class Service implements Serializable {
 
     public void setNumberofplaces(Integer numberofplaces) {
         this.numberofplaces = numberofplaces;
+    }
+
+    public Integer getIsdeleted() {
+        return isdeleted;
+    }
+
+    public void setIsdeleted(Integer isdeleted) {
+        this.isdeleted = isdeleted;
     }
 
     public Integer getOptLockVersion() {
@@ -183,41 +175,45 @@ public class Service implements Serializable {
         this.reservationList = reservationList;
     }
 
-    public Objecttable getObjectid() {
-        return objectid;
+    public Type getTypeid() {
+        return typeid;
     }
 
-    public void setObjectid(Objecttable objectid) {
-        this.objectid = objectid;
+    public void setTypeid(Type typeid) {
+        this.typeid = typeid;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 79 * hash + Objects.hashCode(this.servicereg);
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Service)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Service other = (Service) obj;
-        if (!Objects.equals(this.servicereg, other.servicereg)) {
+        Service other = (Service) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
     }
+
     @Override
     public String toString() {
         return "lt.vu.mif.entities.Service[ id=" + id + " ]";
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
     
 }

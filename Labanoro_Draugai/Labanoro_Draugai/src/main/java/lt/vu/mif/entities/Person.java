@@ -6,10 +6,8 @@
 package lt.vu.mif.entities;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,12 +20,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Version;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -50,35 +45,33 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Person.findByAddress", query = "SELECT p FROM Person p WHERE p.address = :address"),
     @NamedQuery(name = "Person.findByPersonalid", query = "SELECT p FROM Person p WHERE p.personalid = :personalid"),
     @NamedQuery(name = "Person.findByMembershipdue", query = "SELECT p FROM Person p WHERE p.membershipdue = :membershipdue"),
+    @NamedQuery(name = "Person.findByIsdeleted", query = "SELECT p FROM Person p WHERE p.isdeleted = :isdeleted"),
     @NamedQuery(name = "Person.findByOptLockVersion", query = "SELECT p FROM Person p WHERE p.optLockVersion = :optLockVersion")})
 public class Person implements Serializable {
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personid")
+    private List<Payment> paymentList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personid")
+    private List<Reservation> reservationList;
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID")
-    private Long id;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
+    private Integer id;
+    @Size(max = 255)
     @Column(name = "USERNAME")
     private String username;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
+    @Size(max = 255)
     @Column(name = "PASSWORD")
     private String password;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "PRIORITY")
-    private int priority;
-    @Basic(optional = false)
-    @NotNull
+    private Integer priority;
     @Column(name = "POINTS")
-    private int points;
+    private Integer points;
     @Column(name = "FACEBOOKID")
-    private BigInteger facebookid;
+    private Integer facebookid;
     @Size(max = 255)
     @Column(name = "FIRSTNAME")
     private String firstname;
@@ -91,52 +84,32 @@ public class Person implements Serializable {
     @Size(max = 255)
     @Column(name = "ADDRESS")
     private String address;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
+    @Size(max = 255)
     @Column(name = "PERSONALID")
     private String personalid;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "MEMBERSHIPDUE")
     @Temporal(TemporalType.DATE)
     private Date membershipdue;
+    @Column(name = "ISDELETED")
+    private Integer isdeleted;
     @Column(name = "OPT_LOCK_VERSION")
-    @Version
     private Integer optLockVersion;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personversionid")
-    private List<Payment> paymentList;
-    @JoinColumn(name = "ROLE", referencedColumnName = "ID")
+    @JoinColumn(name = "TYPEID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
-    private Objecttable role;
-    @JoinColumn(name = "OBJECTID", referencedColumnName = "ID")
-    @OneToOne(optional = false)
-    private Objecttable objectid;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personversionid")
-    private List<Reservation> reservationList;
+    private Type typeid;
 
     public Person() {
     }
 
-    public Person(Long id) {
+    public Person(Integer id) {
         this.id = id;
     }
 
-    public Person(Long id, String username, String password, int priority, int points, String personalid, Date membershipdue) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.priority = priority;
-        this.points = points;
-        this.personalid = personalid;
-        this.membershipdue = membershipdue;
-    }
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -156,27 +129,27 @@ public class Person implements Serializable {
         this.password = password;
     }
 
-    public int getPriority() {
+    public Integer getPriority() {
         return priority;
     }
 
-    public void setPriority(int priority) {
+    public void setPriority(Integer priority) {
         this.priority = priority;
     }
 
-    public int getPoints() {
+    public Integer getPoints() {
         return points;
     }
 
-    public void setPoints(int points) {
+    public void setPoints(Integer points) {
         this.points = points;
     }
 
-    public BigInteger getFacebookid() {
+    public Integer getFacebookid() {
         return facebookid;
     }
 
-    public void setFacebookid(BigInteger facebookid) {
+    public void setFacebookid(Integer facebookid) {
         this.facebookid = facebookid;
     }
 
@@ -228,12 +201,53 @@ public class Person implements Serializable {
         this.membershipdue = membershipdue;
     }
 
+    public Integer getIsdeleted() {
+        return isdeleted;
+    }
+
+    public void setIsdeleted(Integer isdeleted) {
+        this.isdeleted = isdeleted;
+    }
+
     public Integer getOptLockVersion() {
         return optLockVersion;
     }
 
     public void setOptLockVersion(Integer optLockVersion) {
         this.optLockVersion = optLockVersion;
+    }
+
+    public Type getTypeid() {
+        return typeid;
+    }
+
+    public void setTypeid(Type typeid) {
+        this.typeid = typeid;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Person)) {
+            return false;
+        }
+        Person other = (Person) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "lt.vu.mif.entities.Person[ id=" + id + " ]";
     }
 
     public List<Payment> getPaymentList() {
@@ -244,57 +258,12 @@ public class Person implements Serializable {
         this.paymentList = paymentList;
     }
 
-    public Objecttable getRole() {
-        return role;
-    }
-
-    public void setRole(Objecttable role) {
-        this.role = role;
-    }
-
-    public Objecttable getObjectid() {
-        return objectid;
-    }
-
-    public void setObjectid(Objecttable objectid) {
-        this.objectid = objectid;
-    }
-
     public List<Reservation> getReservationList() {
         return reservationList;
     }
 
     public void setReservationList(List<Reservation> reservationList) {
         this.reservationList = reservationList;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 71 * hash + Objects.hashCode(this.personalid);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Person other = (Person) obj;
-        if (!Objects.equals(this.personalid, other.personalid)) {
-            return false;
-        }
-        return true;
-    }
-    @Override
-    public String toString() {
-        return "lt.vu.mif.entities.Person[ id=" + id + " ]";
     }
     
 }

@@ -1,4 +1,5 @@
 --Following scripts drop all tables.
+drop table HousePictures;
 drop table SystemParameter;
 drop table MultiselectReservationToService;
 drop table MultiselectHouseToService;
@@ -11,135 +12,122 @@ drop table Role;
 drop table Type;
 drop table ObjectTable;
 
-CREATE Table ObjectTable
-(
-    ID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    InternalName    VARCHAR(255)                UNIQUE,
-    TypeID          BIGINT          NOT NULL,
-    IsDeleted       INTEGER,
-    CreatedDate     DATE,
-    CreatedBy       BIGINT,
-    DeletedDate     DATE,
-    DeletedBy       BIGINT,
-    OPT_LOCK_VERSION INTEGER,
-    PRIMARY KEY (ID)
-);
-
 CREATE TABLE Type
 (
-    ID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    ObjectID        BIGINT          NOT NULL    UNIQUE,
-    Title           VARCHAR(255)    NOT NULL    UNIQUE,
+    ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+    InternalName    VARCHAR(255)                UNIQUE,
+    Title           VARCHAR(255),
     Description     VARCHAR(255),
+    IsDeleted       INTEGER,
     OPT_LOCK_VERSION INTEGER,
-    FOREIGN KEY (ObjectID) REFERENCES ObjectTable (ID),
     PRIMARY KEY (ID)
 );
 
 CREATE TABLE Person
 (
-    ID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    ObjectID        BIGINT          NOT NULL        UNIQUE,
-    Username        VARCHAR(255)    NOT NULL        UNIQUE,
-    Password        VARCHAR(255)    NOT NULL,
-    Role            BIGINT          NOT NULL,
-    Priority        INTEGER         NOT NULL,
-    Points          DECIMAL         NOT NULL,
-    FacebookID      BIGINT,
+    ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+    Username        VARCHAR(255)                UNIQUE,
+    Password        VARCHAR(255),
+    TypeID          INTEGER         NOT NULL,
+    Priority        INTEGER,
+    Points          DECIMAL,
+    FacebookID      INTEGER,
     FirstName       VARCHAR(255),
     MiddleName      VARCHAR(255),
     LastName        VARCHAR(255),
     Address         VARCHAR(255),
-    PersonalID      VARCHAR(255)    NOT NULL        UNIQUE,
-    MembershipDue   DATE            NOT NULL,
+    PersonalID      VARCHAR(255)                UNIQUE,
+    MembershipDue   DATE,
+    IsDeleted       INTEGER,
     OPT_LOCK_VERSION INTEGER,
-    FOREIGN KEY (ObjectID) REFERENCES ObjectTable (ID),
-    FOREIGN KEY (Role) REFERENCES ObjectTable (ID),
+    FOREIGN KEY (TypeID) REFERENCES Type (ID),
     PRIMARY KEY (ID)
 );
 
-CREATE TABLE Role
+/*CREATE TABLE Role
 (
-    ID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    ObjectID            BIGINT          NOT NULL        UNIQUE,
-    Title               VARCHAR(255)    NOT NULL        UNIQUE,
+    ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+    TypeID              INTEGER         NOT NULL,
+    Title               VARCHAR(255)                    UNIQUE,
     Description         VARCHAR(255),
+    IsDeleted           INTEGER,
     OPT_LOCK_VERSION    INTEGER,
-    FOREIGN KEY (ObjectID) REFERENCES ObjectTable (ID),
+    FOREIGN KEY (TypeID) REFERENCES Type (ID),
     PRIMARY KEY (ID)
-);
+);*/
 
 CREATE TABLE Payment
 (
-    ID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    ObjectID            BIGINT          NOT NULL        UNIQUE,
-    PaymentReg          VARCHAR(255)    NOT NULL        UNIQUE,
-    PersonID            BIGINT          NOT NULL,
-    PersonVersionID     BIGINT          NOT NULL,
-    PaymentPrice        DECIMAL         NOT NULL,
-    PaymentDate         Date            NOT NULL,
-    PaidWithMoney       INTEGER         NOT NULL,
+    ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+    TypeID              INTEGER         NOT NULL,
+    PaymentReg          VARCHAR(255)                    UNIQUE,
+    PersonID            INTEGER         NOT NULL,
+    PaymentPrice        DECIMAL,
+    PaymentDate         Date,
+    PaidWithMoney       INTEGER,
+    IsDeleted           INTEGER,
     OPT_LOCK_VERSION    INTEGER,
-    FOREIGN KEY (ObjectID) REFERENCES ObjectTable (ID),
-    FOREIGN KEY (PersonID) REFERENCES ObjectTable (ID),
-    FOREIGN KEY (PersonVersionID) REFERENCES Person (ID),
+    FOREIGN KEY (TypeID) REFERENCES Type (ID),
+    FOREIGN KEY (PersonID) REFERENCES Person (ID),
     PRIMARY KEY (ID)
 );
 
 CREATE TABLE Service
 (
-    ID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    ObjectID        BIGINT         NOT NULL         UNIQUE,
-    ServiceReg      VARCHAR(255)   NOT NULL         UNIQUE,
-    IsActive        INTEGER        NOT NULL,
-    StartDate       Date           NOT NULL,
-    EndDate         Date           NOT NULL,
-    WeekPrice       Decimal        NOT NULL,
+    ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+    Title           VARCHAR(255),
+    TypeID          INTEGER        NOT NULL,
+    ServiceReg      VARCHAR(255)   NOT NULL      UNIQUE,
+    IsActive        INTEGER,
+    StartDate       Date,
+    EndDate         Date,
+    WeekPrice       Decimal,
     NumberOfPlaces  INTEGER,
+    IsDeleted       INTEGER,
     OPT_LOCK_VERSION    INTEGER,
-    FOREIGN KEY (ObjectID)  REFERENCES ObjectTable (ID),
+    FOREIGN KEY (TypeID)  REFERENCES Type (ID),
     PRIMARY KEY (ID)
 );
 
 CREATE TABLE House
 (
-    ID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    ObjectID        BIGINT         NOT NULL         UNIQUE,
-    HouseReg        VARCHAR(255)   NOT NULL         UNIQUE,
-    IsActive        INTEGER        NOT NULL,
-    StartDate       Date           NOT NULL,
-    EndDate         Date           NOT NULL,
-    WeekPrice       Decimal        NOT NULL,
+    ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+    Title           VARCHAR(255),
+    TypeID          INTEGER        NOT NULL,
+    HouseReg        VARCHAR(255)   NOT NULL     UNIQUE,
+    Address         VARCHAR(255),
+    IsActive        INTEGER,
+    StartDate       Date,
+    EndDate         Date,
+    WeekPrice       Decimal,
     NumberOfPlaces  INTEGER,
+    IsDeleted       INTEGER,
     OPT_LOCK_VERSION    INTEGER,
-    FOREIGN KEY (ObjectID)  REFERENCES ObjectTable (ID),
+    FOREIGN KEY (TypeID)  REFERENCES Type (ID),
     PRIMARY KEY (ID)
 );
 
 CREATE TABLE Reservation
 (
-    ID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    ObjectID            BIGINT          NOT NULL    UNIQUE,
-    ReservationReg      VARCHAR(255)    NOT NULL    UNIQUE,
-    HouseID             BIGINT          NOT NULL,
-    HouseVersionID      BIGINT          NOT NULL,
-    PersonID            BIGINT          NOT NULL,
-    PersonVersionID     BIGINT          NOT NULL,
-    StartDate           Date            NOT NULL,
-    EndDate             Date            NOT NULL,
+    ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+    TypeID              INTEGER         NOT NULL,
+    ReservationReg      VARCHAR(255)               UNIQUE,
+    HouseID             INTEGER         NOT NULL,
+    PersonID            INTEGER         NOT NULL,
+    StartDate           Date,
+    EndDate             Date,
+    IsDeleted           INTEGER,
     OPT_LOCK_VERSION INTEGER,
-    FOREIGN KEY (ObjectID) REFERENCES ObjectTable (ID),
-    FOREIGN KEY (HouseID) REFERENCES ObjectTable (ID),
-    FOREIGN KEY (PersonID) REFERENCES ObjectTable (ID),
-    FOREIGN KEY (HouseVersionID) REFERENCES House (ID),
-    FOREIGN KEY (PersonVersionID) REFERENCES Person (ID),
+    FOREIGN KEY (TypeID) REFERENCES Type (ID),
+    FOREIGN KEY (HouseID) REFERENCES House (ID),
+    FOREIGN KEY (PersonID) REFERENCES Person (ID),
     PRIMARY KEY (ID)
 );
 
 CREATE TABLE MultiselectReservationToService
 (
-    ParentID        BIGINT         NOT NULL,
-    ChildID         BIGINT         NOT NULL,
+    ParentID        INTEGER         NOT NULL,
+    ChildID         INTEGER         NOT NULL,
     FOREIGN KEY (ParentID)  REFERENCES Reservation (ID),
     FOREIGN KEY (ChildID)   REFERENCES Service (ID),
     PRIMARY KEY (ParentID, ChildID)
@@ -147,8 +135,8 @@ CREATE TABLE MultiselectReservationToService
 
 CREATE TABLE MultiselectHouseToService
 (
-    ParentID        BIGINT         NOT NULL,
-    ChildID         BIGINT         NOT NULL,
+    ParentID        INTEGER         NOT NULL,
+    ChildID         INTEGER         NOT NULL,
     FOREIGN KEY (ParentID)  REFERENCES House (ID),
     FOREIGN KEY (ChildID)   REFERENCES Service (ID),
     PRIMARY KEY (ParentID, ChildID)
@@ -156,16 +144,27 @@ CREATE TABLE MultiselectHouseToService
 
 CREATE TABLE SystemParameter
 (
-    ID BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    ObjectID        BIGINT          NOT NULL        UNIQUE, 
-    Title           VARCHAR(255)    NOT NULL        UNIQUE,
+    ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+    TypeID          INTEGER         NOT NULL, 
+    InternalName    VARCHAR(255)    NOT NULL    UNIQUE,
+    Title           VARCHAR(255),
     Description     VARCHAR(255),
-    Value           INT             NOT NULL,
+    Value           INTEGER,
+    IsDeleted       INTEGER,
     OPT_LOCK_VERSION INTEGER,
-    FOREIGN KEY (ObjectID)  REFERENCES ObjectTable (ID),
+    FOREIGN KEY (TypeID)  REFERENCES Type (ID),
     PRIMARY KEY (ID)
 );
 
-ALTER TABLE ObjectTable ADD CONSTRAINT ObjectTable_TypeID_To_Type_ID  FOREIGN KEY (TypeID) REFERENCES ObjectTable (ID);
-ALTER TABLE ObjectTable ADD CONSTRAINT ObjectTable_CreatedByID_To_Type_ID  FOREIGN KEY (CreatedBy) REFERENCES ObjectTable (ID);
-ALTER TABLE ObjectTable ADD CONSTRAINT ObjectTable_DeletedBY_To_Type_ID  FOREIGN KEY (DeletedBy) REFERENCES ObjectTable (ID);
+CREATE TABLE HousePictures
+(
+    ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+    TypeID          INTEGER         NOT NULL, 
+    HouseID         INTEGER,
+    Path            VARCHAR(255)    NOT NULL,
+    IsDeleted       INTEGER,
+    OPT_LOCK_VERSION INTEGER,
+    FOREIGN KEY (TypeID)  REFERENCES Type (ID),
+    FOREIGN KEY (HouseID)  REFERENCES House (ID),
+    PRIMARY KEY (ID)
+);

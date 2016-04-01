@@ -6,20 +6,19 @@
 package lt.vu.mif.entities;
 
 import java.io.Serializable;
-import java.util.Objects;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Version;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -31,50 +30,74 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "Type.findAll", query = "SELECT t FROM Type t"),
     @NamedQuery(name = "Type.findById", query = "SELECT t FROM Type t WHERE t.id = :id"),
+    @NamedQuery(name = "Type.findByInternalname", query = "SELECT t FROM Type t WHERE t.internalname = :internalname"),
     @NamedQuery(name = "Type.findByTitle", query = "SELECT t FROM Type t WHERE t.title = :title"),
     @NamedQuery(name = "Type.findByDescription", query = "SELECT t FROM Type t WHERE t.description = :description"),
+    @NamedQuery(name = "Type.findByIsdeleted", query = "SELECT t FROM Type t WHERE t.isdeleted = :isdeleted"),
     @NamedQuery(name = "Type.findByOptLockVersion", query = "SELECT t FROM Type t WHERE t.optLockVersion = :optLockVersion")})
 public class Type implements Serializable {
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
+    private List<Housepictures> housepicturesList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
+    private List<Systemparameter> systemparameterList;
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID")
-    private Long id;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
+    private Integer id;
+    @Size(max = 255)
+    @Column(name = "INTERNALNAME")
+    private String internalname;
+    @Size(max = 255)
     @Column(name = "TITLE")
     private String title;
     @Size(max = 255)
     @Column(name = "DESCRIPTION")
     private String description;
+    @Column(name = "ISDELETED")
+    private Integer isdeleted;
     @Column(name = "OPT_LOCK_VERSION")
-    @Version
     private Integer optLockVersion;
-    @JoinColumn(name = "OBJECTID", referencedColumnName = "ID")
-    @OneToOne(optional = false)
-    private Objecttable objectid;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
+    private List<Payment> paymentList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
+    private List<Person> personList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
+    private List<Reservation> reservationList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
+    private List<Service> serviceList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
+    private List<House> houseList;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "typeid")
+    private Systemparameter systemparameter;
 
     public Type() {
     }
 
-    public Type(Long id) {
-        this.id = id;
-    }
-
-    public Type(Long id, String title) {
-        this.id = id;
+    public Type(String internalName, String title, String description, Integer isDeleted) {
+        this.internalname = internalName;
         this.title = title;
+        this.description = description;
+        this.isdeleted = isDeleted;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getInternalname() {
+        return internalname;
+    }
+
+    public void setInternalname(String internalname) {
+        this.internalname = internalname;
     }
 
     public String getTitle() {
@@ -93,6 +116,14 @@ public class Type implements Serializable {
         this.description = description;
     }
 
+    public Integer getIsdeleted() {
+        return isdeleted;
+    }
+
+    public void setIsdeleted(Integer isdeleted) {
+        this.isdeleted = isdeleted;
+    }
+
     public Integer getOptLockVersion() {
         return optLockVersion;
     }
@@ -101,41 +132,93 @@ public class Type implements Serializable {
         this.optLockVersion = optLockVersion;
     }
 
-    public Objecttable getObjectid() {
-        return objectid;
+    public List<Payment> getPaymentList() {
+        return paymentList;
     }
 
-    public void setObjectid(Objecttable objectid) {
-        this.objectid = objectid;
+    public void setPaymentList(List<Payment> paymentList) {
+        this.paymentList = paymentList;
+    }
+
+    public List<Person> getPersonList() {
+        return personList;
+    }
+
+    public void setPersonList(List<Person> personList) {
+        this.personList = personList;
+    }
+
+    public List<Reservation> getReservationList() {
+        return reservationList;
+    }
+
+    public void setReservationList(List<Reservation> reservationList) {
+        this.reservationList = reservationList;
+    }
+
+    public List<Service> getServiceList() {
+        return serviceList;
+    }
+
+    public void setServiceList(List<Service> serviceList) {
+        this.serviceList = serviceList;
+    }
+
+    public List<House> getHouseList() {
+        return houseList;
+    }
+
+    public void setHouseList(List<House> houseList) {
+        this.houseList = houseList;
+    }
+
+    public Systemparameter getSystemparameter() {
+        return systemparameter;
+    }
+
+    public void setSystemparameter(Systemparameter systemparameter) {
+        this.systemparameter = systemparameter;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 97 * hash + Objects.hashCode(this.title);
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Type)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Type other = (Type) obj;
-        if (!Objects.equals(this.title, other.title)) {
+        Type other = (Type) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
     }
+
     @Override
     public String toString() {
-        return "lt.vu.mif.entities.Type[ id=" + id + " ]";
+        return "lt.vu.mif.entities.Type[ id=" + internalname + " ]";
+    }
+
+    public List<Housepictures> getHousepicturesList() {
+        return housepicturesList;
+    }
+
+    public void setHousepicturesList(List<Housepictures> housepicturesList) {
+        this.housepicturesList = housepicturesList;
+    }
+
+    public List<Systemparameter> getSystemparameterList() {
+        return systemparameterList;
+    }
+
+    public void setSystemparameterList(List<Systemparameter> systemparameterList) {
+        this.systemparameterList = systemparameterList;
     }
     
 }
