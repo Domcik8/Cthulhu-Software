@@ -9,7 +9,7 @@ and open the template in the editor.
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Vasarnamių rezervacija</title>
+        <title>Vasarnamių Administravimas</title>
         <h:outputStylesheet library="css" name="custom.css"/>
         <script src="//connect.facebook.net/en_US/sdk.js" type="text/javascript"/>
         <script src="https://code.jquery.com/jquery-2.2.2.min.js"   integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI="   crossorigin="anonymous"></script>
@@ -38,8 +38,8 @@ and open the template in the editor.
                         <li><a href="../index.html">Pagrindinis</a></li>
                         <li><a href="#">Vasarnamiai</a></li>
                         <li><a href="#">Paslaugos</a></li>
-                        <li class="active"><a href="">Rezervacijos</a></li>
-                        <li><a href="../Administration/admin.html">Administravimas</a></li>
+                        <li><a href="../Reservation/summerhouses.html">Rezervacijos</a></li>
+                        <li class="active"><a href="">Administravimas</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li>
@@ -64,25 +64,13 @@ and open the template in the editor.
             </div>
         </nav>
         
-        <!-- Summerhouse list -->
-        <div class="container .col-md-8">
-            <p:dataScroller value="#{summerhouseManager.summerhouses}" var="house" chunkSize="15" style="border:thin">
-                <h:panelGrid columns="2" style="width:100%" columnClasses="logo,detail">
-                    <span class="glyphicon glyphicon-bed" style="width: 30%"/>
-                    <p:outputPanel >
-                        <h:panelGrid columns="2" >
-                            <h:outputText value="Id:"/>
-                            <h:outputText value="#{house.id}"/>
-                            <h:outputText value="House reg:"/>
-                            <h:outputText value="#{house.housereg}"/>
-                        </h:panelGrid>
-                    </p:outputPanel>
-                </h:panelGrid>
-                <hr/>
-            </p:dataScroller>
+        
+        <div class="container">
+            <h:form>
+                <h:commandLink type="button" class="btn btn-lg btn-danger" action="#{databaseManager.fillDataBase()}">Fill database</h:commandLink>
+            </h:form>
         </div>
         
-    
         
         
         

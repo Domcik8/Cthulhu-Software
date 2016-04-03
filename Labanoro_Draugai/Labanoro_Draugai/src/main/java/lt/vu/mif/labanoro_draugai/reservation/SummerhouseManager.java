@@ -14,6 +14,7 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import lt.vu.mif.entities.House;
 
 /**
@@ -33,7 +34,8 @@ public class SummerhouseManager {
     public void init() {
         List<House> houses = new ArrayList<>();
         for(int i = 0; i < 30; i++){
-            //houses.add(new House(Long.valueOf(i),"reg"+i,1,new Date(),new Date(),50));
+            Query query = em.createNamedQuery("House.findAll");
+            houses = query.getResultList();
         }
         summerhouses = houses;
         System.out.println(toString() + " constructed.");

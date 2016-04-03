@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import javax.ejb.AfterBegin;
 import javax.ejb.AfterCompletion;
 import javax.ejb.Stateful;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -22,6 +23,7 @@ import lt.vu.mif.entities.Type;
 
 @Named
 @Stateful
+@SessionScoped
 public class DatabaseManager {
     @Resource
     private TransactionSynchronizationRegistry tx;
@@ -81,6 +83,26 @@ public class DatabaseManager {
     private void fillBasicHouses() {
         addHouse("Old small house", "Vilnius", "HouseReg-1", "House.Penthouse");
         addHouse("New small house", "Vilnius", "HouseReg-2", "House.Penthouse");
+        addHouse("Old small house", "Vilnius", "HouseReg-3", "House.Penthouse");
+        addHouse("New small house", "Vilnius", "HouseReg-4", "House.Penthouse");
+        addHouse("Old small house", "Vilnius", "HouseReg-5", "House.Penthouse");
+        addHouse("New small house", "Vilnius", "HouseReg-6", "House.Penthouse");
+        addHouse("Old small house", "Vilnius", "HouseReg-7", "House.Penthouse");
+        addHouse("New small house", "Vilnius", "HouseReg-8", "House.Penthouse");
+        addHouse("Old small house", "Vilnius", "HouseReg-9", "House.Penthouse");
+        addHouse("New small house", "Vilnius", "HouseReg-10", "House.Penthouse");
+        addHouse("Old small house", "Vilnius", "HouseReg-11", "House.Penthouse");
+        addHouse("New small house", "Vilnius", "HouseReg-12", "House.Penthouse");
+        addHouse("Old small house", "Vilnius", "HouseReg-13", "House.Penthouse");
+        addHouse("New small house", "Vilnius", "HouseReg-14", "House.Penthouse");
+        addHouse("Old small house", "Vilnius", "HouseReg-15", "House.Penthouse");
+        addHouse("New small house", "Vilnius", "HouseReg-16", "House.Penthouse");
+        addHouse("Old small house", "Vilnius", "HouseReg-17", "House.Penthouse");
+        addHouse("New small house", "Vilnius", "HouseReg-19", "House.Penthouse");
+        addHouse("Old small house", "Vilnius", "HouseReg-20", "House.Penthouse");
+        addHouse("New small house", "Vilnius", "HouseReg-21", "House.Penthouse");
+        addHouse("Old small house", "Vilnius", "HouseReg-22", "House.Penthouse");
+        addHouse("New small house", "Vilnius", "HouseReg-23", "House.Penthouse");
     }
     
     /**
