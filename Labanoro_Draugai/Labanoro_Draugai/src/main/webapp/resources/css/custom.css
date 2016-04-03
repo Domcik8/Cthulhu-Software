@@ -4,9 +4,27 @@
 */
 body { 
     padding-top: 65px; 
+    background-image: url("https://www.apva.lt/uploads/images/labanoras%20008.JPG");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-size: cover;
 }
 
 .ui-datascroller-item{
     font-size: 20px;
     
+}
+
+.text-bg {
+    background: rgba(224,224,224,0.8);
+    border-radius: 10px;
+    padding-left: 7px;
+    padding-right: 5px;
+    padding-bottom: 3px;
+    padding-top: 3px;
+}
+.invisible-border{
+    padding-right: 5px;
+    padding-top: 5px;
 }
