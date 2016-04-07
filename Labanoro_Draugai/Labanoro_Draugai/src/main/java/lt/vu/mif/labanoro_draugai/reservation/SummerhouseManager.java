@@ -10,7 +10,9 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
+import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -23,27 +25,28 @@ import lt.vu.mif.entities.House;
  */
 @Named
 @Stateful
-@ViewScoped
+@SessionScoped
 public class SummerhouseManager {
     private List<House> summerhouses;
-
+    private List<House> filteredSummerhouses;
+      
     @PersistenceContext
     EntityManager em;
     
     @PostConstruct
     public void init() {
-        List<House> houses = new ArrayList<>();
-        for(int i = 0; i < 30; i++){
-            Query query = em.createNamedQuery("House.findAll");
-            houses = query.getResultList();
-        }
-        summerhouses = houses;
+        
+        Query query = em.createNamedQuery("House.findAll");
+        summerhouses = query.getResultList();
+        filteredSummerhouses = query.getResultList();
+
         System.out.println(toString() + " constructed.");
     }
-
-    public List<House> getSummerhouses() {
-        return summerhouses;
+    
+    public List<House> getFilteredSummerhouses() {
+        return filteredSummerhouses;
     }
     
-    
+    public void filter(){
+    }
 }

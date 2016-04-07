@@ -7,7 +7,8 @@ and open the template in the editor.
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
         <title>Vasarnamių rezervacija</title>
         <h:outputStylesheet library="css" name="custom.css"/>
@@ -67,12 +68,28 @@ and open the template in the editor.
        <div class="row">
          <div class="container">
              <div class="text-bg col-sm-3 col-md-3 col-lg-2">
-                 <h4>Pasirinkite filtrus:</h4>
+                       <h:form>
+                            <h3>Mutiple checkboxes</h3> 
+                            <p:selectManyCheckbox id="grid2" value="#{houseFilter.selectedFilters}" layout="pageDirection" columns="3">
+                                <f:selectItems value="#{houseFilter.availableFilters}" var="filter" itemLabel="#{filter}" itemValue="#{filter}" />
+                            </p:selectManyCheckbox>
+                            <p:commandButton value="Submit" update="display" oncomplete="PF('dlg').show()" icon="ui-icon-check" />
+                            <p:dialog header="Values" modal="true" showEffect="clip" widgetVar="dlg" resizable="false">
+                                <p:outputPanel id="display">
+                                    <p:dataList value="#{houseFilter.selectedFilters}" var="filter">
+                                        <f:facet name="header">
+                                            Filters
+                                        </f:facet>
+                                        #{filter}
+                                    </p:dataList>
+                                </p:outputPanel>
+                            </p:dialog>
+                       </h:form>
              </div>
         
-            <!-- Summerhouse list -->
+
             <div class="col-sm-9 col-md-9 col-lg-10">
-                <p:dataScroller value="#{summerhouseManager.summerhouses}" var="house" chunkSize="15" style="border:thin">
+                <p:dataScroller id="houseDataScroller" value="#{summerhouseManager.filteredSummerhouses}" var="house" chunkSize="15" style="border:thin">
                     <h:panelGrid columns="2" style="width:100%" columnClasses="logo,detail">
                         <span class="glyphicon glyphicon-bed" style="width: 30%"/>
                         <p:outputPanel >

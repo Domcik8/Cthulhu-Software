@@ -5,18 +5,49 @@
  */
 package lt.vu.mif.labanoro_draugai.reservation;
 
-import javax.ejb.Stateful;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
-import javax.inject.Named;
 
 /**
  *
  * @author Karolis
  */
-@Named
-@Stateful
+@ManagedBean(name = "houseFilter", eager = true)
 @SessionScoped
-public class HouseFilter {
+public class HouseFilter implements Serializable{
+    private static final long serialVersionUID = 1L;
     
+    private List<String> availableFilters;
+    public String[] selectedFilters;
+
+    @PostConstruct
+    public void init(){
+        //Papulint servisus is db
+        availableFilters = new ArrayList<>();
+        availableFilters.add("Service1");
+        availableFilters.add("Service2");
+        availableFilters.add("Service3");
+        availableFilters.add("Service4");
+        availableFilters.add("Service5");
+    }
+    
+    public String[] getSelectedFilters() {
+        return selectedFilters;
+    }
+
+    public void setSelectedFilters(String[] selectedFilters) {
+        this.selectedFilters = selectedFilters;
+    }
+    
+    public List<String> getAvailableFilters() {
+        return availableFilters;
+    }
+
+    public void setAvailableFilters(List<String> availableFilters) {
+        this.availableFilters = availableFilters;
+    }
 }
