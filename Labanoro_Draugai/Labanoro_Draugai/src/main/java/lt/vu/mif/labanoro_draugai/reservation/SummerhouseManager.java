@@ -5,11 +5,13 @@
  */
 package lt.vu.mif.labanoro_draugai.reservation;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
+import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
@@ -23,10 +25,9 @@ import lt.vu.mif.entities.House;
  *
  * @author Karolis
  */
-@Named
-@Stateful
-@SessionScoped
-public class SummerhouseManager {
+@ManagedBean(name="summerhouseManager")
+@ViewScoped
+public class SummerhouseManager implements Serializable{
     private List<House> summerhouses;
     private List<House> filteredSummerhouses;
       

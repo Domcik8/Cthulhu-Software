@@ -74,7 +74,7 @@ and open the template in the editor.
                                 <f:selectItems value="#{houseFilter.availableFilters}" var="filter" itemLabel="#{filter}" itemValue="#{filter}" />
                             </p:selectManyCheckbox>
                             <p:commandButton value="Submit" update="display" oncomplete="PF('dlg').show()" icon="ui-icon-check" />
-                            <p:dialog header="Values" modal="true" showEffect="clip" widgetVar="dlg" resizable="false">
+                            <p:dialog header="Values" modal="true" showEffect="clip" widgetVar="dlg" resizable="false" draggable="false" responsive="true">
                                 <p:outputPanel id="display">
                                     <p:dataList value="#{houseFilter.selectedFilters}" var="filter">
                                         <f:facet name="header">
