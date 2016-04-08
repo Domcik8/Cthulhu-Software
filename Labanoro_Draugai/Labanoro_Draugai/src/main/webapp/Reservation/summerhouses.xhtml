@@ -67,23 +67,26 @@ and open the template in the editor.
         
        <div class="row">
          <div class="container">
-             <div class="text-bg col-sm-3 col-md-3 col-lg-2">
+             <div class="col-sm-3 col-md-3 col-lg-2">
                        <h:form>
-                            <h3>Mutiple checkboxes</h3> 
-                            <p:selectManyCheckbox id="grid2" value="#{houseFilter.selectedFilters}" layout="pageDirection" columns="3">
-                                <f:selectItems value="#{houseFilter.availableFilters}" var="filter" itemLabel="#{filter}" itemValue="#{filter}" />
-                            </p:selectManyCheckbox>
-                            <p:commandButton value="Submit" update="display" oncomplete="PF('dlg').show()" icon="ui-icon-check" />
-                            <p:dialog header="Values" modal="true" showEffect="clip" widgetVar="dlg" resizable="false" draggable="false" responsive="true">
+                            <p:panel id="toggleable" header="Papildomos paslaugos" toggleable="true" toggleSpeed="500" widgetVar="panel" style="margin-bottom:5px" >
+                                <p:selectManyCheckbox id="grid2" value="#{houseFilter.selectedFilters}" layout="pageDirection" columns="3">
+                                    <f:selectItems value="#{houseFilter.availableFilters}" var="filter" itemLabel="#{filter}" itemValue="#{filter}" />
+                                </p:selectManyCheckbox>
+                            </p:panel>
+                            <p:commandButton value="Filtruoti" action="#{summerhouseManager.filter()}" update="houseDataScroller" />
+                            
+                            <!-- oncomplete="PF('dlg').show()" icon="ui-icon-check" />-->
+<!--                            <p:dialog header="Values" modal="true" showEffect="clip" widgetVar="dlg" resizable="false" draggable="false" responsive="true">
                                 <p:outputPanel id="display">
-                                    <p:dataList value="#{houseFilter.selectedFilters}" var="filter">
+                                    <p:dataList value="" var="filter">
                                         <f:facet name="header">
                                             Filters
                                         </f:facet>
-                                        #{filter}
+                                        
                                     </p:dataList>
                                 </p:outputPanel>
-                            </p:dialog>
+                            </p:dialog>-->
                        </h:form>
              </div>
         

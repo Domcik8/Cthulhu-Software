@@ -49,5 +49,7 @@ public class SummerhouseManager implements Serializable{
     }
     
     public void filter(){
+        if(filteredSummerhouses == null)filteredSummerhouses = summerhouses;
+        else filteredSummerhouses = null;
     }
 }
