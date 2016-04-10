@@ -64,29 +64,29 @@ and open the template in the editor.
                 </div>
             </div>
         </nav>
-        
+       <!--Filter panel--> 
        <div class="row">
             <div class="container">
                 <div class="col-sm-4 col-md-3 col-lg-3">
                     <h:form id="filterForm">
                         <p:accordionPanel id="filterAccordion" multiple="true">
                             <p:tab id="options" title="Parinktys">
-                                <h:outputLabel for="ordering" value="Viršuje:" />
-                                <h:selectOneMenu id="ordering" value="#{houseFilter.ordering}" >
-                                    <!--<f:selectItem itemLabel="Rikiavimas" itemValue="#{null}" noSelectionOption="true"/>-->
-                                    <f:selectItem itemLabel="Pigiausi" itemValue="cheap" />
-                                    <f:selectItem itemLabel="Brangiausi" itemValue="expensive" />
-                                    <f:selectItem itemLabel="Seniausi" itemValue="old" />
-                                    <f:selectItem itemLabel="Naujausi" itemValue="new" />
-                                </h:selectOneMenu>
-                                <br/>
+                                <h:panelGrid id="panelGrid" columns="2" >
+                                    <h:outputLabel for="ordering" value="Viršuje:" />
+                                    <h:selectOneMenu id="ordering" value="#{houseFilter.ordering}" >
+                                        <f:selectItem itemLabel="Pigiausi" itemValue="cheap" />
+                                        <f:selectItem itemLabel="Brangiausi" itemValue="expensive" />
+                                        <f:selectItem itemLabel="Seniausi" itemValue="old" />
+                                        <f:selectItem itemLabel="Naujausi" itemValue="new" />
+                                    </h:selectOneMenu>
+                                    <h:outputLabel for="placeCount" value="Vietų skaičius:" />
+                                    <p:spinner id="placeCount" value="#{houseFilter.placeCount}" min="0" max="99" size="1"/>
+                                    <p:tooltip id="toolTipPlaceCount" for="placeCount" value="0 žymi visus vietų skaičius" trackMouse="true" />
+                                </h:panelGrid>
                                 
-                                <h:outputLabel for="placeCount" value="Vietų skaičius:" />
-                                <p:spinner id="placeCount" value="#{houseFilter.placeCount}" min="0" max="99" size="1"/>
-                                <p:tooltip id="toolTipPlaceCount" for="placeCount" value="0 žymi visus vietų skaičius" trackMouse="true" />
-                                <br/>
                                 
-                                <h:outputText id="displayRange" value="Kaina nuo #{houseFilter.priceFrom} iki #{houseFilter.priceTo}" />
+                                <p:outputLabel for="displayRange" value="Kaina:" /><br/>
+                                <h:outputText id="displayRange" value="Nuo #{houseFilter.priceFrom} iki #{houseFilter.priceTo}" />
                                 <p:slider id="priceSlider" 
                                           for="priceFrom,priceTo" 
                                           display="displayRange" 
@@ -96,7 +96,26 @@ and open the template in the editor.
                                           maxValue="#{houseFilter.maxHousePrice}" />
                                 <h:inputHidden id="priceFrom" value="#{houseFilter.priceFrom}" />
                                 <h:inputHidden id="priceTo" value="#{houseFilter.priceTo}" />
-                                
+
+                                <br/>
+
+                                <p:outputLabel for="panelGrid" value="Viešnagės periodas:" />
+                                <h:panelGrid id="dateGrid" columns="2" >
+                                    <p:outputLabel for="dateFrom" value="Nuo: " />
+                                    <p:calendar id="dateFrom" pattern="yyyy-MM-dd" size="10"
+                                                value="#{houseFilter.dateFrom}" 
+                                                mindate="#{houseFilter.today}" 
+                                                maxdate="#{houseFilter.endOfSeason}"  >
+                                        <p:ajax event="dateSelect" listener="#{houseFilter.onDateSelect}" update="dateTo" />
+                                    </p:calendar>
+                                    <p:outputLabel for="dateTo" value="Iki: " />
+                                    <p:calendar id="dateTo" pattern="yyyy-MM-dd" size="10"
+                                                value="#{houseFilter.dateTo}" 
+                                                mindate="#{houseFilter.dateFrom}"
+                                                maxdate="#{houseFilter.endOfSeason}" >
+                                        <p:ajax event="dateSelect" update="dateFrom" />
+                                    </p:calendar>    
+                                </h:panelGrid>
                             </p:tab>
                             
                             <p:tab title="Paslaugos">
@@ -122,7 +141,7 @@ and open the template in the editor.
                     </h:form>
                 </div>
         
-
+            <!--summerhouse data-->
                 <div class="col-sm-8 col-md-9 col-lg-9">
                     <p:dataScroller id="houseDataScroller" value="#{summerhouseManager.filteredSummerhouses}" var="house" chunkSize="15" style="border:thin">
                         <h:panelGrid columns="2" style="width:100%" columnClasses="logo,detail">

@@ -7,10 +7,13 @@ package lt.vu.mif.labanoro_draugai.reservation;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import org.primefaces.event.SelectEvent;
 
 /**
  *
@@ -114,5 +117,40 @@ public class HouseFilter implements Serializable{
     }
     private float priceTo;
     
+    //Datepicker
     
+    private Date dateFrom = getToday();
+    private Date dateTo;
+
+    public Date getDateFrom() {
+        return dateFrom;
+    }
+
+    public void setDateFrom(Date dateFrom) {
+        this.dateFrom = dateFrom;
+    }
+
+    public Date getDateTo() {
+        return dateTo;
+    }
+
+    public void setDateTo(Date dateTo) {
+        this.dateTo = dateTo;
+    }
+    public Date getToday(){
+        return new Date();
+    }
+    
+    //Sezono pradžia čia turi but
+    public Date getEndOfSeason(){
+        Calendar today = Calendar.getInstance(); 
+        today.add(Calendar.YEAR, 1);
+        return today.getTime();
+    }
+    
+    public void onDateSelect() {
+        if(getDateTo()==null || getDateFrom()==null) return;
+        if(getDateTo().before(getDateFrom()))
+            setDateTo(null);
+    }
 }
