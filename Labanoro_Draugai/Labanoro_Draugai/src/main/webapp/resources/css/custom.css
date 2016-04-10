@@ -28,3 +28,17 @@ body {
     padding-right: 5px;
     padding-top: 5px;
 }
+.btn-green{
+  color: #ffffff;
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+  font-size: 14px;
+}
+.ui-accordion{
+    background-color: #5cb85c;
+}
+.ui-accordion-header{
+    font-family: sans-serif;
+    font-weight: 100;
+    color: white;
+    }

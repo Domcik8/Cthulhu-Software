@@ -66,16 +66,48 @@ and open the template in the editor.
         </nav>
         
        <div class="row">
-         <div class="container">
-             <div class="col-sm-3 col-md-3 col-lg-2">
-                       <h:form>
-                            <p:panel id="toggleable" header="Papildomos paslaugos" toggleable="true" toggleSpeed="500" widgetVar="panel" style="margin-bottom:5px" >
+            <div class="container">
+                <div class="col-sm-4 col-md-3 col-lg-3">
+                    <h:form id="filterForm">
+                        <p:accordionPanel id="filterAccordion" multiple="true">
+                            <p:tab id="options" title="Parinktys">
+                                <h:outputLabel for="ordering" value="Viršuje:" />
+                                <h:selectOneMenu id="ordering" value="#{houseFilter.ordering}" >
+                                    <!--<f:selectItem itemLabel="Rikiavimas" itemValue="#{null}" noSelectionOption="true"/>-->
+                                    <f:selectItem itemLabel="Pigiausi" itemValue="cheap" />
+                                    <f:selectItem itemLabel="Brangiausi" itemValue="expensive" />
+                                    <f:selectItem itemLabel="Seniausi" itemValue="old" />
+                                    <f:selectItem itemLabel="Naujausi" itemValue="new" />
+                                </h:selectOneMenu>
+                                <br/>
+                                
+                                <h:outputLabel for="placeCount" value="Vietų skaičius:" />
+                                <p:spinner id="placeCount" value="#{houseFilter.placeCount}" min="0" max="99" size="1"/>
+                                <p:tooltip id="toolTipPlaceCount" for="placeCount" value="0 žymi visus vietų skaičius" trackMouse="true" />
+                                <br/>
+                                
+                                <h:outputText id="displayRange" value="Kaina nuo #{houseFilter.priceFrom} iki #{houseFilter.priceTo}" />
+                                <p:slider id="priceSlider" 
+                                          for="priceFrom,priceTo" 
+                                          display="displayRange" 
+                                          style="width: 170px" 
+                                          range="true" 
+                                          displayTemplate="Kaina nuo {min} iki {max}" 
+                                          maxValue="#{houseFilter.maxHousePrice}" />
+                                <h:inputHidden id="priceFrom" value="#{houseFilter.priceFrom}" />
+                                <h:inputHidden id="priceTo" value="#{houseFilter.priceTo}" />
+                                
+                            </p:tab>
+                            
+                            <p:tab title="Paslaugos">
                                 <p:selectManyCheckbox id="grid2" value="#{houseFilter.selectedFilters}" layout="pageDirection" columns="3">
                                     <f:selectItems value="#{houseFilter.availableFilters}" var="filter" itemLabel="#{filter}" itemValue="#{filter}" />
-                                </p:selectManyCheckbox>
-                            </p:panel>
-                            <p:commandButton value="Filtruoti" action="#{summerhouseManager.filter()}" update="houseDataScroller" />
-                            
+                                </p:selectManyCheckbox> 
+                            </p:tab>
+                        </p:accordionPanel>    
+                        
+                        <p:commandButton class="btn btn-primary" value="Filtruoti" action="#{summerhouseManager.filter()}" update="houseDataScroller" />
+
                             <!-- oncomplete="PF('dlg').show()" icon="ui-icon-check" />-->
 <!--                            <p:dialog header="Values" modal="true" showEffect="clip" widgetVar="dlg" resizable="false" draggable="false" responsive="true">
                                 <p:outputPanel id="display">
@@ -87,28 +119,28 @@ and open the template in the editor.
                                     </p:dataList>
                                 </p:outputPanel>
                             </p:dialog>-->
-                       </h:form>
-             </div>
+                    </h:form>
+                </div>
         
 
-            <div class="col-sm-9 col-md-9 col-lg-10">
-                <p:dataScroller id="houseDataScroller" value="#{summerhouseManager.filteredSummerhouses}" var="house" chunkSize="15" style="border:thin">
-                    <h:panelGrid columns="2" style="width:100%" columnClasses="logo,detail">
-                        <span class="glyphicon glyphicon-bed" style="width: 30%"/>
-                        <p:outputPanel >
-                            <h:panelGrid columns="2" >
-                                <h:outputText value="Id:"/>
-                                <h:outputText value="#{house.id}"/>
-                                <h:outputText value="House reg:"/>
-                                <h:outputText value="#{house.housereg}"/>
-                            </h:panelGrid>
-                        </p:outputPanel>
-                    </h:panelGrid>
-                    <hr/>
-                </p:dataScroller>
+                <div class="col-sm-8 col-md-9 col-lg-9">
+                    <p:dataScroller id="houseDataScroller" value="#{summerhouseManager.filteredSummerhouses}" var="house" chunkSize="15" style="border:thin">
+                        <h:panelGrid columns="2" style="width:100%" columnClasses="logo,detail">
+                            <span class="glyphicon glyphicon-bed" style="width: 30%"/>
+                            <p:outputPanel >
+                                <h:panelGrid columns="2" >
+                                    <h:outputText value="Id:"/>
+                                    <h:outputText value="#{house.id}"/>
+                                    <h:outputText value="House reg:"/>
+                                    <h:outputText value="#{house.housereg}"/>
+                                </h:panelGrid>
+                            </p:outputPanel>
+                        </h:panelGrid>
+                        <hr/>
+                    </p:dataScroller>
+                </div>
             </div>
         </div>
-       </div>
         
         
         
