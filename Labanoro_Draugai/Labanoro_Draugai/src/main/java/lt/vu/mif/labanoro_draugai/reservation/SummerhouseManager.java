@@ -52,4 +52,11 @@ public class SummerhouseManager implements Serializable{
         if(filteredSummerhouses == null)filteredSummerhouses = summerhouses;
         else filteredSummerhouses = null;
     }
+    
+    public void showAll(){
+        filteredSummerhouses = new ArrayList<>();
+        for(House house:summerhouses){
+            filteredSummerhouses.add(house);
+        }
+    }
 }

@@ -37,7 +37,7 @@ and open the template in the editor.
                 <div id="navbarCollapse" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li><a href="../index.html">Pagrindinis</a></li>
-                        <li class="active"><a href="">Vasarnamiai</a></li>
+                        <li class="active"><a href="#">Vasarnamiai</a></li>
                         <li><a href="#">Paslaugos</a></li>
                         <li><a href="#">Rezervacijos</a></li>
                         <li><a href="../Administration/admin.html">Administravimas</a></li>
@@ -86,13 +86,13 @@ and open the template in the editor.
                                 
                                 
                                 <p:outputLabel for="displayRange" value="Kaina:" /><br/>
-                                <h:outputText id="displayRange" value="Nuo #{houseFilter.priceFrom} iki #{houseFilter.priceTo}" />
+                                <h:outputText id="displayRange" value="Nuo #{houseFilter.priceFrom}€ iki #{houseFilter.priceTo}€" />
                                 <p:slider id="priceSlider" 
                                           for="priceFrom,priceTo" 
                                           display="displayRange" 
                                           style="width: 170px" 
                                           range="true" 
-                                          displayTemplate="Kaina nuo {min} iki {max}" 
+                                          displayTemplate="Kaina nuo {min}€ iki {max}€" 
                                           maxValue="#{houseFilter.maxHousePrice}" />
                                 <h:inputHidden id="priceFrom" value="#{houseFilter.priceFrom}" />
                                 <h:inputHidden id="priceTo" value="#{houseFilter.priceTo}" />
@@ -100,9 +100,11 @@ and open the template in the editor.
                                 <br/>
 
                                 <p:outputLabel for="panelGrid" value="Viešnagės periodas:" />
+                                <p:tooltip id="calendarToolTip" for="dateFrom,dateTo" value="Nameliai nuomuojami savaitėmis (nuo pirmadienio iki sekmandienio imtinai)" trackMouse="true" />
                                 <h:panelGrid id="dateGrid" columns="2" >
                                     <p:outputLabel for="dateFrom" value="Nuo: " />
                                     <p:calendar id="dateFrom" pattern="yyyy-MM-dd" size="10"
+                                                beforeShowDay="calendarOnlyMonday" locale="lt"
                                                 value="#{houseFilter.dateFrom}" 
                                                 mindate="#{houseFilter.today}" 
                                                 maxdate="#{houseFilter.endOfSeason}"  >
@@ -110,6 +112,7 @@ and open the template in the editor.
                                     </p:calendar>
                                     <p:outputLabel for="dateTo" value="Iki: " />
                                     <p:calendar id="dateTo" pattern="yyyy-MM-dd" size="10"
+                                                beforeShowDay="calendarOnlySunday" locale="lt"
                                                 value="#{houseFilter.dateTo}" 
                                                 mindate="#{houseFilter.dateFrom}"
                                                 maxdate="#{houseFilter.endOfSeason}" >
@@ -125,9 +128,9 @@ and open the template in the editor.
                             </p:tab>
                         </p:accordionPanel>    
                         
-                        <p:commandButton class="btn btn-primary" value="Filtruoti" action="#{summerhouseManager.filter()}" update="houseDataScroller" />
-
-                            <!-- oncomplete="PF('dlg').show()" icon="ui-icon-check" />-->
+                        <p:commandButton class="btn btn-primary" value="Filtruoti" action="#{summerhouseManager.filter()}" update="houseDataScroller" style="width: 100%"/>
+                        <p:commandButton class="btn btn-success" value="Rodyti visus" action="#{summerhouseManager.showAll()}" update="houseDataScroller" style="width: 100%"/>   
+                        <!-- oncomplete="PF('dlg').show()" icon="ui-icon-check" />-->
 <!--                            <p:dialog header="Values" modal="true" showEffect="clip" widgetVar="dlg" resizable="false" draggable="false" responsive="true">
                                 <p:outputPanel id="display">
                                     <p:dataList value="" var="filter">
@@ -143,7 +146,10 @@ and open the template in the editor.
         
             <!--summerhouse data-->
                 <div class="col-sm-8 col-md-9 col-lg-9">
-                    <p:dataScroller id="houseDataScroller" value="#{summerhouseManager.filteredSummerhouses}" var="house" chunkSize="15" style="border:thin">
+                    <p:dataScroller id="houseDataScroller" value="#{summerhouseManager.filteredSummerhouses}" var="house" chunkSize="15" style="border:thin" >
+                        <f:facet name="header" >
+                                Vasarnamiai
+                        </f:facet>
                         <h:panelGrid columns="2" style="width:100%" columnClasses="logo,detail">
                             <span class="glyphicon glyphicon-bed" style="width: 30%"/>
                             <p:outputPanel >

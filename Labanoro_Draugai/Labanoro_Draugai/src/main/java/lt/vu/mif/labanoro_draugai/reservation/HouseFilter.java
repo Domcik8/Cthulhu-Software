@@ -13,6 +13,10 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import lt.vu.mif.entities.Service;
 import org.primefaces.event.SelectEvent;
 
 /**
@@ -24,6 +28,9 @@ import org.primefaces.event.SelectEvent;
 public class HouseFilter implements Serializable{
     private static final long serialVersionUID = 1L;
     
+    @PersistenceContext
+    EntityManager em;
+    
     //Service checkbox list
     private List<String> availableFilters;
     public String[] selectedFilters;
@@ -31,12 +38,15 @@ public class HouseFilter implements Serializable{
     @PostConstruct
     public void init(){
         //Papulint servisus is db
+        Query query = em.createNamedQuery("Service.findAll");
+        List<Service> services = query.getResultList();
+
         availableFilters = new ArrayList<>();
-        availableFilters.add("Service1");
-        availableFilters.add("Service2");
-        availableFilters.add("Service3");
-        availableFilters.add("Service4");
-        availableFilters.add("Service5");
+        for(Service service:services){
+            availableFilters.add(service.getTitle());
+        }
+        ////////////////////////
+        
         System.out.println(toString() + " constructed.");
         
         setMaxHousePrice(1000);
