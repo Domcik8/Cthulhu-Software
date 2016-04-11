@@ -9,7 +9,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Hashtable;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -23,6 +26,10 @@ import org.primefaces.event.SelectEvent;
  *
  * @author Karolis
  */
+enum Ordering{
+    Cheap,Expensive,Old,New
+}
+
 @ManagedBean(name = "houseFilter", eager = true)
 @ViewScoped
 public class HouseFilter implements Serializable{
@@ -46,6 +53,13 @@ public class HouseFilter implements Serializable{
             availableFilters.add(service.getTitle());
         }
         ////////////////////////
+        
+        availableOrderings = new LinkedHashMap<>();
+        availableOrderings.put("Naujausi", Ordering.New);
+        availableOrderings.put("Seniausi", Ordering.Old);
+        availableOrderings.put("Pigiausi", Ordering.Cheap);
+        availableOrderings.put("Brangiausi", Ordering.Expensive);
+        
         
         System.out.println(toString() + " constructed.");
         
@@ -75,13 +89,22 @@ public class HouseFilter implements Serializable{
         this.availableFilters = availableFilters;
     }
     
-    private String ordering; 
+    private Ordering ordering;
+    
+    private Map<String,Ordering> availableOrderings;
 
-    public String getOrdering() {
+    public Map<String, Ordering> getAvailableOrderings() {
+        return availableOrderings;
+    }
+
+    public void setAvailableOrderings(Map<String, Ordering> availableOrderings) {
+        this.availableOrderings = availableOrderings;
+    }
+    public Ordering getOrdering() {
         return ordering;
     }
 
-    public void setOrdering(String ordering) {
+    public void setOrdering(Ordering ordering) {
         this.ordering = ordering;
         System.out.println("Ordering by "+ ordering);
     }

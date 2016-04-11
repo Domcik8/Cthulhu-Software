@@ -2,6 +2,7 @@ package lt.vu.mif.business;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
@@ -25,6 +26,24 @@ import lt.vu.mif.entities.Type;
 @Stateful
 @SessionScoped
 public class DatabaseManager {
+    
+    public void editHouses(){
+        Random rand = new Random();
+        Query query = em.createNamedQuery("House.findAll");
+        List<House> houses=query.getResultList();
+        for(House house:houses){
+            house.setTitle(house.getTitle()+rand.nextInt(1000));
+            house.setIsactive(1);
+            house.setStartdate(new Date());
+            house.setEnddate(new Date(2017,04,11));
+            house.setIsdeleted(0);
+            house.setNumberofplaces(rand.nextInt(30));
+            house.setWeekprice(rand.nextInt(800));
+            persistAndFlush(house);
+        }
+    }
+    
+    
     @Resource
     private TransactionSynchronizationRegistry tx;
     

@@ -7,15 +7,13 @@ package lt.vu.mif.labanoro_draugai.reservation;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.ejb.Stateful;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -30,27 +28,84 @@ import lt.vu.mif.entities.House;
 public class SummerhouseManager implements Serializable{
     private List<House> summerhouses;
     private List<House> filteredSummerhouses;
-      
+    
+    @ManagedProperty(value="#{houseFilter}")
+    private HouseFilter filter;
+
+    public HouseFilter getFilter() {
+        return filter;
+    }
+
+    public void setFilter(HouseFilter filter) {
+        this.filter = filter;
+    }
+    
     @PersistenceContext
     EntityManager em;
     
     @PostConstruct
     public void init() {
-        
         Query query = em.createNamedQuery("House.findAll");
+        
         summerhouses = query.getResultList();
         filteredSummerhouses = query.getResultList();
-
+        Collections.reverse(summerhouses);
+        Collections.reverse(filteredSummerhouses);
+        
         System.out.println(toString() + " constructed.");
     }
     
     public List<House> getFilteredSummerhouses() {
         return filteredSummerhouses;
     }
-    
+    //TODO availability filter
     public void filter(){
-        if(filteredSummerhouses == null)filteredSummerhouses = summerhouses;
-        else filteredSummerhouses = null;
+        System.out.println("This is filter:"+filter.getOrdering());
+        
+        filteredSummerhouses = new ArrayList<>();
+        for(House house:summerhouses){
+            if((filter.getPlaceCount() == 0 || house.getNumberofplaces()>=filter.getPlaceCount()) &&
+                    (filter.getPriceFrom() <= house.getWeekprice() && house.getWeekprice() <= filter.getPriceTo()))
+            filteredSummerhouses.add(house);
+        }
+        
+        switch(filter.getOrdering()){
+            case Cheap:
+                Collections.sort(filteredSummerhouses, new Comparator<House>() {
+                    @Override
+                    public int compare(House h1, House h2) {
+                        return h1.getWeekprice().compareTo(h2.getWeekprice());
+                    }
+                });
+                break;
+            case Expensive: 
+                Collections.sort(filteredSummerhouses, new Comparator<House>() {
+                    @Override
+                    public int compare(House h1, House h2) {
+                        return h2.getWeekprice().compareTo(h1.getWeekprice());
+                    }
+                });
+                break;
+            case New:
+                Collections.sort(filteredSummerhouses, new Comparator<House>() {
+                    @Override
+                    public int compare(House h1, House h2) {
+                        return h2.getId().compareTo(h1.getId());
+                    }
+                });
+                break;
+            case Old:
+                Collections.sort(filteredSummerhouses, new Comparator<House>() {
+                    @Override
+                    public int compare(House h1, House h2) {
+                        return h1.getId().compareTo(h2.getId());
+                    }
+                });
+                break;
+            default:
+                System.out.println("No Ordering selected");
+                break;
+        }
     }
     
     public void showAll(){
