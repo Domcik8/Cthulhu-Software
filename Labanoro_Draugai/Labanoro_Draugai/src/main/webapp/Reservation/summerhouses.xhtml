@@ -138,8 +138,8 @@ and open the template in the editor.
                             <f:facet name="header" >
                                     Vasarnamiai
                             </f:facet>
-                            <h:panelGrid columns="2" style="width: 100%" columnClasses="twenty-percent top-alignment, eighty-percent top-alignment" >
-                                <span class="glyphicon glyphicon-bed"/>
+                            <h:panelGrid columns="2" style="width: 100%" columnClasses="ui-grid-col-4,ui-grid-col-8" >
+                                <p:graphicImage id="img" url="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ34NdBFQhnN-roT0brsL-VFUnVVesw-KNTOJNTL0Al8b9-Ut0T" style="width: 100%;padding-right: 10px"/>
                                 <p:outputPanel>
 
                                     <p:commandLink oncomplete="disableScrolling(),PF('houseDialog').show()" update=":datascrollerForm:houseDetail,houseDataScroller" >
@@ -158,12 +158,16 @@ and open the template in the editor.
                             <hr/>
                         </p:dataScroller>
                     <h:form id="datascrollerForm" >    
-                        <p:dialog id="houseDetail" header="#{summerhouseManager.selectedHouse.title}" 
+                        <p:dialog id="houseDetail" header="#{summerhouseManager.selectedHouse.title}"
+                                  width="300" height="300"
                                   modal="true" showEffect="clip" widgetVar="houseDialog"
                                   resizable="false" draggable="false" responsive="true"
-                                  closeOnEscape="true" fitViewport="true"
+                                  closeOnEscape="true" fitViewport="true" position="center"
                                   focus="datascrollerForm"  onHide="enableScrolling()">
                             <p:outputPanel >
+                                <p:galleria value="#{summerhouseManager.houseImages}" var="image" style="width: 100%" panelHeight="180" panelWidth="250">
+                                    <p:graphicImage url="#{image}" alt="Image Description for #{image}" style="width: 100%"/>
+                                </p:galleria>
                                 <!--Nuotraukos-->
                                 #{summerhouseManager.selectedHouse.weekprice}
                             </p:outputPanel>

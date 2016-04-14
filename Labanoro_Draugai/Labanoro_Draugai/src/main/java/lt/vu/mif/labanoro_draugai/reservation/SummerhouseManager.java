@@ -29,17 +29,10 @@ public class SummerhouseManager implements Serializable{
     private List<House> summerhouses;
     private List<House> filteredSummerhouses;
     private House selectedHouse;
+    private List<String> houseImages;
     
     @ManagedProperty(value="#{houseFilter}")
     private HouseFilter filter;
-
-    public HouseFilter getFilter() {
-        return filter;
-    }
-
-    public void setFilter(HouseFilter filter) {
-        this.filter = filter;
-    }
     
     @PersistenceContext
     EntityManager em;
@@ -52,6 +45,11 @@ public class SummerhouseManager implements Serializable{
         filteredSummerhouses = query.getResultList();
         Collections.reverse(summerhouses);
         Collections.reverse(filteredSummerhouses);
+        
+        houseImages = new ArrayList<>();
+        houseImages.add("http://www.atostogoskaime.lt/uploads/Sodybos/images/galleries/1633/zoom/6-vietis-namelis.JPG");
+        houseImages.add("http://sodyboskaime.lt/sites/sodyboskaime.lt/files/bilvinu_sodyba_1_6792.jpg");
+        houseImages.add("http://g4.dcdn.lt/images/pix/sodyba-61450842.jpg");
         
         System.out.println(toString() + " constructed.");
     }
@@ -123,4 +121,20 @@ public class SummerhouseManager implements Serializable{
     public void setSelectedHouse(House selectedHouse) {
         this.selectedHouse = selectedHouse;
     }
+
+    public List<String> getHouseImages() {
+        return houseImages;
+    }
+
+    public void setHouseImages(List<String> houseImages) {
+        this.houseImages = houseImages;
+    }
+        public HouseFilter getFilter() {
+        return filter;
+    }
+
+    public void setFilter(HouseFilter filter) {
+        this.filter = filter;
+    }
+    
 }
