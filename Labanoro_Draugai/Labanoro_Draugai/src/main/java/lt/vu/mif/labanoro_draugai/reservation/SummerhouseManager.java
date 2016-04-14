@@ -28,6 +28,7 @@ import lt.vu.mif.entities.House;
 public class SummerhouseManager implements Serializable{
     private List<House> summerhouses;
     private List<House> filteredSummerhouses;
+    private House selectedHouse;
     
     @ManagedProperty(value="#{houseFilter}")
     private HouseFilter filter;
@@ -113,5 +114,13 @@ public class SummerhouseManager implements Serializable{
         for(House house:summerhouses){
             filteredSummerhouses.add(house);
         }
+    }
+
+    public House getSelectedHouse() {
+        return selectedHouse;
+    }
+
+    public void setSelectedHouse(House selectedHouse) {
+        this.selectedHouse = selectedHouse;
     }
 }

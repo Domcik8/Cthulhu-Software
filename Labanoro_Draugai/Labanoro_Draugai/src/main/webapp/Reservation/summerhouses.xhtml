@@ -65,19 +65,16 @@ and open the template in the editor.
             </div>
         </nav>
        <!--Filter panel--> 
-       <div class="row">
-            <div class="container">
+       <div class="container">
+            <div class="row">
                 <div class="col-sm-4 col-md-3 col-lg-3">
                     <h:form id="filterForm">
                         <p:accordionPanel id="filterAccordion" multiple="true">
                             <p:tab id="options" title="Parinktys">
-                                <h:panelGrid id="panelGrid" columns="2" >
+                                <!--Dropdown orering--><!--Spinner place count-->
+                                <h:panelGrid id="panelGrid" columns="2" >    
                                     <h:outputLabel for="ordering" value="Viršuje:" />
                                     <h:selectOneMenu id="ordering" value="#{houseFilter.ordering}" >
-<!--                                        <f:selectItem itemLabel="Pigiausi" itemValue="cheap" />
-                                        <f:selectItem itemLabel="Brangiausi" itemValue="expensive" />
-                                        <f:selectItem itemLabel="Seniausi" itemValue="old" />
-                                        <f:selectItem itemLabel="Naujausi" itemValue="new" />-->
                                         <f:selectItems value="#{houseFilter.availableOrderings}" />
                                     </h:selectOneMenu>
                                     <h:outputLabel for="placeCount" value="Vietų skaičius:" />
@@ -85,7 +82,7 @@ and open the template in the editor.
                                     <p:tooltip id="toolTipPlaceCount" for="placeCount" value="0 žymi visus vietų skaičius" trackMouse="true" />
                                 </h:panelGrid>
                                 
-                                
+                                <!--Price slider-->
                                 <p:outputLabel for="displayRange" value="Kaina:" /><br/>
                                 <h:outputText id="displayRange" value="Nuo #{houseFilter.priceFrom}€ iki #{houseFilter.priceTo}€" />
                                 <p:slider id="priceSlider" 
@@ -122,6 +119,7 @@ and open the template in the editor.
                                 </h:panelGrid>
                             </p:tab>
                             
+                            <!--Available services-->
                             <p:tab title="Paslaugos">
                                 <p:selectManyCheckbox id="grid2" value="#{houseFilter.selectedFilters}" layout="pageDirection" columns="3">
                                     <f:selectItems value="#{houseFilter.availableFilters}" var="filter" itemLabel="#{filter}" itemValue="#{filter}" />
@@ -131,44 +129,52 @@ and open the template in the editor.
                         
                         <p:commandButton class="btn btn-primary" value="Filtruoti" action="#{summerhouseManager.filter()}" update="houseDataScroller" style="width: 100%"/>
                         <p:commandButton class="btn btn-success" value="Rodyti visus" action="#{summerhouseManager.showAll()}" update="houseDataScroller" style="width: 100%"/>   
-                        <!-- oncomplete="PF('dlg').show()" icon="ui-icon-check" />-->
-<!--                            <p:dialog header="Values" modal="true" showEffect="clip" widgetVar="dlg" resizable="false" draggable="false" responsive="true">
-                                <p:outputPanel id="display">
-                                    <p:dataList value="" var="filter">
-                                        <f:facet name="header">
-                                            Filters
-                                        </f:facet>
-                                        
-                                    </p:dataList>
-                                </p:outputPanel>
-                            </p:dialog>-->
                     </h:form>
                 </div>
         
             <!--summerhouse data-->
                 <div class="col-sm-8 col-md-9 col-lg-9">
-                    <p:dataScroller id="houseDataScroller" value="#{summerhouseManager.filteredSummerhouses}" var="house" chunkSize="15" style="border:thin" >
-                        <f:facet name="header" >
-                                Vasarnamiai
-                        </f:facet>
-                        <h:panelGrid columns="2" style="width: 100%" columnClasses="twenty-percent top-alignment, eighty-percent top-alignment" >
-                            <span class="glyphicon glyphicon-bed"/>
+                        <p:dataScroller id="houseDataScroller" value="#{summerhouseManager.filteredSummerhouses}" var="house" chunkSize="10" style="border:thin" >
+                            <f:facet name="header" >
+                                    Vasarnamiai
+                            </f:facet>
+                            <h:panelGrid columns="2" style="width: 100%" columnClasses="twenty-percent top-alignment, eighty-percent top-alignment" >
+                                <span class="glyphicon glyphicon-bed"/>
+                                <p:outputPanel>
+
+                                    <p:commandLink oncomplete="disableScrolling(),PF('houseDialog').show()" update=":datascrollerForm:houseDetail,houseDataScroller" >
+                                        <f:setPropertyActionListener value="#{house}" target="#{summerhouseManager.selectedHouse}" />
+                                        <h:outputText class="title-text" value="#{house.title}"/>
+                                    </p:commandLink>
+
+                                    <h:panelGrid columns="1" style="width: 100%" columnClasses="forty-percent top-alignment, sixty-percent top-alignment" >
+                                        <h:outputText class="small-text" value="Adresas: #{house.address}"/>
+                                        <h:outputText class="small-text" value="Vietos: #{house.numberofplaces}"/>
+                                    </h:panelGrid>
+                                    <h:outputText class="price-text" style="width: 100%" value="#{house.weekprice}€"/>
+
+                                </p:outputPanel>
+                            </h:panelGrid>
+                            <hr/>
+                        </p:dataScroller>
+                    <h:form id="datascrollerForm" >    
+                        <p:dialog id="houseDetail" header="#{summerhouseManager.selectedHouse.title}" 
+                                  modal="true" showEffect="clip" widgetVar="houseDialog"
+                                  resizable="false" draggable="false" responsive="true"
+                                  closeOnEscape="true" fitViewport="true"
+                                  focus="datascrollerForm"  onHide="enableScrolling()">
                             <p:outputPanel >
-                                <h:outputText class="title-text" value="#{house.title}"/>
-                                <h:panelGrid columns="1" style="width: 100%" columnClasses="forty-percent top-alignment, sixty-percent top-alignment" >
-                                    <h:outputText class="small-text" value="Adresas: #{house.address}"/>
-                                    <h:outputText class="small-text" value="Vietos: #{house.numberofplaces}"/>
-                                </h:panelGrid>
-                                <h:outputText class="price-text" style="width: 100%" value="#{house.weekprice}€"/>
+                                <!--Nuotraukos-->
+                                #{summerhouseManager.selectedHouse.weekprice}
                             </p:outputPanel>
-                        </h:panelGrid>
-                        <hr/>
-                    </p:dataScroller>
+                        </p:dialog>
+                    </h:form> 
                 </div>
             </div>
         </div>
         
         
+
         
         <!-- scripts -->
         <h:outputScript library="js" name="custom.js" />

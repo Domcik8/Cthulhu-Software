@@ -79,7 +79,15 @@
             'javax.faces.validator.RegexValidator.NOT_MATCHED_detail': 'Regex pattern of \'{0}\' not matched',
             'javax.faces.validator.RegexValidator.MATCH_EXCEPTION': 'Error in regular expression.', 
             'javax.faces.validator.RegexValidator.MATCH_EXCEPTION_detail': 'Error in regular expression, \'{0}\'' } }; 
-    
+
+//Dialog config
+    function disableScrolling(){
+        $("body").css({ overflow: 'hidden' })
+    }
+
+    function enableScrolling(){
+         $("body").css({ overflow: 'inherit' })
+    }
 //var elem = document.getElementById('fb-button');
 //elem.onclick = displayDate();
 

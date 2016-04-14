@@ -100,6 +100,7 @@ public class HouseFilter implements Serializable{
     public void setAvailableOrderings(Map<String, Ordering> availableOrderings) {
         this.availableOrderings = availableOrderings;
     }
+    
     public Ordering getOrdering() {
         return ordering;
     }
@@ -123,7 +124,9 @@ public class HouseFilter implements Serializable{
     
     //Price slider
     private float maxHousePrice;
-
+    private float priceFrom = 0;
+    private float priceTo;
+    
     public float getMaxHousePrice() {
         return maxHousePrice;
     }
@@ -131,8 +134,7 @@ public class HouseFilter implements Serializable{
     public void setMaxHousePrice(float maxHousePrice) {
         this.maxHousePrice = maxHousePrice;
     }
-    private float priceFrom = 0;
-
+    
     public float getPriceFrom() {
         return priceFrom;
     }
@@ -148,8 +150,7 @@ public class HouseFilter implements Serializable{
     public void setPriceTo(float priceTo) {
         this.priceTo = priceTo;
     }
-    private float priceTo;
-    
+      
     //Datepicker
     
     private Date dateFrom = getToday();
@@ -170,11 +171,12 @@ public class HouseFilter implements Serializable{
     public void setDateTo(Date dateTo) {
         this.dateTo = dateTo;
     }
+    
     public Date getToday(){
         return new Date();
     }
     
-    //Sezono pradžia čia turi but
+    //TODO Sezono pradžia čia turi but<-------------------------------------------------------
     public Date getEndOfSeason(){
         Calendar today = Calendar.getInstance(); 
         today.add(Calendar.YEAR, 1);
