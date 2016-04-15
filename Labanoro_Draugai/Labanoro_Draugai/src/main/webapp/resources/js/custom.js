@@ -88,6 +88,10 @@
     function enableScrolling(){
          $("body").css({ overflow: 'inherit' })
     }
+//Set active tab
+    function setActiveNavTab(tabPageName){
+        $("#"+tabPageName).addClass("active");
+    }
 //var elem = document.getElementById('fb-button');
 //elem.onclick = displayDate();
 

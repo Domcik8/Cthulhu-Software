@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
         <title>Klubas "Labanoro draugai"</title>
         <h:outputStylesheet library="css" name="custom.css"/>
@@ -17,51 +18,7 @@
     </h:head>
     <h:body>
     <!-- Navigation panel-->
-    <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
-        <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a href="" class="navbar-brand">Labanoro Draugai</a>    
-            </div>
-            <!-- Collection of nav links and other content for toggling -->
-            <div id="navbarCollapse" class="collapse navbar-collapse">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="">Pagrindinis</a></li>
-                    <li><a href="Reservation/summerhouses.html">Vasarnamiai</a></li>
-                    <li><a href="#">Paslaugos</a></li>
-                    <li><a href="#">Rezervacijos</a></li>
-                    <li><a href="Administration/admin.html">Administravimas</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a class="btn btn-default btn-outline btn-circle collapsed" data-toggle="collapse" href="#nav-profile" aria-expanded="false" aria-controls="nav-profile">Profile</a>
-                    </li>
-                    <li><a  class="fb-login-button" data-max-rows="1" data-show-faces="false" data-auto-logout-link="true" href="#"></a></li>
-                </ul>
-
-
-                <ul class="collapse nav navbar-nav navbar-right nav-collapse slide-down" role="search" id="nav-profile">
-                    <li><a href="#">Support</a></li>
-                    <li class="dropdown">
-                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="caret"></span></a>
-                      <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">My profile</a></li>
-                        <li><a href="#">My reservations</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">Settings</a></li>
-                        <li><a href="#" onclick="logoutFb()">Logout</a></li>
-                      </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <ui:include src="/WEB-INF/navigation.xhtml" />
     <!-- End of Navigation panel -->
                 
         
