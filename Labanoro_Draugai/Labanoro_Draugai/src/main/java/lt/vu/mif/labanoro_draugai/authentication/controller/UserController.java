@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  *
- * @author AlaNote
+ * @author Ernest J
  */
 public class UserController {
     //@Autowired

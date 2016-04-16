@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 
 /**
  *
- * @author AlaNote
+ * @author Ernest J
  */
 public class StatusForm {
     @NotNull

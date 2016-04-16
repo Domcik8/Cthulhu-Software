@@ -5,63 +5,177 @@
  */
 package lt.vu.mif.labanoro_draugai.authentication;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import javax.ejb.Stateless;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 
-import org.primefaces.json.JSONException;
-import org.primefaces.json.JSONObject;
+import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
 
+@Stateless
 public class FBGraph {
-    private String accessToken;
+    
+    public FBGraph() {}
+    
 
-    public FBGraph(String accessToken) {
-        this.accessToken = accessToken;
-    }
+//    public Map getGraphData(String fbGraph) {
+//        Map fbProfile = new HashMap();
+//        try {
+//            JSONObject json = new JSONObject(fbGraph);
+//            fbProfile.put("id", json.getString("id"));
+//            fbProfile.put("first_name", json.getString("first_name"));
+//            if (json.has("email")) {
+//                fbProfile.put("email", json.getString("email"));
+//            }
+//            if (json.has("gender")) {
+//                fbProfile.put("gender", json.getString("gender"));
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("ERROR in parsing FB graph data. " + e);
+//        }
+//        return fbProfile;
+//    }
 
-    public String getFBGraph() {
-        String graph = null;
+      
+    public String getEmail(String accessToken) {
+        
+        String email = null;
+        
         try {
-
-            String g = "https://graph.facebook.com/me?" + accessToken;
-            URL u = new URL(g);
-            URLConnection c = u.openConnection();
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    c.getInputStream()));
-            String inputLine;
-            StringBuffer b = new StringBuffer();
-            while ((inputLine = in.readLine()) != null) {
-                b.append(inputLine + "\n");
+            String responseBody = getDataFromGraph("email", accessToken);
+            if (responseBody != null) {
+               JSONObject json = (JSONObject) JSONSerializer.toJSON(responseBody);
+                email = json.getString("email"); 
             }
-            in.close();
-            graph = b.toString();
-            System.out.println(graph);
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException("ERROR in getting FB graph data. " + e);
-        }
-        return graph;
+        } 
+        
+        return email;   
     }
-
-    public Map getGraphData(String fbGraph) {
-        Map fbProfile = new HashMap();
+    
+    public Map getFirstLastName(String accessToken) {
+        
+        Map info = new HashMap();
+        
         try {
-            JSONObject json = new JSONObject(fbGraph);
-            fbProfile.put("id", json.getString("id"));
-            fbProfile.put("first_name", json.getString("first_name"));
-            if (json.has("email")) {
-                fbProfile.put("email", json.getString("email"));
+            String responseBody = getDataFromGraph("first_name,last_name", accessToken);
+            if (responseBody != null) {
+               JSONObject json = (JSONObject) JSONSerializer.toJSON(responseBody);
+                info.put("first_name", json.getString("first_name")); 
+                info.put("last_name", json.getString("last_name"));
             }
-            if (json.has("gender")) {
-                fbProfile.put("gender", json.getString("gender"));
-            }
-        } catch (JSONException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException("ERROR in parsing FB graph data. " + e);
         }
-        return fbProfile;
+        
+        return info;
     }
+    
+    public String getAge(String accessToken) {
+        
+        String birthday = null;
+        
+        try {
+            String responseBody = getDataFromGraph("birthday", accessToken);
+            if (responseBody != null) {
+               JSONObject json = (JSONObject) JSONSerializer.toJSON(responseBody);
+                birthday = json.getString("birthday"); 
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+        
+        return birthday; 
+    }
+    
+    public String getProfilePicture(String accessToken) {
+        
+        String profilePictureUrl = null;
+        
+        try {
+            String responseBody = getDataFromGraph("picture", accessToken);
+            if (responseBody != null) {
+               JSONObject json = (JSONObject) JSONSerializer.toJSON(responseBody);
+                profilePictureUrl = json.getJSONObject("picture").getJSONObject("data").getString("url"); 
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+        
+        return profilePictureUrl; 
+    }
+    
+    public String getFirstName(String accessToken) {
+        
+        String firstName = null;
+        
+        try {
+            String responseBody = getDataFromGraph("first_name", accessToken);
+            if (responseBody != null) {
+               JSONObject json = (JSONObject) JSONSerializer.toJSON(responseBody);
+                firstName = json.getString("first_name"); 
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+        
+        return firstName; 
+    }
+    
+    public String getLastName(String accessToken) {
+        
+        String lastName = null;
+        
+        try {
+            String responseBody = getDataFromGraph("last_name", accessToken);
+            if (responseBody != null) {
+               JSONObject json = (JSONObject) JSONSerializer.toJSON(responseBody);
+                lastName = json.getString("last_name"); 
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+        
+        return lastName; 
+    }
+    
+    private String getDataFromGraph(String command, String accessToken) throws IOException {
+        
+        String responseBody = null;
+        
+        CloseableHttpClient httpclient = HttpClientBuilder.create().build();
+        
+        try {
+            if (accessToken != null && !"".equals(accessToken)) {
+                String newUrl = "https://graph.facebook.com/v2.5/me?fields="+ command +"&access_token=" + accessToken;
+                httpclient = HttpClientBuilder.create().build();
+
+                HttpGet httpget = new HttpGet(newUrl);
+
+                ResponseHandler<String> responseHandler = new BasicResponseHandler();
+                responseBody = httpclient.execute(httpget, responseHandler);
+
+            } else {
+                System.err.println("Facebook token is null");
+            }
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            httpclient.close();
+        }
+        
+        return responseBody;
+    }
+    
 }

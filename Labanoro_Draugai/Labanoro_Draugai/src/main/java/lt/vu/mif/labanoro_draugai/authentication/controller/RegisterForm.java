@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 
 /**
  *
- * @author AlaNote
+ * @author Ernest J
  */
 public class RegisterForm {
     @NotNull
@@ -22,6 +22,9 @@ public class RegisterForm {
     @Size(min=3)
     @NotNull
     public String confirmPassword;
+    @NotNull
+    @Size(min=3) 
+    public String email;
 
     public String getUserName() {
         return userName;
@@ -46,4 +49,12 @@ public class RegisterForm {
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
     }
+    
+    public String getEmail() {
+        return this.email;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }   
 }

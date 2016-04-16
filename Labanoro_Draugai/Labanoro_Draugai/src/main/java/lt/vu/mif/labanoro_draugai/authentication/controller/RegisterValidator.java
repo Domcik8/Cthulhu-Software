@@ -9,27 +9,28 @@ import lt.vu.mif.entities.Person;
 import lt.vu.mif.labanoro_draugai.authentication.service.UserService;
 
 import org.apache.commons.lang3.StringUtils;
-/*
-import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
-import org.springframework.validation.Validator;
-*/
+
 /**
  *
- * @author AlaNote
+ * @author Ernest J
  */
-public class RegisterValidator {//implements Validator{
+public class RegisterValidator {
     UserService userService;
 
     public RegisterValidator(UserService userService) {
         this.userService = userService;
     }
 
-    //@Override
     public boolean supports(Class<?> clazz) {
         return RegisterForm.class.equals(clazz);
     }
 /*
+    
+    Need to write validation logic for user input ? 
+    Like password strength check, etc...
+    If user doesn't exist?
+    If email is not already registered? 
+    
     @Override
     public void validate(Object obj, Errors errors) {
         RegisterForm regForm = (RegisterForm) obj;

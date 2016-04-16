@@ -11,19 +11,8 @@
         <h:form id="loginForm">
             <p:button value="Facebook Connect" href="#{loginPageCode.facebookUrlAuth}" />
             <br/><br/>
-            <h:outputText value="#{loginPageCode.userFromSession}"></h:outputText>
+            <!--<h:outputText value=""></h:outputText>-->
         </h:form>
-        
-        <!--
-        <h:form>
-            <p:growl id="growl" life="2000" />
-            <p:commandButton value="Ajax Submit" id="ajax" update="growl" actionListener="#{loginView.buttonAction}" styleClass="ui-priority-primary" />
-            <p:commandButton value="Non-Ajax Submit" id="nonAjax" actionListener="#{loginView.buttonAction}" ajax="false" />
-            <p:commandButton value="With Icon" id="withIcon" actionListener="#{loginView.buttonAction}" update="growl" icon="ui-icon-disk" />
-            <p:commandButton actionListener="#{loginView.buttonAction}" id="iconOnly" update="growl" icon="ui-icon-disk" title="Icon Only" />
-            <p:commandButton value="Disabled" id="disabled" disabled="true" />
-        </h:form>  
-        -->
     </h:body>
 
 </html>

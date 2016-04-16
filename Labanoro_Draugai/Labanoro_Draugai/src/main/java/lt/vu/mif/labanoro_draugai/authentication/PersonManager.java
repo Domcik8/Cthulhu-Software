@@ -14,7 +14,7 @@ import lt.vu.mif.business.DatabaseManager;
 
 /**
  *
- * @author AlaNote
+ * @author Ernest J
  */
 @ManagedBean(name="personManager")
 public class PersonManager {
