@@ -45,6 +45,10 @@ body {
 .ui-datepicker td {
     color: #5cb85c;
 }
+.ui-galleria-filmstrip-wrapper {
+    display:none;
+}
+
 .small-text{
     font-size: 14px;
     font-family: sans-serif;
