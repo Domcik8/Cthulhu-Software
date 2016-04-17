@@ -27,7 +27,7 @@ CREATE TABLE Type
 CREATE TABLE Person
 (
     ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    Username            VARCHAR(255)                UNIQUE,
+    Email               VARCHAR(255)                UNIQUE,
     Password            VARCHAR(255),
     TypeID              INTEGER         NOT NULL,
     Priority            INTEGER,
@@ -78,6 +78,7 @@ CREATE TABLE Service
 (
     ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
     Title           VARCHAR(255),
+    Description         VARCHAR(255),
     TypeID          INTEGER        NOT NULL,
     ServiceReg      VARCHAR(255)   NOT NULL      UNIQUE,
     IsActive        BOOLEAN,
@@ -114,7 +115,6 @@ CREATE TABLE Reservation
 (
     ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
     TypeID              INTEGER         NOT NULL,
-    Description     VARCHAR(255),
     ReservationReg      VARCHAR(255)               UNIQUE,
     HouseID             INTEGER         NOT NULL,
     PersonID            INTEGER         NOT NULL,

@@ -36,7 +36,7 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "Person.findAll", query = "SELECT p FROM Person p"),
     @NamedQuery(name = "Person.findById", query = "SELECT p FROM Person p WHERE p.id = :id"),
-    @NamedQuery(name = "Person.findByUsername", query = "SELECT p FROM Person p WHERE p.username = :username"),
+    @NamedQuery(name = "Person.findByEmail", query = "SELECT p FROM Person p WHERE p.email = :email"),
     @NamedQuery(name = "Person.findByPassword", query = "SELECT p FROM Person p WHERE p.password = :password"),
     @NamedQuery(name = "Person.findByPriority", query = "SELECT p FROM Person p WHERE p.priority = :priority"),
     @NamedQuery(name = "Person.findByPoints", query = "SELECT p FROM Person p WHERE p.points = :points"),
@@ -50,6 +50,11 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Person.findByIsdeleted", query = "SELECT p FROM Person p WHERE p.isdeleted = :isdeleted"),
     @NamedQuery(name = "Person.findByOptLockVersion", query = "SELECT p FROM Person p WHERE p.optLockVersion = :optLockVersion")})
 public class Person implements Serializable {
+
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @Size(max = 255)
+    @Column(name = "EMAIL")
+    private String email;
 
     @Size(max = 255)
     @Column(name = "FACEBOOKID")
@@ -71,9 +76,6 @@ public class Person implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
-    @Size(max = 255)
-    @Column(name = "USERNAME")
-    private String username;
     @Size(max = 255)
     @Column(name = "PASSWORD")
     private String password;
@@ -119,14 +121,6 @@ public class Person implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {
@@ -218,31 +212,6 @@ public class Person implements Serializable {
     public void setTypeid(Type typeid) {
         this.typeid = typeid;
     }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 89 * hash + Objects.hashCode(this.personalid);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Person other = (Person) obj;
-        if (!Objects.equals(this.personalid, other.personalid)) {
-            return false;
-        }
-        return true;
-    }
     
     @Override
     public String toString() {
@@ -287,6 +256,39 @@ public class Person implements Serializable {
 
     public void setIsdeleted(Boolean isdeleted) {
         this.isdeleted = isdeleted;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 71 * hash + Objects.hashCode(this.email);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Person other = (Person) obj;
+        if (!Objects.equals(this.email, other.email)) {
+            return false;
+        }
+        return true;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
     
 }

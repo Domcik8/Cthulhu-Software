@@ -27,23 +27,6 @@ import lt.vu.mif.labanoro_draugai.entities.Type;
 @SessionScoped
 public class DatabaseManager {
     
-    public void editHouses(){
-        Random rand = new Random();
-        Query query = em.createNamedQuery("House.findAll");
-        List<House> houses=query.getResultList();
-        for(House house:houses){
-            house.setTitle(house.getTitle()+rand.nextInt(1000));
-            house.setIsactive(true);
-            house.setSeasonstartdate(new Date());
-            house.setSeasonenddate(new Date(2017,04,11));
-            house.setIsdeleted(false);
-            house.setNumberofplaces(rand.nextInt(30));
-            house.setWeekprice(rand.nextInt(800));
-            persistAndFlush(house);
-        }
-    }
-    
-    
     @Resource
     private TransactionSynchronizationRegistry tx;
     
@@ -65,6 +48,7 @@ public class DatabaseManager {
         fillBasicPeople();
         fillBasicHouses();
         fillBasicServices();
+        //fillBasicReservations();
         
         return "DataBase has been filled";
     }
@@ -73,6 +57,7 @@ public class DatabaseManager {
      * Fills database with basic types
      */
     public void fillBasicTypes() {
+        addType("SystemParameter", "SystemParameter");
         addType("Person", "Person");
         addType("Person.Administrator", "Administrator");
         addType("Person.User", "User");
@@ -83,6 +68,7 @@ public class DatabaseManager {
         addType("Service.Vehicle", "Vehicle");
         addType("Service.Vehicle.Car", "Car");
         addType("Service.Vehicle.Bike", "Bike");
+        addType("Reservation", "Reservation");
     }
 
     /**
@@ -133,6 +119,28 @@ public class DatabaseManager {
     }
     
     /**
+     * Fills database with basic reservations
+     */
+    private void fillBasicReservations() {
+        //addReservation("ReservationReg-1", "HouseReg-1", "Reservation", null);
+                
+                
+   /* ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+    TypeID              INTEGER         NOT NULL,
+    ReservationReg      VARCHAR(255)               UNIQUE,
+    HouseID             INTEGER         NOT NULL,
+    PersonID            INTEGER         NOT NULL,
+    SeasonStartDate     DATE,
+    SeasonEndDate       DATE,
+    IsDeleted           BOOLEAN,
+    OPT_LOCK_VERSION INTEGER,
+    FOREIGN KEY (TypeID) REFERENCES Type (ID),
+    FOREIGN KEY (HouseID) REFERENCES House (ID),
+    FOREIGN KEY (PersonID) REFERENCES Person (ID),
+    PRIMARY KEY (ID)*/
+    }
+    
+    /**
      * Creates new entity type and flushes it to database.
      * Returns type entity if created sucessfully
      * 
@@ -149,20 +157,8 @@ public class DatabaseManager {
      * @param internalName
      * @param title 
      */
-    private void addType(String internalName, String title) {
-        addType(internalName, title, null, null);
-    }
-    
-    /**
-     * Creates new entity type and flushes it to database.
-     * Returns type entity if created sucessfully
-     * 
-     * @param internalName
-     * @param title
-     * @param description 
-     */
-    private void addType(String internalName, String title, String description) {
-        addType(internalName, title, description, null);
+    private Type addType(String internalName, String title) {
+        return addType(internalName, title, null, null);
     }
     
     /**
@@ -208,7 +204,7 @@ public class DatabaseManager {
         }
         
         Person newPerson = new Person();
-        newPerson.setUsername(userName);
+        newPerson.setEmail(userName);
         newPerson.setFirstname(firstName);
         newPerson.setLastname(lastName);
         newPerson.setTypeid(type);
@@ -263,13 +259,15 @@ public class DatabaseManager {
             return null;
     }
     
-    /**
+    /***
      * Creates new service and flushes it to database.
      * Returns entity if created sucessfully
      * 
-     * @param firstName
-     * @param lastName
-     * @param internalName 
+     * @param title
+     * @param serviceReg
+     * @param houseReg
+     * @param typeInternalName
+     * @return 
      */
     private Service addService(String title, String serviceReg, String houseReg, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
@@ -305,6 +303,52 @@ public class DatabaseManager {
         house.getServiceList().add(newService);
         
         return newService;
+    }
+    
+    /***
+     * Creates new service and flushes it to database.
+     * Returns entity if created sucessfully
+     * 
+     * @param reservationReg
+     * @param houseReg
+     * @param typeInternalName
+     * @param services
+     * @return 
+     */
+    private Service addReservation(String reservationReg, String houseReg, String typeInternalName, List<String> services) {
+        /*Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
+        House house = (House) getEntity("House", "Housereg", houseReg);
+        
+        if(type == null) {
+            System.out.println(String.format("There is no type '%s'", typeInternalName));
+            return null;
+        }
+        
+        if(house == null) {
+            System.out.println(String.format("House with registration '%s' does not exist", houseReg));
+            return null;
+        }
+        
+        Service newService = new Service();
+        newService.setTitle(title);
+        newService.setServicereg(serviceReg);
+        newService.setTypeid(type);
+        
+        if(entityExists("Service", "Servicereg", serviceReg)) {
+            System.out.println(String.format("Service with registration '%s' already exists", serviceReg));
+            return null;
+        }
+        
+        if(persistAndFlush(newService))
+        {
+            System.out.println(String.format("Service '%s' created successfully", title));
+        }
+        else
+            return null;
+        
+        house.getServiceList().add(newService);*/
+        
+        return null;
     }
 
      /**
@@ -351,6 +395,22 @@ public class DatabaseManager {
             return false;
         } 
         return true;
+    }
+    
+    public void editHouses(){
+        Random rand = new Random();
+        Query query = em.createNamedQuery("House.findAll");
+        List<House> houses=query.getResultList();
+        for(House house:houses){
+            house.setTitle(house.getTitle()+rand.nextInt(1000));
+            house.setIsactive(true);
+            house.setSeasonstartdate(new Date());
+            house.setSeasonenddate(new Date(2017,04,11));
+            house.setIsdeleted(false);
+            house.setNumberofplaces(rand.nextInt(30));
+            house.setWeekprice(rand.nextInt(800));
+            persistAndFlush(house);
+        }
     }
     
     public static String decapitalize(String string) {

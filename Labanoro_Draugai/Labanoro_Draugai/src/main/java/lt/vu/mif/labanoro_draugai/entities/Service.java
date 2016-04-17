@@ -46,6 +46,10 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Service.findByOptLockVersion", query = "SELECT s FROM Service s WHERE s.optLockVersion = :optLockVersion")})
 public class Service implements Serializable {
 
+    @Size(max = 255)
+    @Column(name = "DESCRIPTION")
+    private String description;
+
     @Column(name = "ISACTIVE")
     private Boolean isactive;
     @Column(name = "ISDELETED")
@@ -236,6 +240,14 @@ public class Service implements Serializable {
 
     public void setServicepicturesList(List<Servicepictures> servicepicturesList) {
         this.servicepicturesList = servicepicturesList;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
     
 }

@@ -43,9 +43,6 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Reservation.findByOptLockVersion", query = "SELECT r FROM Reservation r WHERE r.optLockVersion = :optLockVersion")})
 public class Reservation implements Serializable {
 
-    @Size(max = 255)
-    @Column(name = "DESCRIPTION")
-    private String description;
     @Column(name = "SEASONSTARTDATE")
     @Temporal(TemporalType.DATE)
     private Date seasonstartdate;
@@ -206,15 +203,7 @@ public class Reservation implements Serializable {
     public void setIsdeleted(Boolean isdeleted) {
         this.isdeleted = isdeleted;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
+    
     public Date getSeasonstartdate() {
         return seasonstartdate;
     }
