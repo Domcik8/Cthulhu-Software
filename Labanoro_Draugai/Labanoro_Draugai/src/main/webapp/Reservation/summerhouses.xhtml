@@ -60,7 +60,7 @@ and open the template in the editor.
                                 <p:tooltip id="calendarToolTip" for="dateFrom,dateTo" value="Nameliai nuomuojami savaitėmis (nuo pirmadienio iki sekmandienio imtinai)" trackMouse="true" />
                                 <h:panelGrid id="dateGrid" columns="2" >
                                     <p:outputLabel for="dateFrom" value="Nuo: " />
-                                    <p:calendar id="dateFrom" pattern="yyyy-MM-dd" size="10"
+                                    <p:calendar id="dateFrom" pattern="yyyy-MM-dd" size="10" mask="true"
                                                 beforeShowDay="calendarOnlyMonday" locale="lt"
                                                 value="#{houseFilter.dateFrom}" 
                                                 mindate="#{houseFilter.today}" 
@@ -68,7 +68,7 @@ and open the template in the editor.
                                         <p:ajax event="dateSelect" listener="#{houseFilter.onDateSelect}" update="dateTo" />
                                     </p:calendar>
                                     <p:outputLabel for="dateTo" value="Iki: " />
-                                    <p:calendar id="dateTo" pattern="yyyy-MM-dd" size="10"
+                                    <p:calendar id="dateTo" pattern="yyyy-MM-dd" size="10" mask="true"
                                                 beforeShowDay="calendarOnlySunday" locale="lt"
                                                 value="#{houseFilter.dateTo}" 
                                                 mindate="#{houseFilter.dateFrom}"
