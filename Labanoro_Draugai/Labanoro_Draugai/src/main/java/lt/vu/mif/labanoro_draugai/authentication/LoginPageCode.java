@@ -40,12 +40,10 @@ public class LoginPageCode implements Serializable {
         private void setAppId() {
             
             // change to call for db settings
-            this.appId = "198659840500311";
-            
+            this.appId = "198659840500311"; 
         }
         
         private void setRedirectUrl() {
-            // change to call for db settings
             this.redirectUrl = "http://localhost:8080/Labanoro_Draugai/user/index.sec";
         }
 }

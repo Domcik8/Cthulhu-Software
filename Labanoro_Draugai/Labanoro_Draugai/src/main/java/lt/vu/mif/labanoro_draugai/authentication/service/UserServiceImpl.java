@@ -6,7 +6,7 @@
 package lt.vu.mif.labanoro_draugai.authentication.service;
 
 import lt.vu.mif.entities.Person;
-import lt.vu.mif.business.DatabaseManager;
+import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 /*
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;

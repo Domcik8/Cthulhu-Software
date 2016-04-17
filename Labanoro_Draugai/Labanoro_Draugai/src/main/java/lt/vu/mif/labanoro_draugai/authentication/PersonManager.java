@@ -9,7 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import lt.vu.mif.business.DatabaseManager;
+import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 
 
 /**

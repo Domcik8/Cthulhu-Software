@@ -22,24 +22,20 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 
-// import lt.vu.mif.labanoro_draugai.{someImport}               -- for database operation (user registration)
+import lt.vu.mif.labanoro_draugai.business.DatabaseManager;              //for database operation (user registration)
 // import lt.vu.mif.labanoro_draugai.administration.settings    -- for settings import
 
 @WebServlet("*.sec")
 public class SecurityServlet extends HttpServlet {
 
     private static final long serialVersionUID = 8071426090770097330L;
-    
-    
     private String appId = "";
     private String redirectUrl = "";
     
-        
     @Inject
     private FBGraph fbGraph;
     
-    public SecurityServlet() {
-    }
+    public SecurityServlet() {}
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -59,7 +55,6 @@ public class SecurityServlet extends HttpServlet {
         
         String accessToken = getFacebookAccessToken(faceCode);
         
-//        String email = getUserMailAddressFromJsonResponse(accessToken, httpSession);
         String email = fbGraph.getEmail(accessToken);
         String birthday = fbGraph.getAge(accessToken);
         String firstName = fbGraph.getFirstName(accessToken);
@@ -126,40 +121,6 @@ public class SecurityServlet extends HttpServlet {
         }
         return token;
     }
-
-//    private String getUserMailAddressFromJsonResponse(String accessToken, HttpSession httpSession) throws IOException {
-//        String email = null;
-//        CloseableHttpClient httpclient = HttpClientBuilder.create().build();
-//
-//        try {
-//            if (accessToken != null && !"".equals(accessToken)) {
-//                String newUrl = "https://graph.facebook.com/v2.5/me?fields=email&access_token=" + accessToken;
-//                //String newUrl = "https://graph.facebook.com/v2.5/me?fields=first_name,last_name,email&access_token=" + accessToken;
-//                //String newUrl = "https://graph.facebook.com/me?access_token=" + accessToken;
-//                httpclient = HttpClientBuilder.create().build();
-//
-//                HttpGet httpget = new HttpGet(newUrl);
-//                System.out.println("Get info from face --> executing request: " + httpget.getURI());
-//                ResponseHandler<String> responseHandler = new BasicResponseHandler();
-//                String responseBody = httpclient.execute(httpget, responseHandler);
-//                JSONObject json = (JSONObject) JSONSerializer.toJSON(responseBody);
-//                String facebookId = json.getString("id");
-//                email = json.getString("email");
-//                
-//                System.out.println("getUserMailAddressFromJsonResponse method: " + facebookId + " " + email);
-//
-//            } else {
-//                System.err.println("Facebook token is null");
-//            }
-//        } catch (ClientProtocolException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } finally {
-//            httpclient.close();
-//        }
-//        return email;
-//    }
     
     private void setAppId() {
         
@@ -169,7 +130,6 @@ public class SecurityServlet extends HttpServlet {
     
     private void setRedirectUrl() {
         
-        // get RedirectUrl from settings and return it;
         this.redirectUrl = "http://localhost:8080/Labanoro_Draugai/user/index.sec";
     }
     
