@@ -19,7 +19,7 @@ import javax.faces.bean.ViewScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import lt.vu.mif.entities.Service;
+import lt.vu.mif.labanoro_draugai.entities.Service;
 import org.primefaces.event.SelectEvent;
 
 /**

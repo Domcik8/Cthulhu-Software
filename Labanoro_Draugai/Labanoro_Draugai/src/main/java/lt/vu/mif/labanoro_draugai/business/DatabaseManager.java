@@ -17,10 +17,10 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.transaction.TransactionSynchronizationRegistry;
-import lt.vu.mif.entities.House;
-import lt.vu.mif.entities.Person;
-import lt.vu.mif.entities.Service;
-import lt.vu.mif.entities.Type;
+import lt.vu.mif.labanoro_draugai.entities.House;
+import lt.vu.mif.labanoro_draugai.entities.Person;
+import lt.vu.mif.labanoro_draugai.entities.Service;
+import lt.vu.mif.labanoro_draugai.entities.Type;
 
 @Named
 @Stateful
@@ -33,10 +33,10 @@ public class DatabaseManager {
         List<House> houses=query.getResultList();
         for(House house:houses){
             house.setTitle(house.getTitle()+rand.nextInt(1000));
-            house.setIsactive(1);
-            house.setStartdate(new Date());
-            house.setEnddate(new Date(2017,04,11));
-            house.setIsdeleted(0);
+            house.setIsactive(true);
+            house.setSeasonstartdate(new Date());
+            house.setSeasonenddate(new Date(2017,04,11));
+            house.setIsdeleted(false);
             house.setNumberofplaces(rand.nextInt(30));
             house.setWeekprice(rand.nextInt(800));
             persistAndFlush(house);
@@ -174,7 +174,7 @@ public class DatabaseManager {
      * @param description
      * @param isDeleted 
      */
-    private Type addType(String internalName, String title, String description, Integer isDeleted){
+    private Type addType(String internalName, String title, String description, Boolean isDeleted){
         Type newType = new Type(internalName, title, description, isDeleted);
         
         if(entityExists("Type", "Internalname", internalName)) {

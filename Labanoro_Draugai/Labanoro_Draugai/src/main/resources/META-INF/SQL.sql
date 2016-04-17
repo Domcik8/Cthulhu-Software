@@ -1,4 +1,5 @@
 --Following scripts drop all tables.
+drop table ServicePictures;
 drop table HousePictures;
 drop table SystemParameter;
 drop table MultiselectReservationToService;
@@ -26,19 +27,20 @@ CREATE TABLE Type
 CREATE TABLE Person
 (
     ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    Username        VARCHAR(255)                UNIQUE,
-    Password        VARCHAR(255),
-    TypeID          INTEGER         NOT NULL,
-    Priority        INTEGER,
-    Points          DECIMAL,
-    FacebookID      VARCHAR(255),
-    FirstName       VARCHAR(255),
-    MiddleName      VARCHAR(255),
-    LastName        VARCHAR(255),
-    Address         VARCHAR(255),
-    PersonalID      VARCHAR(255)                UNIQUE,
-    MembershipDue   DATE,
-    IsDeleted       BOOLEAN,
+    Username            VARCHAR(255)                UNIQUE,
+    Password            VARCHAR(255),
+    TypeID              INTEGER         NOT NULL,
+    Priority            INTEGER,
+    Points              DECIMAL,
+    FacebookID          VARCHAR(255),
+    FacebookAccessToken VARCHAR(255),
+    FirstName           VARCHAR(255),
+    MiddleName          VARCHAR(255),
+    LastName            VARCHAR(255),
+    Address             VARCHAR(255),
+    PersonalID          VARCHAR(255)                UNIQUE,
+    MembershipDue       DATE,
+    IsDeleted           BOOLEAN,
     OPT_LOCK_VERSION INTEGER,
     FOREIGN KEY (TypeID) REFERENCES Type (ID),
     PRIMARY KEY (ID)
@@ -94,11 +96,12 @@ CREATE TABLE House
     ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
     Title           VARCHAR(255),
     TypeID          INTEGER        NOT NULL,
+    Description     VARCHAR(255),
     HouseReg        VARCHAR(255)   NOT NULL     UNIQUE,
     Address         VARCHAR(255),
     IsActive        BOOLEAN,
-    StartDate       Date,
-    EndDate         Date,
+    SeasonStartDate DATE,
+    SeasonEndDate   DATE,
     WeekPrice       Decimal,
     NumberOfPlaces  INTEGER,
     IsDeleted       BOOLEAN,
@@ -111,11 +114,12 @@ CREATE TABLE Reservation
 (
     ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
     TypeID              INTEGER         NOT NULL,
+    Description     VARCHAR(255),
     ReservationReg      VARCHAR(255)               UNIQUE,
     HouseID             INTEGER         NOT NULL,
     PersonID            INTEGER         NOT NULL,
-    StartDate           Date,
-    EndDate             Date,
+    SeasonStartDate     DATE,
+    SeasonEndDate       DATE,
     IsDeleted           BOOLEAN,
     OPT_LOCK_VERSION INTEGER,
     FOREIGN KEY (TypeID) REFERENCES Type (ID),
@@ -161,10 +165,25 @@ CREATE TABLE HousePictures
     ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
     TypeID          INTEGER         NOT NULL, 
     HouseID         INTEGER,
+    Sequence        INTEGER,
     Path            VARCHAR(255)    NOT NULL,
     IsDeleted       BOOLEAN,
     OPT_LOCK_VERSION INTEGER,
     FOREIGN KEY (TypeID)  REFERENCES Type (ID),
     FOREIGN KEY (HouseID)  REFERENCES House (ID),
+    PRIMARY KEY (ID)
+);
+
+CREATE TABLE ServicePictures
+(
+    ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+    TypeID          INTEGER         NOT NULL, 
+    ServiceID       INTEGER,
+    Sequence        INTEGER,
+    Path            VARCHAR(255)    NOT NULL,
+    IsDeleted       BOOLEAN,
+    OPT_LOCK_VERSION INTEGER,
+    FOREIGN KEY (TypeID)  REFERENCES Type (ID),
+    FOREIGN KEY (ServiceID)  REFERENCES Service (ID),
     PRIMARY KEY (ID)
 );

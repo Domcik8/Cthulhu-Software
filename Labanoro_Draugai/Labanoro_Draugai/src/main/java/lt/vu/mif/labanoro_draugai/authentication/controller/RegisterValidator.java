@@ -5,7 +5,7 @@
  */
 package lt.vu.mif.labanoro_draugai.authentication.controller;
 
-import lt.vu.mif.entities.Person;
+import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.authentication.service.UserService;
 
 import org.apache.commons.lang3.StringUtils;

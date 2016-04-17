@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lt.vu.mif.entities;
+package lt.vu.mif.labanoro_draugai.entities;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -34,6 +36,11 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Housepictures.findByOptLockVersion", query = "SELECT h FROM Housepictures h WHERE h.optLockVersion = :optLockVersion")})
 public class Housepictures implements Serializable {
 
+    @Column(name = "SEQUENCE")
+    private Integer sequence;
+    @Column(name = "ISDELETED")
+    private Boolean isdeleted;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,9 +52,8 @@ public class Housepictures implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "PATH")
     private String path;
-    @Column(name = "ISDELETED")
-    private Integer isdeleted;
     @Column(name = "OPT_LOCK_VERSION")
+    @Version
     private Integer optLockVersion;
     @JoinColumn(name = "HOUSEID", referencedColumnName = "ID")
     @ManyToOne
@@ -84,13 +90,6 @@ public class Housepictures implements Serializable {
         this.path = path;
     }
 
-    public Integer getIsdeleted() {
-        return isdeleted;
-    }
-
-    public void setIsdeleted(Integer isdeleted) {
-        this.isdeleted = isdeleted;
-    }
 
     public Integer getOptLockVersion() {
         return optLockVersion;
@@ -118,19 +117,24 @@ public class Housepictures implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        int hash = 7;
+        hash = 41 * hash + Objects.hashCode(this.path);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Housepictures)) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        Housepictures other = (Housepictures) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Housepictures other = (Housepictures) obj;
+        if (!Objects.equals(this.path, other.path)) {
             return false;
         }
         return true;
@@ -139,6 +143,22 @@ public class Housepictures implements Serializable {
     @Override
     public String toString() {
         return "lt.vu.mif.entities.Housepictures[ id=" + id + " ]";
+    }
+
+    public Integer getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(Integer sequence) {
+        this.sequence = sequence;
+    }
+
+    public Boolean getIsdeleted() {
+        return isdeleted;
+    }
+
+    public void setIsdeleted(Boolean isdeleted) {
+        this.isdeleted = isdeleted;
     }
     
 }

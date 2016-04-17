@@ -5,7 +5,7 @@
  */
 package lt.vu.mif.labanoro_draugai.authentication.service;
 
-import lt.vu.mif.entities.Person;
+import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 /*
 import org.springframework.beans.factory.annotation.Autowired;
