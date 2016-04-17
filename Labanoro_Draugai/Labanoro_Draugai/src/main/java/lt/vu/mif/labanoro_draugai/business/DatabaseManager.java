@@ -1,5 +1,6 @@
 package lt.vu.mif.labanoro_draugai.business;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -46,7 +47,7 @@ public class DatabaseManager {
 
     public String fillDataBase() {
         fillBasicTypes();
-        //fillBasicPeople();
+        fillBasicPeople();
         fillBasicHouses();
         fillBasicServices();
         fillBasicReservations();
@@ -123,22 +124,12 @@ public class DatabaseManager {
      * Fills database with basic reservations
      */
     private void fillBasicReservations() {
+        List<String> services = new ArrayList<String>();
+        services.add("ServiceReg-1");
+        services.add("ServiceReg-2");
+        
         addReservation("ReservationReg-1", "HouseReg-1", "Reservation", "doli@test.com", null);
-                
-                
-   /* ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    TypeID              INTEGER         NOT NULL,
-    ReservationReg      VARCHAR(255)               UNIQUE,
-    HouseID             INTEGER         NOT NULL,
-    PersonID            INTEGER         NOT NULL,
-    SeasonStartDate     DATE,
-    SeasonEndDate       DATE,
-    IsDeleted           BOOLEAN,
-    OPT_LOCK_VERSION INTEGER,
-    FOREIGN KEY (TypeID) REFERENCES Type (ID),
-    FOREIGN KEY (HouseID) REFERENCES House (ID),
-    FOREIGN KEY (PersonID) REFERENCES Person (ID),
-    PRIMARY KEY (ID)*/
+        addReservation("ReservationReg-2", "HouseReg-1", "Reservation", "doli@test.com", services);
     }
     
     /**
@@ -308,6 +299,7 @@ public class DatabaseManager {
         newReservation.setTypeid(type);
         newReservation.setHouseid(house);
         newReservation.setPersonid(person);
+        newReservation.setServiceList(new ArrayList<Service>());
         
         if(type == null) {
             System.out.println(String.format("There is no type '%s'", typeInternalName));
@@ -328,8 +320,14 @@ public class DatabaseManager {
             for(String serviceReg: services){
                 Service service = (Service) getEntity("Service", "Servicereg", serviceReg);
                 if(service == null)
+                {
                     System.out.println(String.format("Service with registration '%s' does not exist", serviceReg));
                     return null;  
+                }
+                else 
+                {
+                    newReservation.getServiceList().add(service);
+                }
             }
         
         if(entityExists("Reservation", "Reservationreg", reservationReg)) {
