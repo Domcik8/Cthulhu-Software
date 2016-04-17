@@ -45,7 +45,7 @@ public class DatabaseManager {
 
     public String fillDataBase() {
         fillBasicTypes();
-        fillBasicPeople();
+        //fillBasicPeople();
         fillBasicHouses();
         fillBasicServices();
         //fillBasicReservations();
