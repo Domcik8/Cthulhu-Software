@@ -8,7 +8,6 @@ package lt.vu.mif.labanoro_draugai.entities;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,7 +23,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Version;
 import javax.validation.constraints.Size;
 
 /**
@@ -43,16 +41,6 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Reservation.findByOptLockVersion", query = "SELECT r FROM Reservation r WHERE r.optLockVersion = :optLockVersion")})
 public class Reservation implements Serializable {
 
-    @Column(name = "SEASONSTARTDATE")
-    @Temporal(TemporalType.DATE)
-    private Date seasonstartdate;
-    @Column(name = "SEASONENDDATE")
-    @Temporal(TemporalType.DATE)
-    private Date seasonenddate;
-
-    @Column(name = "ISDELETED")
-    private Boolean isdeleted;
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,8 +56,9 @@ public class Reservation implements Serializable {
     @Column(name = "ENDDATE")
     @Temporal(TemporalType.DATE)
     private Date enddate;
+    @Column(name = "ISDELETED")
+    private Boolean isdeleted;
     @Column(name = "OPT_LOCK_VERSION")
-    @Version
     private Integer optLockVersion;
     @JoinTable(name = "MULTISELECTRESERVATIONTOSERVICE", joinColumns = {
         @JoinColumn(name = "PARENTID", referencedColumnName = "ID")}, inverseJoinColumns = {
@@ -125,6 +114,13 @@ public class Reservation implements Serializable {
         this.enddate = enddate;
     }
 
+    public Boolean getIsdeleted() {
+        return isdeleted;
+    }
+
+    public void setIsdeleted(Boolean isdeleted) {
+        this.isdeleted = isdeleted;
+    }
 
     public Integer getOptLockVersion() {
         return optLockVersion;
@@ -168,24 +164,19 @@ public class Reservation implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 97 * hash + Objects.hashCode(this.reservationreg);
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Reservation)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Reservation other = (Reservation) obj;
-        if (!Objects.equals(this.reservationreg, other.reservationreg)) {
+        Reservation other = (Reservation) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -193,31 +184,7 @@ public class Reservation implements Serializable {
 
     @Override
     public String toString() {
-        return "lt.vu.mif.entities.Reservation[ id=" + id + " ]";
-    }
-
-    public Boolean getIsdeleted() {
-        return isdeleted;
-    }
-
-    public void setIsdeleted(Boolean isdeleted) {
-        this.isdeleted = isdeleted;
-    }
-    
-    public Date getSeasonstartdate() {
-        return seasonstartdate;
-    }
-
-    public void setSeasonstartdate(Date seasonstartdate) {
-        this.seasonstartdate = seasonstartdate;
-    }
-
-    public Date getSeasonenddate() {
-        return seasonenddate;
-    }
-
-    public void setSeasonenddate(Date seasonenddate) {
-        this.seasonenddate = seasonenddate;
+        return "lt.vu.mif.labanoro_draugai.entities.Reservation[ id=" + id + " ]";
     }
     
 }

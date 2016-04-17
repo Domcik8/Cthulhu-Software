@@ -6,7 +6,6 @@
 package lt.vu.mif.labanoro_draugai.entities;
 
 import java.io.Serializable;
-import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,11 +13,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -31,6 +29,7 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "Systemparameter.findAll", query = "SELECT s FROM Systemparameter s"),
     @NamedQuery(name = "Systemparameter.findById", query = "SELECT s FROM Systemparameter s WHERE s.id = :id"),
+    @NamedQuery(name = "Systemparameter.findByInternalname", query = "SELECT s FROM Systemparameter s WHERE s.internalname = :internalname"),
     @NamedQuery(name = "Systemparameter.findByTitle", query = "SELECT s FROM Systemparameter s WHERE s.title = :title"),
     @NamedQuery(name = "Systemparameter.findByDescription", query = "SELECT s FROM Systemparameter s WHERE s.description = :description"),
     @NamedQuery(name = "Systemparameter.findByValue", query = "SELECT s FROM Systemparameter s WHERE s.value = :value"),
@@ -38,21 +37,17 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Systemparameter.findByOptLockVersion", query = "SELECT s FROM Systemparameter s WHERE s.optLockVersion = :optLockVersion")})
 public class Systemparameter implements Serializable {
 
-    @Column(name = "ISDELETED")
-    private Boolean isdeleted;
-
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "INTERNALNAME")
-    private String internalname;
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "INTERNALNAME")
+    private String internalname;
     @Size(max = 255)
     @Column(name = "TITLE")
     private String title;
@@ -61,11 +56,12 @@ public class Systemparameter implements Serializable {
     private String description;
     @Column(name = "VALUE")
     private Integer value;
-    @Version
+    @Column(name = "ISDELETED")
+    private Boolean isdeleted;
     @Column(name = "OPT_LOCK_VERSION")
     private Integer optLockVersion;
     @JoinColumn(name = "TYPEID", referencedColumnName = "ID")
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     private Type typeid;
 
     public Systemparameter() {
@@ -75,12 +71,25 @@ public class Systemparameter implements Serializable {
         this.id = id;
     }
 
+    public Systemparameter(Integer id, String internalname) {
+        this.id = id;
+        this.internalname = internalname;
+    }
+
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getInternalname() {
+        return internalname;
+    }
+
+    public void setInternalname(String internalname) {
+        this.internalname = internalname;
     }
 
     public String getTitle() {
@@ -107,6 +116,13 @@ public class Systemparameter implements Serializable {
         this.value = value;
     }
 
+    public Boolean getIsdeleted() {
+        return isdeleted;
+    }
+
+    public void setIsdeleted(Boolean isdeleted) {
+        this.isdeleted = isdeleted;
+    }
 
     public Integer getOptLockVersion() {
         return optLockVersion;
@@ -126,24 +142,19 @@ public class Systemparameter implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 53 * hash + Objects.hashCode(this.internalname);
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Systemparameter)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Systemparameter other = (Systemparameter) obj;
-        if (!Objects.equals(this.internalname, other.internalname)) {
+        Systemparameter other = (Systemparameter) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -151,23 +162,7 @@ public class Systemparameter implements Serializable {
 
     @Override
     public String toString() {
-        return "lt.vu.mif.entities.Systemparameter[ id=" + id + " ]";
-    }
-
-    public String getInternalname() {
-        return internalname;
-    }
-
-    public void setInternalname(String internalname) {
-        this.internalname = internalname;
-    }
-
-    public Boolean getIsdeleted() {
-        return isdeleted;
-    }
-
-    public void setIsdeleted(Boolean isdeleted) {
-        this.isdeleted = isdeleted;
+        return "lt.vu.mif.labanoro_draugai.entities.Systemparameter[ id=" + id + " ]";
     }
     
 }

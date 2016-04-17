@@ -8,7 +8,6 @@ package lt.vu.mif.labanoro_draugai.entities;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -24,7 +23,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Version;
 import javax.validation.constraints.Size;
 
 /**
@@ -41,6 +39,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Person.findByPriority", query = "SELECT p FROM Person p WHERE p.priority = :priority"),
     @NamedQuery(name = "Person.findByPoints", query = "SELECT p FROM Person p WHERE p.points = :points"),
     @NamedQuery(name = "Person.findByFacebookid", query = "SELECT p FROM Person p WHERE p.facebookid = :facebookid"),
+    @NamedQuery(name = "Person.findByFacebookaccesstoken", query = "SELECT p FROM Person p WHERE p.facebookaccesstoken = :facebookaccesstoken"),
     @NamedQuery(name = "Person.findByFirstname", query = "SELECT p FROM Person p WHERE p.firstname = :firstname"),
     @NamedQuery(name = "Person.findByMiddlename", query = "SELECT p FROM Person p WHERE p.middlename = :middlename"),
     @NamedQuery(name = "Person.findByLastname", query = "SELECT p FROM Person p WHERE p.lastname = :lastname"),
@@ -51,31 +50,16 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Person.findByOptLockVersion", query = "SELECT p FROM Person p WHERE p.optLockVersion = :optLockVersion")})
 public class Person implements Serializable {
 
-    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
-    @Size(max = 255)
-    @Column(name = "EMAIL")
-    private String email;
-
-    @Size(max = 255)
-    @Column(name = "FACEBOOKID")
-    private String facebookid;
-    @Size(max = 255)
-    @Column(name = "FACEBOOKACCESSTOKEN")
-    private String facebookaccesstoken;
-    @Column(name = "ISDELETED")
-    private Boolean isdeleted;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personid")
-    private List<Payment> paymentList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personid")
-    private List<Reservation> reservationList;
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @Size(max = 255)
+    @Column(name = "EMAIL")
+    private String email;
     @Size(max = 255)
     @Column(name = "PASSWORD")
     private String password;
@@ -83,6 +67,12 @@ public class Person implements Serializable {
     private Integer priority;
     @Column(name = "POINTS")
     private Integer points;
+    @Size(max = 255)
+    @Column(name = "FACEBOOKID")
+    private String facebookid;
+    @Size(max = 255)
+    @Column(name = "FACEBOOKACCESSTOKEN")
+    private String facebookaccesstoken;
     @Size(max = 255)
     @Column(name = "FIRSTNAME")
     private String firstname;
@@ -101,12 +91,17 @@ public class Person implements Serializable {
     @Column(name = "MEMBERSHIPDUE")
     @Temporal(TemporalType.DATE)
     private Date membershipdue;
-    @Version
+    @Column(name = "ISDELETED")
+    private Boolean isdeleted;
     @Column(name = "OPT_LOCK_VERSION")
     private Integer optLockVersion;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personid")
+    private List<Payment> paymentList;
     @JoinColumn(name = "TYPEID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Type typeid;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "personid")
+    private List<Reservation> reservationList;
 
     public Person() {
     }
@@ -121,6 +116,14 @@ public class Person implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -147,6 +150,21 @@ public class Person implements Serializable {
         this.points = points;
     }
 
+    public String getFacebookid() {
+        return facebookid;
+    }
+
+    public void setFacebookid(String facebookid) {
+        this.facebookid = facebookid;
+    }
+
+    public String getFacebookaccesstoken() {
+        return facebookaccesstoken;
+    }
+
+    public void setFacebookaccesstoken(String facebookaccesstoken) {
+        this.facebookaccesstoken = facebookaccesstoken;
+    }
 
     public String getFirstname() {
         return firstname;
@@ -196,6 +214,13 @@ public class Person implements Serializable {
         this.membershipdue = membershipdue;
     }
 
+    public Boolean getIsdeleted() {
+        return isdeleted;
+    }
+
+    public void setIsdeleted(Boolean isdeleted) {
+        this.isdeleted = isdeleted;
+    }
 
     public Integer getOptLockVersion() {
         return optLockVersion;
@@ -203,19 +228,6 @@ public class Person implements Serializable {
 
     public void setOptLockVersion(Integer optLockVersion) {
         this.optLockVersion = optLockVersion;
-    }
-
-    public Type getTypeid() {
-        return typeid;
-    }
-
-    public void setTypeid(Type typeid) {
-        this.typeid = typeid;
-    }
-    
-    @Override
-    public String toString() {
-        return "lt.vu.mif.entities.Person[ id=" + id + " ]";
     }
 
     public List<Payment> getPaymentList() {
@@ -226,6 +238,14 @@ public class Person implements Serializable {
         this.paymentList = paymentList;
     }
 
+    public Type getTypeid() {
+        return typeid;
+    }
+
+    public void setTypeid(Type typeid) {
+        this.typeid = typeid;
+    }
+
     public List<Reservation> getReservationList() {
         return reservationList;
     }
@@ -234,61 +254,29 @@ public class Person implements Serializable {
         this.reservationList = reservationList;
     }
 
-    public String getFacebookid() {
-        return facebookid;
-    }
-
-    public void setFacebookid(String facebookid) {
-        this.facebookid = facebookid;
-    }
-
-    public String getFacebookaccesstoken() {
-        return facebookaccesstoken;
-    }
-
-    public void setFacebookaccesstoken(String facebookaccesstoken) {
-        this.facebookaccesstoken = facebookaccesstoken;
-    }
-
-    public Boolean getIsdeleted() {
-        return isdeleted;
-    }
-
-    public void setIsdeleted(Boolean isdeleted) {
-        this.isdeleted = isdeleted;
-    }
-
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 71 * hash + Objects.hashCode(this.email);
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Person)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Person other = (Person) obj;
-        if (!Objects.equals(this.email, other.email)) {
+        Person other = (Person) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    @Override
+    public String toString() {
+        return "lt.vu.mif.labanoro_draugai.entities.Person[ id=" + id + " ]";
     }
     
 }

@@ -6,7 +6,6 @@
 package lt.vu.mif.labanoro_draugai.entities;
 
 import java.io.Serializable;
-import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,7 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -52,7 +50,6 @@ public class Servicepictures implements Serializable {
     private String path;
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
-    @Version
     @Column(name = "OPT_LOCK_VERSION")
     private Integer optLockVersion;
     @JoinColumn(name = "SERVICEID", referencedColumnName = "ID")
@@ -132,24 +129,19 @@ public class Servicepictures implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 89 * hash + Objects.hashCode(this.path);
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Servicepictures)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Servicepictures other = (Servicepictures) obj;
-        if (!Objects.equals(this.path, other.path)) {
+        Servicepictures other = (Servicepictures) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -157,7 +149,7 @@ public class Servicepictures implements Serializable {
 
     @Override
     public String toString() {
-        return "lt.vu.mif.entities.Servicepictures[ id=" + id + " ]";
+        return "lt.vu.mif.labanoro_draugai.entities.Servicepictures[ id=" + id + " ]";
     }
     
 }

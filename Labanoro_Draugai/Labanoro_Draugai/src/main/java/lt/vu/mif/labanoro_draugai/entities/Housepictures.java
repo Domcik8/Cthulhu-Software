@@ -6,7 +6,6 @@
 package lt.vu.mif.labanoro_draugai.entities;
 
 import java.io.Serializable;
-import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,7 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -31,15 +29,11 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "Housepictures.findAll", query = "SELECT h FROM Housepictures h"),
     @NamedQuery(name = "Housepictures.findById", query = "SELECT h FROM Housepictures h WHERE h.id = :id"),
+    @NamedQuery(name = "Housepictures.findBySequence", query = "SELECT h FROM Housepictures h WHERE h.sequence = :sequence"),
     @NamedQuery(name = "Housepictures.findByPath", query = "SELECT h FROM Housepictures h WHERE h.path = :path"),
     @NamedQuery(name = "Housepictures.findByIsdeleted", query = "SELECT h FROM Housepictures h WHERE h.isdeleted = :isdeleted"),
     @NamedQuery(name = "Housepictures.findByOptLockVersion", query = "SELECT h FROM Housepictures h WHERE h.optLockVersion = :optLockVersion")})
 public class Housepictures implements Serializable {
-
-    @Column(name = "SEQUENCE")
-    private Integer sequence;
-    @Column(name = "ISDELETED")
-    private Boolean isdeleted;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -47,13 +41,16 @@ public class Housepictures implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
+    @Column(name = "SEQUENCE")
+    private Integer sequence;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "PATH")
     private String path;
+    @Column(name = "ISDELETED")
+    private Boolean isdeleted;
     @Column(name = "OPT_LOCK_VERSION")
-    @Version
     private Integer optLockVersion;
     @JoinColumn(name = "HOUSEID", referencedColumnName = "ID")
     @ManyToOne
@@ -82,6 +79,14 @@ public class Housepictures implements Serializable {
         this.id = id;
     }
 
+    public Integer getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(Integer sequence) {
+        this.sequence = sequence;
+    }
+
     public String getPath() {
         return path;
     }
@@ -90,6 +95,13 @@ public class Housepictures implements Serializable {
         this.path = path;
     }
 
+    public Boolean getIsdeleted() {
+        return isdeleted;
+    }
+
+    public void setIsdeleted(Boolean isdeleted) {
+        this.isdeleted = isdeleted;
+    }
 
     public Integer getOptLockVersion() {
         return optLockVersion;
@@ -117,24 +129,19 @@ public class Housepictures implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 41 * hash + Objects.hashCode(this.path);
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Housepictures)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Housepictures other = (Housepictures) obj;
-        if (!Objects.equals(this.path, other.path)) {
+        Housepictures other = (Housepictures) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -142,23 +149,7 @@ public class Housepictures implements Serializable {
 
     @Override
     public String toString() {
-        return "lt.vu.mif.entities.Housepictures[ id=" + id + " ]";
-    }
-
-    public Integer getSequence() {
-        return sequence;
-    }
-
-    public void setSequence(Integer sequence) {
-        this.sequence = sequence;
-    }
-
-    public Boolean getIsdeleted() {
-        return isdeleted;
-    }
-
-    public void setIsdeleted(Boolean isdeleted) {
-        this.isdeleted = isdeleted;
+        return "lt.vu.mif.labanoro_draugai.entities.Housepictures[ id=" + id + " ]";
     }
     
 }

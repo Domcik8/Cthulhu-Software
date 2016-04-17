@@ -19,6 +19,7 @@ import javax.persistence.Query;
 import javax.transaction.TransactionSynchronizationRegistry;
 import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Person;
+import lt.vu.mif.labanoro_draugai.entities.Reservation;
 import lt.vu.mif.labanoro_draugai.entities.Service;
 import lt.vu.mif.labanoro_draugai.entities.Type;
 
@@ -48,7 +49,7 @@ public class DatabaseManager {
         //fillBasicPeople();
         fillBasicHouses();
         fillBasicServices();
-        //fillBasicReservations();
+        fillBasicReservations();
         
         return "DataBase has been filled";
     }
@@ -75,11 +76,11 @@ public class DatabaseManager {
      * Fills database with basic people
      */
     private void fillBasicPeople() {
-        addPerson("doli", "Dominik", "Lisovski", "Person.Administrator");
-        addPerson("erba", "Ernest", "Barkovski", "Person.Administrator");
-        addPerson("erja", "Ernest", "Jascanin", "Person.Administrator");
-        addPerson("kauz", "Karolis", "Uždanavičius", "Person.Administrator");
-        addPerson("paru", "Paulius", "Rudzinskas", "Person.Administrator");
+        addPerson("doli@test.com", "Dominik", "Lisovski", "Person.Administrator");
+        addPerson("erba@test.com", "Ernest", "Barkovski", "Person.Administrator");
+        addPerson("erja@test.com", "Ernest", "Jascanin", "Person.Administrator");
+        addPerson("kauz@test.com", "Karolis", "Uždanavičius", "Person.Administrator");
+        addPerson("paru@test.com", "Paulius", "Rudzinskas", "Person.Administrator");
     }
     
     /**
@@ -122,7 +123,7 @@ public class DatabaseManager {
      * Fills database with basic reservations
      */
     private void fillBasicReservations() {
-        //addReservation("ReservationReg-1", "HouseReg-1", "Reservation", null);
+        addReservation("ReservationReg-1", "HouseReg-1", "Reservation", "doli@test.com", null);
                 
                 
    /* ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
@@ -144,34 +145,16 @@ public class DatabaseManager {
      * Creates new entity type and flushes it to database.
      * Returns type entity if created sucessfully
      * 
-     * @param internalName 
-     */
-    private void addType(String internalName) {
-        addType(internalName, null, null, null);
-    }
-    
-    /**
-     * Creates new entity type and flushes it to database.
-     * Returns type entity if created sucessfully
-     * 
-     * @param internalName
-     * @param title 
-     */
-    private Type addType(String internalName, String title) {
-        return addType(internalName, title, null, null);
-    }
-    
-    /**
-     * Creates new entity type and flushes it to database.
-     * Returns type entity if created sucessfully
-     * 
      * @param internalName
      * @param title
      * @param description
      * @param isDeleted 
      */
-    private Type addType(String internalName, String title, String description, Boolean isDeleted){
-        Type newType = new Type(internalName, title, description, isDeleted);
+    private Type addType(String internalName, String title){
+        Type newType = new Type();
+        
+        newType.setInternalname(internalName);
+        newType.setTitle(title);
         
         if(entityExists("Type", "Internalname", internalName)) {
             System.out.println(String.format("Type with internal name '%s' already exists", internalName));
@@ -195,7 +178,7 @@ public class DatabaseManager {
      * @param lastName
      * @param internalName 
      */
-    public Person addPerson(String userName, String firstName, String lastName, String typeInternalName) {
+    public Person addPerson(String email, String firstName, String lastName, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
         
         if(type == null) {
@@ -204,13 +187,13 @@ public class DatabaseManager {
         }
         
         Person newPerson = new Person();
-        newPerson.setEmail(userName);
+        newPerson.setEmail(email);
         newPerson.setFirstname(firstName);
         newPerson.setLastname(lastName);
         newPerson.setTypeid(type);
         
-        if(entityExists("Person", "Username", userName)) {
-            System.out.println(String.format("Person with username '%s' already exists", userName));
+        if(entityExists("Person", "Email", email)) {
+            System.out.println(String.format("Person with email '%s' already exists", email));
             return null;
         }
         
@@ -315,9 +298,16 @@ public class DatabaseManager {
      * @param services
      * @return 
      */
-    private Service addReservation(String reservationReg, String houseReg, String typeInternalName, List<String> services) {
-        /*Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
+    private Reservation addReservation(String reservationReg, String houseReg, String typeInternalName, String personEmail, List<String> services) {
+        Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
         House house = (House) getEntity("House", "Housereg", houseReg);
+        Person person = (Person) getEntity("Person", "Email", personEmail);
+        
+        Reservation newReservation = new Reservation();
+        newReservation.setReservationreg(reservationReg);
+        newReservation.setTypeid(type);
+        newReservation.setHouseid(house);
+        newReservation.setPersonid(person);
         
         if(type == null) {
             System.out.println(String.format("There is no type '%s'", typeInternalName));
@@ -329,26 +319,32 @@ public class DatabaseManager {
             return null;
         }
         
-        Service newService = new Service();
-        newService.setTitle(title);
-        newService.setServicereg(serviceReg);
-        newService.setTypeid(type);
-        
-        if(entityExists("Service", "Servicereg", serviceReg)) {
-            System.out.println(String.format("Service with registration '%s' already exists", serviceReg));
+        if(person == null) {
+            System.out.println(String.format("Person with email '%s' does not exist", personEmail));
             return null;
         }
         
-        if(persistAndFlush(newService))
+        if(services != null)
+            for(String serviceReg: services){
+                Service service = (Service) getEntity("Service", "Servicereg", serviceReg);
+                if(service == null)
+                    System.out.println(String.format("Service with registration '%s' does not exist", serviceReg));
+                    return null;  
+            }
+        
+        if(entityExists("Reservation", "Reservationreg", reservationReg)) {
+            System.out.println(String.format("Reservation with registration '%s' already exists", reservationReg));
+            return null;
+        }
+        
+        if(persistAndFlush(newReservation))
         {
-            System.out.println(String.format("Service '%s' created successfully", title));
+            System.out.println(String.format("Reservation '%s' created successfully", reservationReg));
         }
         else
             return null;
-        
-        house.getServiceList().add(newService);*/
-        
-        return null;
+       
+        return newReservation;
     }
 
      /**
@@ -404,8 +400,8 @@ public class DatabaseManager {
         for(House house:houses){
             house.setTitle(house.getTitle()+rand.nextInt(1000));
             house.setIsactive(true);
-            house.setSeasonstartdate(new Date());
-            house.setSeasonenddate(new Date(2017,04,11));
+            //house.setSeasonstartdate(new Date());
+            //house.setSeasonenddate(new Date(2017,04,11));
             house.setIsdeleted(false);
             house.setNumberofplaces(rand.nextInt(30));
             house.setWeekprice(rand.nextInt(800));

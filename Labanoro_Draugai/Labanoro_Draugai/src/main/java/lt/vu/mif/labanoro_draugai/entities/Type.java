@@ -7,7 +7,6 @@ package lt.vu.mif.labanoro_draugai.entities;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,9 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Version;
 import javax.validation.constraints.Size;
 
 /**
@@ -39,16 +36,6 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Type.findByOptLockVersion", query = "SELECT t FROM Type t WHERE t.optLockVersion = :optLockVersion")})
 public class Type implements Serializable {
 
-    @Column(name = "ISDELETED")
-    private Boolean isdeleted;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
-    private List<Servicepictures> servicepicturesList;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
-    private List<Housepictures> housepicturesList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
-    private List<Systemparameter> systemparameterList;
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,7 +51,8 @@ public class Type implements Serializable {
     @Size(max = 255)
     @Column(name = "DESCRIPTION")
     private String description;
-    @Version
+    @Column(name = "ISDELETED")
+    private Boolean isdeleted;
     @Column(name = "OPT_LOCK_VERSION")
     private Integer optLockVersion;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
@@ -74,20 +62,21 @@ public class Type implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
     private List<Reservation> reservationList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
+    private List<Servicepictures> servicepicturesList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
     private List<Service> serviceList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
     private List<House> houseList;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "typeid")
-    private Systemparameter systemparameter;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
+    private List<Housepictures> housepicturesList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
+    private List<Systemparameter> systemparameterList;
 
     public Type() {
     }
 
-    public Type(String internalName, String title, String description, Boolean isDeleted) {
-        this.internalname = internalName;
-        this.title = title;
-        this.description = description;
-        this.isdeleted = isDeleted;
+    public Type(Integer id) {
+        this.id = id;
     }
 
     public Integer getId() {
@@ -122,6 +111,13 @@ public class Type implements Serializable {
         this.description = description;
     }
 
+    public Boolean getIsdeleted() {
+        return isdeleted;
+    }
+
+    public void setIsdeleted(Boolean isdeleted) {
+        this.isdeleted = isdeleted;
+    }
 
     public Integer getOptLockVersion() {
         return optLockVersion;
@@ -155,6 +151,14 @@ public class Type implements Serializable {
         this.reservationList = reservationList;
     }
 
+    public List<Servicepictures> getServicepicturesList() {
+        return servicepicturesList;
+    }
+
+    public void setServicepicturesList(List<Servicepictures> servicepicturesList) {
+        this.servicepicturesList = servicepicturesList;
+    }
+
     public List<Service> getServiceList() {
         return serviceList;
     }
@@ -169,44 +173,6 @@ public class Type implements Serializable {
 
     public void setHouseList(List<House> houseList) {
         this.houseList = houseList;
-    }
-
-    public Systemparameter getSystemparameter() {
-        return systemparameter;
-    }
-
-    public void setSystemparameter(Systemparameter systemparameter) {
-        this.systemparameter = systemparameter;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 83 * hash + Objects.hashCode(this.internalname);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Type other = (Type) obj;
-        if (!Objects.equals(this.internalname, other.internalname)) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "lt.vu.mif.entities.Type[ id=" + internalname + " ]";
     }
 
     public List<Housepictures> getHousepicturesList() {
@@ -225,20 +191,29 @@ public class Type implements Serializable {
         this.systemparameterList = systemparameterList;
     }
 
-    public Boolean getIsdeleted() {
-        return isdeleted;
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
     }
 
-    public void setIsdeleted(Boolean isdeleted) {
-        this.isdeleted = isdeleted;
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Type)) {
+            return false;
+        }
+        Type other = (Type) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
     }
 
-    public List<Servicepictures> getServicepicturesList() {
-        return servicepicturesList;
-    }
-
-    public void setServicepicturesList(List<Servicepictures> servicepicturesList) {
-        this.servicepicturesList = servicepicturesList;
+    @Override
+    public String toString() {
+        return "lt.vu.mif.labanoro_draugai.entities.Type[ id=" + id + " ]";
     }
     
 }

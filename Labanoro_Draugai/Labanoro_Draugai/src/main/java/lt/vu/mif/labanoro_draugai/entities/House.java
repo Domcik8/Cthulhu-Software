@@ -8,7 +8,6 @@ package lt.vu.mif.labanoro_draugai.entities;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -26,7 +25,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -39,7 +37,10 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "House.findAll", query = "SELECT h FROM House h"),
     @NamedQuery(name = "House.findById", query = "SELECT h FROM House h WHERE h.id = :id"),
+    @NamedQuery(name = "House.findByTitle", query = "SELECT h FROM House h WHERE h.title = :title"),
+    @NamedQuery(name = "House.findByDescription", query = "SELECT h FROM House h WHERE h.description = :description"),
     @NamedQuery(name = "House.findByHousereg", query = "SELECT h FROM House h WHERE h.housereg = :housereg"),
+    @NamedQuery(name = "House.findByAddress", query = "SELECT h FROM House h WHERE h.address = :address"),
     @NamedQuery(name = "House.findByIsactive", query = "SELECT h FROM House h WHERE h.isactive = :isactive"),
     @NamedQuery(name = "House.findBySeasonstartdate", query = "SELECT h FROM House h WHERE h.seasonstartdate = :seasonstartdate"),
     @NamedQuery(name = "House.findBySeasonenddate", query = "SELECT h FROM House h WHERE h.seasonenddate = :seasonenddate"),
@@ -49,10 +50,26 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "House.findByOptLockVersion", query = "SELECT h FROM House h WHERE h.optLockVersion = :optLockVersion")})
 public class House implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "ID")
+    private Integer id;
+    @Size(max = 255)
+    @Column(name = "TITLE")
+    private String title;
     @Size(max = 255)
     @Column(name = "DESCRIPTION")
     private String description;
-
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "HOUSEREG")
+    private String housereg;
+    @Size(max = 255)
+    @Column(name = "ADDRESS")
+    private String address;
     @Column(name = "ISACTIVE")
     private Boolean isactive;
     @Column(name = "SEASONSTARTDATE")
@@ -61,37 +78,13 @@ public class House implements Serializable {
     @Column(name = "SEASONENDDATE")
     @Temporal(TemporalType.DATE)
     private Date seasonenddate;
-    @Column(name = "ISDELETED")
-    private Boolean isdeleted;
-
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "HOUSEREG")
-    private String housereg;
-
-    @Size(max = 255)
-    @Column(name = "ADDRESS")
-    private String address;
-
-    @Size(max = 255)
-    @Column(name = "TITLE")
-    private String title;
-    @OneToMany(mappedBy = "houseid")
-    private List<Housepictures> housepicturesList;
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "ID")
-    private Integer id;
     @Column(name = "WEEKPRICE")
     private Integer weekprice;
     @Column(name = "NUMBEROFPLACES")
     private Integer numberofplaces;
+    @Column(name = "ISDELETED")
+    private Boolean isdeleted;
     @Column(name = "OPT_LOCK_VERSION")
-    @Version
     private Integer optLockVersion;
     @JoinTable(name = "MULTISELECTHOUSETOSERVICE", joinColumns = {
         @JoinColumn(name = "PARENTID", referencedColumnName = "ID")}, inverseJoinColumns = {
@@ -103,12 +96,19 @@ public class House implements Serializable {
     @JoinColumn(name = "TYPEID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Type typeid;
+    @OneToMany(mappedBy = "houseid")
+    private List<Housepictures> housepicturesList;
 
     public House() {
     }
 
     public House(Integer id) {
         this.id = id;
+    }
+
+    public House(Integer id, String housereg) {
+        this.id = id;
+        this.housereg = housereg;
     }
 
     public Integer getId() {
@@ -119,93 +119,6 @@ public class House implements Serializable {
         this.id = id;
     }
 
-    public String getHousereg() {
-        return housereg;
-    }
-
-    public void setHousereg(String housereg) {
-        this.housereg = housereg;
-    }
-
-    public Integer getWeekprice() {
-        return weekprice;
-    }
-
-    public void setWeekprice(Integer weekprice) {
-        this.weekprice = weekprice;
-    }
-
-    public Integer getNumberofplaces() {
-        return numberofplaces;
-    }
-
-    public void setNumberofplaces(Integer numberofplaces) {
-        this.numberofplaces = numberofplaces;
-    }
-
-
-    public Integer getOptLockVersion() {
-        return optLockVersion;
-    }
-
-    public void setOptLockVersion(Integer optLockVersion) {
-        this.optLockVersion = optLockVersion;
-    }
-
-    public List<Service> getServiceList() {
-        return serviceList;
-    }
-
-    public void setServiceList(List<Service> serviceList) {
-        this.serviceList = serviceList;
-    }
-
-    public List<Reservation> getReservationList() {
-        return reservationList;
-    }
-
-    public void setReservationList(List<Reservation> reservationList) {
-        this.reservationList = reservationList;
-    }
-
-    public Type getTypeid() {
-        return typeid;
-    }
-
-    public void setTypeid(Type typeid) {
-        this.typeid = typeid;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 67 * hash + Objects.hashCode(this.housereg);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final House other = (House) obj;
-        if (!Objects.equals(this.housereg, other.housereg)) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "lt.vu.mif.entities.House[ id=" + id + " ]";
-    }
-
     public String getTitle() {
         return title;
     }
@@ -214,12 +127,20 @@ public class House implements Serializable {
         this.title = title;
     }
 
-    public List<Housepictures> getHousepicturesList() {
-        return housepicturesList;
+    public String getDescription() {
+        return description;
     }
 
-    public void setHousepicturesList(List<Housepictures> housepicturesList) {
-        this.housepicturesList = housepicturesList;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getHousereg() {
+        return housereg;
+    }
+
+    public void setHousereg(String housereg) {
+        this.housereg = housereg;
     }
 
     public String getAddress() {
@@ -254,6 +175,22 @@ public class House implements Serializable {
         this.seasonenddate = seasonenddate;
     }
 
+    public Integer getWeekprice() {
+        return weekprice;
+    }
+
+    public void setWeekprice(Integer weekprice) {
+        this.weekprice = weekprice;
+    }
+
+    public Integer getNumberofplaces() {
+        return numberofplaces;
+    }
+
+    public void setNumberofplaces(Integer numberofplaces) {
+        this.numberofplaces = numberofplaces;
+    }
+
     public Boolean getIsdeleted() {
         return isdeleted;
     }
@@ -262,12 +199,69 @@ public class House implements Serializable {
         this.isdeleted = isdeleted;
     }
 
-    public String getDescription() {
-        return description;
+    public Integer getOptLockVersion() {
+        return optLockVersion;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setOptLockVersion(Integer optLockVersion) {
+        this.optLockVersion = optLockVersion;
+    }
+
+    public List<Service> getServiceList() {
+        return serviceList;
+    }
+
+    public void setServiceList(List<Service> serviceList) {
+        this.serviceList = serviceList;
+    }
+
+    public List<Reservation> getReservationList() {
+        return reservationList;
+    }
+
+    public void setReservationList(List<Reservation> reservationList) {
+        this.reservationList = reservationList;
+    }
+
+    public Type getTypeid() {
+        return typeid;
+    }
+
+    public void setTypeid(Type typeid) {
+        this.typeid = typeid;
+    }
+
+    public List<Housepictures> getHousepicturesList() {
+        return housepicturesList;
+    }
+
+    public void setHousepicturesList(List<Housepictures> housepicturesList) {
+        this.housepicturesList = housepicturesList;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof House)) {
+            return false;
+        }
+        House other = (House) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "lt.vu.mif.labanoro_draugai.entities.House[ id=" + id + " ]";
     }
     
 }

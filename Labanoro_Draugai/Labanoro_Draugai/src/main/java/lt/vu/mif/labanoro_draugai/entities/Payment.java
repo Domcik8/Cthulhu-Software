@@ -7,7 +7,6 @@ package lt.vu.mif.labanoro_draugai.entities;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,7 +20,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Version;
 import javax.validation.constraints.Size;
 
 /**
@@ -41,9 +39,6 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Payment.findByOptLockVersion", query = "SELECT p FROM Payment p WHERE p.optLockVersion = :optLockVersion")})
 public class Payment implements Serializable {
 
-    @Column(name = "ISDELETED")
-    private Boolean isdeleted;
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,8 +55,9 @@ public class Payment implements Serializable {
     private Date paymentdate;
     @Column(name = "PAIDWITHMONEY")
     private Integer paidwithmoney;
+    @Column(name = "ISDELETED")
+    private Boolean isdeleted;
     @Column(name = "OPT_LOCK_VERSION")
-    @Version
     private Integer optLockVersion;
     @JoinColumn(name = "PERSONID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
@@ -117,6 +113,13 @@ public class Payment implements Serializable {
         this.paidwithmoney = paidwithmoney;
     }
 
+    public Boolean getIsdeleted() {
+        return isdeleted;
+    }
+
+    public void setIsdeleted(Boolean isdeleted) {
+        this.isdeleted = isdeleted;
+    }
 
     public Integer getOptLockVersion() {
         return optLockVersion;
@@ -144,42 +147,27 @@ public class Payment implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 13 * hash + Objects.hashCode(this.paymentreg);
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Payment)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Payment other = (Payment) obj;
-        if (!Objects.equals(this.paymentreg, other.paymentreg)) {
+        Payment other = (Payment) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
     }
 
-   
-
     @Override
     public String toString() {
-        return "lt.vu.mif.entities.Payment[ id=" + id + " ]";
-    }
-
-    public Boolean getIsdeleted() {
-        return isdeleted;
-    }
-
-    public void setIsdeleted(Boolean isdeleted) {
-        this.isdeleted = isdeleted;
+        return "lt.vu.mif.labanoro_draugai.entities.Payment[ id=" + id + " ]";
     }
     
 }
