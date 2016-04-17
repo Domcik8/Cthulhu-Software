@@ -51,12 +51,12 @@ public class DatabaseManager {
     private EntityManager em;
     
     @PostConstruct
-    private void gimiau() {
+    private void onCreation() {
         System.out.println(this + " has been created.");
     }
     
     @PreDestroy
-    private void tuojMirsiu() {
+    private void onDeletion() {
         System.out.println(this + " has been destroyed.");
     }
 
