@@ -22,6 +22,7 @@ import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.entities.Reservation;
 import lt.vu.mif.labanoro_draugai.entities.Service;
+import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import lt.vu.mif.labanoro_draugai.entities.Type;
 
 @Named
@@ -51,6 +52,7 @@ public class DatabaseManager {
         fillBasicHouses();
         fillBasicServices();
         fillBasicReservations();
+        fillBasicSystemParameters();
         
         return "DataBase has been filled";
     }
@@ -133,6 +135,13 @@ public class DatabaseManager {
     }
     
     /**
+     * Fills database with basic SystemParameters
+     */
+    private void fillBasicSystemParameters() {
+        addSystemParameter("ServiceParameter.Test", "Test", "SystemParameter");
+    }
+    
+    /**
      * Creates new entity type and flushes it to database.
      * Returns type entity if created sucessfully
      * 
@@ -153,12 +162,10 @@ public class DatabaseManager {
         }
         
         if(persistAndFlush(newType))
-        {
             System.out.println(String.format("Type '%s' created successfully", internalName));
-            return newType;
-        }
         else
             return null;
+        return newType;
     }
     
     /**
@@ -189,12 +196,10 @@ public class DatabaseManager {
         }
         
         if(persistAndFlush(newPerson))
-        {
             System.out.println(String.format("Person '%s' created successfully", firstName + lastName));
-            return newPerson;
-        }
         else
             return null;
+        return newPerson;
     }
     
     /**
@@ -225,12 +230,10 @@ public class DatabaseManager {
         }
         
         if(persistAndFlush(newHouse))
-        {
             System.out.println(String.format("House '%s' created successfully", title));
-            return newHouse;
-        }
         else
             return null;
+        return newHouse;
     }
     
     /***
@@ -268,9 +271,7 @@ public class DatabaseManager {
         }
         
         if(persistAndFlush(newService))
-        {
             System.out.println(String.format("Service '%s' created successfully", title));
-        }
         else
             return null;
         
@@ -336,13 +337,45 @@ public class DatabaseManager {
         }
         
         if(persistAndFlush(newReservation))
-        {
             System.out.println(String.format("Reservation '%s' created successfully", reservationReg));
-        }
         else
             return null;
        
         return newReservation;
+    }
+    
+     /***
+      * Creates new system parameter and flushes it to database.
+      * Returns system parameter entity if created sucessfully
+      * 
+      * @param internalName
+      * @param title
+      * @return 
+      */
+    private Systemparameter addSystemParameter(String internalName, String title, String typeInternalName){
+        Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
+        
+        if(type == null) {
+            System.out.println(String.format("There is no type '%s'", typeInternalName));
+            return null;
+        }
+        
+        Systemparameter newSystemParameter = new Systemparameter();
+        
+        newSystemParameter.setInternalname(internalName);
+        newSystemParameter.setTitle(title);
+        newSystemParameter.setTypeid(type);
+        
+        if(entityExists("Systemparameter", "Internalname", internalName)) {
+            System.out.println(String.format("System parameter with internal name '%s' already exists", internalName));
+            return null;
+        }
+        
+        if(persistAndFlush(newSystemParameter))
+            System.out.println(String.format("System parameter '%s' created successfully", internalName));
+        else
+            return null;
+        return newSystemParameter;
     }
 
      /**
