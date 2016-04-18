@@ -19,9 +19,11 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.transaction.TransactionSynchronizationRegistry;
 import lt.vu.mif.labanoro_draugai.entities.House;
+import lt.vu.mif.labanoro_draugai.entities.Houseimage;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.entities.Reservation;
 import lt.vu.mif.labanoro_draugai.entities.Service;
+import lt.vu.mif.labanoro_draugai.entities.Serviceimage;
 import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import lt.vu.mif.labanoro_draugai.entities.Type;
 
@@ -53,6 +55,8 @@ public class DatabaseManager {
         fillBasicServices();
         fillBasicReservations();
         fillBasicSystemParameters();
+        fillBasicHouseImages();
+        fillBasicServiceImages();
         
         return "DataBase has been filled";
     }
@@ -73,6 +77,9 @@ public class DatabaseManager {
         addType("Service.Vehicle.Car", "Car");
         addType("Service.Vehicle.Bike", "Bike");
         addType("Reservation", "Reservation");
+        addType("Picture", "Picture");
+        addType("Picture.House", "House picture");
+        addType("Picture.Service", "Service picture");
     }
 
     /**
@@ -135,10 +142,27 @@ public class DatabaseManager {
     }
     
     /**
-     * Fills database with basic SystemParameters
+     * Fills database with basic system parameters
      */
     private void fillBasicSystemParameters() {
         addSystemParameter("ServiceParameter.Test", "Test", "SystemParameter");
+    }
+    
+     /**
+     * Fills database with basic house pictures
+     */
+    private void fillBasicHouseImages() {
+        addHouseImage("Picture.HouseReg-1.1", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-1_1.JPG", 1, "HouseReg-1", "Picture.House");
+        addHouseImage("Picture.HouseReg-1.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-1_2.JPG", 2, "HouseReg-1", "Picture.House");
+        addHouseImage("Picture.HouseReg-2.1", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_1.JPG", 1, "HouseReg-2", "Picture.House");
+        addHouseImage("Picture.HouseReg-2.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-2", "Picture.House");
+        addHouseImage("Picture.HouseReg-2.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 3, "HouseReg-2", "Picture.House");
+    }
+    
+    private void fillBasicServiceImages() {
+        addServiceImage("Picture.ServiceReg-1.1", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\Service\\Service-1_1.JPG", 1, "ServiceReg-1", "Picture.Service");
+        addServiceImage("Picture.ServiceReg-2.1", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\Service\\Service-2_1.JPG", 1, "ServiceReg-2", "Picture.Service");
+
     }
     
     /**
@@ -350,6 +374,7 @@ public class DatabaseManager {
       * 
       * @param internalName
       * @param title
+      * @param typeInternalName
       * @return 
       */
     private Systemparameter addSystemParameter(String internalName, String title, String typeInternalName){
@@ -377,7 +402,97 @@ public class DatabaseManager {
             return null;
         return newSystemParameter;
     }
+    
+    /***
+     * Creates new house image and flushes it to database.
+     * Returns house image entity if created sucessfully
+     * 
+     * @param internalName
+     * @param path
+     * @param sequence
+     * @param houseReg
+     * @param typeInternalName
+     * @return 
+     */
+    private Houseimage addHouseImage(String internalName, String path, int sequence, String houseReg, String typeInternalName){
+        Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
+        House house = (House) getEntity("House", "Housereg", houseReg);
+        
+        if(type == null) {
+            System.out.println(String.format("There is no type '%s'", typeInternalName));
+            return null;
+        }  
+        
+        if(house == null) {
+            System.out.println(String.format("House with registration '%s' does not exist", houseReg));
+            return null;
+        }
+        
+        Houseimage newHouseimage = new Houseimage();
+        
+        newHouseimage.setInternalname(internalName);
+        newHouseimage.setPath(path);
+        newHouseimage.setSequence(sequence);
+        newHouseimage.setHouseid(house);
+        newHouseimage.setTypeid(type);
+        
+        if(entityExists("Houseimage", "Internalname", internalName)) {
+            System.out.println(String.format("House image with internal name '%s' already exists", internalName));
+            return null;
+        }
+        
+        if(persistAndFlush(newHouseimage))
+            System.out.println(String.format("House image '%s' created successfully", internalName));
+        else
+            return null;
+        return newHouseimage;
+    }
 
+    /***
+     * Creates new service image and flushes it to database.
+     * Returns service image entity if created sucessfully
+     * 
+     * @param internalName
+     * @param path
+     * @param sequence
+     * @param serviceReg
+     * @param typeInternalName
+     * @return 
+     */
+    private Serviceimage addServiceImage(String internalName, String path, int sequence, String serviceReg, String typeInternalName){
+        Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
+        Service service = (Service) getEntity("Service", "Servicereg", serviceReg);
+        
+        if(type == null) {
+            System.out.println(String.format("There is no type '%s'", typeInternalName));
+            return null;
+        }  
+        
+        if(service == null) {
+            System.out.println(String.format("Service with registration '%s' does not exist", serviceReg));
+            return null;
+        }
+        
+        Serviceimage newServiceimage = new Serviceimage();
+        
+        newServiceimage.setInternalname(internalName);
+        newServiceimage.setPath(path);
+        newServiceimage.setSequence(sequence);
+        newServiceimage.setServiceid(service);
+        newServiceimage.setTypeid(type);
+        
+        if(entityExists("Serviceimage", "Internalname", internalName)) {
+            System.out.println(String.format("Service image with internal name '%s' already exists", internalName));
+            return null;
+        }
+        
+        if(persistAndFlush(newServiceimage))
+            System.out.println(String.format("Service image '%s' created successfully", internalName));
+        else
+            return null;
+        return newServiceimage;
+    }
+    
      /**
       * Returns true if specified entity exists with specified parameter
       * 
