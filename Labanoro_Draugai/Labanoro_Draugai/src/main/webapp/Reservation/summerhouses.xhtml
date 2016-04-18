@@ -110,7 +110,7 @@ and open the template in the editor.
                                         <h:outputText class="small-text" value="Adresas: #{house.address}"/>
                                         <h:outputText class="small-text" value="Vietos: #{house.numberofplaces}"/>
                                     </h:panelGrid>
-                                    <h:outputText class="price-text" style="width: 100%" value="#{house.weekprice}€"/>
+                                    <h:outputText class="price-text" style="width: 100%" value="#{house.weekprice}t / #{house.weekprice}€"/>
 
                                 </p:outputPanel>
                             </h:panelGrid>
@@ -129,9 +129,14 @@ and open the template in the editor.
                                             showFilmstrip="true" autoPlay="false" showCaption="false">
                                     <p:graphicImage url="#{image}" alt="Image Description for #{image}" style="width: 100%"/>
                                 </p:galleria>
-                                <!--Nuotraukos-->
-                                #{summerhouseManager.selectedHouse.weekprice}
-                            </p:outputPanel>
+                                    <h:panelGrid columns="1" style="width: 100%">
+                                    <h:outputText class="small-text" value="Aprašas: #{summerhouseManager.selectedHouse.description}"/>
+                                    <h:outputText class="small-text" value="Adresas: #{summerhouseManager.selectedHouse.address}"/>
+                                    <h:outputText class="small-text" value="Vietos: #{summerhouseManager.selectedHouse.numberofplaces}"/>
+                                    <h:outputText class="small-text" value="Kaina: #{summerhouseManager.selectedHouse.weekprice}t / #{summerhouseManager.selectedHouse.weekprice}€"/>
+                                </h:panelGrid>
+                                 
+                                </p:outputPanel>
                         </p:dialog>
                     </h:form> 
                 </div>
