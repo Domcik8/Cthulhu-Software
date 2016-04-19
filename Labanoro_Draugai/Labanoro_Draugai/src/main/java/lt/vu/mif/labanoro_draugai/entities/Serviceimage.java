@@ -25,15 +25,17 @@ import javax.validation.constraints.Size;
  * @author Dominik Lisovski
  */
 @Entity
-@Table(name = "SERVICEPICTURES")
+@Table(name = "SERVICEIMAGE")
 @NamedQueries({
-    @NamedQuery(name = "Servicepictures.findAll", query = "SELECT s FROM Servicepictures s"),
-    @NamedQuery(name = "Servicepictures.findById", query = "SELECT s FROM Servicepictures s WHERE s.id = :id"),
-    @NamedQuery(name = "Servicepictures.findBySequence", query = "SELECT s FROM Servicepictures s WHERE s.sequence = :sequence"),
-    @NamedQuery(name = "Servicepictures.findByPath", query = "SELECT s FROM Servicepictures s WHERE s.path = :path"),
-    @NamedQuery(name = "Servicepictures.findByIsdeleted", query = "SELECT s FROM Servicepictures s WHERE s.isdeleted = :isdeleted"),
-    @NamedQuery(name = "Servicepictures.findByOptLockVersion", query = "SELECT s FROM Servicepictures s WHERE s.optLockVersion = :optLockVersion")})
-public class Servicepictures implements Serializable {
+    @NamedQuery(name = "Serviceimage.findAll", query = "SELECT s FROM Serviceimage s"),
+    @NamedQuery(name = "Serviceimage.findById", query = "SELECT s FROM Serviceimage s WHERE s.id = :id"),
+    @NamedQuery(name = "Serviceimage.findByInternalname", query = "SELECT s FROM Serviceimage s WHERE s.internalname = :internalname"),
+    @NamedQuery(name = "Serviceimage.findBySequence", query = "SELECT s FROM Serviceimage s WHERE s.sequence = :sequence"),
+    @NamedQuery(name = "Serviceimage.findByPath", query = "SELECT s FROM Serviceimage s WHERE s.path = :path"),
+    @NamedQuery(name = "Serviceimage.findByIsdeleted", query = "SELECT s FROM Serviceimage s WHERE s.isdeleted = :isdeleted"),
+    @NamedQuery(name = "Serviceimage.findByDescription", query = "SELECT s FROM Serviceimage s WHERE s.description = :description"),
+    @NamedQuery(name = "Serviceimage.findByOptLockVersion", query = "SELECT s FROM Serviceimage s WHERE s.optLockVersion = :optLockVersion")})
+public class Serviceimage implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -41,6 +43,11 @@ public class Servicepictures implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "INTERNALNAME")
+    private String internalname;
     @Column(name = "SEQUENCE")
     private Integer sequence;
     @Basic(optional = false)
@@ -50,6 +57,9 @@ public class Servicepictures implements Serializable {
     private String path;
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
+    @Size(max = 255)
+    @Column(name = "DESCRIPTION")
+    private String description;
     @Column(name = "OPT_LOCK_VERSION")
     private Integer optLockVersion;
     @JoinColumn(name = "SERVICEID", referencedColumnName = "ID")
@@ -59,15 +69,16 @@ public class Servicepictures implements Serializable {
     @ManyToOne(optional = false)
     private Type typeid;
 
-    public Servicepictures() {
+    public Serviceimage() {
     }
 
-    public Servicepictures(Integer id) {
+    public Serviceimage(Integer id) {
         this.id = id;
     }
 
-    public Servicepictures(Integer id, String path) {
+    public Serviceimage(Integer id, String internalname, String path) {
         this.id = id;
+        this.internalname = internalname;
         this.path = path;
     }
 
@@ -77,6 +88,14 @@ public class Servicepictures implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getInternalname() {
+        return internalname;
+    }
+
+    public void setInternalname(String internalname) {
+        this.internalname = internalname;
     }
 
     public Integer getSequence() {
@@ -101,6 +120,14 @@ public class Servicepictures implements Serializable {
 
     public void setIsdeleted(Boolean isdeleted) {
         this.isdeleted = isdeleted;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Integer getOptLockVersion() {
@@ -137,10 +164,10 @@ public class Servicepictures implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Servicepictures)) {
+        if (!(object instanceof Serviceimage)) {
             return false;
         }
-        Servicepictures other = (Servicepictures) object;
+        Serviceimage other = (Serviceimage) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -149,7 +176,7 @@ public class Servicepictures implements Serializable {
 
     @Override
     public String toString() {
-        return "lt.vu.mif.labanoro_draugai.entities.Servicepictures[ id=" + id + " ]";
+        return "lt.vu.mif.labanoro_draugai.entities.Serviceimage[ id=" + id + " ]";
     }
     
 }

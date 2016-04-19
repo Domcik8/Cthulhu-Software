@@ -62,13 +62,13 @@ public class Type implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
     private List<Reservation> reservationList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
-    private List<Servicepictures> servicepicturesList;
+    private List<Serviceimage> serviceimageList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
     private List<Service> serviceList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
     private List<House> houseList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
-    private List<Housepictures> housepicturesList;
+    private List<Houseimage> houseimageList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
     private List<Systemparameter> systemparameterList;
 
@@ -151,12 +151,12 @@ public class Type implements Serializable {
         this.reservationList = reservationList;
     }
 
-    public List<Servicepictures> getServicepicturesList() {
-        return servicepicturesList;
+    public List<Serviceimage> getServiceimageList() {
+        return serviceimageList;
     }
 
-    public void setServicepicturesList(List<Servicepictures> servicepicturesList) {
-        this.servicepicturesList = servicepicturesList;
+    public void setServiceimageList(List<Serviceimage> serviceimageList) {
+        this.serviceimageList = serviceimageList;
     }
 
     public List<Service> getServiceList() {
@@ -175,12 +175,12 @@ public class Type implements Serializable {
         this.houseList = houseList;
     }
 
-    public List<Housepictures> getHousepicturesList() {
-        return housepicturesList;
+    public List<Houseimage> getHouseimageList() {
+        return houseimageList;
     }
 
-    public void setHousepicturesList(List<Housepictures> housepicturesList) {
-        this.housepicturesList = housepicturesList;
+    public void setHouseimageList(List<Houseimage> houseimageList) {
+        this.houseimageList = houseimageList;
     }
 
     public List<Systemparameter> getSystemparameterList() {

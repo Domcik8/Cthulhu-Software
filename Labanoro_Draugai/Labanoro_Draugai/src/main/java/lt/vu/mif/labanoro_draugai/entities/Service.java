@@ -85,7 +85,7 @@ public class Service implements Serializable {
     @ManyToMany(mappedBy = "serviceList")
     private List<Reservation> reservationList;
     @OneToMany(mappedBy = "serviceid")
-    private List<Servicepictures> servicepicturesList;
+    private List<Serviceimage> serviceimageList;
     @JoinColumn(name = "TYPEID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Type typeid;
@@ -206,12 +206,12 @@ public class Service implements Serializable {
         this.reservationList = reservationList;
     }
 
-    public List<Servicepictures> getServicepicturesList() {
-        return servicepicturesList;
+    public List<Serviceimage> getServiceimageList() {
+        return serviceimageList;
     }
 
-    public void setServicepicturesList(List<Servicepictures> servicepicturesList) {
-        this.servicepicturesList = servicepicturesList;
+    public void setServiceimageList(List<Serviceimage> serviceimageList) {
+        this.serviceimageList = serviceimageList;
     }
 
     public Type getTypeid() {

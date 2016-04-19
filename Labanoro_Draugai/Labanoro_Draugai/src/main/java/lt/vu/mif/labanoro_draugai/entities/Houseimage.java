@@ -25,15 +25,17 @@ import javax.validation.constraints.Size;
  * @author Dominik Lisovski
  */
 @Entity
-@Table(name = "HOUSEPICTURES")
+@Table(name = "HOUSEIMAGE")
 @NamedQueries({
-    @NamedQuery(name = "Housepictures.findAll", query = "SELECT h FROM Housepictures h"),
-    @NamedQuery(name = "Housepictures.findById", query = "SELECT h FROM Housepictures h WHERE h.id = :id"),
-    @NamedQuery(name = "Housepictures.findBySequence", query = "SELECT h FROM Housepictures h WHERE h.sequence = :sequence"),
-    @NamedQuery(name = "Housepictures.findByPath", query = "SELECT h FROM Housepictures h WHERE h.path = :path"),
-    @NamedQuery(name = "Housepictures.findByIsdeleted", query = "SELECT h FROM Housepictures h WHERE h.isdeleted = :isdeleted"),
-    @NamedQuery(name = "Housepictures.findByOptLockVersion", query = "SELECT h FROM Housepictures h WHERE h.optLockVersion = :optLockVersion")})
-public class Housepictures implements Serializable {
+    @NamedQuery(name = "Houseimage.findAll", query = "SELECT h FROM Houseimage h"),
+    @NamedQuery(name = "Houseimage.findById", query = "SELECT h FROM Houseimage h WHERE h.id = :id"),
+    @NamedQuery(name = "Houseimage.findByInternalname", query = "SELECT h FROM Houseimage h WHERE h.internalname = :internalname"),
+    @NamedQuery(name = "Houseimage.findBySequence", query = "SELECT h FROM Houseimage h WHERE h.sequence = :sequence"),
+    @NamedQuery(name = "Houseimage.findByPath", query = "SELECT h FROM Houseimage h WHERE h.path = :path"),
+    @NamedQuery(name = "Houseimage.findByDescription", query = "SELECT h FROM Houseimage h WHERE h.description = :description"),
+    @NamedQuery(name = "Houseimage.findByIsdeleted", query = "SELECT h FROM Houseimage h WHERE h.isdeleted = :isdeleted"),
+    @NamedQuery(name = "Houseimage.findByOptLockVersion", query = "SELECT h FROM Houseimage h WHERE h.optLockVersion = :optLockVersion")})
+public class Houseimage implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -41,6 +43,11 @@ public class Housepictures implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "INTERNALNAME")
+    private String internalname;
     @Column(name = "SEQUENCE")
     private Integer sequence;
     @Basic(optional = false)
@@ -48,6 +55,9 @@ public class Housepictures implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "PATH")
     private String path;
+    @Size(max = 255)
+    @Column(name = "DESCRIPTION")
+    private String description;
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
     @Column(name = "OPT_LOCK_VERSION")
@@ -59,15 +69,16 @@ public class Housepictures implements Serializable {
     @ManyToOne(optional = false)
     private Type typeid;
 
-    public Housepictures() {
+    public Houseimage() {
     }
 
-    public Housepictures(Integer id) {
+    public Houseimage(Integer id) {
         this.id = id;
     }
 
-    public Housepictures(Integer id, String path) {
+    public Houseimage(Integer id, String internalname, String path) {
         this.id = id;
+        this.internalname = internalname;
         this.path = path;
     }
 
@@ -77,6 +88,14 @@ public class Housepictures implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getInternalname() {
+        return internalname;
+    }
+
+    public void setInternalname(String internalname) {
+        this.internalname = internalname;
     }
 
     public Integer getSequence() {
@@ -93,6 +112,14 @@ public class Housepictures implements Serializable {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Boolean getIsdeleted() {
@@ -137,10 +164,10 @@ public class Housepictures implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Housepictures)) {
+        if (!(object instanceof Houseimage)) {
             return false;
         }
-        Housepictures other = (Housepictures) object;
+        Houseimage other = (Houseimage) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -149,7 +176,7 @@ public class Housepictures implements Serializable {
 
     @Override
     public String toString() {
-        return "lt.vu.mif.labanoro_draugai.entities.Housepictures[ id=" + id + " ]";
+        return "lt.vu.mif.labanoro_draugai.entities.Houseimage[ id=" + id + " ]";
     }
     
 }

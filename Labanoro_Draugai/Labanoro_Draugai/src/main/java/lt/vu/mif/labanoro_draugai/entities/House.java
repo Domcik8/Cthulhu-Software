@@ -97,7 +97,7 @@ public class House implements Serializable {
     @ManyToOne(optional = false)
     private Type typeid;
     @OneToMany(mappedBy = "houseid")
-    private List<Housepictures> housepicturesList;
+    private List<Houseimage> houseimageList;
 
     public House() {
     }
@@ -231,12 +231,12 @@ public class House implements Serializable {
         this.typeid = typeid;
     }
 
-    public List<Housepictures> getHousepicturesList() {
-        return housepicturesList;
+    public List<Houseimage> getHouseimageList() {
+        return houseimageList;
     }
 
-    public void setHousepicturesList(List<Housepictures> housepicturesList) {
-        this.housepicturesList = housepicturesList;
+    public void setHouseimageList(List<Houseimage> houseimageList) {
+        this.houseimageList = houseimageList;
     }
 
     @Override

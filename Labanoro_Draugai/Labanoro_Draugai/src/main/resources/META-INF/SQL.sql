@@ -1,4 +1,6 @@
 --Following scripts drop all tables.
+drop table ServiceImage;
+drop table HouseImage;
 drop table ServicePictures;
 drop table HousePictures;
 drop table SystemParameter;
@@ -160,13 +162,15 @@ CREATE TABLE SystemParameter
     PRIMARY KEY (ID)
 );
 
-CREATE TABLE HousePictures
+CREATE TABLE HouseImage
 (
     ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
     TypeID          INTEGER         NOT NULL, 
     HouseID         INTEGER,
+    InternalName    VARCHAR(255)    NOT NULL    UNIQUE,
     Sequence        INTEGER,
     Path            VARCHAR(255)    NOT NULL,
+    Description     VARCHAR(255),
     IsDeleted       BOOLEAN,
     OPT_LOCK_VERSION INTEGER,
     FOREIGN KEY (TypeID)  REFERENCES Type (ID),
@@ -174,14 +178,16 @@ CREATE TABLE HousePictures
     PRIMARY KEY (ID)
 );
 
-CREATE TABLE ServicePictures
+CREATE TABLE ServiceImage
 (
     ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
     TypeID          INTEGER         NOT NULL, 
     ServiceID       INTEGER,
+    InternalName    VARCHAR(255)    NOT NULL    UNIQUE,
     Sequence        INTEGER,
     Path            VARCHAR(255)    NOT NULL,
     IsDeleted       BOOLEAN,
+    Description     VARCHAR(255),
     OPT_LOCK_VERSION INTEGER,
     FOREIGN KEY (TypeID)  REFERENCES Type (ID),
     FOREIGN KEY (ServiceID)  REFERENCES Service (ID),
