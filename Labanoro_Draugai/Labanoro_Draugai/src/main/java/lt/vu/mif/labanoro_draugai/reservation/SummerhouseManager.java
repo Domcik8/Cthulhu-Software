@@ -6,10 +6,13 @@
 package lt.vu.mif.labanoro_draugai.reservation;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -81,6 +84,8 @@ public class SummerhouseManager implements Serializable{
     
     private boolean isHouseAvailable(House house,Date dateFrom,Date dateTo){
         if(house.getReservationList()== null || dateFrom == null || dateTo == null) return true;
+        if(house.getSeasonstartdate()!=null && house.getSeasonenddate()!=null && !(dateTo.before(house.getSeasonstartdate()) || dateFrom.after(house.getSeasonenddate())))
+                    return false;
         for(Reservation reservation : house.getReservationList()){
             if(!(dateTo.before(reservation.getStartdate()) || dateFrom.after(reservation.getEnddate())))
                     return false;
@@ -158,30 +163,41 @@ public class SummerhouseManager implements Serializable{
     private House selectedHouse;
     private Date selectedDateFrom;
     private Date selectedDateTo;
-
-//    public Date getSelectedHouseMinDateFrom(){
-//        
-//    }
-//    
-//    public Date getSelectedHouseMaxDateFrom(){
-//    
-//    }
-//    
-//    public Date getSelectedHouseMinDateTo(){
-//        
-//    }
-//    
-//    public Date getSelectedHouseMaxDateTo(){
-//    
-//    }
+    private String SelectedHouseReservedDays;
+    
+    public Date getSelectedHouseMinDate(){
+        if(selectedHouse == null || selectedHouse.getSeasonstartdate()==null) return new Date();
+        Date today = new Date();
+        return selectedHouse.getSeasonstartdate().after(today)? selectedHouse.getSeasonstartdate():today;
+    }
+    
+    public Date getSelectedHouseMaxDate(){
+        if(selectedHouse == null || selectedHouse.getSeasonenddate()==null) return filter.getEndOfSeason();
+        return selectedHouse.getSeasonenddate().before(filter.getEndOfSeason())? selectedHouse.getSeasonenddate():filter.getEndOfSeason();
+    }
+    
+    public Date getSelectedHouseMaxDateTo(){
+        Date maxDate = getSelectedHouseMaxDate();
+        if(selectedHouse == null || selectedHouse.getReservationList() == null) return maxDate;
+        for(Reservation reservation:selectedHouse.getReservationList()){
+            if(reservation.getStartdate().before(maxDate) && reservation.getStartdate().after(selectedDateFrom)) maxDate = reservation.getStartdate();
+        }
+        return maxDate;
+    }
     
     public Date getSelectedDateFrom() {
+        if(selectedDateFrom == null){
+            selectedDateFrom = filter.getDateFrom();
+        }
         return selectedDateFrom;
     }
     public void setSelectedDateFrom(Date selectedDateFrom) {
         this.selectedDateFrom = selectedDateFrom;
     }
     public Date getSelectedDateTo() {
+        if(selectedDateTo == null){
+            selectedDateTo = filter.getDateTo();
+        }
         return selectedDateTo;
     }
     public void setSelectedDateTo(Date selectedDateTo) {
@@ -192,5 +208,49 @@ public class SummerhouseManager implements Serializable{
     }
     public void setSelectedHouse(House selectedHouse) {
         this.selectedHouse = selectedHouse;
+    }
+    
+    public void onDateSelect() {
+        if(getSelectedDateTo()==null || getSelectedDateFrom()==null) return;
+        if(getSelectedDateTo().before(getSelectedDateFrom()))
+            setSelectedDateTo(null);
+    }
+    
+    public String getSelectedHouseReservedDays(){
+        if(selectedHouse == null || selectedHouse.getReservationList() == null) return "[]";
+        List<Date> dates;
+        String prefix = "";
+        SimpleDateFormat formatter;
+        formatter = new SimpleDateFormat("M-d-yyyy");
+        StringBuilder builder = new StringBuilder();
+        
+        for(Reservation reservation:selectedHouse.getReservationList()){
+            dates = getDaysBetweenDates(reservation.getStartdate(), reservation.getEnddate());
+            for(Date date:dates){
+                builder.append(prefix);
+                prefix = ",";
+                builder.append(formatter.format(date));
+            }
+        }
+
+        SelectedHouseReservedDays = builder.toString();
+        System.out.println(SelectedHouseReservedDays);
+        return SelectedHouseReservedDays;
+    }
+    
+    
+    public static List<Date> getDaysBetweenDates(Date startdate, Date enddate)
+    {
+        List<Date> dates = new ArrayList<>();
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(startdate);
+
+        while (calendar.getTime().before(enddate) || calendar.getTime().equals(enddate))
+        {
+            Date result = calendar.getTime();
+            dates.add(result);
+            calendar.add(Calendar.DATE, 1);
+        }
+        return dates;
     }
 }

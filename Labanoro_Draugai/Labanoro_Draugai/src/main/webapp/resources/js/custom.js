@@ -15,6 +15,30 @@
         return [(day == 0), '']
     }
     
+        function calendarSelectedHouseMondays(date){
+            if(date.getDay()!=1) return[false];
+            var disabledDays = document.getElementById('houseDialogForm:reservedDays').value.split(",");
+            var m = date.getMonth(), d = date.getDate(), y = date.getFullYear();
+            for (i = 0; i < disabledDays.length; i++) {
+                if($.inArray((m+1) + '-' + d + '-' + y,disabledDays) != -1) {
+                    console.log((m+1) + '-' + d + '-' + y + "removed");
+                    return [false];
+                }
+            }
+            return [true];
+        }
+        function calendarSelectedHouseSundays(date){
+            if(date.getDay()!=0) return[false]
+            var disabledDays = document.getElementById('houseDialogForm:reservedDays').value.split(",");
+            var m = date.getMonth(), d = date.getDate(), y = date.getFullYear();
+            for (i = 0; i < disabledDays.length; i++) {
+                if($.inArray((m+1) + '-' + d + '-' + y,disabledDays) != -1) {
+                    return [false];
+                }
+            }
+            return [true];
+        }
+    
     PrimeFaces.locales ['lt'] = { 
         closeText: 'Uždaryti',
         prevText: 'Atgal', 
