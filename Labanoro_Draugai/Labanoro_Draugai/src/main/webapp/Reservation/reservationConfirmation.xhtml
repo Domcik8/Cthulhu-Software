@@ -8,11 +8,12 @@ and open the template in the editor.
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
-        <title>Vasarnamių Administravimas</title>
+        <title>Vasarnamių rezervacija</title>
         <h:outputStylesheet library="css" name="custom.css"/>
-        <script src="//connect.facebook.net/en_US/sdk.js" type="text/javascript"/>
+        <h:outputScript library="js" name="custom.js" />
         <script src="https://code.jquery.com/jquery-2.2.2.min.js"   integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI="   crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"/>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous"/>
@@ -22,23 +23,8 @@ and open the template in the editor.
     <h:body>
         <!-- Navigation panel-->
         <ui:include src="/WEB-INF/other_pages/navigation.xhtml" />
-        <!--Admin stuff-->
-        <div class="container">
-            <h:form>
-                <h:commandLink type="button" class="btn btn-lg btn-danger" action="#{databaseManager.fillDataBase()}">Fill database</h:commandLink>
-                <br/>
-                <h:commandLink type="button" class="btn btn-lg btn-danger" action="#{databaseManager.editHouses()}">Edit houses</h:commandLink>
-                <br/>
-                <h:commandLink type="button" class="btn btn-lg btn-danger" action="houses">Namelių administravimas</h:commandLink>
-            </h:form>
-        </div>
-        
-        
-        
-        
-        <!-- scripts -->
-        <h:outputScript library="js" name="custom.js" />
-        <script>setActiveNavTab("admin")</script>
-        <!-- end of scripts -->
+        <p:panel>
+            <h:outputLabel>Bla bla</h:outputLabel>
+        </p:panel>
     </h:body>
 </html>

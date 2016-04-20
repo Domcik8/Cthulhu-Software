@@ -22,7 +22,7 @@ and open the template in the editor.
     </h:head>
     <h:body>
         <!-- Navigation panel-->
-        <ui:include src="/WEB-INF/navigation.xhtml" />
+        <ui:include src="/WEB-INF/other_pages/navigation.xhtml" />
        <!--Filter panel--> 
        <div class="container">
             <div class="row">
@@ -63,7 +63,7 @@ and open the template in the editor.
                                     <p:calendar id="dateFrom" pattern="yyyy-MM-dd" size="10"
                                                 beforeShowDay="calendarOnlyMonday" locale="lt"
                                                 value="#{houseFilter.dateFrom}" 
-                                                mindate="#{houseFilter.today}" 
+                                                mindate="#{houseFilter.nextMonday}" 
                                                 maxdate="#{houseFilter.endOfSeason}"  >
                                         <p:ajax event="dateSelect" listener="#{houseFilter.onDateSelect}" update="dateTo" />
                                     </p:calendar>
@@ -110,23 +110,26 @@ and open the template in the editor.
                                         <h:outputText class="small-text" value="Adresas: #{house.address}"/>
                                         <h:outputText class="small-text" value="Vietos: #{house.numberofplaces}"/>
                                     </h:panelGrid>
-                                    <h:outputText class="price-text" style="width: 100%" value="#{house.weekprice}t / #{house.weekprice}€"/>
+                                    <h:outputText class="price-text" style="width: 100%" value="#{house.weekprice}t"/>
 
                                 </p:outputPanel>
                             </h:panelGrid>
                             <hr/>
                         </p:dataScroller>
+                    
+                    
+                    
                     <h:form id="houseDialogForm" >
                         <h:inputHidden id="reservedDays" value="#{summerhouseManager.selectedHouseReservedDays}" />    
                         <p:dialog id="houseDetail" header="#{summerhouseManager.selectedHouse.title}"
-                                  width="300" height="300"
+                                  width="320" height="350" focus="confirmOrder"
                                   modal="true" showEffect="clip" widgetVar="houseDialog"
                                   resizable="false" draggable="false" responsive="true"
                                   closeOnEscape="true" fitViewport="true" position="center"
                                   onHide="enableScrolling()">
                             <p:outputPanel >
                                 <p:galleria id="houseGalleria" value="#{summerhouseManager.houseImages}" var="image" 
-                                            style="width: 100%" panelHeight="180" panelWidth="250"
+                                            style="width: 100%" panelHeight="150" panelWidth="250"
                                             showFilmstrip="true" autoPlay="false" showCaption="false">
                                     <p:graphicImage url="#{image}" alt="Image Description for #{image}" style="width: 100%"/>
                                 </p:galleria>
@@ -134,7 +137,7 @@ and open the template in the editor.
                                     <h:outputText class="small-text" value="Aprašas: #{summerhouseManager.selectedHouse.description}"/>
                                     <h:outputText class="small-text" value="Adresas: #{summerhouseManager.selectedHouse.address}"/>
                                     <h:outputText class="small-text" value="Vietos: #{summerhouseManager.selectedHouse.numberofplaces}"/>
-                                    <h:outputText class="small-text" value="Kaina: #{summerhouseManager.selectedHouse.weekprice}t / #{summerhouseManager.selectedHouse.weekprice}€"/>
+                                    <h:outputText class="small-text" value="Savaitės kaina: #{summerhouseManager.selectedHouse.weekprice}t"/>
                                 </h:panelGrid>
                                 
                                 
@@ -142,18 +145,29 @@ and open the template in the editor.
                                     <p:calendar id="selectedDateFrom" pattern="yyyy-MM-dd" size="10"
                                                 beforeShowDay="calendarSelectedHouseMondays" locale="lt"
                                                 value="#{summerhouseManager.selectedDateFrom}" 
-                                                mindate="#{summerhouseManager.selectedHouseMinDate}" 
-                                                maxdate="#{summerhouseManager.selectedHouseMaxDate}"  >
-                                        <p:ajax event="dateSelect" listener="#{summerhouseManager.onDateSelect}" update="selectedDateTo" />
+                                                mindate="#{summerhouseManager.selectedHouseMinDate()}" 
+                                                maxdate="#{summerhouseManager.selectedHouseMaxDate()}"  >
+                                        <p:ajax event="dateSelect" listener="#{summerhouseManager.onDateSelect}" update="selectedDateTo,periodPrice" />
                                     </p:calendar>
                                     <p:outputLabel for="selectedDateTo" value=" iki: " />
                                     <p:calendar id="selectedDateTo" pattern="yyyy-MM-dd" size="10"
                                                 beforeShowDay="calendarSelectedHouseSundays" locale="lt"
                                                 value="#{summerhouseManager.selectedDateTo}" 
                                                 mindate="#{summerhouseManager.selectedDateFrom}"
-                                                maxdate="#{summerhouseManager.selectedHouseMaxDateTo}" >
-                                        <p:ajax event="dateSelect" update="selectedDateFrom" />
+                                                maxdate="#{summerhouseManager.selectedHouseMaxDateTo()}" >
+                                        <p:ajax event="dateSelect" update="selectedDateFrom,periodPrice" />
                                     </p:calendar>
+                                    
+                                    <br/>
+                                    <h:outputLabel id="periodPrice" value="Kaina: #{summerhouseManager.selectedHousePeriodPrice()}t" />
+                                    
+                                    <p:commandLink id="confirmOrder" action="#{summerhouseManager.confirmSelectedHouse()}" class="btn btn-success" 
+                                        style="position: absolute;right:5px; bottom:5px" value="Užsakyti">
+                                        <f:param name="houseId" value="#{summerhouseManager.selectedHouse.id}"/>
+                                        <f:param name="dateFrom" value="#{summerhouseManager.selectedDateFrom}"/>
+                                        <f:param name="dateTo" value="#{summerhouseManager.selectedDateTo}"/>
+                                    </p:commandLink>
+                                    
                                 </p:outputPanel>
                         </p:dialog>
                     </h:form> 

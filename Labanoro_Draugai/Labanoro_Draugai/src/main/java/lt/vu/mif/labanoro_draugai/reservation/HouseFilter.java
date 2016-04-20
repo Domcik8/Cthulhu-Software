@@ -153,7 +153,7 @@ public class HouseFilter implements Serializable{
       
     //Datepicker
     
-    private Date dateFrom = getToday();
+    private Date dateFrom = getNextMonday();
     private Date dateTo;
 
     public Date getDateFrom() {
@@ -172,9 +172,6 @@ public class HouseFilter implements Serializable{
         this.dateTo = dateTo;
     }
     
-    public Date getToday(){
-        return new Date();
-    }
     
     //TODO Sezono pradžia čia turi but<-------------------------------------------------------
     public Date getEndOfSeason(){
@@ -187,5 +184,19 @@ public class HouseFilter implements Serializable{
         if(getDateTo()==null || getDateFrom()==null) return;
         if(getDateTo().before(getDateFrom()))
             setDateTo(null);
+    }
+    
+    public Date getNextMonday(){
+        Calendar now = Calendar.getInstance();
+        int weekday = now.get(Calendar.DAY_OF_WEEK);
+        if (weekday != Calendar.MONDAY)
+        {
+            // calculate how much to add
+            // the 2 is the difference between Saturday and Monday
+            int days = (Calendar.SATURDAY - weekday + 2) % 7;
+            now.add(Calendar.DAY_OF_YEAR, days);
+        }
+        // now is the date you want
+        return now.getTime();
     }
 }
