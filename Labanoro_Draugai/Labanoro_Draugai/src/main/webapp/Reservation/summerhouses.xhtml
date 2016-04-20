@@ -98,7 +98,7 @@ and open the template in the editor.
                                     Vasarnamiai
                             </f:facet>
                             <h:panelGrid columns="2" style="width: 100%" columnClasses="ui-grid-col-4,ui-grid-col-8" >
-                                <p:graphicImage id="img" url="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ34NdBFQhnN-roT0brsL-VFUnVVesw-KNTOJNTL0Al8b9-Ut0T" style="width: 100%;padding-right: 10px"/>
+                                <p:graphicImage id="img" name="#{summerhouseManager.getDisplayHouseImage(house.housereg)}" style="width: 100%;padding-right: 10px"/>
                                 <p:outputPanel>
 
                                     <p:commandLink oncomplete="disableScrolling(),PF('houseDialog').show()" update=":houseDialogForm:houseDetail,:houseDialogForm:houseGalleria,:houseDialogForm:reservedDays" >
@@ -128,10 +128,10 @@ and open the template in the editor.
                                   closeOnEscape="true" fitViewport="true" position="center"
                                   onHide="enableScrolling()">
                             <p:outputPanel >
-                                <p:galleria id="houseGalleria" value="#{summerhouseManager.houseImages}" var="image" 
+                                <p:galleria id="houseGalleria" value="#{summerhouseManager.getHouseImageList(summerhouseManager.selectedHouse.housereg)}" var="image" 
                                             style="width: 100%" panelHeight="150" panelWidth="250"
                                             showFilmstrip="true" autoPlay="false" showCaption="false">
-                                    <p:graphicImage url="#{image}" alt="Image Description for #{image}" style="width: 100%"/>
+                                    <p:graphicImage name="#{image}" alt="#{image}" style="width: 100%"/>
                                 </p:galleria>
                                 <h:panelGrid columns="1" style="width: 100%">
                                     <h:outputText class="small-text" value="Aprašas: #{summerhouseManager.selectedHouse.description}"/>

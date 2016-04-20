@@ -13,7 +13,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
@@ -25,6 +27,7 @@ import lt.vu.mif.labanoro_draugai.entities.Reservation;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
+import lt.vu.mif.labanoro_draugai.entities.Houseimage;
  
 /**
  *
@@ -35,7 +38,6 @@ import javax.faces.context.FacesContext;
 public class SummerhouseManager implements Serializable{
     private List<House> summerhouses;
     private List<House> filteredSummerhouses;
-    private List<String> houseImages;
     
     @ManagedProperty(value="#{houseFilter}")
     private HouseFilter filter;
@@ -52,23 +54,44 @@ public class SummerhouseManager implements Serializable{
         Collections.reverse(summerhouses);
         Collections.reverse(filteredSummerhouses);
         
-        houseImages = new ArrayList<>();
-        houseImages.add("http://www.atostogoskaime.lt/uploads/Sodybos/images/galleries/1633/zoom/6-vietis-namelis.JPG");
-        houseImages.add("http://sodyboskaime.lt/sites/sodyboskaime.lt/files/bilvinu_sodyba_1_6792.jpg");
-        houseImages.add("http://g4.dcdn.lt/images/pix/sodyba-61450842.jpg");
+        houseImages = new HashMap<>();
         
         System.out.println(toString() + " constructed.");
-        System.out.println("Reservations:");
+        //System.out.println("houseImages:");
         for(House house:summerhouses){
-            if(house.getReservationList()!= null){
-                for(Reservation reservation:house.getReservationList()){
-                    System.out.println("reservation:"+reservation.getId());
+            //System.out.println(house.getHousereg());
+            if(house.getHouseimageList()== null) System.out.println("no images found");
+            if(house.getHouseimageList()!= null){
+                List<String> imageList = new ArrayList<>();
+                
+                Collections.sort(house.getHouseimageList(), new Comparator<Houseimage>() {
+                    @Override
+                    public int compare(Houseimage h1, Houseimage h2) {
+                        return h1.getSequence().compareTo(h2.getSequence());
+                    }
+                });
+                
+                for(Houseimage image : house.getHouseimageList()){
+                    imageList.add(image.getPath());
+                    //System.out.println(image.getPath());
                 }
+                houseImages.put(house.getHousereg(), imageList);
             }
         }
     }
     
-
+    private Map<String,List<String>> houseImages;
+    public List<String> getHouseImageList(String houseReg){
+        if(houseImages==null || houseReg==null || houseImages.isEmpty())return new ArrayList<String>();
+        return houseImages.get(houseReg);
+    }
+    public String getDisplayHouseImage(String houseReg){
+        if(houseImages==null || houseReg==null)return "";
+        List<String> images = houseImages.get(houseReg);
+        if(images == null || images.isEmpty()) return  "";
+        return images.get(0);
+    }
+    
     //TODO availability filter
     public void filter(){
         System.out.println("This is filter:"+filter.getOrdering());
@@ -143,15 +166,10 @@ public class SummerhouseManager implements Serializable{
         sortHouses();
     }
 
-    public List<String> getHouseImages() {
-        return houseImages;
-    }
     public List<House> getFilteredSummerhouses() {
         return filteredSummerhouses;
     }
-    public void setHouseImages(List<String> houseImages) {
-        this.houseImages = houseImages;
-    }
+
     public HouseFilter getFilter() {
         return filter;
     }

@@ -1,9 +1,13 @@
 package lt.vu.mif.labanoro_draugai.business;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
@@ -114,11 +118,9 @@ public class DatabaseManager {
         addHouse("Old small house", "Vilnius", "HouseReg-15", "House.Penthouse");
         addHouse("New small house", "Vilnius", "HouseReg-16", "House.Penthouse");
         addHouse("Old small house", "Vilnius", "HouseReg-17", "House.Penthouse");
+        addHouse("New small house", "Vilnius", "HouseReg-18", "House.Penthouse");
         addHouse("New small house", "Vilnius", "HouseReg-19", "House.Penthouse");
         addHouse("Old small house", "Vilnius", "HouseReg-20", "House.Penthouse");
-        addHouse("New small house", "Vilnius", "HouseReg-21", "House.Penthouse");
-        addHouse("Old small house", "Vilnius", "HouseReg-22", "House.Penthouse");
-        addHouse("New small house", "Vilnius", "HouseReg-23", "House.Penthouse");
     }
     
     /**
@@ -133,12 +135,17 @@ public class DatabaseManager {
      * Fills database with basic reservations
      */
     private void fillBasicReservations() {
-        List<String> services = new ArrayList<String>();
-        services.add("ServiceReg-1");
-        services.add("ServiceReg-2");
-        
-        addReservation("ReservationReg-1", "HouseReg-1", "Reservation", "doli@test.com", null);
-        addReservation("ReservationReg-2", "HouseReg-1", "Reservation", "doli@test.com", services);
+        try {
+            List<String> services = new ArrayList<String>();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            services.add("ServiceReg-1");
+            services.add("ServiceReg-2");
+            
+            addReservation("ReservationReg-1", "HouseReg-1", "Reservation", "doli@test.com", null,format.parse("2016-06-06"),format.parse("2016-06-12"));
+            addReservation("ReservationReg-2", "HouseReg-1", "Reservation", "doli@test.com", services,format.parse("2016-06-27"),format.parse("2016-07-10"));
+        } catch (ParseException ex) {
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /**
@@ -157,6 +164,43 @@ public class DatabaseManager {
         addHouseImage("Picture.HouseReg-2.1", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_1.JPG", 1, "HouseReg-2", "Picture.House");
         addHouseImage("Picture.HouseReg-2.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-2", "Picture.House");
         addHouseImage("Picture.HouseReg-2.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 3, "HouseReg-2", "Picture.House");
+        addHouseImage("Picture.HouseReg-3.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-3", "Picture.House");
+        addHouseImage("Picture.HouseReg-3.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-3", "Picture.House");
+        addHouseImage("Picture.HouseReg-4.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-4", "Picture.House");
+        addHouseImage("Picture.HouseReg-4.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-4", "Picture.House");
+        addHouseImage("Picture.HouseReg-5.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-5", "Picture.House");
+        addHouseImage("Picture.HouseReg-5.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-5", "Picture.House");
+        addHouseImage("Picture.HouseReg-6.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-6", "Picture.House");
+        addHouseImage("Picture.HouseReg-6.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-6", "Picture.House");
+        addHouseImage("Picture.HouseReg-7.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-7", "Picture.House");
+        addHouseImage("Picture.HouseReg-7.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-7", "Picture.House");
+        addHouseImage("Picture.HouseReg-8.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-8", "Picture.House");
+        addHouseImage("Picture.HouseReg-8.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-8", "Picture.House");
+        addHouseImage("Picture.HouseReg-9.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-9", "Picture.House");
+        addHouseImage("Picture.HouseReg-9.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-9", "Picture.House");
+        addHouseImage("Picture.HouseReg-10.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-10", "Picture.House");
+        addHouseImage("Picture.HouseReg-10.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-10", "Picture.House");
+        addHouseImage("Picture.HouseReg-11.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-11", "Picture.House");
+        addHouseImage("Picture.HouseReg-11.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-11", "Picture.House");
+        addHouseImage("Picture.HouseReg-12.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-12", "Picture.House");
+        addHouseImage("Picture.HouseReg-12.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-12", "Picture.House");
+        addHouseImage("Picture.HouseReg-13.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-13", "Picture.House");
+        addHouseImage("Picture.HouseReg-13.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-13", "Picture.House");
+        addHouseImage("Picture.HouseReg-14.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-14", "Picture.House");
+        addHouseImage("Picture.HouseReg-14.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-14", "Picture.House");
+        addHouseImage("Picture.HouseReg-15.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-15", "Picture.House");
+        addHouseImage("Picture.HouseReg-15.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-15", "Picture.House");
+        addHouseImage("Picture.HouseReg-16.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-16", "Picture.House");
+        addHouseImage("Picture.HouseReg-16.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-16", "Picture.House");
+        addHouseImage("Picture.HouseReg-17.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-17", "Picture.House");
+        addHouseImage("Picture.HouseReg-17.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-17", "Picture.House");
+        addHouseImage("Picture.HouseReg-18.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-18", "Picture.House");
+        addHouseImage("Picture.HouseReg-18.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-18", "Picture.House");
+        addHouseImage("Picture.HouseReg-19.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-19", "Picture.House");
+        addHouseImage("Picture.HouseReg-19.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-19", "Picture.House");
+        addHouseImage("Picture.HouseReg-20.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-20", "Picture.House");
+        addHouseImage("Picture.HouseReg-20.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-20", "Picture.House");
+        
     }
     
     private void fillBasicServiceImages() {
@@ -314,7 +358,7 @@ public class DatabaseManager {
      * @param services
      * @return 
      */
-    private Reservation addReservation(String reservationReg, String houseReg, String typeInternalName, String personEmail, List<String> services) {
+    private Reservation addReservation(String reservationReg, String houseReg, String typeInternalName, String personEmail, List<String> services, Date dateFrom, Date dateTo) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
         House house = (House) getEntity("House", "Housereg", houseReg);
         Person person = (Person) getEntity("Person", "Email", personEmail);
@@ -324,6 +368,8 @@ public class DatabaseManager {
         newReservation.setTypeid(type);
         newReservation.setHouseid(house);
         newReservation.setPersonid(person);
+        newReservation.setStartdate(dateFrom);
+        newReservation.setEnddate(dateTo);
         newReservation.setServiceList(new ArrayList<Service>());
         
         if(type == null) {
