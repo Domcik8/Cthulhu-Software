@@ -39,6 +39,42 @@
 <!--     <url-pattern>*.sec</url-pattern> -->
 <!--   </servlet-mapping> -->
 
+    <!-- Security constrains-->
+<!--    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>reservation</web-resource-name>
+            <url-pattern>/reservation/*</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>Registered</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+    
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>administration</web-resource-name>
+            <url-pattern>/administration/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>Administrator</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>-->
+    
+    <!-- Security roles used by this web application -->
+<!--    <security-role>
+        <role-name>administrator</role-name>
+    </security-role>
+    <security-role>
+        <role-name>club_member</role-name>
+    </security-role>-->
     
     <resource-ref>
         <res-ref-name>java:app/jdbc/LabanoroDatasource</res-ref-name>

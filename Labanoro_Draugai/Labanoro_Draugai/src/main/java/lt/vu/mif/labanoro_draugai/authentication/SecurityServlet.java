@@ -4,6 +4,9 @@ import com.github.scribejava.core.oauth.OAuthService;
 import java.io.IOException;
 import java.util.Map;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,6 +25,7 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 
+import lt.vu.mif.labanoro_draugai.authentication.controller.LoginController;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;              //for database operation (user registration)
 // import lt.vu.mif.labanoro_draugai.administration.settings    -- for settings import
 
@@ -34,6 +38,8 @@ public class SecurityServlet extends HttpServlet {
     
     @Inject
     private FBGraph fbGraph;
+    @Inject
+    private LoginController loginController;
     
     public SecurityServlet() {}
 
@@ -52,36 +58,45 @@ public class SecurityServlet extends HttpServlet {
         
         setAppId();
         setRedirectUrl();
-        
         String accessToken = getFacebookAccessToken(faceCode);
         
+//        String facebookId = (String) fbGraph.getIdEmail(accessToken).get("id");
         String email = fbGraph.getEmail(accessToken);
-        String birthday = fbGraph.getAge(accessToken);
-        String firstName = fbGraph.getFirstName(accessToken);
-        String lastName = fbGraph.getLastName(accessToken);
-        Map profile = fbGraph.getFirstLastName(accessToken);
-        String profileUrl = fbGraph.getProfilePicture(accessToken);
+//        String birthday = fbGraph.getAge(accessToken);
+//        String firstName = fbGraph.getFirstName(accessToken);
+//        String lastName = fbGraph.getLastName(accessToken);
+//        Map profile = fbGraph.getFirstLastName(accessToken);
+//        String profileUrl = fbGraph.getProfilePicture(accessToken);
         
-        System.out.println("Check: " 
-                + email + "\n" 
-                + birthday + "\n" 
-                + profileUrl + "\n"
-                + firstName + "\n" 
-                + lastName + "\n" 
-                + profile.get("first_name") + "\n" 
-                + profile.get("last_name")
-        );
+//        System.out.println("Check: " 
+//                + facebookId + "\n"
+//                + email + "\n" 
+//                + birthday + "\n" 
+//                + profileUrl + "\n"
+//                + firstName + "\n" 
+//                + lastName + "\n" 
+//                + profile.get("first_name") + "\n" 
+//                + profile.get("last_name")
+//        );
   
         String sessionID = httpSession.getId();
         
         if (state.equals(sessionID)) {
-            try {                
-                //do some specific user data operation like saving to DB or login user
+            try {  
+
+                if(loginController.isUser(email)) {
+                    //request.login(email, "somedefaultpassword");
+                }
+                   
+                else {
+                    loginController.RegisterUser(email);
+                }
+
                 //request.login(email, "somedefaultpassword");
 
             } catch (Exception e) {
                 e.printStackTrace();
-                response.sendRedirect(request.getContextPath() + "/user/facebookError.html");
+                response.sendRedirect(request.getContextPath() + "/user/loginError.html");
                 return;
             }
             
@@ -130,7 +145,7 @@ public class SecurityServlet extends HttpServlet {
     
     private void setRedirectUrl() {
         
-        this.redirectUrl = "http://localhost:8080/Labanoro_Draugai/user/index.sec";
+        this.redirectUrl = "http://localhost:8080/Labanoro_Draugai/user/login.sec";
     }
     
     private String getAppSecret() {

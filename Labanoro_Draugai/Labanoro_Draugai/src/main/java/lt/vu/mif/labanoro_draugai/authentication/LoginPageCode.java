@@ -44,6 +44,6 @@ public class LoginPageCode implements Serializable {
         }
         
         private void setRedirectUrl() {
-            this.redirectUrl = "http://localhost:8080/Labanoro_Draugai/user/index.sec";
+            this.redirectUrl = "http://localhost:8080/Labanoro_Draugai/user/login.sec";
         }
 }

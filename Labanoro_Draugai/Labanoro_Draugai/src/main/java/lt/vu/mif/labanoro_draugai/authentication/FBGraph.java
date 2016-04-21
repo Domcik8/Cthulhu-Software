@@ -23,27 +23,6 @@ import net.sf.json.JSONSerializer;
 public class FBGraph {
     
     public FBGraph() {}
-    
-
-//    public Map getGraphData(String fbGraph) {
-//        Map fbProfile = new HashMap();
-//        try {
-//            JSONObject json = new JSONObject(fbGraph);
-//            fbProfile.put("id", json.getString("id"));
-//            fbProfile.put("first_name", json.getString("first_name"));
-//            if (json.has("email")) {
-//                fbProfile.put("email", json.getString("email"));
-//            }
-//            if (json.has("gender")) {
-//                fbProfile.put("gender", json.getString("gender"));
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//            throw new RuntimeException("ERROR in parsing FB graph data. " + e);
-//        }
-//        return fbProfile;
-//    }
-
       
     public String getEmail(String accessToken) {
         
@@ -60,6 +39,24 @@ public class FBGraph {
         } 
         
         return email;   
+    }
+    
+    public Map getIdEmail(String accessToken) {
+        
+        Map info = new HashMap();
+        
+        try {
+            String responseBody = getDataFromGraph("email", accessToken);
+            if (responseBody != null) {
+               JSONObject json = (JSONObject) JSONSerializer.toJSON(responseBody);
+                info.put("id", json.getString("id")); 
+                info.put("email", json.getString("email")); 
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+        
+        return info;
     }
     
     public Map getFirstLastName(String accessToken) {

@@ -13,8 +13,7 @@ import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.ejb.AfterBegin;
 import javax.ejb.AfterCompletion;
-import javax.ejb.Stateful;
-import javax.enterprise.context.SessionScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -32,9 +31,10 @@ import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import lt.vu.mif.labanoro_draugai.entities.Type;
 
 @Named
-@Stateful
-@SessionScoped
+@Stateless
 public class DatabaseManager {
+    
+    public DatabaseManager() {}
     
     @Resource
     private TransactionSynchronizationRegistry tx;
@@ -264,7 +264,7 @@ public class DatabaseManager {
         }
         
         if(persistAndFlush(newPerson))
-            System.out.println(String.format("Person '%s' created successfully", firstName + lastName));
+            System.out.println(String.format("Person '%s' created successfully", firstName + ":" + lastName));
         else
             return null;
         return newPerson;
