@@ -72,7 +72,7 @@ public class SummerhouseManager implements Serializable{
                 });
                 
                 for(Houseimage image : house.getHouseimageList()){
-                    imageList.add(image.getPath());
+                    imageList.add("https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ34NdBFQhnN-roT0brsL-VFUnVVesw-KNTOJNTL0Al8b9-Ut0T");
                     //System.out.println(image.getPath());
                 }
                 houseImages.put(house.getHousereg(), imageList);
@@ -86,10 +86,11 @@ public class SummerhouseManager implements Serializable{
         return houseImages.get(houseReg);
     }
     public String getDisplayHouseImage(String houseReg){
-        if(houseImages==null || houseReg==null)return "";
-        List<String> images = houseImages.get(houseReg);
-        if(images == null || images.isEmpty()) return  "";
-        return images.get(0);
+//        if(houseImages==null || houseReg==null)return "";
+//        List<String> images = houseImages.get(houseReg);
+//        if(images == null || images.isEmpty()) return  "";
+//        return images.get(0);
+         return "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ34NdBFQhnN-roT0brsL-VFUnVVesw-KNTOJNTL0Al8b9-Ut0T";
     }
     
     //TODO availability filter
