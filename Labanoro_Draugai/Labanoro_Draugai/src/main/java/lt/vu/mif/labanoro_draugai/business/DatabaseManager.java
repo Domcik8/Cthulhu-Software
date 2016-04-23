@@ -477,7 +477,7 @@ public class DatabaseManager {
         Houseimage newHouseimage = new Houseimage();
         
         newHouseimage.setInternalname(internalName);
-        newHouseimage.setPath(path);
+        //newHouseimage.setPath(path);
         newHouseimage.setSequence(sequence);
         newHouseimage.setHouseid(house);
         newHouseimage.setTypeid(type);
@@ -522,7 +522,7 @@ public class DatabaseManager {
         Serviceimage newServiceimage = new Serviceimage();
         
         newServiceimage.setInternalname(internalName);
-        newServiceimage.setPath(path);
+        //newServiceimage.setPath(path);
         newServiceimage.setSequence(sequence);
         newServiceimage.setServiceid(service);
         newServiceimage.setTypeid(type);

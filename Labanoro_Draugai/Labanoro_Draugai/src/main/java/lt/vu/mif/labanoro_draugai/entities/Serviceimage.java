@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -31,7 +32,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Serviceimage.findById", query = "SELECT s FROM Serviceimage s WHERE s.id = :id"),
     @NamedQuery(name = "Serviceimage.findByInternalname", query = "SELECT s FROM Serviceimage s WHERE s.internalname = :internalname"),
     @NamedQuery(name = "Serviceimage.findBySequence", query = "SELECT s FROM Serviceimage s WHERE s.sequence = :sequence"),
-    @NamedQuery(name = "Serviceimage.findByPath", query = "SELECT s FROM Serviceimage s WHERE s.path = :path"),
+    @NamedQuery(name = "Serviceimage.findByMimetype", query = "SELECT s FROM Serviceimage s WHERE s.mimetype = :mimetype"),
     @NamedQuery(name = "Serviceimage.findByIsdeleted", query = "SELECT s FROM Serviceimage s WHERE s.isdeleted = :isdeleted"),
     @NamedQuery(name = "Serviceimage.findByDescription", query = "SELECT s FROM Serviceimage s WHERE s.description = :description"),
     @NamedQuery(name = "Serviceimage.findByOptLockVersion", query = "SELECT s FROM Serviceimage s WHERE s.optLockVersion = :optLockVersion")})
@@ -52,9 +53,14 @@ public class Serviceimage implements Serializable {
     private Integer sequence;
     @Basic(optional = false)
     @NotNull
+    @Lob
+    @Column(name = "IMAGE")
+    private Serializable image;
+    @Basic(optional = false)
+    @NotNull
     @Size(min = 1, max = 255)
-    @Column(name = "PATH")
-    private String path;
+    @Column(name = "MIMETYPE")
+    private String mimetype;
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
     @Size(max = 255)
@@ -76,10 +82,11 @@ public class Serviceimage implements Serializable {
         this.id = id;
     }
 
-    public Serviceimage(Integer id, String internalname, String path) {
+    public Serviceimage(Integer id, String internalname, Serializable image, String mimetype) {
         this.id = id;
         this.internalname = internalname;
-        this.path = path;
+        this.image = image;
+        this.mimetype = mimetype;
     }
 
     public Integer getId() {
@@ -106,12 +113,20 @@ public class Serviceimage implements Serializable {
         this.sequence = sequence;
     }
 
-    public String getPath() {
-        return path;
+    public Serializable getImage() {
+        return image;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setImage(Serializable image) {
+        this.image = image;
+    }
+
+    public String getMimetype() {
+        return mimetype;
+    }
+
+    public void setMimetype(String mimetype) {
+        this.mimetype = mimetype;
     }
 
     public Boolean getIsdeleted() {

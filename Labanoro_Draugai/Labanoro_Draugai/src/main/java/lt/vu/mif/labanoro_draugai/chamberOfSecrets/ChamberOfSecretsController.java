@@ -31,6 +31,7 @@ public class ChamberOfSecretsController implements Serializable {
 
     @Inject
     private HouseService houseService;
+    
     @Inject
     private ServiceService serviceService;
 

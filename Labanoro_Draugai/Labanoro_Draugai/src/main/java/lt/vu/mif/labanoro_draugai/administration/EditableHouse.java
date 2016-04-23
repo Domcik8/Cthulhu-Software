@@ -55,8 +55,8 @@ public class EditableHouse implements Serializable {
         return conversation;
     }
     
-    @Inject
-    HouseFilter houseFilter;
+   /* @Inject
+    HouseFilter houseFilter;*/
 
     @Inject
     DatabaseManager dbm;
