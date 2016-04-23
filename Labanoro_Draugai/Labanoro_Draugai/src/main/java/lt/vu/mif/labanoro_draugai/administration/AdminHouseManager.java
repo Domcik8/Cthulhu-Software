@@ -32,10 +32,7 @@ import lt.vu.mif.labanoro_draugai.entities.House;
 @Stateful
 @ViewScoped
 public class AdminHouseManager implements Serializable {
-    
     private List<House> houses;
-    private House house;
-    private String editableHouseId;
     
     @PersistenceContext
     EntityManager em;
