@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
+import javax.enterprise.context.Conversation;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -23,6 +24,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.House;
+import lt.vu.mif.labanoro_draugai.entities.Person;
 
 /**
  *
@@ -31,8 +33,10 @@ import lt.vu.mif.labanoro_draugai.entities.House;
 @Named
 @Stateful
 @ViewScoped
-public class AdminHouseManager implements Serializable {
-    private List<House> houses;
+public class AdminUserManager implements Serializable {
+    
+    private List<Person> users;
+    private Person user;
     
     @PersistenceContext
     EntityManager em;
@@ -40,30 +44,35 @@ public class AdminHouseManager implements Serializable {
     @Inject
     DatabaseManager dbm;
     
+    @Inject
+    private Conversation conversation;
+    
     @PostConstruct
     public void init() { 
-        houses = em.createNamedQuery("House.findByIsdeleted").setParameter("isdeleted",  false).getResultList();
+        conversation.begin();
+        //users = em.createNamedQuery("User.findByIsdeleted").setParameter("isdeleted",  false).getResultList();
+        users = em.createNamedQuery("User.findAll").getResultList();
     }
     
-    public List<House> getHouses() {
-        return houses;
+    public List<Person> getUsers() {
+        return users;
     }
     
     public String setHouse() {
         return "house";
     }
     
-    public AdminHouseManager() {
+    public AdminUserManager() {
     }
     
-    /*private String getParameter(String key) {
+    private String getParameter(String key) {
         FacesContext fc = FacesContext.getCurrentInstance();
         Map<String,String> params = fc.getExternalContext().getRequestParameterMap();
         
         return params.get(key);
     }
      
-     public House getHouse() {
+     /*public House getHouse() {
         try {
             String houseId = getParameter("houseId");
             int id = Integer.parseInt(houseId);

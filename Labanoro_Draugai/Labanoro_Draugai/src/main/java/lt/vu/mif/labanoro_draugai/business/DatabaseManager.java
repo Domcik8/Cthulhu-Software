@@ -278,7 +278,7 @@ public class DatabaseManager {
      * @param lastName
      * @param internalName 
      */
-    private House addHouse(String title, String address, String houseReg, String typeInternalName) {
+    public House addHouse(String title, String address, String houseReg, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
         
         if(type == null) {

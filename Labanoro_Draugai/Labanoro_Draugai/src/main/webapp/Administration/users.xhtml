@@ -22,41 +22,33 @@ and open the template in the editor.
     </h:head>
     <h:body>
         <!-- Navigation panel-->
-        <ui:include src="/WEB-INF/other_pages/navigation.xhtml" />
-        <!-- End of Navigation panel -->
+    <ui:include src="/WEB-INF/other_pages/navigation.xhtml" />
+    <!-- End of Navigation panel -->
         
         <!-- Summerhouse list -->
         <div class="container .col-md-8">
-            <p:dataScroller value="#{adminHouseManager.getHouses()}" var="house" chunkSize="15" style="border:thin">
+            <p:dataScroller value="#{adminUserManager.getUsers()}" var="user" chunkSize="15" style="border:thin">
                 <h:panelGrid columns="2" style="width:100%" columnClasses="logo,detail">
                     <span class="glyphicon glyphicon-bed" style="width: 30%"/>
                     <p:outputPanel>
                         <h:form>
                             <h:panelGrid columns="2" >
-                                <h:outputLabel class="title-text" value="#{house.title}"/>
-                                <h:outputText/>
-                                <h:outputLabel class="small-text" value="#{house.description}"/>
-                                <h:outputText/>
-                                <h:outputLabel for="houseId" value="Namelis nr."/>
-                                <h:outputText id="houseId" value="#{house.id}"/>
-                                <h:outputLabel for="weekPrice" value="Sav. kaina (EUR):"/>
-                                <h:outputText id="weekPrice" value="#{house.weekprice}"/>
+                                <h:outputLabel for="email" value="El. paštas:"/>
+                                <h:outputText id="email" value="#{user.email}"/>
+                                <h:outputLabel for="houseId" value="Vardas:"/>
+                                <h:outputText id="houseId" value="#{user.firstname}"/>
+                                <h:outputLabel for="weekPrice" value="Pavardė:"/>
+                                <h:outputText id="weekPrice" value="#{user.lastname}"/>
                                 <h:outputLabel for="numberOfPlaces" value="Vietų sk.:"/>
-                                <h:outputText id="numberOfPlaces" value="#{house.numberofplaces}"/>
+                                <h:outputText id="numberOfPlaces" value="#{user.personalid}"/>
                                 <h:outputLabel for="address" value="Adresas:"/>
-                                <h:outputText id="address" value="#{house.address}"/>
+                                <h:outputText id="address" value="#{user.points}"/>
                                 <h:outputLabel for="startDate" value="Pradžios data:"/>
-                                <h:outputText id="startDate" value="#{house.seasonstartdate}">
-                                    <f:convertDateTime pattern="yyyy-MM-dd" />
-                                </h:outputText>
+                                <h:outputText id="startDate" value="#{user.priority}"/>
                                 <h:outputLabel for="endDate" value="Pabaigos data:"/>
-                                <h:outputText id="endDate" value="#{house.seasonenddate}">
-                                    <f:convertDateTime pattern="yyyy-MM-dd" />
-                                </h:outputText>
-                                <h:outputLabel for="isActive" value="Aktyvus:"/>
-                                <h:selectBooleanCheckbox id="isActive" value="#{house.isactive}" disabled="true"/>
+                                <h:outputText id="endDate" value="#{user.typeid}"/>
                                 <h:commandButton action="#{adminHouseManager.setHouse()}" value="Modifikuoti">
-                                    <f:param name="houseId" value="#{house.id}"/>
+                                    <f:param name="houseId" value="#{user.id}"/>
                                 </h:commandButton>
                             </h:panelGrid>
                         </h:form>

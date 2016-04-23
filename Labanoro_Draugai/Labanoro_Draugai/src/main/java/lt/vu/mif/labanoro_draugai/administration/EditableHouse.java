@@ -21,8 +21,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.SynchronizationType;
+import static javax.persistence.SynchronizationType.UNSYNCHRONIZED;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.House;
+import lt.vu.mif.labanoro_draugai.entities.Type;
+import lt.vu.mif.labanoro_draugai.reservation.HouseFilter;
 
 /**
  *
@@ -35,17 +38,14 @@ import lt.vu.mif.labanoro_draugai.entities.House;
 @ConversationScoped
 @Stateful
 public class EditableHouse implements Serializable {
-    
-    private static final String PAGE_INDEX          = "index?faces-redirect=true";
-    private static final String PAGE_CREATE_STUDENT = "createStudent?faces-redirect=true";
-    private static final String PAGE_CONFIRM        = "confirm?faces-redirect=true";
-    
+    //@PersistenceContext(type=PersistenceContextType.EXTENDED, synchronization=SynchronizationType.UNSYNCHRONIZED) 
+
     private int id;
     private List<House> houses;
     
     private House house;
     
-    @PersistenceContext(type = PersistenceContextType.EXTENDED, synchronization = SynchronizationType.UNSYNCHRONIZED)
+    @PersistenceContext
     private EntityManager em;
     
     @Inject
@@ -54,6 +54,9 @@ public class EditableHouse implements Serializable {
     public Conversation getConversation() {
         return conversation;
     }
+    
+    @Inject
+    HouseFilter houseFilter;
 
     @Inject
     DatabaseManager dbm;
@@ -103,7 +106,21 @@ public class EditableHouse implements Serializable {
     
     public String saveHouse() {
         conversation.end();
-        dbm.persistAndFlush(house);
+        em.joinTransaction();
+        //try {
+            //house = dbm.addHouse("Old small house", "Vilnius", "HouseReg-99", "House.Penthouse");
+            /*house = new House();
+            house.setTitle("Test title");
+            house.setAddress("Vilniuuusas");
+            house.setHousereg("HouseReg-TEST55");  //<--- UNIQUE
+            Type type = (Type) dbm.getEntity("Type", "Internalname", "House.Penthouse");
+            house.setTypeid(type);*/
+            boolean isSuccess = dbm.persistAndFlush(house);
+        /*}
+        catch (Exception ex)
+        {
+            return "houses";
+        }*/
         return "houses";
     }
 
