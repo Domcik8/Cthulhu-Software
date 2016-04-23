@@ -6,15 +6,21 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.ejb.Stateless;
+import javax.enterprise.context.Conversation;
+import javax.enterprise.context.ConversationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIData;
+import javax.faces.component.html.HtmlDataTable;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
+import javax.persistence.SynchronizationType;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.House;
 
@@ -22,24 +28,45 @@ import lt.vu.mif.labanoro_draugai.entities.House;
  *
  * @author ErnestB
  */
-@Named
+/*@Named
 @Stateful
-@ViewScoped
+@ViewScoped*/
+@Named
+@ConversationScoped
+@Stateful
 public class EditableHouse implements Serializable {
+    
+    private static final String PAGE_INDEX          = "index?faces-redirect=true";
+    private static final String PAGE_CREATE_STUDENT = "createStudent?faces-redirect=true";
+    private static final String PAGE_CONFIRM        = "confirm?faces-redirect=true";
     
     private int id;
     private List<House> houses;
-    public House house;
     
-    @PersistenceContext
-    EntityManager em;
+    private House house;
     
+    @PersistenceContext(type = PersistenceContextType.EXTENDED, synchronization = SynchronizationType.UNSYNCHRONIZED)
+    private EntityManager em;
+    
+    @Inject
+    private Conversation conversation;
+
+    public Conversation getConversation() {
+        return conversation;
+    }
+
     @Inject
     DatabaseManager dbm;
 
     @PostConstruct
     public void init() { 
-        houses = em.createNamedQuery("House.findByIsdeleted").setParameter("isdeleted",  0).getResultList();
+        //houses = em.createNamedQuery("House.findByIsdeleted").setParameter("isdeleted",  false).getResultList();
+        if (!conversation.isTransient()) {
+            conversation.end();
+        }
+
+        conversation.begin();
+        house = getEditableHouse();
     }
     
     public EditableHouse() {
@@ -52,22 +79,18 @@ public class EditableHouse implements Serializable {
     }
     
     public House getHouse() {
-        if (house == null) {
+        /*if (house == null) {
             house = getEditableHouse();
-        }
+        }*/
         
         return house;
-    }
-    
-    public void setHouse(House h) {
-        house = h;
     }
     
     public House getEditableHouse() {
         try {
             String houseId = getParameter("houseId");
             id = Integer.parseInt(houseId);
-            //houses = em.createNamedQuery("House.findById").setParameter("id",  id).getResultList();
+            houses = em.createNamedQuery("House.findById").setParameter("id",  id).getResultList();
             house = houses.get(0);
         }
         catch (Exception ex) {
@@ -78,14 +101,9 @@ public class EditableHouse implements Serializable {
         }
     }
     
-    public String saveHouse(House h) {
-        //em.getTransaction().begin();
-        //em.persist(house);
-        //em.getTransaction().commit();
-        //em.flush();
-        //house.setAddress("Vilniussss");
-        //house = getHouse();
-        //dbm.editHouse(house);
+    public String saveHouse() {
+        conversation.end();
+        dbm.persistAndFlush(house);
         return "houses";
     }
 

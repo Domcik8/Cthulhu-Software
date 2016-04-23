@@ -573,7 +573,7 @@ public class DatabaseManager {
      * 
      * @param newEntity 
      */
-    private boolean persistAndFlush(Object newEntity) {
+    public boolean persistAndFlush(Object newEntity) {
         try {
             em.persist(newEntity);
             em.flush();

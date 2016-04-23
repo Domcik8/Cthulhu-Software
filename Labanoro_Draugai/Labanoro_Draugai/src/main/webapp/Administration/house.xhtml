@@ -74,41 +74,34 @@ and open the template in the editor.
             </div>
         </nav>
         
-        <div class="container .col-md-8">
-            <p:dataScroller value="#{editableHouse.house}" var="house" chunkSize="15" style="border:thin">
-                <h:panelGrid columns="2" style="width:100%" columnClasses="logo,detail">
-                    <span class="glyphicon glyphicon-bed" style="width: 30%"/>
-                        <h:form>
-                            <h:panelGrid columns="2" >
+        
+        <div>
+                <h:form>
+                    <h:panelGrid id="grid" columns="2">
                                 <h:outputLabel for="title" value="Pavadinimas:"/>
-                                <h:inputText id="title" value="#{house.title}"/>
+                                <h:inputText id="title" value="#{editableHouse.house.title}"/>
                                 <h:outputLabel for="houseId" value="Namelis nr."/>
-                                <h:inputText id="houseId" value="#{house.id}"/>
+                                <h:inputText id="houseId" value="#{editableHouse.house.id}"/>
                                 <h:outputLabel for="weekPrice" value="Sav. kaina (EUR):"/>
-                                <h:inputText id="weekPrice" value="#{house.weekprice}"/>
+                                <h:inputText id="weekPrice" value="#{editableHouse.house.weekprice}"/>
                                 <h:outputLabel for="numberOfPlaces" value="Vietų sk.:"/>
-                                <h:inputText id="numberOfPlaces" value="#{house.numberofplaces}"/>
+                                <h:inputText id="numberOfPlaces" value="#{editableHouse.house.numberofplaces}"/>
                                 <h:outputLabel for="address" value="Adresas:"/>
-                                <h:inputText id="address" value="#{house.address}"/>
+                                <h:inputText id="address" value="#{editableHouse.house.address}"/>
                                 <h:outputLabel for="startDate" value="Pradžios data:"/>
-                                <h:inputText readonly="true" styleClass="datepicker" id="startDate" value="#{house.startdate}">
+                                <h:inputText readonly="true" styleClass="datepicker" id="startDate" value="#{editableHouse.house.seasonstartdate}">
                                     <f:convertDateTime pattern="yyyy-MM-dd" />
                                 </h:inputText>
                                 <h:outputLabel for="endDate" value="Pabaigos data:"/>
-                                <h:inputText readonly="true" styleClass="datepicker" id="endDate" value="#{house.enddate}">
+                                <h:inputText readonly="true" styleClass="datepicker" id="endDate" value="#{editableHouse.house.seasonenddate}">
                                     <f:convertDateTime pattern="yyyy-MM-dd" />
                                 </h:inputText>
-                                <h:outputLabel for="isActive" value="Aktyvus:"/>
-                                <h:inputText id="isActive" value="#{house.isactive}"/>
-                                <h:commandButton action="#{editableHouse.saveHouse(house)}" value="Išsaugoti">
+                                <h:commandButton action="#{editableHouse.saveHouse}" value="Išsaugoti">
                                     <f:ajax render="@form" execute="@form"/>
                                 </h:commandButton>
                                 <h:commandButton value="Atmesti"/>
                             </h:panelGrid>
-                        </h:form>
-                </h:panelGrid>
-                <hr/>
-            </p:dataScroller>
+                </h:form>
         </div>
         
         <!-- scripts -->
