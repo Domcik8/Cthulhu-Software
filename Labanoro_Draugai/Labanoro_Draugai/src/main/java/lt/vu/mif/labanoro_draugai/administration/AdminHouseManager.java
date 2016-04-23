@@ -45,7 +45,7 @@ public class AdminHouseManager implements Serializable {
     
     @PostConstruct
     public void init() { 
-        houses = em.createNamedQuery("House.findByIsdeleted").setParameter("isdeleted",  false).getResultList();
+        houses = em.createNamedQuery("House.findAll").setParameter("isdeleted",  false).getResultList();
     }
     
     public List<House> getHouses() {
@@ -53,6 +53,7 @@ public class AdminHouseManager implements Serializable {
     }
     
     public String setHouse() {
+        
         return "house";
     }
     

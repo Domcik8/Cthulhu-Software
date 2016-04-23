@@ -59,8 +59,8 @@ public class DatabaseManager {
         fillBasicServices();
         fillBasicReservations();
         fillBasicSystemParameters();
-        fillBasicHouseImages();
-        fillBasicServiceImages();
+        //fillBasicHouseImages();
+        //fillBasicServiceImages();
         
         return "DataBase has been filled";
     }
