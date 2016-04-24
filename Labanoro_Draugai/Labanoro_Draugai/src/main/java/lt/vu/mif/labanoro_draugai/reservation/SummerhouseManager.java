@@ -356,6 +356,13 @@ public class SummerhouseManager implements Serializable{
                 || !isHouseAvailable(selectedHouse, selectedDateFrom, selectedDateTo)|| selectedHousePeriodPrice() == 0){
            return "";
         }
-        return "reservationConfirmation.html?faces-redirect=true";
+        
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("house", selectedHouse);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("dateFrom", selectedDateFrom);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("dateTo", selectedDateTo);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("serviceList", selectedHouseSelectedServices);
+        
+        
+        return "reservationConfirmation.html";
     }
 }

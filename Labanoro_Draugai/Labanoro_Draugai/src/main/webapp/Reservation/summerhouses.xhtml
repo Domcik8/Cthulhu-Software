@@ -171,10 +171,6 @@ and open the template in the editor.
                                     <h:outputLabel id="periodPrice" value="Kaina: #{summerhouseManager.selectedHousePeriodPrice()}t" />
                                     <p:commandLink id="confirmOrder" action="#{summerhouseManager.confirmSelectedHouse()}" class="btn btn-success" 
                                         style="position: relative;left: 40%; bottom: -35%;" value="Užsakyti">
-                                        <f:param name="houseId" value="#{summerhouseManager.selectedHouse.id}"/>
-                                        <f:param name="dateFrom" value="#{summerhouseManager.selectedDateFrom}"/>
-                                        <f:param name="dateTo" value="#{summerhouseManager.selectedDateTo}"/>
-                                        <f:param name="selectedServices" value="#{summerhouseManager.selectedHouseSelectedServices}"/>
                                     </p:commandLink>
                                     
                                 </p:outputPanel>
