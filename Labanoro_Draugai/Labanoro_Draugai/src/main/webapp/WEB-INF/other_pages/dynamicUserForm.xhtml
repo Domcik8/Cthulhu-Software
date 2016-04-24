@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pe="http://primefaces.org/ui/extensions"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
+        <h:panelGroup id="displayDynaFormGroup">  
+                        <pe:dynaForm id="displayDynaForm" value="#{model}" var="data">  
+                            <pe:dynaFormControl type="input" for="txtd">  
+                                <p:inputText id="txtd" value="#{data.value}" required="#{data.required}"/>  
+                            </pe:dynaFormControl>
+                            <pe:dynaFormControl type="number" for="numd">  
+                                <p:spinner id="numd" value="#{data.value}" required="#{data.required}"/>  
+                            </pe:dynaFormControl>
+                            <pe:dynaFormControl type="calendar" for="cald" styleClass="calendar" >  
+                                <p:calendar id="cald" value="#{data.value}" required="#{data.required}" showOn="button" pattern="yyyy-MM-dd" locale="lt"/>  
+                            </pe:dynaFormControl>  
+                            <pe:dynaFormControl type="select" for="seld" styleClass="select">  
+                                <h:selectOneMenu id="seld" value="#{data.value}" required="#{data.required}">  
+                                    <f:selectItems value="#{data.selectItems}"/>  
+                                </h:selectOneMenu>  
+                            </pe:dynaFormControl>  
+                            <pe:dynaFormControl type="textarea" for="taread">  
+                                <p:inputTextarea id="taread" value="#{data.value}" required="#{data.required}" autoResize="true" rows="5" cols="150" style="width: 100%"/>  
+                            </pe:dynaFormControl>   
+                        </pe:dynaForm>
+                    </h:panelGroup>
+</ui:composition>

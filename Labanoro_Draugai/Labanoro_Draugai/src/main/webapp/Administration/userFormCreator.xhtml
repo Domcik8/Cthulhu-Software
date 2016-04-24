@@ -53,11 +53,10 @@ and open the template in the editor.
                         </pe:dynaFormControl> 
                         <f:facet name="buttonBar">
                             <p:commandLink value="Pridėti eilutę" action="#{userFormCreationManager.addAdminFormPropery()}"  
-                                           global="false" style="margin-left:10px" process="dynaForm" update=":mainForm:dynaFormGroup"/>   
+                                           global="false" style="position: relative;left: -80%; bottom: -35%" process="dynaForm" update=":mainForm:dynaFormGroup"/>   
                             <p:commandButton value="Peržiūrėti formą" action="#{userFormCreationManager.submitForm}"  
                                              process="dynaForm" update=":mainForm:dynaFormGroup :mainForm:displayDynaForm"  
                                              oncomplete=""/>  
-                             
                         </f:facet>  
                     </pe:dynaForm>
                 </h:panelGroup>  
@@ -66,29 +65,10 @@ and open the template in the editor.
                 <h2>
                     Vartotojų matoma forma:
                 </h2>
-            
-                    <h:panelGroup id="displayDynaFormGroup">  
-                        <pe:dynaForm id="displayDynaForm" value="#{userFormCreationManager.displayModel}" var="data">  
-                            <pe:dynaFormControl type="input" for="txtd">  
-                                <p:inputText id="txtd" value="#{data.value}" required="#{data.required}"/>  
-                            </pe:dynaFormControl>
-                            <pe:dynaFormControl type="number" for="numd">  
-                                <p:spinner id="numd" value="#{data.value}" required="#{data.required}"/>  
-                            </pe:dynaFormControl>
-                            <pe:dynaFormControl type="calendar" for="cald" styleClass="calendar" >  
-                                <p:calendar id="cald" value="#{data.value}" required="#{data.required}" showOn="button" pattern="yyyy-MM-dd" locale="lt"/>  
-                            </pe:dynaFormControl>  
-                            <pe:dynaFormControl type="select" for="seld" styleClass="select">  
-                                <h:selectOneMenu id="seld" value="#{data.value}" required="#{data.required}">  
-                                    <f:selectItems value="#{data.selectItems}"/>  
-                                </h:selectOneMenu>  
-                            </pe:dynaFormControl>  
-                            <pe:dynaFormControl type="textarea" for="taread">  
-                                <p:inputTextarea id="taread" value="#{data.value}" required="#{data.required}" autoResize="true" rows="5" cols="150" style="width: 100%"/>  
-                            </pe:dynaFormControl>   
-                        </pe:dynaForm>
-                    </h:panelGroup>  
-                </p:panel>
+                <ui:include src="/WEB-INF/other_pages/dynamicUserForm.xhtml">
+                    <ui:param name="model" value="#{userFormCreationManager.displayModel}" />
+                </ui:include>   
+            </p:panel>
             
             <p:dialog header="Input values" widgetVar="inputValuesWidget">  
                 <p:dataList id="inputValues" value="#{userFormCreationManager.adminUserProperties}" var="prop"  
