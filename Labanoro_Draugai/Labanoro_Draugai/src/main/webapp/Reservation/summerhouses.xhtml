@@ -98,7 +98,7 @@ and open the template in the editor.
                                     Vasarnamiai
                             </f:facet>
                             <h:panelGrid columns="2" style="width: 100%" columnClasses="ui-grid-col-4,ui-grid-col-8" >
-                                <p:graphicImage id="img" name="#{summerhouseManager.getDisplayHouseImage(house.housereg)}" style="width: 100%;padding-right: 10px"/>
+                                <p:graphicImage id="img" url="#{summerhouseManager.getDisplayHouseImage(house.housereg)}" style="width: 100%;padding-right: 10px"/>
                                 <p:outputPanel>
 
                                     <p:commandLink oncomplete="disableScrolling(),PF('houseDialog').show()" update=":houseDialogForm:houseDetail,:houseDialogForm:houseGalleria,:houseDialogForm:reservedDays" >
@@ -122,16 +122,17 @@ and open the template in the editor.
                     <h:form id="houseDialogForm" >
                         <h:inputHidden id="reservedDays" value="#{summerhouseManager.selectedHouseReservedDays}" />    
                         <p:dialog id="houseDetail" header="#{summerhouseManager.selectedHouse.title}"
-                                  width="320" height="350" focus="confirmOrder"
+                                  width="300" height="350" focus="confirmOrder"
                                   modal="true" showEffect="clip" widgetVar="houseDialog"
                                   resizable="false" draggable="false" responsive="true"
                                   closeOnEscape="true" fitViewport="true" position="center"
                                   onHide="enableScrolling()">
+                            <p:ajax event="close" listener="#{summerhouseManager.handleDialogClose}" />
                             <p:outputPanel >
                                 <p:galleria id="houseGalleria" value="#{summerhouseManager.getHouseImageList(summerhouseManager.selectedHouse.housereg)}" var="image" 
                                             style="width: 100%" panelHeight="150" panelWidth="250"
                                             showFilmstrip="true" autoPlay="false" showCaption="false">
-                                    <p:graphicImage name="#{image}" alt="#{image}" style="width: 100%"/>
+                                    <p:graphicImage url="#{image}" alt="#{image}" style="width: 100%"/>
                                 </p:galleria>
                                 <h:panelGrid columns="1" style="width: 100%">
                                     <h:outputText class="small-text" value="Aprašas: #{summerhouseManager.selectedHouse.description}"/>
@@ -159,13 +160,21 @@ and open the template in the editor.
                                     </p:calendar>
                                     
                                     <br/>
-                                    <h:outputLabel id="periodPrice" value="Kaina: #{summerhouseManager.selectedHousePeriodPrice()}t" />
                                     
+                                    <p:accordionPanel id="selectedHouseServiceAccordion" multiple="true" style="width: 90%" activeIndex="null">
+                                        <p:tab id="optionalServices" title="Papildomos paslaugos">
+                                            <p:selectManyCheckbox id="selectedHouseServices" value="#{summerhouseManager.selectedHouseSelectedServices}" layout="pageDirection" columns="3">
+                                                <f:selectItems value="#{summerhouseManager.selectedHouseAvailableServices}" var="filter" itemLabel="#{filter}" itemValue="#{filter}" />
+                                            </p:selectManyCheckbox> 
+                                        </p:tab>
+                                    </p:accordionPanel>
+                                    <h:outputLabel id="periodPrice" value="Kaina: #{summerhouseManager.selectedHousePeriodPrice()}t" />
                                     <p:commandLink id="confirmOrder" action="#{summerhouseManager.confirmSelectedHouse()}" class="btn btn-success" 
-                                        style="position: absolute;right:5px; bottom:5px" value="Užsakyti">
+                                        style="position: relative;left: 40%; bottom: -35%;" value="Užsakyti">
                                         <f:param name="houseId" value="#{summerhouseManager.selectedHouse.id}"/>
                                         <f:param name="dateFrom" value="#{summerhouseManager.selectedDateFrom}"/>
                                         <f:param name="dateTo" value="#{summerhouseManager.selectedDateTo}"/>
+                                        <f:param name="selectedServices" value="#{summerhouseManager.selectedHouseSelectedServices}"/>
                                     </p:commandLink>
                                     
                                 </p:outputPanel>

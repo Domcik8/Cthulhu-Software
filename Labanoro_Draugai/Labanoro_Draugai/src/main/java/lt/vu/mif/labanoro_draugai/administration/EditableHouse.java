@@ -5,11 +5,8 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
-import javax.ejb.Stateless;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
+import javax.enterprise.context.Conversation;
+import javax.enterprise.context.ConversationScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -17,29 +14,51 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.House;
+import lt.vu.mif.labanoro_draugai.entities.Type;
 
 /**
  *
  * @author ErnestB
  */
-@Named
+/*@Named
 @Stateful
-@ViewScoped
+@ViewScoped*/
+@Named
+@ConversationScoped
+@Stateful
 public class EditableHouse implements Serializable {
-    
+    //@PersistenceContext(type=PersistenceContextType.EXTENDED, synchronization=SynchronizationType.UNSYNCHRONIZED) 
+
     private int id;
     private List<House> houses;
-    public House house;
+    
+    private House house;
     
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
     
+    @Inject
+    private Conversation conversation;
+
+    public Conversation getConversation() {
+        return conversation;
+    }
+    
+    //@Inject
+    //HouseFilter houseFilter;
+
     @Inject
     DatabaseManager dbm;
 
     @PostConstruct
     public void init() { 
-        houses = em.createNamedQuery("House.findByIsdeleted").setParameter("isdeleted",  0).getResultList();
+        //houses = em.createNamedQuery("House.findByIsdeleted").setParameter("isdeleted",  false).getResultList();
+        if (!conversation.isTransient()) {
+            conversation.end();
+        }
+        //houseFilter = new HouseFilter();
+        conversation.begin();
+        house = getEditableHouse();
     }
     
     public EditableHouse() {
@@ -52,22 +71,18 @@ public class EditableHouse implements Serializable {
     }
     
     public House getHouse() {
-        if (house == null) {
+        /*if (house == null) {
             house = getEditableHouse();
-        }
+        }*/
         
         return house;
-    }
-    
-    public void setHouse(House h) {
-        house = h;
     }
     
     public House getEditableHouse() {
         try {
             String houseId = getParameter("houseId");
             id = Integer.parseInt(houseId);
-            //houses = em.createNamedQuery("House.findById").setParameter("id",  id).getResultList();
+            houses = em.createNamedQuery("House.findById").setParameter("id",  id).getResultList();
             house = houses.get(0);
         }
         catch (Exception ex) {
@@ -78,14 +93,26 @@ public class EditableHouse implements Serializable {
         }
     }
     
-    public String saveHouse(House h) {
-        //em.getTransaction().begin();
-        //em.persist(house);
-        //em.getTransaction().commit();
-        //em.flush();
-        //house.setAddress("Vilniussss");
-        //house = getHouse();
-        //dbm.editHouse(house);
+    public String saveHouse() {
+        Type type = (Type) dbm.getEntity("Type", "Internalname", "House");
+        house.setTypeid(type);
+        
+        conversation.end();
+        em.joinTransaction();
+        //try {
+            //house = dbm.addHouse("Old small house", "Vilnius", "HouseReg-99", "House.Penthouse");
+            /*house = new House();
+            house.setTitle("Test title");
+            house.setAddress("Vilniuuusas");
+            house.setHousereg("HouseReg-TEST55");  //<--- UNIQUE
+            Type type = (Type) dbm.getEntity("Type", "Internalname", "House.Penthouse");
+            house.setTypeid(type);*/
+            boolean isSuccess = dbm.persistAndFlush(house);
+        /*}
+        catch (Exception ex)
+        {
+            return "houses";
+        }*/
         return "houses";
     }
 
@@ -103,5 +130,10 @@ public class EditableHouse implements Serializable {
     public String getTitle() {
         return house.getTitle();
     }
-
+    
+    public String declineChanges() {
+        house = null;
+        conversation.end();
+        return "houses";
+    }
 }

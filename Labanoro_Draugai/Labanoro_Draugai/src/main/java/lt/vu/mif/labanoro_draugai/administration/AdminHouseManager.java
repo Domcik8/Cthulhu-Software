@@ -5,18 +5,11 @@
  */
 package lt.vu.mif.labanoro_draugai.administration;
 
-import java.beans.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.ejb.Stateful;
-import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -32,10 +25,7 @@ import lt.vu.mif.labanoro_draugai.entities.House;
 @Stateful
 @ViewScoped
 public class AdminHouseManager implements Serializable {
-    
     private List<House> houses;
-    private House house;
-    private String editableHouseId;
     
     @PersistenceContext
     EntityManager em;
@@ -45,7 +35,10 @@ public class AdminHouseManager implements Serializable {
     
     @PostConstruct
     public void init() { 
-        houses = em.createNamedQuery("House.findByIsdeleted").setParameter("isdeleted",  false).getResultList();
+        houses = em.createNamedQuery("House.findAll").getResultList();
+    }
+    
+    public AdminHouseManager() {
     }
     
     public List<House> getHouses() {
@@ -54,9 +47,6 @@ public class AdminHouseManager implements Serializable {
     
     public String setHouse() {
         return "house";
-    }
-    
-    public AdminHouseManager() {
     }
     
     /*private String getParameter(String key) {
@@ -79,17 +69,5 @@ public class AdminHouseManager implements Serializable {
         finally {
             return house;
         }
-    }
-     
-     public String saveHouse(House h) {
-        //em.getTransaction().begin();
-        //em.persist(house);
-        //em.getTransaction().commit();
-        //em.flush();
-        //house.setAddress("Vilniussss");
-        //house = getHouse();
-        
-        dbm.editHouse(h);
-        return "houses";
     }*/
 }

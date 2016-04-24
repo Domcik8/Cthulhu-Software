@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -31,7 +32,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Houseimage.findById", query = "SELECT h FROM Houseimage h WHERE h.id = :id"),
     @NamedQuery(name = "Houseimage.findByInternalname", query = "SELECT h FROM Houseimage h WHERE h.internalname = :internalname"),
     @NamedQuery(name = "Houseimage.findBySequence", query = "SELECT h FROM Houseimage h WHERE h.sequence = :sequence"),
-    @NamedQuery(name = "Houseimage.findByPath", query = "SELECT h FROM Houseimage h WHERE h.path = :path"),
+    @NamedQuery(name = "Houseimage.findByMimetype", query = "SELECT h FROM Houseimage h WHERE h.mimetype = :mimetype"),
     @NamedQuery(name = "Houseimage.findByDescription", query = "SELECT h FROM Houseimage h WHERE h.description = :description"),
     @NamedQuery(name = "Houseimage.findByIsdeleted", query = "SELECT h FROM Houseimage h WHERE h.isdeleted = :isdeleted"),
     @NamedQuery(name = "Houseimage.findByOptLockVersion", query = "SELECT h FROM Houseimage h WHERE h.optLockVersion = :optLockVersion")})
@@ -52,9 +53,14 @@ public class Houseimage implements Serializable {
     private Integer sequence;
     @Basic(optional = false)
     @NotNull
+    @Lob
+    @Column(name = "IMAGE")
+    private Serializable image;
+    @Basic(optional = false)
+    @NotNull
     @Size(min = 1, max = 255)
-    @Column(name = "PATH")
-    private String path;
+    @Column(name = "MIMETYPE")
+    private String mimetype;
     @Size(max = 255)
     @Column(name = "DESCRIPTION")
     private String description;
@@ -76,10 +82,11 @@ public class Houseimage implements Serializable {
         this.id = id;
     }
 
-    public Houseimage(Integer id, String internalname, String path) {
+    public Houseimage(Integer id, String internalname, Serializable image, String mimetype) {
         this.id = id;
         this.internalname = internalname;
-        this.path = path;
+        this.image = image;
+        this.mimetype = mimetype;
     }
 
     public Integer getId() {
@@ -106,12 +113,20 @@ public class Houseimage implements Serializable {
         this.sequence = sequence;
     }
 
-    public String getPath() {
-        return path;
+    public Serializable getImage() {
+        return image;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setImage(Serializable image) {
+        this.image = image;
+    }
+
+    public String getMimetype() {
+        return mimetype;
+    }
+
+    public void setMimetype(String mimetype) {
+        this.mimetype = mimetype;
     }
 
     public String getDescription() {

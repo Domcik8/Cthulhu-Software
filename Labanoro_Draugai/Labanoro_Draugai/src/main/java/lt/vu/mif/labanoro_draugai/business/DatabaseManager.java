@@ -59,8 +59,8 @@ public class DatabaseManager {
         fillBasicServices();
         fillBasicReservations();
         fillBasicSystemParameters();
-        fillBasicHouseImages();
-        fillBasicServiceImages();
+        //fillBasicHouseImages();
+        //fillBasicServiceImages();
         
         return "DataBase has been filled";
     }
@@ -278,7 +278,7 @@ public class DatabaseManager {
      * @param lastName
      * @param internalName 
      */
-    private House addHouse(String title, String address, String houseReg, String typeInternalName) {
+    public House addHouse(String title, String address, String houseReg, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
         
         if(type == null) {
@@ -477,7 +477,7 @@ public class DatabaseManager {
         Houseimage newHouseimage = new Houseimage();
         
         newHouseimage.setInternalname(internalName);
-        newHouseimage.setPath(path);
+        //newHouseimage.setPath(path);
         newHouseimage.setSequence(sequence);
         newHouseimage.setHouseid(house);
         newHouseimage.setTypeid(type);
@@ -522,7 +522,7 @@ public class DatabaseManager {
         Serviceimage newServiceimage = new Serviceimage();
         
         newServiceimage.setInternalname(internalName);
-        newServiceimage.setPath(path);
+        //newServiceimage.setPath(path);
         newServiceimage.setSequence(sequence);
         newServiceimage.setServiceid(service);
         newServiceimage.setTypeid(type);
@@ -573,7 +573,7 @@ public class DatabaseManager {
      * 
      * @param newEntity 
      */
-    private boolean persistAndFlush(Object newEntity) {
+    public boolean persistAndFlush(Object newEntity) {
         try {
             em.persist(newEntity);
             em.flush();
