@@ -25,6 +25,10 @@ and open the template in the editor.
         <ui:include src="/WEB-INF/other_pages/navigation.xhtml" />
         <!-- End of Navigation panel -->
         
+        <h:form>
+            <h:commandButton action="house" value="Pridėti namelį"/>
+        </h:form>
+        
         <!-- Summerhouse list -->
         <div class="container .col-md-8">
             <p:dataScroller value="#{adminHouseManager.getHouses()}" var="house" chunkSize="15" style="border:thin">
@@ -37,8 +41,8 @@ and open the template in the editor.
                                 <h:outputText/>
                                 <h:outputLabel class="small-text" value="#{house.description}"/>
                                 <h:outputText/>
-                                <h:outputLabel for="houseId" value="Namelis nr."/>
-                                <h:outputText id="houseId" value="#{house.id}"/>
+                                <h:outputLabel for="houseId" value="Namelio reg. nr."/>
+                                <h:outputText id="houseId" value="#{house.housereg}"/>
                                 <h:outputLabel for="weekPrice" value="Sav. kaina (EUR):"/>
                                 <h:outputText id="weekPrice" value="#{house.weekprice}"/>
                                 <h:outputLabel for="numberOfPlaces" value="Vietų sk.:"/>
@@ -64,9 +68,6 @@ and open the template in the editor.
                 </h:panelGrid>
                 <hr/>
             </p:dataScroller>
-            <h:form>
-                <h:commandButton action="#{adminHouseManager.setHouse()}" value="Pridėti namelį"/>
-            </h:form>
         </div>
         
         

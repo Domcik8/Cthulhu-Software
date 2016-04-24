@@ -5,27 +5,16 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
-import javax.ejb.Stateless;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
-import javax.faces.component.UIData;
-import javax.faces.component.html.HtmlDataTable;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceContextType;
-import javax.persistence.SynchronizationType;
-import static javax.persistence.SynchronizationType.UNSYNCHRONIZED;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Type;
-import lt.vu.mif.labanoro_draugai.reservation.HouseFilter;
 
 /**
  *
@@ -55,8 +44,8 @@ public class EditableHouse implements Serializable {
         return conversation;
     }
     
-   /* @Inject
-    HouseFilter houseFilter;*/
+    //@Inject
+    //HouseFilter houseFilter;
 
     @Inject
     DatabaseManager dbm;
@@ -67,7 +56,7 @@ public class EditableHouse implements Serializable {
         if (!conversation.isTransient()) {
             conversation.end();
         }
-
+        //houseFilter = new HouseFilter();
         conversation.begin();
         house = getEditableHouse();
     }
@@ -105,6 +94,9 @@ public class EditableHouse implements Serializable {
     }
     
     public String saveHouse() {
+        Type type = (Type) dbm.getEntity("Type", "Internalname", "House");
+        house.setTypeid(type);
+        
         conversation.end();
         em.joinTransaction();
         //try {
@@ -138,5 +130,10 @@ public class EditableHouse implements Serializable {
     public String getTitle() {
         return house.getTitle();
     }
-
+    
+    public String declineChanges() {
+        house = null;
+        conversation.end();
+        return "houses";
+    }
 }
