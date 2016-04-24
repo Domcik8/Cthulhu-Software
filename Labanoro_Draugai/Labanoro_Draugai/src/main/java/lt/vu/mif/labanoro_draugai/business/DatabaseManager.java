@@ -1,5 +1,7 @@
 package lt.vu.mif.labanoro_draugai.business;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,10 +13,7 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
-import javax.ejb.AfterBegin;
-import javax.ejb.AfterCompletion;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,7 +25,6 @@ import lt.vu.mif.labanoro_draugai.entities.Houseimage;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.entities.Reservation;
 import lt.vu.mif.labanoro_draugai.entities.Service;
-import lt.vu.mif.labanoro_draugai.entities.Serviceimage;
 import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import lt.vu.mif.labanoro_draugai.entities.Type;
 
@@ -204,9 +202,8 @@ public class DatabaseManager {
     }
     
     private void fillBasicServiceImages() {
-        addServiceImage("Picture.ServiceReg-1.1", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\Service\\Service-1_1.JPG", 1, "ServiceReg-1", "Picture.Service");
-        addServiceImage("Picture.ServiceReg-2.1", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\Service\\Service-2_1.JPG", 1, "ServiceReg-2", "Picture.Service");
-
+        //addServiceImage("Picture.ServiceReg-1.1", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\Service\\Service-1_1.JPG", 1, "ServiceReg-1", "Picture.Service");
+        //addServiceImage("Picture.ServiceReg-2.1", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\Service\\Service-2_1.JPG", 1, "ServiceReg-2", "Picture.Service");
     }
     
     /**
@@ -463,6 +460,56 @@ public class DatabaseManager {
     private Houseimage addHouseImage(String internalName, String path, int sequence, String houseReg, String typeInternalName){
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
         House house = (House) getEntity("House", "Housereg", houseReg);
+        FileInputStream fis = null;
+        byte[] imageInBytes = null;
+        
+        Houseimage newHouseimage = new Houseimage();
+        
+        try {
+            File image = new File(path);
+            fis = new FileInputStream(image);
+            imageInBytes = new byte[(int) image.length()];
+            fis.read(imageInBytes);
+        } catch (Exception e) {
+        }
+        finally {
+            try{
+                fis.close();  
+            } catch (Exception e) {
+            }
+        } 
+        
+/*
+public class InsertPictureToMySql {
+  public static void main(String[] args) throws Exception, IOException, SQLException {
+    Class.forName("org.gjt.mm.mysql.Driver");
+    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/databaseName", "root", "root");
+    String INSERT_PICTURE = "insert into MyPictures(id, name, photo) values (?, ?, ?)";
+
+    /*FileInputStream fis = null;
+    PreparedStatement ps = null;
+    try {
+      conn.setAutoCommit(false);
+      File file = new File("myPhoto.png");
+      fis = new FileInputStream(file);
+      ps = conn.prepareStatement(INSERT_PICTURE);
+      ps.setString(1, "001");
+      ps.setString(2, "name");
+      ps.setBinaryStream(3, fis, (int) file.length());
+      ps.executeUpdate();
+      conn.commit();
+    } finally {
+      ps.close();
+      fis.close();
+    }
+  }
+}*/
+        
+        newHouseimage.setInternalname(internalName);
+        newHouseimage.setImage(imageInBytes);
+        newHouseimage.setSequence(sequence);
+        newHouseimage.setHouseid(house);
+        newHouseimage.setTypeid(type);
         
         if(type == null) {
             System.out.println(String.format("There is no type '%s'", typeInternalName));
@@ -474,14 +521,6 @@ public class DatabaseManager {
             return null;
         }
         
-        Houseimage newHouseimage = new Houseimage();
-        
-        newHouseimage.setInternalname(internalName);
-        //newHouseimage.setPath(path);
-        newHouseimage.setSequence(sequence);
-        newHouseimage.setHouseid(house);
-        newHouseimage.setTypeid(type);
-        
         if(entityExists("Houseimage", "Internalname", internalName)) {
             System.out.println(String.format("House image with internal name '%s' already exists", internalName));
             return null;
@@ -492,51 +531,6 @@ public class DatabaseManager {
         else
             return null;
         return newHouseimage;
-    }
-
-    /***
-     * Creates new service image and flushes it to database.
-     * Returns service image entity if created sucessfully
-     * 
-     * @param internalName
-     * @param path
-     * @param sequence
-     * @param serviceReg
-     * @param typeInternalName
-     * @return 
-     */
-    private Serviceimage addServiceImage(String internalName, String path, int sequence, String serviceReg, String typeInternalName){
-        Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
-        Service service = (Service) getEntity("Service", "Servicereg", serviceReg);
-        
-        if(type == null) {
-            System.out.println(String.format("There is no type '%s'", typeInternalName));
-            return null;
-        }  
-        
-        if(service == null) {
-            System.out.println(String.format("Service with registration '%s' does not exist", serviceReg));
-            return null;
-        }
-        
-        Serviceimage newServiceimage = new Serviceimage();
-        
-        newServiceimage.setInternalname(internalName);
-        //newServiceimage.setPath(path);
-        newServiceimage.setSequence(sequence);
-        newServiceimage.setServiceid(service);
-        newServiceimage.setTypeid(type);
-        
-        if(entityExists("Serviceimage", "Internalname", internalName)) {
-            System.out.println(String.format("Service image with internal name '%s' already exists", internalName));
-            return null;
-        }
-        
-        if(persistAndFlush(newServiceimage))
-            System.out.println(String.format("Service image '%s' created successfully", internalName));
-        else
-            return null;
-        return newServiceimage;
     }
     
      /**
