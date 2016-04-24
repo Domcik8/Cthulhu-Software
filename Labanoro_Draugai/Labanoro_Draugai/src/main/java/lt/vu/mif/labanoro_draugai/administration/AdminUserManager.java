@@ -5,25 +5,22 @@
  */
 package lt.vu.mif.labanoro_draugai.administration;
 
-import java.beans.*;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.enterprise.context.Conversation;
-import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
+import javax.enterprise.context.ConversationScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
-import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 
 /**
@@ -32,7 +29,7 @@ import lt.vu.mif.labanoro_draugai.entities.Person;
  */
 @Named
 @Stateful
-@ViewScoped
+@ConversationScoped
 public class AdminUserManager implements Serializable {
     
     private List<Person> users;
@@ -49,17 +46,37 @@ public class AdminUserManager implements Serializable {
     
     @PostConstruct
     public void init() { 
+        if (!conversation.isTransient()) {
+            conversation.end();
+        }
+        
         conversation.begin();
-        //users = em.createNamedQuery("User.findByIsdeleted").setParameter("isdeleted",  false).getResultList();
-        users = em.createNamedQuery("User.findAll").getResultList();
+        
+        if (users == null || users.isEmpty()) {
+            users = em.createNamedQuery("Person.findAll").getResultList();
+        }
+        
+        initFilters();
     }
     
     public List<Person> getUsers() {
         return users;
     }
     
-    public String setHouse() {
-        return "house";
+    public String removeUser() {
+        String houseId = getParameter("userId");
+        int id = Integer.parseInt(houseId);
+        users = em.createNamedQuery("Person.findById").setParameter("id",  id).getResultList();
+        user = users.get(0);
+        
+        user.setIsdeleted(true);
+        
+        conversation.end();
+        em.joinTransaction();
+
+        boolean isSuccess = dbm.persistAndFlush(user);
+        
+        return "users";
     }
     
     public AdminUserManager() {
@@ -70,6 +87,55 @@ public class AdminUserManager implements Serializable {
         Map<String,String> params = fc.getExternalContext().getRequestParameterMap();
         
         return params.get(key);
+    }
+    
+    // FILTERS:
+    
+    private int filter;
+    private Map<String, Object> filters;
+    private String filterKey;
+    
+    public int getFilter() {
+        return filter;
+    }
+    
+    public void setFilter(int filt) {
+        filter = filt;
+    }
+    
+    public Map<String, Object> getFilters() {
+        return filters;
+    }
+    
+    public void initFilters() {
+        filters = new LinkedHashMap<String, Object>();
+        
+        filters.put("El. paštas", 0);
+        filters.put("Vardas", 1);
+        filters.put("Pavardė", 2);
+    }
+    
+    public String getFilterKey() {
+        return filterKey;
+    }
+    
+    public void setFilterKey(String filtKey) {
+        filterKey = filtKey;
+    }
+    
+    public String filterUsers() {
+        if (!filterKey.equals("")) {
+            switch (filter) {
+                case 0:
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
+                default:
+            }
+        }
+        return "users";
     }
      
      /*public House getHouse() {

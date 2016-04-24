@@ -24,42 +24,54 @@ and open the template in the editor.
         <!-- Navigation panel-->
     <ui:include src="/WEB-INF/other_pages/navigation.xhtml" />
     <!-- End of Navigation panel -->
-        
-        <!-- Summerhouse list -->
-        <div class="container .col-md-8">
-            <p:dataScroller value="#{adminUserManager.getUsers()}" var="user" chunkSize="15" style="border:thin">
-                <h:panelGrid columns="2" style="width:100%" columnClasses="logo,detail">
-                    <span class="glyphicon glyphicon-bed" style="width: 30%"/>
-                    <p:outputPanel>
-                        <h:form>
-                            <h:panelGrid columns="2" >
-                                <h:outputLabel for="email" value="El. paštas:"/>
-                                <h:outputText id="email" value="#{user.email}"/>
-                                <h:outputLabel for="houseId" value="Vardas:"/>
-                                <h:outputText id="houseId" value="#{user.firstname}"/>
-                                <h:outputLabel for="weekPrice" value="Pavardė:"/>
-                                <h:outputText id="weekPrice" value="#{user.lastname}"/>
-                                <h:outputLabel for="numberOfPlaces" value="Vietų sk.:"/>
-                                <h:outputText id="numberOfPlaces" value="#{user.personalid}"/>
-                                <h:outputLabel for="address" value="Adresas:"/>
-                                <h:outputText id="address" value="#{user.points}"/>
-                                <h:outputLabel for="startDate" value="Pradžios data:"/>
-                                <h:outputText id="startDate" value="#{user.priority}"/>
-                                <h:outputLabel for="endDate" value="Pabaigos data:"/>
-                                <h:outputText id="endDate" value="#{user.typeid}"/>
-                                <h:commandButton action="#{adminHouseManager.setHouse()}" value="Modifikuoti">
-                                    <f:param name="houseId" value="#{user.id}"/>
-                                </h:commandButton>
-                            </h:panelGrid>
-                        </h:form>
-                    </p:outputPanel>
-                </h:panelGrid>
-                <hr/>
-            </p:dataScroller>
-            <h:form>
-                <h:commandButton action="#{adminHouseManager.setHouse()}" value="Pridėti namelį"/>
-            </h:form>
-        </div>
+
+             
+    <div>
+        <h:form>
+            <h:panelGrid columns="5">
+                <h:outputLabel for="filter" value="Filtras:"/>
+                <h:selectOneMenu id="filter" value="#{adminUserManager.filter}">
+                    <f:selectItems value="#{adminUserManager.filters}"/>
+                </h:selectOneMenu>
+                <h:outputLabel for="filterKey" value="Raktas:"/>
+                <h:inputText id="filterKey" value="#{adminUserManager.filterKey}"/>
+                <h:commandButton action="#{adminUserManager.filterUsers}" value="Vykdyti"/>
+            </h:panelGrid>
+        </h:form>
+    </div>
+    
+    <!-- User list -->
+    <div class="container .col-md-8">
+        <p:dataScroller value="#{adminUserManager.getUsers()}" var="user" chunkSize="15" style="border:thin">
+            <h:panelGrid columns="2" style="width:100%" columnClasses="logo,detail">
+                <span class="glyphicon glyphicon-bed" style="width: 30%"/>
+                <p:outputPanel>
+                    <h:form>
+                        <h:panelGrid columns="2">
+                            <h:outputLabel for="email" value="El. paštas:"/>
+                            <h:outputText id="email" value="#{user.email}"/>
+                            <h:outputLabel for="houseId" value="Vardas:"/>
+                            <h:outputText id="houseId" value="#{user.firstname}"/>
+                            <h:outputLabel for="weekPrice" value="Pavardė:"/>
+                            <h:outputText id="weekPrice" value="#{user.lastname}"/>
+                            <h:outputLabel for="numberOfPlaces" value="Kodas:"/>
+                            <h:outputText id="numberOfPlaces" value="#{user.personalid}"/>
+                            <h:outputLabel for="address" value="Taškai:"/>
+                            <h:outputText id="address" value="#{user.points}"/>
+                            <h:outputLabel for="startDate" value="Prioritetas:"/>
+                            <h:outputText id="startDate" value="#{user.priority}"/>
+                            <h:outputLabel for="endDate" value="Vartotojo tipas:"/>
+                            <h:outputText id="endDate" value="#{user.typeid}"/>
+                            <h:commandButton action="#{adminUserManager.removeUser()}" value="Pašalinti">
+                                <f:param name="userId" value="#{user.id}"/>
+                            </h:commandButton>
+                        </h:panelGrid>
+                    </h:form>
+                </p:outputPanel>
+            </h:panelGrid>
+            <hr/>
+        </p:dataScroller>
+    </div>
         
         
         <!-- scripts -->

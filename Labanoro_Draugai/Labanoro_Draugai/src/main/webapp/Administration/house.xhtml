@@ -37,12 +37,14 @@ and open the template in the editor.
         <div class="container .col-md-8">
             <h:form>
                 <h:panelGrid id="grid" columns="2">
+                    <h:inputHidden value="#{editableHouse.house.id}" />
+                    <h:inputHidden/>
                     <h:outputLabel for="title" value="Pavadinimas:"/>
                     <h:inputText id="title" value="#{editableHouse.house.title}"/>
                     <h:outputLabel for="description" value="Aprašymas:"/>
                     <h:inputText id="description" value="#{editableHouse.house.description}"/>
-                    <h:outputLabel for="houseId" value="Namelis nr."/>
-                    <h:inputText id="houseId" value="#{editableHouse.house.id}"/>
+                    <h:outputLabel for="houseId" value="Namelio reg. nr."/>
+                    <h:inputText id="houseId" value="#{editableHouse.house.housereg}"/>
                     <h:outputLabel for="weekPrice" value="Sav. kaina (EUR):"/>
                     <h:inputText id="weekPrice" value="#{editableHouse.house.weekprice}"/>
                     <h:outputLabel for="numberOfPlaces" value="Vietų sk.:"/>
@@ -58,29 +60,9 @@ and open the template in the editor.
                         <f:convertDateTime pattern="yyyy-MM-dd" />
                     </h:inputText>
                     <h:outputLabel for="isActive" value="Aktyvus:"/>
-                    <h:selectBooleanCheckbox id="isActive" value="#{editableHouse.house.isactive}"/>
-                    
-                    <h:panelGrid id="dateGrid" columns="2" >
-                                    <p:outputLabel for="dateFrom" value="Nuo: " />
-                                    <p:calendar id="dateFrom" pattern="yyyy-MM-dd" size="10"
-                                                beforeShowDay="calendarOnlyMonday" locale="lt"
-                                                value="#{editableHouse.house.seasonstartdate}"
-                                                mindate="#{editableHouse.houseFilter.nextMonday}" 
-                                                maxdate="#{editableHouse.houseFilter.endOfSeason}"  >
-                                        <p:ajax event="dateSelect" listener="#{houseFilter.onDateSelect}" update="dateTo" />
-                                    </p:calendar>
-                                    <p:outputLabel for="dateTo" value="Iki: " />
-                                    <p:calendar id="dateTo" pattern="yyyy-MM-dd" size="10"
-                                                beforeShowDay="calendarOnlySunday" locale="lt"
-                                                value="#{editableHouse.house.seasonenddate}"
-                                                mindate="#{houseFilter.dateFrom}"
-                                                maxdate="#{houseFilter.endOfSeason}">
-                                        <p:ajax event="dateSelect" update="dateFrom" />
-                                    </p:calendar>    
-                                </h:panelGrid>
-                    
+                    <h:selectBooleanCheckbox id="isActive" value="#{editableHouse.house.isactive}"/> 
                     <h:commandButton action="#{editableHouse.saveHouse}" value="Išsaugoti"/>
-                    <h:commandButton action="houses" value="Atmesti"/>
+                    <h:commandButton action="#{editableHouse.declineChanges}" value="Atmesti"/>
                 </h:panelGrid>
             </h:form>
         </div>
