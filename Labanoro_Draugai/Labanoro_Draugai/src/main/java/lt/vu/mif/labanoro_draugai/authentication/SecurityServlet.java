@@ -60,7 +60,7 @@ public class SecurityServlet extends HttpServlet {
         setRedirectUrl();
         String accessToken = getFacebookAccessToken(faceCode);
         
-//        String facebookId = (String) fbGraph.getIdEmail(accessToken).get("id");
+        String facebookId = (String) fbGraph.getIdEmail(accessToken).get("id");
         String email = fbGraph.getEmail(accessToken);
 //        String birthday = fbGraph.getAge(accessToken);
 //        String firstName = fbGraph.getFirstName(accessToken);
@@ -83,16 +83,12 @@ public class SecurityServlet extends HttpServlet {
         
         if (state.equals(sessionID)) {
             try {  
-
-                if(loginController.isUser(email)) {
+ 
+                if(loginController.login(email,facebookId)) {
                     //request.login(email, "somedefaultpassword");
+                    System.out.println("User logged");
                 }
-                   
-                else {
-                    loginController.RegisterUser(email);
-                }
-
-                //request.login(email, "somedefaultpassword");
+                
 
             } catch (Exception e) {
                 e.printStackTrace();
