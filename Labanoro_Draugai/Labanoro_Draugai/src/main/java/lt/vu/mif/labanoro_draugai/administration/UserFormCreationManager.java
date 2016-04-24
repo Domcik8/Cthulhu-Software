@@ -9,12 +9,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.ConversationScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import lt.vu.mif.labanoro_draugai.data_models.BookProperty;
+import lt.vu.mif.labanoro_draugai.data_models.AdminUserFormProperty;
+import lt.vu.mif.labanoro_draugai.data_models.UserFormProperty;
 import org.primefaces.context.RequestContext;
 import org.primefaces.extensions.model.dynaform.DynaFormControl;
 import org.primefaces.extensions.model.dynaform.DynaFormLabel;
@@ -34,80 +36,91 @@ public class UserFormCreationManager implements Serializable{
   
     private static final long serialVersionUID = 20120423L;  
   
-    private DynaFormModel model;  
-  
-    private static List<SelectItem> LANGUAGES = new ArrayList<SelectItem>();  
-  
+    private DynaFormModel model;
+    private DynaFormModel displayModel;
+    
+    private List<AdminUserFormProperty> adminFormProperties;
+    private List<SelectItem> fieldTypes;
+    
     @PostConstruct  
     protected void initialize() {  
-        model = new DynaFormModel();  
-  
-        // add rows, labels and editable controls  
-        // set relationship between label and editable controls to support outputLabel with "for" attribute  
-  
-        // 1. row  
-        DynaFormRow row = model.createRegularRow();  
-  
-        DynaFormLabel label11 = row.addLabel("Author");  
-        DynaFormControl control12 = row.addControl(new BookProperty("Author", true), "input");  
-        label11.setForControl(control12);  
-  
-        DynaFormLabel label13 = row.addLabel("ISBN");  
-        DynaFormControl control14 = row.addControl(new BookProperty("ISBN", true), "input");  
-        label13.setForControl(control14);  
-  
-        // 2. row  
-        row = model.createRegularRow();  
-  
-        DynaFormLabel label21 = row.addLabel("Title");  
-        DynaFormControl control22 = row.addControl(new BookProperty("Title", false), "input", 3, 1);  
-        label21.setForControl(control22);  
-  
-        // 3. row  
-        row = model.createRegularRow();  
-  
-        DynaFormLabel label31 = row.addLabel("Publisher");  
-        DynaFormControl control32 = row.addControl(new BookProperty("Publisher", false), "input");  
-        label31.setForControl(control32);  
-  
-        DynaFormLabel label33 = row.addLabel("Published on");  
-        DynaFormControl control34 = row.addControl(new BookProperty("Published on", false), "calendar");  
-        label33.setForControl(control34);  
-  
-        // 4. row  
-        row = model.createRegularRow();  
-  
-        DynaFormLabel label41 = row.addLabel("Language");  
-        DynaFormControl control42 = row.addControl(new BookProperty("Language", false), "select");  
-        label41.setForControl(control42);  
-  
-        DynaFormLabel label43 = row.addLabel("Description", 1, 2);  
-        DynaFormControl control44 = row.addControl(new BookProperty("Description", false), "textarea", 1, 2);  
-        label43.setForControl(control44);  
-  
-        // 5. row  
-        row = model.createRegularRow();  
-  
-        DynaFormLabel label51 = row.addLabel("Rating");  
-        DynaFormControl control52 = row.addControl(new BookProperty("Rating", 3, true), "rating");  
-        label51.setForControl(control52);  
+        model = new DynaFormModel();
+        adminFormProperties = new ArrayList<>();
+        updateDisplayDynaForm();
+        
+        //get types from db
+        fieldTypes = new ArrayList<>();
+        fieldTypes.add(new SelectItem("input","Teksto laukas"));
+        fieldTypes.add(new SelectItem("select","Pasirinkti vieną"));
+        fieldTypes.add(new SelectItem("textarea","Didelis teksto laukas"));
+        fieldTypes.add(new SelectItem("calendar","Datos pasirinkimas"));
+        fieldTypes.add(new SelectItem("number","Skaičius"));
+        //load current form
+
+        
+        for(int i =0;i<1;i++){
+            DynaFormRow row = model.createRegularRow();
+            
+            AdminUserFormProperty adminProp = new AdminUserFormProperty(fieldTypes,i);
+            addAdminPropertyToRowAndList(row, adminProp);
+        }
+        System.out.println("eilucius skaicius administravimo formoje: " + adminFormProperties.size());
     }  
   
+    public void removeAdminFormPropery(AdminUserFormProperty property) {  
+        model.removeRegularRow(property.getIndex());          
+        adminFormProperties.remove(property);  
+          
+        // re-index conditions  
+        int idx = 0;  
+        for (AdminUserFormProperty prop : adminFormProperties) {  
+            prop.setIndex(idx);  
+            idx++;  
+        }  
+    }
+    public void addAdminFormPropery() {  
+        DynaFormRow row = model.createRegularRow();
+        AdminUserFormProperty adminProp;
+        if(adminFormProperties!=null){
+            adminProp = new AdminUserFormProperty(fieldTypes,adminFormProperties.get(adminFormProperties.size()-1).getIndex()+1); 
+        }else{
+            adminFormProperties = new ArrayList<>();
+            adminProp = new AdminUserFormProperty(fieldTypes,0); 
+        }
+        
+        addAdminPropertyToRowAndList(row, adminProp);
+
+    } 
+    
+    private void addAdminPropertyToRowAndList(DynaFormRow row, AdminUserFormProperty adminProp){
+        adminFormProperties.add(adminProp);
+            
+        DynaFormLabel label = row.addLabel("Pavadinimas:");  
+        DynaFormControl control = row.addControl(adminProp, "inputName");  
+        label.setForControl(control);
+
+        label = row.addLabel("tipas:");  
+        control = row.addControl(adminProp, "select");  
+        label.setForControl(control);
+
+        label = row.addLabel("privalomas:");  
+        control = row.addControl(adminProp, "booleanchoice");  
+        label.setForControl(control);
+
+        label = row.addLabel("reikšmės:");  
+        control = row.addControl(adminProp, "input");  
+        label.setForControl(control);
+
+        row.addControl(adminProp, "remove");
+    }
+    
+    
     public DynaFormModel getModel() {  
         return model;  
     }  
   
-    public List<BookProperty> getBookProperties() {  
-        if (model == null) {  
-            return null;  
-        }  
-  
-        List<BookProperty> bookProperties = new ArrayList<>();  
-        for (DynaFormControl dynaFormControl : model.getControls()) {  
-            bookProperties.add((BookProperty) dynaFormControl.getData());  
-        }  
-  
-        return bookProperties;  
+    public List<AdminUserFormProperty> getAdminUserProperties() {  
+        return adminFormProperties;  
     }  
   
     public String submitForm() {  
@@ -117,17 +130,41 @@ public class UserFormCreationManager implements Serializable{
         RequestContext requestContext = RequestContext.getCurrentInstance();  
         requestContext.addCallbackParam("isValid", !hasErrors);  
   
+        updateDisplayDynaForm();
+        
         return null;  
-    }  
+    }
+    
+    private void updateDisplayDynaForm(){
+        displayModel = new DynaFormModel();  
   
-    public List<SelectItem> getLanguages() {  
-        if (LANGUAGES.isEmpty()) {  
-            LANGUAGES.add(new SelectItem("en", "English"));  
-            LANGUAGES.add(new SelectItem("de", "German"));  
-            LANGUAGES.add(new SelectItem("ru", "Russian"));  
-            LANGUAGES.add(new SelectItem("tr", "Turkish"));  
-        }  
-  
-        return LANGUAGES;  
-    }  
+        for(AdminUserFormProperty adminProp:adminFormProperties){
+            DynaFormRow row = displayModel.createRegularRow();
+            
+            DynaFormLabel label = row.addLabel(adminProp.getLabelName()); 
+            DynaFormControl control = adminProp.getSelectedType().equals("select")?
+                row.addControl(new UserFormProperty(adminProp.getLabelName(),adminProp.isRequired(),parseSelectValues(adminProp.getSelectionValues())), adminProp.getSelectedType()):
+                row.addControl(new UserFormProperty(adminProp.getLabelName(),adminProp.isRequired()), adminProp.getSelectedType());  
+             label.setForControl(control);
+        }
+    }
+    
+    private List<SelectItem> parseSelectValues(String selectionValues){
+        List<SelectItem> result = new ArrayList<>();
+        String[] values = selectionValues.split(",");
+        for(String str:values){
+            System.out.println(str.trim());
+            result.add(new SelectItem(str.trim()));
+        }
+        return result;
+    }
+    
+    public DynaFormModel getDisplayModel() {
+        return displayModel;
+    }
+
+    public void setDisplayModel(DynaFormModel displayModel) {
+        this.displayModel = displayModel;
+    }
+    
 }

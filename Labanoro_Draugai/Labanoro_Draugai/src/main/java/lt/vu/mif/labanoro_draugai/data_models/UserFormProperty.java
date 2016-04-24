@@ -8,29 +8,32 @@ package lt.vu.mif.labanoro_draugai.data_models;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import javax.faces.model.SelectItem;
 
 /**
  *
  * @author Karolis
  */
-public class BookProperty implements Serializable {  
-  
+public class UserFormProperty implements Serializable{
     private static final long serialVersionUID = 20120521L;  
   
     private String name;  
-    private Object value;  
-    private boolean required;  
+    private Object value = null;  
+    private boolean required;
+    private List<SelectItem> selectItems;  
   
-    public BookProperty(String name, boolean required) {  
+    public UserFormProperty(String name, boolean required) {  
         this.name = name;  
         this.required = required;  
     }  
-  
-    public BookProperty(String name, Object value, boolean required) {  
+    
+    public UserFormProperty(String name, boolean required, List<SelectItem> selectItems) {  
         this.name = name;  
-        this.value = value;  
-        this.required = required;  
-    }  
+        this.value = selectItems==null|| selectItems.isEmpty()? "" : selectItems.get(0);  
+        this.required = required;
+        this.selectItems = selectItems;
+    } 
   
     public String getName() {  
         return name;  
@@ -46,7 +49,7 @@ public class BookProperty implements Serializable {
   
     public Object getFormattedValue() {  
         if (value instanceof Date) {  
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d MMM yyyy");  
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");  
   
             return simpleDateFormat.format(value);  
         }  
@@ -65,4 +68,9 @@ public class BookProperty implements Serializable {
     public void setRequired(boolean required) {  
         this.required = required;  
     }  
-}  
+
+    public List<SelectItem> getSelectItems() {
+        return selectItems;
+    }
+    
+}
