@@ -69,7 +69,7 @@ public class Houseimage implements Serializable {
     @Column(name = "OPT_LOCK_VERSION")
     private Integer optLockVersion;
     @JoinColumn(name = "HOUSEID", referencedColumnName = "ID")
-    @ManyToOne
+    @ManyToOne(optional = false)
     private House houseid;
     @JoinColumn(name = "TYPEID", referencedColumnName = "ID")
     @ManyToOne(optional = false)

@@ -62,8 +62,6 @@ public class Type implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
     private List<Reservation> reservationList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
-    private List<Serviceimage> serviceimageList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
     private List<Service> serviceList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
     private List<House> houseList;
@@ -149,14 +147,6 @@ public class Type implements Serializable {
 
     public void setReservationList(List<Reservation> reservationList) {
         this.reservationList = reservationList;
-    }
-
-    public List<Serviceimage> getServiceimageList() {
-        return serviceimageList;
-    }
-
-    public void setServiceimageList(List<Serviceimage> serviceimageList) {
-        this.serviceimageList = serviceimageList;
     }
 
     public List<Service> getServiceList() {

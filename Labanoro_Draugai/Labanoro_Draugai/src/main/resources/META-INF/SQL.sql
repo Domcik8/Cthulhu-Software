@@ -167,7 +167,7 @@ CREATE TABLE HouseImage
 (
     ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
     TypeID          INTEGER         NOT NULL, 
-    HouseID         INTEGER,
+    HouseID         INTEGER         NOT NULL,
     InternalName    VARCHAR(255)    NOT NULL    UNIQUE,
     Sequence        INTEGER,
     Image           BLOB            NOT NULL,
@@ -180,42 +180,6 @@ CREATE TABLE HouseImage
     PRIMARY KEY (ID)
 );
 
-CREATE TABLE ServiceImage
-(
-    ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    TypeID          INTEGER         NOT NULL, 
-    ServiceID       INTEGER,
-    InternalName    VARCHAR(255)    NOT NULL    UNIQUE,
-    Sequence        INTEGER,
-    Image           BLOB            NOT NULL,
-    MIMEType        VARCHAR(255)    NOT NULL,
-    IsDeleted       BOOLEAN,
-    Description     VARCHAR(255),
-    OPT_LOCK_VERSION INTEGER,
-    FOREIGN KEY (TypeID)  REFERENCES Type (ID),
-    FOREIGN KEY (ServiceID)  REFERENCES Service (ID),
-    PRIMARY KEY (ID)
-);
-
 CREATE VIEW GroupView (ID, InternalName, Title, Description, IsDeleted, OPT_LOCK_VERSION)
     AS SELECT ID, InternalName, Title, Description, IsDeleted, OPT_LOCK_VERSION
     FROM Type WHERE InternalName like 'Person.%'
-
-/*
-
-CREATE VIEW SAMP.PROJ_COMBO 
-	(PROJNO, PRENDATE, PRSTAFF, MAJPROJ) 
-	AS SELECT PROJNO, PRENDATE, PRSTAFF, MAJPROJ
-	FROM SAMP.PROJECT UNION ALL */
-
-
-/*CREATE TABLE Type
-(
-    ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    InternalName    VARCHAR(255)                UNIQUE,
-    Title           VARCHAR(255),
-    Description     VARCHAR(255),
-    IsDeleted       BOOLEAN,
-    OPT_LOCK_VERSION INTEGER,
-    PRIMARY KEY (ID)
-);*/

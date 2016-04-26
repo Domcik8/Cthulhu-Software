@@ -19,7 +19,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -84,8 +83,6 @@ public class Service implements Serializable {
     private List<House> houseList;
     @ManyToMany(mappedBy = "serviceList")
     private List<Reservation> reservationList;
-    @OneToMany(mappedBy = "serviceid")
-    private List<Serviceimage> serviceimageList;
     @JoinColumn(name = "TYPEID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Type typeid;
@@ -204,14 +201,6 @@ public class Service implements Serializable {
 
     public void setReservationList(List<Reservation> reservationList) {
         this.reservationList = reservationList;
-    }
-
-    public List<Serviceimage> getServiceimageList() {
-        return serviceimageList;
-    }
-
-    public void setServiceimageList(List<Serviceimage> serviceimageList) {
-        this.serviceimageList = serviceimageList;
     }
 
     public Type getTypeid() {

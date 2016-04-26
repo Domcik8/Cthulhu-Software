@@ -96,7 +96,7 @@ public class House implements Serializable {
     @JoinColumn(name = "TYPEID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Type typeid;
-    @OneToMany(mappedBy = "houseid")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "houseid")
     private List<Houseimage> houseimageList;
 
     public House() {
