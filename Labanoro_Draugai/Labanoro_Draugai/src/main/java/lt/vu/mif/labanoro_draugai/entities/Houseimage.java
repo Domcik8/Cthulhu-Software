@@ -35,7 +35,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Houseimage.findByMimetype", query = "SELECT h FROM Houseimage h WHERE h.mimetype = :mimetype"),
     @NamedQuery(name = "Houseimage.findByDescription", query = "SELECT h FROM Houseimage h WHERE h.description = :description"),
     @NamedQuery(name = "Houseimage.findByIsdeleted", query = "SELECT h FROM Houseimage h WHERE h.isdeleted = :isdeleted"),
-    @NamedQuery(name = "Houseimage.findByOptLockVersion", query = "SELECT h FROM Houseimage h WHERE h.optLockVersion = :optLockVersion")})
+    @NamedQuery(name = "Houseimage.findByOptlockversion", query = "SELECT h FROM Houseimage h WHERE h.optlockversion = :optlockversion")})
 public class Houseimage implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -66,8 +66,8 @@ public class Houseimage implements Serializable {
     private String description;
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
-    @Column(name = "OPT_LOCK_VERSION")
-    private Integer optLockVersion;
+    @Column(name = "OPTLOCKVERSION")
+    private Integer optlockversion;
     @JoinColumn(name = "HOUSEID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private House houseid;
@@ -145,12 +145,12 @@ public class Houseimage implements Serializable {
         this.isdeleted = isdeleted;
     }
 
-    public Integer getOptLockVersion() {
-        return optLockVersion;
+    public Integer getOptlockversion() {
+        return optlockversion;
     }
 
-    public void setOptLockVersion(Integer optLockVersion) {
-        this.optLockVersion = optLockVersion;
+    public void setOptlockversion(Integer optlockversion) {
+        this.optlockversion = optlockversion;
     }
 
     public House getHouseid() {

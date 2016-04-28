@@ -526,7 +526,9 @@ public class DatabaseManager {
       * @return 
       */
     public Object getEntity(String className, String findBy, String parameter){
-        Query query = em.createNamedQuery(className + ".findBy" + findBy).setParameter(decapitalize(findBy), parameter);
+        className = className.toLowerCase();
+        findBy = findBy.toLowerCase();
+        Query query = em.createNamedQuery(capitalize(className) + ".findBy" + capitalize(findBy)).setParameter(findBy, parameter);
         
         return query.getResultList().isEmpty() ? null : query.getResultList().get(0);
     }
@@ -566,12 +568,12 @@ public class DatabaseManager {
         }
     }
     
-    public static String decapitalize(String string) {
+    public static String capitalize(String string) {
         if (string == null || string.length() == 0) {
             return string;
         }
         char c[] = string.toCharArray();
-        c[0] = Character.toLowerCase(c[0]);
+        c[0] = Character.toUpperCase(c[0]);
         return new String(c);
     }
 }

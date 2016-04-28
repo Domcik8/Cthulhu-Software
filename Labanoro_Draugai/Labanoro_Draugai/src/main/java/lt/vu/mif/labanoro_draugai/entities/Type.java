@@ -33,7 +33,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Type.findByTitle", query = "SELECT t FROM Type t WHERE t.title = :title"),
     @NamedQuery(name = "Type.findByDescription", query = "SELECT t FROM Type t WHERE t.description = :description"),
     @NamedQuery(name = "Type.findByIsdeleted", query = "SELECT t FROM Type t WHERE t.isdeleted = :isdeleted"),
-    @NamedQuery(name = "Type.findByOptLockVersion", query = "SELECT t FROM Type t WHERE t.optLockVersion = :optLockVersion")})
+    @NamedQuery(name = "Type.findByOptlockversion", query = "SELECT t FROM Type t WHERE t.optlockversion = :optlockversion")})
 public class Type implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -53,14 +53,18 @@ public class Type implements Serializable {
     private String description;
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
-    @Column(name = "OPT_LOCK_VERSION")
-    private Integer optLockVersion;
+    @Column(name = "OPTLOCKVERSION")
+    private Integer optlockversion;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
     private List<Payment> paymentList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
     private List<Person> personList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
     private List<Reservation> reservationList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
+    private List<Formattribute> formattributeList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
+    private List<Personregistrationform> personregistrationformList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
     private List<Service> serviceList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
@@ -117,12 +121,12 @@ public class Type implements Serializable {
         this.isdeleted = isdeleted;
     }
 
-    public Integer getOptLockVersion() {
-        return optLockVersion;
+    public Integer getOptlockversion() {
+        return optlockversion;
     }
 
-    public void setOptLockVersion(Integer optLockVersion) {
-        this.optLockVersion = optLockVersion;
+    public void setOptlockversion(Integer optlockversion) {
+        this.optlockversion = optlockversion;
     }
 
     public List<Payment> getPaymentList() {
@@ -147,6 +151,22 @@ public class Type implements Serializable {
 
     public void setReservationList(List<Reservation> reservationList) {
         this.reservationList = reservationList;
+    }
+
+    public List<Formattribute> getFormattributeList() {
+        return formattributeList;
+    }
+
+    public void setFormattributeList(List<Formattribute> formattributeList) {
+        this.formattributeList = formattributeList;
+    }
+
+    public List<Personregistrationform> getPersonregistrationformList() {
+        return personregistrationformList;
+    }
+
+    public void setPersonregistrationformList(List<Personregistrationform> personregistrationformList) {
+        this.personregistrationformList = personregistrationformList;
     }
 
     public List<Service> getServiceList() {

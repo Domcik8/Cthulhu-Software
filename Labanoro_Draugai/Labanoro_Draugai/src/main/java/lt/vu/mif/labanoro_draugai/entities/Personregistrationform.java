@@ -13,9 +13,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -25,17 +27,14 @@ import javax.validation.constraints.Size;
  * @author Dominik Lisovski
  */
 @Entity
-@Table(name = "SYSTEMPARAMETER")
+@Table(name = "PERSONREGISTRATIONFORM")
 @NamedQueries({
-    @NamedQuery(name = "Systemparameter.findAll", query = "SELECT s FROM Systemparameter s"),
-    @NamedQuery(name = "Systemparameter.findById", query = "SELECT s FROM Systemparameter s WHERE s.id = :id"),
-    @NamedQuery(name = "Systemparameter.findByInternalname", query = "SELECT s FROM Systemparameter s WHERE s.internalname = :internalname"),
-    @NamedQuery(name = "Systemparameter.findByTitle", query = "SELECT s FROM Systemparameter s WHERE s.title = :title"),
-    @NamedQuery(name = "Systemparameter.findByDescription", query = "SELECT s FROM Systemparameter s WHERE s.description = :description"),
-    @NamedQuery(name = "Systemparameter.findByValue", query = "SELECT s FROM Systemparameter s WHERE s.value = :value"),
-    @NamedQuery(name = "Systemparameter.findByIsdeleted", query = "SELECT s FROM Systemparameter s WHERE s.isdeleted = :isdeleted"),
-    @NamedQuery(name = "Systemparameter.findByOptlockversion", query = "SELECT s FROM Systemparameter s WHERE s.optlockversion = :optlockversion")})
-public class Systemparameter implements Serializable {
+    @NamedQuery(name = "Personregistrationform.findAll", query = "SELECT p FROM Personregistrationform p"),
+    @NamedQuery(name = "Personregistrationform.findById", query = "SELECT p FROM Personregistrationform p WHERE p.id = :id"),
+    @NamedQuery(name = "Personregistrationform.findByInternalname", query = "SELECT p FROM Personregistrationform p WHERE p.internalname = :internalname"),
+    @NamedQuery(name = "Personregistrationform.findByIsdeleted", query = "SELECT p FROM Personregistrationform p WHERE p.isdeleted = :isdeleted"),
+    @NamedQuery(name = "Personregistrationform.findByOptlockversion", query = "SELECT p FROM Personregistrationform p WHERE p.optlockversion = :optlockversion")})
+public class Personregistrationform implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -48,30 +47,29 @@ public class Systemparameter implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "INTERNALNAME")
     private String internalname;
-    @Size(max = 255)
-    @Column(name = "TITLE")
-    private String title;
-    @Size(max = 255)
-    @Column(name = "DESCRIPTION")
-    private String description;
-    @Column(name = "VALUE")
-    private Integer value;
+    @Lob
+    @Size(max = 32700)
+    @Column(name = "FORMVALUE")
+    private String formvalue;
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
     @Column(name = "OPTLOCKVERSION")
     private Integer optlockversion;
+    @JoinColumn(name = "PERSONID", referencedColumnName = "ID")
+    @OneToOne(optional = false)
+    private Person personid;
     @JoinColumn(name = "TYPEID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Type typeid;
 
-    public Systemparameter() {
+    public Personregistrationform() {
     }
 
-    public Systemparameter(Integer id) {
+    public Personregistrationform(Integer id) {
         this.id = id;
     }
 
-    public Systemparameter(Integer id, String internalname) {
+    public Personregistrationform(Integer id, String internalname) {
         this.id = id;
         this.internalname = internalname;
     }
@@ -92,28 +90,12 @@ public class Systemparameter implements Serializable {
         this.internalname = internalname;
     }
 
-    public String getTitle() {
-        return title;
+    public String getFormvalue() {
+        return formvalue;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getValue() {
-        return value;
-    }
-
-    public void setValue(Integer value) {
-        this.value = value;
+    public void setFormvalue(String formvalue) {
+        this.formvalue = formvalue;
     }
 
     public Boolean getIsdeleted() {
@@ -130,6 +112,14 @@ public class Systemparameter implements Serializable {
 
     public void setOptlockversion(Integer optlockversion) {
         this.optlockversion = optlockversion;
+    }
+
+    public Person getPersonid() {
+        return personid;
+    }
+
+    public void setPersonid(Person personid) {
+        this.personid = personid;
     }
 
     public Type getTypeid() {
@@ -150,10 +140,10 @@ public class Systemparameter implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Systemparameter)) {
+        if (!(object instanceof Personregistrationform)) {
             return false;
         }
-        Systemparameter other = (Systemparameter) object;
+        Personregistrationform other = (Personregistrationform) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -162,7 +152,7 @@ public class Systemparameter implements Serializable {
 
     @Override
     public String toString() {
-        return "lt.vu.mif.labanoro_draugai.entities.Systemparameter[ id=" + id + " ]";
+        return "lt.vu.mif.labanoro_draugai.entities.Personregistrationform[ id=" + id + " ]";
     }
     
 }

@@ -25,17 +25,18 @@ import javax.validation.constraints.Size;
  * @author Dominik Lisovski
  */
 @Entity
-@Table(name = "SYSTEMPARAMETER")
+@Table(name = "FORMATTRIBUTE")
 @NamedQueries({
-    @NamedQuery(name = "Systemparameter.findAll", query = "SELECT s FROM Systemparameter s"),
-    @NamedQuery(name = "Systemparameter.findById", query = "SELECT s FROM Systemparameter s WHERE s.id = :id"),
-    @NamedQuery(name = "Systemparameter.findByInternalname", query = "SELECT s FROM Systemparameter s WHERE s.internalname = :internalname"),
-    @NamedQuery(name = "Systemparameter.findByTitle", query = "SELECT s FROM Systemparameter s WHERE s.title = :title"),
-    @NamedQuery(name = "Systemparameter.findByDescription", query = "SELECT s FROM Systemparameter s WHERE s.description = :description"),
-    @NamedQuery(name = "Systemparameter.findByValue", query = "SELECT s FROM Systemparameter s WHERE s.value = :value"),
-    @NamedQuery(name = "Systemparameter.findByIsdeleted", query = "SELECT s FROM Systemparameter s WHERE s.isdeleted = :isdeleted"),
-    @NamedQuery(name = "Systemparameter.findByOptlockversion", query = "SELECT s FROM Systemparameter s WHERE s.optlockversion = :optlockversion")})
-public class Systemparameter implements Serializable {
+    @NamedQuery(name = "Formattribute.findAll", query = "SELECT f FROM Formattribute f"),
+    @NamedQuery(name = "Formattribute.findById", query = "SELECT f FROM Formattribute f WHERE f.id = :id"),
+    @NamedQuery(name = "Formattribute.findByInternalname", query = "SELECT f FROM Formattribute f WHERE f.internalname = :internalname"),
+    @NamedQuery(name = "Formattribute.findByName", query = "SELECT f FROM Formattribute f WHERE f.name = :name"),
+    @NamedQuery(name = "Formattribute.findByListitems", query = "SELECT f FROM Formattribute f WHERE f.listitems = :listitems"),
+    @NamedQuery(name = "Formattribute.findByIsrequired", query = "SELECT f FROM Formattribute f WHERE f.isrequired = :isrequired"),
+    @NamedQuery(name = "Formattribute.findByDescription", query = "SELECT f FROM Formattribute f WHERE f.description = :description"),
+    @NamedQuery(name = "Formattribute.findByIsdeleted", query = "SELECT f FROM Formattribute f WHERE f.isdeleted = :isdeleted"),
+    @NamedQuery(name = "Formattribute.findByOptlockversion", query = "SELECT f FROM Formattribute f WHERE f.optlockversion = :optlockversion")})
+public class Formattribute implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -48,14 +49,19 @@ public class Systemparameter implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "INTERNALNAME")
     private String internalname;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "NAME")
+    private String name;
     @Size(max = 255)
-    @Column(name = "TITLE")
-    private String title;
+    @Column(name = "LISTITEMS")
+    private String listitems;
+    @Column(name = "ISREQUIRED")
+    private Boolean isrequired;
     @Size(max = 255)
     @Column(name = "DESCRIPTION")
     private String description;
-    @Column(name = "VALUE")
-    private Integer value;
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
     @Column(name = "OPTLOCKVERSION")
@@ -64,16 +70,17 @@ public class Systemparameter implements Serializable {
     @ManyToOne(optional = false)
     private Type typeid;
 
-    public Systemparameter() {
+    public Formattribute() {
     }
 
-    public Systemparameter(Integer id) {
+    public Formattribute(Integer id) {
         this.id = id;
     }
 
-    public Systemparameter(Integer id, String internalname) {
+    public Formattribute(Integer id, String internalname, String name) {
         this.id = id;
         this.internalname = internalname;
+        this.name = name;
     }
 
     public Integer getId() {
@@ -92,12 +99,28 @@ public class Systemparameter implements Serializable {
         this.internalname = internalname;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getListitems() {
+        return listitems;
+    }
+
+    public void setListitems(String listitems) {
+        this.listitems = listitems;
+    }
+
+    public Boolean getIsrequired() {
+        return isrequired;
+    }
+
+    public void setIsrequired(Boolean isrequired) {
+        this.isrequired = isrequired;
     }
 
     public String getDescription() {
@@ -106,14 +129,6 @@ public class Systemparameter implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Integer getValue() {
-        return value;
-    }
-
-    public void setValue(Integer value) {
-        this.value = value;
     }
 
     public Boolean getIsdeleted() {
@@ -150,10 +165,10 @@ public class Systemparameter implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Systemparameter)) {
+        if (!(object instanceof Formattribute)) {
             return false;
         }
-        Systemparameter other = (Systemparameter) object;
+        Formattribute other = (Formattribute) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -162,7 +177,7 @@ public class Systemparameter implements Serializable {
 
     @Override
     public String toString() {
-        return "lt.vu.mif.labanoro_draugai.entities.Systemparameter[ id=" + id + " ]";
+        return "lt.vu.mif.labanoro_draugai.entities.Formattribute[ id=" + id + " ]";
     }
     
 }
