@@ -90,8 +90,13 @@
         </dependency>
         
         
-        <!-- Spring framework -->
-        
+        <!-- Google encryption -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>19.0</version>
+        </dependency>
+
         
         <!-- OAuth and Spring-Social -->
         
