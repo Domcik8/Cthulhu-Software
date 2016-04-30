@@ -2,6 +2,7 @@ package lt.vu.mif.labanoro_draugai.business;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import lt.vu.mif.labanoro_draugai.entities.Reservation;
 import lt.vu.mif.labanoro_draugai.entities.Service;
 import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import lt.vu.mif.labanoro_draugai.entities.Type;
+import org.apache.commons.io.IOUtils;
 
 @Named
 @Stateless
@@ -157,11 +159,14 @@ public class DatabaseManager {
      * Fills database with basic house pictures
      */
     private void fillBasicHouseImages() {
-        addHouseImage("Picture.HouseReg-1.1", "C:\\Users\\Dominik\\Desktop\\House\\House-1_1.JPG", 1, "HouseReg-1", "Picture.House");
-        addHouseImage("Picture.HouseReg-1.2", "C:\\Users\\Dominik\\Desktop\\House\\House-1_2.JPG", 2, "HouseReg-1", "Picture.House");
-        addHouseImage("Picture.HouseReg-2.1", "C:\\Users\\Ddsaominik\\Desktop\\House\\Housesafsafsafas-2_1.JPG", 1, "HouseReg-2", "Picture.House");
-        addHouseImage("Picture.HouseReg-2.2", "C:\\Users\\Dominik\\Desktop\\House\\House-2_2.JPG", 2, "HouseReg-2", "Picture.House");
-        addHouseImage("Picture.HouseReg-2.3", "C:\\Users\\Dominik\\Desktop\\House\\House-2_3.JPG", 3, "HouseReg-2", "Picture.House");
+        for(int i = 2;i<=20;i++){
+            addHouseImage("Picture.HouseReg-"+i+"_1", "Images/House/House-1_1.JPG", 1, "HouseReg-"+i, "Picture.House");
+        }
+        addHouseImage("Picture.HouseReg-1_1", "Images/House/House-2_1.JPG", 1, "HouseReg-1", "Picture.House");
+        addHouseImage("Picture.HouseReg-1_2", "Images/House/House-2_2.JPG", 2, "HouseReg-1", "Picture.House");
+        addHouseImage("Picture.HouseReg-1_3", "Images/House/House-2_3.JPG", 3, "HouseReg-1", "Picture.House");
+        addHouseImage("Picture.HouseReg-2_2", "Images/House/House-1_2.JPG", 2, "HouseReg-2", "Picture.House");
+       
     }
     
     /**
@@ -422,7 +427,7 @@ public class DatabaseManager {
         Houseimage newHouseimage = new Houseimage();
         
         newHouseimage.setInternalname(internalName);
-        newHouseimage.setImage(getImage(path));
+        newHouseimage.setImage(getImageFromResources(path));
         newHouseimage.setSequence(sequence);
         newHouseimage.setHouseid(house);
         newHouseimage.setTypeid(type);
@@ -439,7 +444,7 @@ public class DatabaseManager {
         }
         
         if(newHouseimage.getImage() == null) {
-            System.out.println(String.format("Could find file at '%s'", path));
+            System.out.println(String.format("Could't find file at '%s'", path));
             return null;
         }
         
@@ -488,6 +493,27 @@ public class DatabaseManager {
                 System.out.println("Error");
             }
         } 
+        return imageInBytes;
+    }
+    
+    /***
+    * Gets byte[] of image in given resource path
+    * 
+    * @param path - path to image in resources
+    * @return 
+    */  
+    private byte[] getImageFromResources(String path)
+    {
+        byte[] imageInBytes = null;
+        InputStream in = null;
+        try {
+            in = this.getClass().getClassLoader().getResourceAsStream(path);
+            if(in==null) System.out.println("input stream is null");
+            imageInBytes = IOUtils.toByteArray(in);
+        } catch (Exception e) {
+            System.out.println("Error reading image from resources");
+            e.printStackTrace();
+        }
         return imageInBytes;
     }
     
