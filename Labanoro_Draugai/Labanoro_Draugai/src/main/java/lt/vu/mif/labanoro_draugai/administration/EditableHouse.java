@@ -5,16 +5,18 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
-import javax.enterprise.context.Conversation;
-import javax.enterprise.context.ConversationScoped;
+import javax.faces.application.FacesMessage;
+//import javax.faces.bean.ViewScoped;
+import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.House;
-import lt.vu.mif.labanoro_draugai.entities.Type;
 
 /**
  *
@@ -24,64 +26,40 @@ import lt.vu.mif.labanoro_draugai.entities.Type;
 @Stateful
 @ViewScoped*/
 @Named
-@ConversationScoped
+@ViewScoped
 @Stateful
 public class EditableHouse implements Serializable {
     //@PersistenceContext(type=PersistenceContextType.EXTENDED, synchronization=SynchronizationType.UNSYNCHRONIZED) 
 
-    private int id;
     private List<House> houses;
     
     private House house;
     
-    @PersistenceContext
+    @PersistenceContext//(type=PersistenceContextType.EXTENDED, synchronization=SynchronizationType.UNSYNCHRONIZED)
     private EntityManager em;
-    
-    @Inject
-    private Conversation conversation;
-
-    public Conversation getConversation() {
-        return conversation;
-    }
-    
-    //@Inject
-    //HouseFilter houseFilter;
 
     @Inject
     DatabaseManager dbm;
 
     @PostConstruct
-    public void init() { 
-        //houses = em.createNamedQuery("House.findByIsdeleted").setParameter("isdeleted",  false).getResultList();
-        if (!conversation.isTransient()) {
-            conversation.end();
-        }
-        //houseFilter = new HouseFilter();
-        conversation.begin();
+    public void init() {
         house = getEditableHouse();
     }
     
     public EditableHouse() {
         //house = new House();
-    }
-    
-    EditableHouse(int id) {
-        this();
-        this.id = id;
+        //house = getEditableHouse();
     }
     
     public House getHouse() {
-        /*if (house == null) {
-            house = getEditableHouse();
-        }*/
-        
+        //house.getTypeid().getTitle();
         return house;
     }
     
     public House getEditableHouse() {
         try {
             String houseId = getParameter("houseId");
-            id = Integer.parseInt(houseId);
+            int id = Integer.parseInt(houseId);
             houses = em.createNamedQuery("House.findById").setParameter("id",  id).getResultList();
             house = houses.get(0);
         }
@@ -93,26 +71,60 @@ public class EditableHouse implements Serializable {
         }
     }
     
+    private boolean updateHouse(House h) {
+        try {
+            Query q = em.createQuery("UPDATE House h SET h.title = :title, h.typeid = :typeid, "
+                    + "h.description = :description, h.housereg = :housereg, h.address = :address, "
+                    + "h.isactive = :isactive, h.seasonstartdate = :startdt, h.seasonenddate = :enddt, "
+                    + "h.weekprice = :price, h.numberofplaces = :places "
+                    + "WHERE h.id = :id");
+            q.setParameter("title", h.getTitle());
+            q.setParameter("typeid", h.getTypeid());
+            q.setParameter("description", h.getDescription());
+            q.setParameter("housereg", h.getHousereg());
+            q.setParameter("address", h.getAddress());
+            q.setParameter("isactive", h.getIsactive());
+            q.setParameter("startdt", h.getSeasonstartdate());
+            q.setParameter("enddt", h.getSeasonenddate());
+            q.setParameter("price", h.getWeekprice());
+            q.setParameter("places", h.getNumberofplaces());
+            q.setParameter("id", h.getId());
+            em.joinTransaction();
+            int updated = q.executeUpdate();
+            em.flush();
+            return true;
+        }
+        catch (Exception ex) {
+            return false;
+        }
+    }
+    
+    /*private boolean isExisting(House h) {
+        List<House> hs = em.createNamedQuery("House.findById").setParameter("id",  h.getId()).getResultList();
+        return !hs.isEmpty();
+    }*/
+    
+    private boolean insertHouse(House h) {
+        try {
+            em.joinTransaction();
+            return dbm.persistAndFlush(house);
+        }
+        catch (Exception ex) {
+            return false;
+        }
+    }
+    
     public String saveHouse() {
-        Type type = (Type) dbm.getEntity("Type", "Internalname", "House");
-        house.setTypeid(type);
+        boolean savingSuccess = true;
         
-        conversation.end();
-        em.joinTransaction();
-        //try {
-            //house = dbm.addHouse("Old small house", "Vilnius", "HouseReg-99", "House.Penthouse");
-            /*house = new House();
-            house.setTitle("Test title");
-            house.setAddress("Vilniuuusas");
-            house.setHousereg("HouseReg-TEST55");  //<--- UNIQUE
-            Type type = (Type) dbm.getEntity("Type", "Internalname", "House.Penthouse");
-            house.setTypeid(type);*/
-            boolean isSuccess = dbm.persistAndFlush(house);
-        /*}
-        catch (Exception ex)
-        {
-            return "houses";
-        }*/
+        if (house.getId() != null)
+            savingSuccess = updateHouse(house);
+        else
+            savingSuccess = insertHouse(house);
+        
+        //if (!savingSuccess)
+            //show error page
+        //else
         return "houses";
     }
 
@@ -123,17 +135,58 @@ public class EditableHouse implements Serializable {
         return params.get(key);
     }
     
-    public void setTitle(String t) {
-        house.setTitle(t);
-    }
-    
-    public String getTitle() {
-        return house.getTitle();
-    }
-    
     public String declineChanges() {
         house = null;
-        conversation.end();
         return "houses";
+    }
+    
+    public String deleteHouse() {
+        try {
+            em.joinTransaction();
+            boolean savingSuccess = setIsDeletedTrue(house);
+            
+            //if (!savingSuccess)
+                //return error page
+            //else
+            return "houses";
+        }
+        catch (Exception ex) {
+            return ""; //error page
+        }
+    }
+    
+    private boolean setIsDeletedTrue(House h) {
+        try {
+            Query q = em.createQuery("UPDATE House h SET h.isdeleted = :isdeleted "
+                    + "WHERE h.id = :id");
+            q.setParameter("isdeleted", true);
+            q.setParameter("id", h.getId());
+            em.joinTransaction();
+            int updated = q.executeUpdate();
+            em.flush();
+            return true;
+        }
+        catch (Exception ex) {
+            return false;
+        }
+    }
+    
+    public boolean getIsActive() {
+        if (house.getId() == null)
+            return true;
+        else
+            return house.getIsactive();
+    }
+    
+    public void setIsActive(boolean isa) {
+        house.setIsactive(isa);
+    }
+    
+    public String getType() {
+        return house.getTypeid().getTitle();
+    }
+    
+    public void error() {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Klaida!", "Įvyko klaida."));
     }
 }

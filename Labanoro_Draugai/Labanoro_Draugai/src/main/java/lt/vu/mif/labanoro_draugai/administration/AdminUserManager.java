@@ -8,6 +8,7 @@ package lt.vu.mif.labanoro_draugai.administration;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,9 @@ import lt.vu.mif.labanoro_draugai.entities.Person;
 public class AdminUserManager implements Serializable {
     
     private List<Person> users;
+    private List<Person> filteredUsers;
     private Person user;
+    private Date calendar;
     
     @PersistenceContext
     EntityManager em;
@@ -63,19 +66,39 @@ public class AdminUserManager implements Serializable {
         return users;
     }
     
+    public List<Person> getFilteredUsers() {
+        return filteredUsers;
+    }
+    
+    public void setFilteredUsers(List<Person> filtUsers) {
+        filteredUsers = filtUsers;
+    }
+    
     public String removeUser() {
-        String houseId = getParameter("userId");
-        int id = Integer.parseInt(houseId);
-        users = em.createNamedQuery("Person.findById").setParameter("id",  id).getResultList();
-        user = users.get(0);
+        boolean isSuccess = true;
         
-        user.setIsdeleted(true);
-        
-        conversation.end();
-        em.joinTransaction();
+        try {
+            String houseId = getParameter("userId");
+            int id = Integer.parseInt(houseId);
 
-        boolean isSuccess = dbm.persistAndFlush(user);
+            List<Person> usersToDelete = em.createNamedQuery("Person.findById").setParameter("id",  id).getResultList();
+            Person userToDelete = usersToDelete.get(0);
+
+            userToDelete.setIsdeleted(true);
+
+            conversation.end();
+            em.joinTransaction();
+            
+            isSuccess = dbm.persistAndFlush(userToDelete);
+        }
+        catch (Exception ex) {
+            //return error page
+        }
+
         
+        //if (!isSuccess)
+            //return error page
+        //else
         return "users";
     }
     
@@ -137,7 +160,23 @@ public class AdminUserManager implements Serializable {
         }
         return "users";
     }
-     
+    
+    public Date getCalendar() {
+        return calendar;
+    }
+ 
+    public void setCalendar(Date date) {
+        this.calendar = date;
+    }
+    
+    public Date getCurrentDate() {
+        return new Date();
+    }
+    
+    public String getType(Person user) {
+        return user.getTypeid().getTitle();
+    }
+    
      /*public House getHouse() {
         try {
             String houseId = getParameter("houseId");
