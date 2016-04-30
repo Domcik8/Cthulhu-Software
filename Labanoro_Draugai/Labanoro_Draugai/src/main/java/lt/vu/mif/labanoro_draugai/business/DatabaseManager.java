@@ -2,6 +2,7 @@ package lt.vu.mif.labanoro_draugai.business;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.transaction.TransactionSynchronizationRegistry;
+import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Houseimage;
 import lt.vu.mif.labanoro_draugai.entities.Person;
@@ -27,6 +29,7 @@ import lt.vu.mif.labanoro_draugai.entities.Reservation;
 import lt.vu.mif.labanoro_draugai.entities.Service;
 import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import lt.vu.mif.labanoro_draugai.entities.Type;
+import org.apache.commons.io.IOUtils;
 
 @Named
 @Stateless
@@ -57,8 +60,7 @@ public class DatabaseManager {
         fillBasicServices();
         fillBasicReservations();
         fillBasicSystemParameters();
-        //fillBasicHouseImages();
-        //fillBasicServiceImages();
+        fillBasicHouseImages();
         
         return "DataBase has been filled";
     }
@@ -157,53 +159,14 @@ public class DatabaseManager {
      * Fills database with basic house pictures
      */
     private void fillBasicHouseImages() {
-        addHouseImage("Picture.HouseReg-1.1", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-1_1.JPG", 1, "HouseReg-1", "Picture.House");
-        addHouseImage("Picture.HouseReg-1.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-1_2.JPG", 2, "HouseReg-1", "Picture.House");
-        addHouseImage("Picture.HouseReg-2.1", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_1.JPG", 1, "HouseReg-2", "Picture.House");
-        addHouseImage("Picture.HouseReg-2.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-2", "Picture.House");
-        addHouseImage("Picture.HouseReg-2.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 3, "HouseReg-2", "Picture.House");
-        addHouseImage("Picture.HouseReg-3.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-3", "Picture.House");
-        addHouseImage("Picture.HouseReg-3.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-3", "Picture.House");
-        addHouseImage("Picture.HouseReg-4.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-4", "Picture.House");
-        addHouseImage("Picture.HouseReg-4.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-4", "Picture.House");
-        addHouseImage("Picture.HouseReg-5.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-5", "Picture.House");
-        addHouseImage("Picture.HouseReg-5.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-5", "Picture.House");
-        addHouseImage("Picture.HouseReg-6.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-6", "Picture.House");
-        addHouseImage("Picture.HouseReg-6.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-6", "Picture.House");
-        addHouseImage("Picture.HouseReg-7.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-7", "Picture.House");
-        addHouseImage("Picture.HouseReg-7.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-7", "Picture.House");
-        addHouseImage("Picture.HouseReg-8.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-8", "Picture.House");
-        addHouseImage("Picture.HouseReg-8.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-8", "Picture.House");
-        addHouseImage("Picture.HouseReg-9.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-9", "Picture.House");
-        addHouseImage("Picture.HouseReg-9.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-9", "Picture.House");
-        addHouseImage("Picture.HouseReg-10.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-10", "Picture.House");
-        addHouseImage("Picture.HouseReg-10.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-10", "Picture.House");
-        addHouseImage("Picture.HouseReg-11.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-11", "Picture.House");
-        addHouseImage("Picture.HouseReg-11.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-11", "Picture.House");
-        addHouseImage("Picture.HouseReg-12.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-12", "Picture.House");
-        addHouseImage("Picture.HouseReg-12.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-12", "Picture.House");
-        addHouseImage("Picture.HouseReg-13.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-13", "Picture.House");
-        addHouseImage("Picture.HouseReg-13.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-13", "Picture.House");
-        addHouseImage("Picture.HouseReg-14.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-14", "Picture.House");
-        addHouseImage("Picture.HouseReg-14.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-14", "Picture.House");
-        addHouseImage("Picture.HouseReg-15.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-15", "Picture.House");
-        addHouseImage("Picture.HouseReg-15.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-15", "Picture.House");
-        addHouseImage("Picture.HouseReg-16.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-16", "Picture.House");
-        addHouseImage("Picture.HouseReg-16.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-16", "Picture.House");
-        addHouseImage("Picture.HouseReg-17.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-17", "Picture.House");
-        addHouseImage("Picture.HouseReg-17.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-17", "Picture.House");
-        addHouseImage("Picture.HouseReg-18.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-18", "Picture.House");
-        addHouseImage("Picture.HouseReg-18.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-18", "Picture.House");
-        addHouseImage("Picture.HouseReg-19.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-19", "Picture.House");
-        addHouseImage("Picture.HouseReg-19.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-19", "Picture.House");
-        addHouseImage("Picture.HouseReg-20.2", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_2.JPG", 2, "HouseReg-20", "Picture.House");
-        addHouseImage("Picture.HouseReg-20.3", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\House\\House-2_3.JPG", 1, "HouseReg-20", "Picture.House");
-        
-    }
-    
-    private void fillBasicServiceImages() {
-        //addServiceImage("Picture.ServiceReg-1.1", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\Service\\Service-1_1.JPG", 1, "ServiceReg-1", "Picture.Service");
-        //addServiceImage("Picture.ServiceReg-2.1", "Labanoro_Draugai\\Labanoro_Draugai\\src\\main\\resources\\Images\\Service\\Service-2_1.JPG", 1, "ServiceReg-2", "Picture.Service");
+        for(int i = 2;i<=20;i++){
+            addHouseImage("Picture.HouseReg-"+i+"_1", "Images/House/House-1_1.JPG", 1, "HouseReg-"+i, "Picture.House");
+        }
+        addHouseImage("Picture.HouseReg-1_1", "Images/House/House-2_1.JPG", 1, "HouseReg-1", "Picture.House");
+        addHouseImage("Picture.HouseReg-1_2", "Images/House/House-2_2.JPG", 2, "HouseReg-1", "Picture.House");
+        addHouseImage("Picture.HouseReg-1_3", "Images/House/House-2_3.JPG", 3, "HouseReg-1", "Picture.House");
+        addHouseImage("Picture.HouseReg-2_2", "Images/House/House-1_2.JPG", 2, "HouseReg-2", "Picture.House");
+       
     }
     
     /**
@@ -460,56 +423,15 @@ public class DatabaseManager {
     private Houseimage addHouseImage(String internalName, String path, int sequence, String houseReg, String typeInternalName){
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
         House house = (House) getEntity("House", "Housereg", houseReg);
-        FileInputStream fis = null;
-        byte[] imageInBytes = null;
         
         Houseimage newHouseimage = new Houseimage();
         
-        try {
-            File image = new File(path);
-            fis = new FileInputStream(image);
-            imageInBytes = new byte[(int) image.length()];
-            fis.read(imageInBytes);
-        } catch (Exception e) {
-        }
-        finally {
-            try{
-                fis.close();  
-            } catch (Exception e) {
-            }
-        } 
-        
-/*
-public class InsertPictureToMySql {
-  public static void main(String[] args) throws Exception, IOException, SQLException {
-    Class.forName("org.gjt.mm.mysql.Driver");
-    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/databaseName", "root", "root");
-    String INSERT_PICTURE = "insert into MyPictures(id, name, photo) values (?, ?, ?)";
-
-    /*FileInputStream fis = null;
-    PreparedStatement ps = null;
-    try {
-      conn.setAutoCommit(false);
-      File file = new File("myPhoto.png");
-      fis = new FileInputStream(file);
-      ps = conn.prepareStatement(INSERT_PICTURE);
-      ps.setString(1, "001");
-      ps.setString(2, "name");
-      ps.setBinaryStream(3, fis, (int) file.length());
-      ps.executeUpdate();
-      conn.commit();
-    } finally {
-      ps.close();
-      fis.close();
-    }
-  }
-}*/
-        
         newHouseimage.setInternalname(internalName);
-        newHouseimage.setImage(imageInBytes);
+        newHouseimage.setImage(getImageFromResources(path));
         newHouseimage.setSequence(sequence);
         newHouseimage.setHouseid(house);
         newHouseimage.setTypeid(type);
+        newHouseimage.setMimetype(getImageMimeType(path));
         
         if(type == null) {
             System.out.println(String.format("There is no type '%s'", typeInternalName));
@@ -518,6 +440,16 @@ public class InsertPictureToMySql {
         
         if(house == null) {
             System.out.println(String.format("House with registration '%s' does not exist", houseReg));
+            return null;
+        }
+        
+        if(newHouseimage.getImage() == null) {
+            System.out.println(String.format("Could't find file at '%s'", path));
+            return null;
+        }
+        
+        if(newHouseimage.getMimetype() == null) {
+            System.out.println(String.format("Could not define Mime type of file '%s'", path));
             return null;
         }
         
@@ -530,7 +462,72 @@ public class InsertPictureToMySql {
             System.out.println(String.format("House image '%s' created successfully", internalName));
         else
             return null;
+        
         return newHouseimage;
+    }
+    
+    /***
+     * Gets byte[] of image in given path
+     * 
+     * @param path - path to image
+     * @return 
+     */
+    private byte[] getImage(String path)
+    {
+        FileInputStream fis = null;
+        byte[] imageInBytes = null;
+        File image = null;
+        
+        try {
+            image = new File(path);
+            fis = new FileInputStream(image);
+            imageInBytes = new byte[(int) image.length()];
+            fis.read(imageInBytes);
+        } catch (Exception e) {
+            System.out.println("Error");
+        }
+        finally {
+            try{
+                fis.close();  
+            } catch (Exception e) {
+                System.out.println("Error");
+            }
+        } 
+        return imageInBytes;
+    }
+    
+    /***
+    * Gets byte[] of image in given resource path
+    * 
+    * @param path - path to image in resources
+    * @return 
+    */  
+    private byte[] getImageFromResources(String path)
+    {
+        byte[] imageInBytes = null;
+        InputStream in = null;
+        try {
+            in = this.getClass().getClassLoader().getResourceAsStream(path);
+            if(in==null) System.out.println("input stream is null");
+            imageInBytes = IOUtils.toByteArray(in);
+        } catch (Exception e) {
+            System.out.println("Error reading image from resources");
+            e.printStackTrace();
+        }
+        return imageInBytes;
+    }
+    
+    /***
+     * Returns MimeType of file  in given path
+     * 
+     * @param path - path of image
+     * @return 
+     */
+    private String getImageMimeType(String path)
+    {
+        String[] pathParts = path.split("\\.");
+        
+        return pathParts[pathParts.length - 1];
     }
     
      /**
@@ -555,7 +552,9 @@ public class InsertPictureToMySql {
       * @return 
       */
     public Object getEntity(String className, String findBy, String parameter){
-        Query query = em.createNamedQuery(className + ".findBy" + findBy).setParameter(decapitalize(findBy), parameter);
+        className = className.toLowerCase();
+        findBy = findBy.toLowerCase();
+        Query query = em.createNamedQuery(capitalize(className) + ".findBy" + capitalize(findBy)).setParameter(findBy, parameter);
         
         return query.getResultList().isEmpty() ? null : query.getResultList().get(0);
     }
@@ -595,12 +594,12 @@ public class InsertPictureToMySql {
         }
     }
     
-    public static String decapitalize(String string) {
+    public static String capitalize(String string) {
         if (string == null || string.length() == 0) {
             return string;
         }
         char c[] = string.toCharArray();
-        c[0] = Character.toLowerCase(c[0]);
+        c[0] = Character.toUpperCase(c[0]);
         return new String(c);
     }
 }

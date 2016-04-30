@@ -19,7 +19,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -44,7 +43,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Service.findByWeekprice", query = "SELECT s FROM Service s WHERE s.weekprice = :weekprice"),
     @NamedQuery(name = "Service.findByNumberofplaces", query = "SELECT s FROM Service s WHERE s.numberofplaces = :numberofplaces"),
     @NamedQuery(name = "Service.findByIsdeleted", query = "SELECT s FROM Service s WHERE s.isdeleted = :isdeleted"),
-    @NamedQuery(name = "Service.findByOptLockVersion", query = "SELECT s FROM Service s WHERE s.optLockVersion = :optLockVersion")})
+    @NamedQuery(name = "Service.findByOptlockversion", query = "SELECT s FROM Service s WHERE s.optlockversion = :optlockversion")})
 public class Service implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -78,14 +77,12 @@ public class Service implements Serializable {
     private Integer numberofplaces;
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
-    @Column(name = "OPT_LOCK_VERSION")
-    private Integer optLockVersion;
+    @Column(name = "OPTLOCKVERSION")
+    private Integer optlockversion;
     @ManyToMany(mappedBy = "serviceList")
     private List<House> houseList;
     @ManyToMany(mappedBy = "serviceList")
     private List<Reservation> reservationList;
-    @OneToMany(mappedBy = "serviceid")
-    private List<Serviceimage> serviceimageList;
     @JoinColumn(name = "TYPEID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Type typeid;
@@ -182,12 +179,12 @@ public class Service implements Serializable {
         this.isdeleted = isdeleted;
     }
 
-    public Integer getOptLockVersion() {
-        return optLockVersion;
+    public Integer getOptlockversion() {
+        return optlockversion;
     }
 
-    public void setOptLockVersion(Integer optLockVersion) {
-        this.optLockVersion = optLockVersion;
+    public void setOptlockversion(Integer optlockversion) {
+        this.optlockversion = optlockversion;
     }
 
     public List<House> getHouseList() {
@@ -204,14 +201,6 @@ public class Service implements Serializable {
 
     public void setReservationList(List<Reservation> reservationList) {
         this.reservationList = reservationList;
-    }
-
-    public List<Serviceimage> getServiceimageList() {
-        return serviceimageList;
-    }
-
-    public void setServiceimageList(List<Serviceimage> serviceimageList) {
-        this.serviceimageList = serviceimageList;
     }
 
     public Type getTypeid() {

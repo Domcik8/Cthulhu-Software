@@ -36,33 +36,62 @@ and open the template in the editor.
         
         <div class="container .col-md-8">
             <h:form>
-                <h:panelGrid id="grid" columns="2">
+                <p:messages id="messages" autoUpdate="true" closable="true" />
+            </h:form>
+            
+            <h:form>
+                <h:panelGrid id="grid" columns="3">
                     <h:inputHidden value="#{editableHouse.house.id}" />
                     <h:inputHidden/>
-                    <h:outputLabel for="title" value="Pavadinimas:"/>
-                    <h:inputText id="title" value="#{editableHouse.house.title}"/>
-                    <h:outputLabel for="description" value="Aprašymas:"/>
-                    <h:inputText id="description" value="#{editableHouse.house.description}"/>
-                    <h:outputLabel for="houseId" value="Namelio reg. nr."/>
-                    <h:inputText id="houseId" value="#{editableHouse.house.housereg}"/>
-                    <h:outputLabel for="weekPrice" value="Sav. kaina (EUR):"/>
-                    <h:inputText id="weekPrice" value="#{editableHouse.house.weekprice}"/>
-                    <h:outputLabel for="numberOfPlaces" value="Vietų sk.:"/>
-                    <h:inputText id="numberOfPlaces" value="#{editableHouse.house.numberofplaces}"/>
-                    <h:outputLabel for="address" value="Adresas:"/>
-                    <h:inputText id="address" value="#{editableHouse.house.address}"/>
-                    <h:outputLabel for="startDate" value="Pradžios data:"/>
-                    <h:inputText readonly="true" styleClass="datepicker" id="startDate" value="#{editableHouse.house.seasonstartdate}">
-                        <f:convertDateTime pattern="yyyy-MM-dd" />
-                    </h:inputText>
-                    <h:outputLabel for="endDate" value="Pabaigos data:"/>
-                    <h:inputText readonly="true" styleClass="datepicker" id="endDate" value="#{editableHouse.house.seasonenddate}">
-                        <f:convertDateTime pattern="yyyy-MM-dd" />
-                    </h:inputText>
-                    <h:outputLabel for="isActive" value="Aktyvus:"/>
-                    <h:selectBooleanCheckbox id="isActive" value="#{editableHouse.house.isactive}"/> 
-                    <h:commandButton action="#{editableHouse.saveHouse}" value="Išsaugoti"/>
-                    <h:commandButton action="#{editableHouse.declineChanges}" value="Atmesti"/>
+                    <h:inputHidden/>
+                    
+                    <p:outputLabel for="title" value="Pavadinimas:"/>
+                    <p:inputText id="title" value="#{editableHouse.house.title}" required="true" requiredMessage="Įveskite namelio pavadinimą! Maks. ilgis 255 simboliai.">
+                        <f:validateLength minimum="1" maximum="255"/>
+                    </p:inputText>
+                    <p:message for="title" style="color:red" />
+                    
+                    <p:outputLabel for="description" value="Aprašymas:"/>
+                    <p:inputText id="description" value="#{editableHouse.house.description}"/>
+                    <h:message for="description" style="color:red" />
+                    
+                    <p:outputLabel for="houseId" value="Namelio reg. nr."/>
+                    <p:inputText id="houseId" value="#{editableHouse.house.housereg}" required="true" requiredMessage="Įveskite namelio registracijos numerį! Maks. ilgis 255 simboliai.">
+                        <f:validateLength minimum="1" maximum="255"/>
+                    </p:inputText>
+                    <p:message for="houseId" style="color:red" />
+                    
+                    <p:outputLabel for="weekPrice" value="Sav. kaina (EUR):"/>
+                    <p:inputText id="weekPrice" value="#{editableHouse.house.weekprice}"/>
+                    <h:message for="weekPrice" style="color:red" />
+                    
+                    <p:outputLabel for="numberOfPlaces" value="Vietų sk.:"/>
+                    <p:inputText id="numberOfPlaces" value="#{editableHouse.house.numberofplaces}"/>
+                    <h:message for="numberOfPlaces" style="color:red" />
+                    
+                    <p:outputLabel for="address" value="Adresas:"/>
+                    <p:inputText id="address" value="#{editableHouse.house.address}"/>
+                    <h:message for="address" style="color:red" />
+                    
+                    <p:outputLabel for="startDate" value="Pradžios data:"/>
+                    <p:calendar id="startDate" pattern="yyyy-MM-dd" value="#{editableHouse.house.seasonstartdate}" readonly="#{facesContext.renderResponse}"/>
+                    <h:message for="startDate" style="color:red" />
+                    
+                    <p:outputLabel for="endDate" value="Pabaigos data:"/>
+                    <p:calendar id="endDate" pattern="yyyy-MM-dd" value="#{editableHouse.house.seasonenddate}" readonly="#{facesContext.renderResponse}"/>
+                    <h:message for="endDate" style="color:red" />
+                    
+                    <p:outputLabel for="type" value="Tipas:"/>
+                    <p:inputText id="type" value="#{editableHouse.getType()}" readonly="true"/>
+                    <h:message for="type" style="color:red" />
+                    
+                    <p:outputLabel for="isActive" value="Aktyvus:"/>
+                    <h:selectBooleanCheckbox id="isActive" value="#{editableHouse.isActive}"/> 
+                    <h:inputHidden/>
+                    
+                    <p:commandButton action="#{editableHouse.saveHouse}" value="Išsaugoti" process="@form"/>
+                    <p:commandButton action="#{editableHouse.declineChanges}" value="Atmesti" process="@this"/>
+                    <p:commandButton action="#{editableHouse.deleteHouse}" value="Panaikinti" process="@this"/>
                 </h:panelGrid>
             </h:form>
         </div>

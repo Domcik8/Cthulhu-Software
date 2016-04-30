@@ -1,5 +1,7 @@
 --Following scripts drop all tables.
 drop view  GroupView;
+drop table PersonRegistrationForm;
+drop table FormAttribute;
 drop table ServiceImage;
 drop table HouseImage;
 drop table ServicePictures;
@@ -23,7 +25,7 @@ CREATE TABLE Type
     Title           VARCHAR(255),
     Description     VARCHAR(255),
     IsDeleted       BOOLEAN,
-    OPT_LOCK_VERSION INTEGER,
+    OptLockVersion  INTEGER,
     PRIMARY KEY (ID)
 );
 
@@ -44,7 +46,7 @@ CREATE TABLE Person
     PersonalID          VARCHAR(255)                UNIQUE,
     MembershipDue       DATE,
     IsDeleted           BOOLEAN,
-    OPT_LOCK_VERSION INTEGER,
+    OptLockVersion      INTEGER,
     FOREIGN KEY (TypeID) REFERENCES Type (ID),
     PRIMARY KEY (ID)
 );
@@ -56,7 +58,7 @@ CREATE TABLE Person
     Title               VARCHAR(255)                    UNIQUE,
     Description         VARCHAR(255),
     IsDeleted           BOOLEAN,
-    OPT_LOCK_VERSION    INTEGER,
+    OptLockVersion     INTEGER,
     FOREIGN KEY (TypeID) REFERENCES Type (ID),
     PRIMARY KEY (ID)
 );*/
@@ -71,7 +73,7 @@ CREATE TABLE Payment
     PaymentDate         Date,
     PaidWithMoney       INTEGER,
     IsDeleted           BOOLEAN,
-    OPT_LOCK_VERSION    INTEGER,
+    OptLockVersion      INTEGER,
     FOREIGN KEY (TypeID) REFERENCES Type (ID),
     FOREIGN KEY (PersonID) REFERENCES Person (ID),
     PRIMARY KEY (ID)
@@ -90,7 +92,7 @@ CREATE TABLE Service
     WeekPrice       Decimal,
     NumberOfPlaces  INTEGER,
     IsDeleted       BOOLEAN,
-    OPT_LOCK_VERSION    INTEGER,
+    OptLockVersion  INTEGER,
     FOREIGN KEY (TypeID)  REFERENCES Type (ID),
     PRIMARY KEY (ID)
 );
@@ -109,7 +111,7 @@ CREATE TABLE House
     WeekPrice       Decimal,
     NumberOfPlaces  INTEGER,
     IsDeleted       BOOLEAN,
-    OPT_LOCK_VERSION    INTEGER,
+    OptLockVersion  INTEGER,
     FOREIGN KEY (TypeID)  REFERENCES Type (ID),
     PRIMARY KEY (ID)
 );
@@ -124,7 +126,7 @@ CREATE TABLE Reservation
     StartDate           DATE,
     EndDate             DATE,
     IsDeleted           BOOLEAN,
-    OPT_LOCK_VERSION INTEGER,
+    OptLockVersion      INTEGER,
     FOREIGN KEY (TypeID) REFERENCES Type (ID),
     FOREIGN KEY (HouseID) REFERENCES House (ID),
     FOREIGN KEY (PersonID) REFERENCES Person (ID),
@@ -158,7 +160,7 @@ CREATE TABLE SystemParameter
     Description     VARCHAR(255),
     Value           INTEGER,
     IsDeleted       BOOLEAN,
-    OPT_LOCK_VERSION INTEGER,
+    OptLockVersion  INTEGER,
     FOREIGN KEY (TypeID)  REFERENCES Type (ID),
     PRIMARY KEY (ID)
 );
@@ -167,55 +169,49 @@ CREATE TABLE HouseImage
 (
     ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
     TypeID          INTEGER         NOT NULL, 
-    HouseID         INTEGER,
+    HouseID         INTEGER         NOT NULL,
     InternalName    VARCHAR(255)    NOT NULL    UNIQUE,
     Sequence        INTEGER,
     Image           BLOB            NOT NULL,
     MIMEType        VARCHAR(255)    NOT NULL,
     Description     VARCHAR(255),
     IsDeleted       BOOLEAN,
-    OPT_LOCK_VERSION INTEGER,
+    OptLockVersion  INTEGER,
     FOREIGN KEY (TypeID)  REFERENCES Type (ID),
     FOREIGN KEY (HouseID)  REFERENCES House (ID),
     PRIMARY KEY (ID)
 );
 
-CREATE TABLE ServiceImage
+CREATE TABLE FormAttribute
 (
     ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
     TypeID          INTEGER         NOT NULL, 
-    ServiceID       INTEGER,
     InternalName    VARCHAR(255)    NOT NULL    UNIQUE,
-    Sequence        INTEGER,
-    Image           BLOB            NOT NULL,
-    MIMEType        VARCHAR(255)    NOT NULL,
-    IsDeleted       BOOLEAN,
+    Name            VARCHAR(255)    NOT NULL,
+    ListItems       VARCHAR(255),
+    IsRequired      BOOLEAN,
     Description     VARCHAR(255),
-    OPT_LOCK_VERSION INTEGER,
+    IsDeleted       BOOLEAN,
+    OptLockVersion  INTEGER,
     FOREIGN KEY (TypeID)  REFERENCES Type (ID),
-    FOREIGN KEY (ServiceID)  REFERENCES Service (ID),
     PRIMARY KEY (ID)
 );
 
-CREATE VIEW GroupView (ID, InternalName, Title, Description, IsDeleted, OPT_LOCK_VERSION)
-    AS SELECT ID, InternalName, Title, Description, IsDeleted, OPT_LOCK_VERSION
-    FROM Type WHERE InternalName like 'Person.%'
-
-/*
-
-CREATE VIEW SAMP.PROJ_COMBO 
-	(PROJNO, PRENDATE, PRSTAFF, MAJPROJ) 
-	AS SELECT PROJNO, PRENDATE, PRSTAFF, MAJPROJ
-	FROM SAMP.PROJECT UNION ALL */
-
-
-/*CREATE TABLE Type
+CREATE TABLE PersonRegistrationForm
 (
     ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    InternalName    VARCHAR(255)                UNIQUE,
-    Title           VARCHAR(255),
-    Description     VARCHAR(255),
+    TypeID          INTEGER         NOT NULL, 
+    InternalName    VARCHAR(255)    NOT NULL    UNIQUE,
+    PersonID        INTEGER         NOT NULL    UNIQUE,
+    FormValue       LONG VARCHAR,
     IsDeleted       BOOLEAN,
-    OPT_LOCK_VERSION INTEGER,
+    OptLockVersion  INTEGER,
+    FOREIGN KEY (TypeID)  REFERENCES Type (ID),
+    FOREIGN KEY (PersonID)  REFERENCES Person (ID),
     PRIMARY KEY (ID)
-);*/
+);
+
+
+CREATE VIEW GroupView (ID, InternalName, Title, Description, IsDeleted, OptLockVersion)
+    AS SELECT ID, InternalName, Title, Description, IsDeleted, OptLockVersion
+    FROM Type WHERE InternalName like 'Person.%'

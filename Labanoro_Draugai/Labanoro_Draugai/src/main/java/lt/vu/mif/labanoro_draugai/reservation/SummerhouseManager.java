@@ -5,6 +5,8 @@
  */
 package lt.vu.mif.labanoro_draugai.reservation;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,9 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
@@ -24,12 +24,16 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Reservation;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import lt.vu.mif.labanoro_draugai.entities.Houseimage;
 import lt.vu.mif.labanoro_draugai.entities.Service;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.io.IOUtils;
 import org.primefaces.event.CloseEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
  
 /**
  *
@@ -41,6 +45,7 @@ public class SummerhouseManager implements Serializable{
     private List<House> summerhouses;
     private List<House> filteredSummerhouses;
     private boolean isFiltered = false;
+    List<String> selectedHouseImages; 
     
     @ManagedProperty(value="#{houseFilter}")
     private HouseFilter filter;
@@ -57,43 +62,27 @@ public class SummerhouseManager implements Serializable{
         Collections.reverse(summerhouses);
         Collections.reverse(filteredSummerhouses);
         
-        houseImages = new HashMap<>();
-        
         System.out.println(toString() + " constructed.");
-        //System.out.println("houseImages:");
-        for(House house:summerhouses){
-            //System.out.println(house.getHousereg());
-            if(house.getHouseimageList()== null) System.out.println("no images found");
-            if(house.getHouseimageList()!= null){
-                List<String> imageList = new ArrayList<>();
-                
-                Collections.sort(house.getHouseimageList(), new Comparator<Houseimage>() {
-                    @Override
-                    public int compare(Houseimage h1, Houseimage h2) {
-                        return h1.getSequence().compareTo(h2.getSequence());
-                    }
-                });
-                
-                for(Houseimage image : house.getHouseimageList()){
-                    imageList.add("https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ34NdBFQhnN-roT0brsL-VFUnVVesw-KNTOJNTL0Al8b9-Ut0T");
-                    //System.out.println(image.getPath());
-                }
-                houseImages.put(house.getHousereg(), imageList);
-            }
-        }
     }
     
-    private Map<String,List<String>> houseImages;
-    public List<String> getHouseImageList(String houseReg){
-        if(houseImages==null || houseReg==null || houseImages.isEmpty())return new ArrayList<String>();
-        return houseImages.get(houseReg);
+    public String firstImageName(House house){
+        if(house ==null || house.getHouseimageList() == null || house.getHouseimageList().isEmpty()) return null;
+        Predicate condition = new Predicate() {
+            public boolean evaluate(Object sample) {
+                 return ((Houseimage)sample).getSequence().equals(1);
+            }
+         };
+         Houseimage result = (Houseimage)CollectionUtils.select( house.getHouseimageList(), condition ).iterator().next();
+         return result.getInternalname();
     }
-    public String getDisplayHouseImage(String houseReg){
-//        if(houseImages==null || houseReg==null)return "";
-//        List<String> images = houseImages.get(houseReg);
-//        if(images == null || images.isEmpty()) return  "";
-//        return images.get(0);
-         return "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ34NdBFQhnN-roT0brsL-VFUnVVesw-KNTOJNTL0Al8b9-Ut0T";
+    
+        public List<String> HouseImageNames(House house){
+        if(house ==null || house.getHouseimageList() == null || house.getHouseimageList().isEmpty()) return null;
+        List<String> result = new ArrayList<>();
+        for(Houseimage img : house.getHouseimageList()){
+            result.add(img.getInternalname());
+        }
+         return result;
     }
     
     //TODO availability filter
@@ -356,6 +345,22 @@ public class SummerhouseManager implements Serializable{
                 || !isHouseAvailable(selectedHouse, selectedDateFrom, selectedDateTo)|| selectedHousePeriodPrice() == 0){
            return "";
         }
-        return "reservationConfirmation.html?faces-redirect=true";
+        
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("house", selectedHouse);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("dateFrom", selectedDateFrom);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("dateTo", selectedDateTo);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("serviceList", selectedHouseSelectedServices);
+        
+        
+        return "reservationConfirmation.html";
     }
+
+    public List<String> getSelectedHouseImages() {
+        return selectedHouseImages;
+    }
+
+    public void setSelectedHouseImages(List<String> selectedHouseImages) {
+        this.selectedHouseImages = selectedHouseImages;
+    }
+    
 }

@@ -47,7 +47,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "House.findByWeekprice", query = "SELECT h FROM House h WHERE h.weekprice = :weekprice"),
     @NamedQuery(name = "House.findByNumberofplaces", query = "SELECT h FROM House h WHERE h.numberofplaces = :numberofplaces"),
     @NamedQuery(name = "House.findByIsdeleted", query = "SELECT h FROM House h WHERE h.isdeleted = :isdeleted"),
-    @NamedQuery(name = "House.findByOptLockVersion", query = "SELECT h FROM House h WHERE h.optLockVersion = :optLockVersion")})
+    @NamedQuery(name = "House.findByOptlockversion", query = "SELECT h FROM House h WHERE h.optlockversion = :optlockversion")})
 public class House implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -84,8 +84,8 @@ public class House implements Serializable {
     private Integer numberofplaces;
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
-    @Column(name = "OPT_LOCK_VERSION")
-    private Integer optLockVersion;
+    @Column(name = "OPTLOCKVERSION")
+    private Integer optlockversion;
     @JoinTable(name = "MULTISELECTHOUSETOSERVICE", joinColumns = {
         @JoinColumn(name = "PARENTID", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "CHILDID", referencedColumnName = "ID")})
@@ -96,7 +96,7 @@ public class House implements Serializable {
     @JoinColumn(name = "TYPEID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Type typeid;
-    @OneToMany(mappedBy = "houseid")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "houseid")
     private List<Houseimage> houseimageList;
 
     public House() {
@@ -199,12 +199,12 @@ public class House implements Serializable {
         this.isdeleted = isdeleted;
     }
 
-    public Integer getOptLockVersion() {
-        return optLockVersion;
+    public Integer getOptlockversion() {
+        return optlockversion;
     }
 
-    public void setOptLockVersion(Integer optLockVersion) {
-        this.optLockVersion = optLockVersion;
+    public void setOptlockversion(Integer optlockversion) {
+        this.optlockversion = optlockversion;
     }
 
     public List<Service> getServiceList() {

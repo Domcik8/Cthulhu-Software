@@ -38,7 +38,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Reservation.findByStartdate", query = "SELECT r FROM Reservation r WHERE r.startdate = :startdate"),
     @NamedQuery(name = "Reservation.findByEnddate", query = "SELECT r FROM Reservation r WHERE r.enddate = :enddate"),
     @NamedQuery(name = "Reservation.findByIsdeleted", query = "SELECT r FROM Reservation r WHERE r.isdeleted = :isdeleted"),
-    @NamedQuery(name = "Reservation.findByOptLockVersion", query = "SELECT r FROM Reservation r WHERE r.optLockVersion = :optLockVersion")})
+    @NamedQuery(name = "Reservation.findByOptlockversion", query = "SELECT r FROM Reservation r WHERE r.optlockversion = :optlockversion")})
 public class Reservation implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -58,8 +58,8 @@ public class Reservation implements Serializable {
     private Date enddate;
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
-    @Column(name = "OPT_LOCK_VERSION")
-    private Integer optLockVersion;
+    @Column(name = "OPTLOCKVERSION")
+    private Integer optlockversion;
     @JoinTable(name = "MULTISELECTRESERVATIONTOSERVICE", joinColumns = {
         @JoinColumn(name = "PARENTID", referencedColumnName = "ID")}, inverseJoinColumns = {
         @JoinColumn(name = "CHILDID", referencedColumnName = "ID")})
@@ -122,12 +122,12 @@ public class Reservation implements Serializable {
         this.isdeleted = isdeleted;
     }
 
-    public Integer getOptLockVersion() {
-        return optLockVersion;
+    public Integer getOptlockversion() {
+        return optlockversion;
     }
 
-    public void setOptLockVersion(Integer optLockVersion) {
-        this.optLockVersion = optLockVersion;
+    public void setOptlockversion(Integer optlockversion) {
+        this.optlockversion = optlockversion;
     }
 
     public List<Service> getServiceList() {

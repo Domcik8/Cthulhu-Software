@@ -57,9 +57,11 @@ and open the template in the editor.
                                 <h:outputText id="endDate" value="#{house.seasonenddate}">
                                     <f:convertDateTime pattern="yyyy-MM-dd" />
                                 </h:outputText>
+                                <h:outputLabel for="type" value="Tipas:"/>
+                                <h:outputText id="type" value="#{house.getTypeid().getTitle()}"/>
                                 <h:outputLabel for="isActive" value="Aktyvus:"/>
                                 <h:selectBooleanCheckbox id="isActive" value="#{house.isactive}" disabled="true"/>
-                                <h:commandButton action="#{adminHouseManager.setHouse()}" value="Modifikuoti">
+                                <h:commandButton action="#{adminHouseManager.setEditableHouse()}" value="Modifikuoti">
                                     <f:param name="houseId" value="#{house.id}"/>
                                 </h:commandButton>
                             </h:panelGrid>

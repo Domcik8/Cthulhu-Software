@@ -23,8 +23,23 @@ and open the template in the editor.
     <h:body>
         <!-- Navigation panel-->
         <ui:include src="/WEB-INF/other_pages/navigation.xhtml" />
-        <p:panel>
-            <h:outputLabel>Bla bla</h:outputLabel>
-        </p:panel>
+        
+        <div class="container">
+            <h1>Užsakymo patvirtinimas</h1>
+            <p:panel>
+                <p:panelGrid>
+                    <p>House: #{reservationConfirmationManager.house.title}</p>
+                    <p>DateFrom: #{reservationConfirmationManager.dateFrom}</p>
+                    <p>DateTo: #{reservationConfirmationManager.dateTo}</p>
+                    <p>Pasirinktos paslaugos:</p>
+
+                    <p:dataList value="#{reservationConfirmationManager.services}" var="service">
+                        <h:outputLabel> #{service}</h:outputLabel>
+                    </p:dataList> 
+                </p:panelGrid>
+
+            </p:panel>            
+        </div>
+
     </h:body>
 </html>

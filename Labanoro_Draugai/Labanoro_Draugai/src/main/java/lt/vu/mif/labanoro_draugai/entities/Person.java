@@ -20,6 +20,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -47,7 +48,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Person.findByPersonalid", query = "SELECT p FROM Person p WHERE p.personalid = :personalid"),
     @NamedQuery(name = "Person.findByMembershipdue", query = "SELECT p FROM Person p WHERE p.membershipdue = :membershipdue"),
     @NamedQuery(name = "Person.findByIsdeleted", query = "SELECT p FROM Person p WHERE p.isdeleted = :isdeleted"),
-    @NamedQuery(name = "Person.findByOptLockVersion", query = "SELECT p FROM Person p WHERE p.optLockVersion = :optLockVersion")})
+    @NamedQuery(name = "Person.findByOptlockversion", query = "SELECT p FROM Person p WHERE p.optlockversion = :optlockversion")})
 public class Person implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -93,8 +94,8 @@ public class Person implements Serializable {
     private Date membershipdue;
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
-    @Column(name = "OPT_LOCK_VERSION")
-    private Integer optLockVersion;
+    @Column(name = "OPTLOCKVERSION")
+    private Integer optlockversion;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "personid")
     private List<Payment> paymentList;
     @JoinColumn(name = "TYPEID", referencedColumnName = "ID")
@@ -102,6 +103,8 @@ public class Person implements Serializable {
     private Type typeid;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "personid")
     private List<Reservation> reservationList;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "personid")
+    private Personregistrationform personregistrationform;
 
     public Person() {
     }
@@ -222,12 +225,12 @@ public class Person implements Serializable {
         this.isdeleted = isdeleted;
     }
 
-    public Integer getOptLockVersion() {
-        return optLockVersion;
+    public Integer getOptlockversion() {
+        return optlockversion;
     }
 
-    public void setOptLockVersion(Integer optLockVersion) {
-        this.optLockVersion = optLockVersion;
+    public void setOptlockversion(Integer optlockversion) {
+        this.optlockversion = optlockversion;
     }
 
     public List<Payment> getPaymentList() {
@@ -252,6 +255,14 @@ public class Person implements Serializable {
 
     public void setReservationList(List<Reservation> reservationList) {
         this.reservationList = reservationList;
+    }
+
+    public Personregistrationform getPersonregistrationform() {
+        return personregistrationform;
+    }
+
+    public void setPersonregistrationform(Personregistrationform personregistrationform) {
+        this.personregistrationform = personregistrationform;
     }
 
     @Override
