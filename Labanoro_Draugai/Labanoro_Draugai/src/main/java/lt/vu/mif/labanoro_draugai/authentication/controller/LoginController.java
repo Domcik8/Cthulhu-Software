@@ -1,10 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lt.vu.mif.labanoro_draugai.authentication.controller;
 
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.text.MessageFormat;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -13,7 +13,7 @@ import lt.vu.mif.labanoro_draugai.entities.Person;
 
 /**
  *
- * @author NecrQ
+ * @author Ernest J
  */
 @Stateless
 public class LoginController {
@@ -74,8 +74,26 @@ public class LoginController {
 
         if (!isUser(email)) {
             Person person = db.addPerson(email, null, null, "Person.Candidate");
+
+            SecureRandom random = new SecureRandom();
+            String password = new BigInteger(130, random).toString(32);
+
+//            String passwordHash = Hashing.sha256().hashString(password, Charsets.UTF_8).toString();
+//            String output = MessageFormat.format("{0} hashed to: {1}", password, passwordHash);
+//            System.out.println(output);
+            
             person.setFacebookid(facebookId);
+            person.setPassword(password);
         }
+    }
+    
+    public String getRegisteredUserP(String email, String facebookId) {
+        
+        if(isFbUser(email, facebookId)) {
+            Person user = (Person) db.getEntity("Person", "Email", email);
+            return user.getPassword();
+        }
+        return null;
     }
 
     public void registerUser(String email, String firstName, String lastName) {

@@ -30,11 +30,14 @@ and open the template in the editor.
                         <li id="admin"><a href="/Labanoro_Draugai/Administration/admin.html" style="outline: 0" >Administravimas</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
+<!--                        <li>
+                            <a class="btn btn-default btn-outline btn-circle collapsed" data-toggle="collapse" href="#nav-profile" aria-expanded="false" aria-controls="nav-profile">Profile</a>
+                        </li>-->
                         <li>
-                            <!--<a class="btn btn-default btn-outline btn-circle collapsed" data-toggle="collapse" href="#nav-profile" aria-expanded="false" aria-controls="nav-profile">Profile</a>-->
-                        </li>
-                        <li>
-                            <a href="/Labanoro_Draugai/user/login.html" style="outline: 0">Login</a>
+                            <h:form class="btn btn-group">
+                                <h:commandButton class="btn btn-default" action="/user/login.html" style="outline: 0" value="Login"/>
+                                <h:commandButton class="btn btn-default" action="#{auth.logout()}" style="outline: 0" value="Logout"/>
+                            </h:form>
                         </li>
                     </ul>
 <!--                    <ul class="collapse nav navbar-nav navbar-right nav-collapse slide-down" role="search" id="nav-profile">

@@ -6,8 +6,6 @@
 package lt.vu.mif.labanoro_draugai.authentication.controller;
 
 import lt.vu.mif.labanoro_draugai.entities.Person;
-import lt.vu.mif.labanoro_draugai.authentication.service.UserService;
-
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -15,15 +13,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author Ernest J
  */
 public class RegisterValidator {
-    UserService userService;
-
-    public RegisterValidator(UserService userService) {
-        this.userService = userService;
-    }
-
-    public boolean supports(Class<?> clazz) {
-        return RegisterForm.class.equals(clazz);
-    }
+  
 /*
     
     Need to write validation logic for user input ? 

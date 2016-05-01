@@ -5,17 +5,16 @@
  */
 package lt.vu.mif.labanoro_draugai.authentication.controller;
 
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
+import java.text.MessageFormat;
 import javax.ejb.Stateless;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 
@@ -23,22 +22,24 @@ import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
  *
  * @author Ernest J
  */
-@Named
+@ManagedBean(name = "auth")
 @Stateless
 public class LoginForm {
+
     private String username;
     private String password;
 
     @Inject
     LoginController controller;
-    
-    public LoginForm() {}
-    
+
+    public LoginForm() {
+    }
+
     public String getUsername() {
         return this.username;
     }
 
-    public void setUserName(String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 
@@ -46,39 +47,57 @@ public class LoginForm {
         return this.password;
     }
 
-    public void setPassword() {
+    public void setPassword(String password) {
         this.password = password;
     }
-    
-    public String login() {
-//        FacesContext context = FacesContext.getCurrentInstance();
-//        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-//        try {
-            
-            // check user if exist in db and if correct credentials
-                System.out.println("Login worked"); 
-              //  System.out.println(username + " : " + password);
-            //if (exist)         
-//            request.login(this.username, this.password);
-            
-//        } catch (ServletException e) {
-//           
-//            context.addMessage(null, new FacesMessage("Login failed."));
-//            return "error";
-//        }
-        return "/index.html";
-    }
 
-    public void logout() {
+    public String login() {
+
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
         try {
-            request.logout();
+
+            if (request.getUserPrincipal() == null) {   // check if not already logged in
+                if (controller.isUser(this.username)) {     // check if user already exists
+                    request.login(this.username, this.password);
+
+                    if (request.getUserPrincipal().getName() == this.username) {
+                        System.out.println("Internal login worked");
+                        return "/index?faces-redirect=true";
+                    }
+                }
+            }
+
         } catch (ServletException e) {
-            
-            context.addMessage(null, new FacesMessage("Logout failed."));
+            System.out.println("Failed to log in user!");
+            context.addMessage(null, new FacesMessage("Login failed."));
+            return "/user/loginError.html?faces-redirect=true";
         }
+
+        return "/user/loginError.html?faces-redirect=true";
     }
-    
-    
+
+    public String logout() {
+
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+
+        String destination = "/index?faces-redirect=true";
+        try {
+            request.logout();
+            System.out.println("Logout worked");
+        } catch (ServletException e) {
+            System.out.println("Failed to logout user!");
+            destination = "/loginError.html?faces-redirect=true";
+        }
+
+        return destination;
+    }
+
+    private void generateHash(String password) {
+
+        String hash = Hashing.sha256().hashString(password, Charsets.UTF_8).toString();
+        String output = MessageFormat.format("{0} hashed to: {1}", password, hash);
+        System.out.println(output);
+    }
 }
