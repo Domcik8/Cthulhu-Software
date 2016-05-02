@@ -47,12 +47,12 @@ and open the template in the editor.
                                                      style="vertical-align:middle;"/>  
                         </pe:dynaFormControl>
                         <pe:dynaFormControl type="remove" styleClass="clearLink">  
-                            <p:commandLink value="Pašalinti" process="@this" update="dynaForm"  
+                            <p:commandLink value="-Pašalinti" process="@this" update="dynaForm"  
                                            action="#{userFormCreationManager.removeAdminFormPropery(data)}"  
                                            global="false" style="margin-left:10px"/>  
                         </pe:dynaFormControl> 
                         <f:facet name="buttonBar">
-                            <p:commandLink value="Pridėti eilutę" action="#{userFormCreationManager.addAdminFormPropery()}"  
+                            <p:commandLink value="+Pridėti eilutę" action="#{userFormCreationManager.addAdminFormPropery()}"  
                                            global="false" style="position: relative;left: -80%; bottom: -35%" process="dynaForm" update=":mainForm:dynaFormGroup"/>   
                             <p:commandButton value="Peržiūrėti formą" action="#{userFormCreationManager.submitForm}"  
                                              process="dynaForm" update=":mainForm:dynaFormGroup :mainForm:displayDynaForm"  

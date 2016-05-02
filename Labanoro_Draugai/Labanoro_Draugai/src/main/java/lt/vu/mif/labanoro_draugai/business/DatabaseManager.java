@@ -84,6 +84,11 @@ public class DatabaseManager {
         addType("Picture", "Picture");
         addType("Picture.House", "House picture");
         addType("Picture.Service", "Service picture");
+        addType("FormElement.Calendar", "Kalendorius");
+        addType("FormElement.Input", "Teksto laukas");
+        addType("FormElement.Select", "Pasirinkti vieną");
+        addType("FormElement.Textarea", "Didelis teksto laukas");
+        addType("FormElement.Number", "Skaičius");
     }
 
     /**
@@ -95,6 +100,7 @@ public class DatabaseManager {
         addPerson("erja@test.com", "Ernest", "Jascanin", "Person.Administrator");
         addPerson("kauz@test.com", "Karolis", "Uždanavičius", "Person.Administrator");
         addPerson("paru@test.com", "Paulius", "Rudzinskas", "Person.Administrator");
+        addPerson("admin", "admin", "admin", "Person.Administrator");
     }
     
     /**
@@ -217,6 +223,7 @@ public class DatabaseManager {
         newPerson.setFirstname(firstName);
         newPerson.setLastname(lastName);
         newPerson.setTypeid(type);
+        newPerson.setPassword("admin");
         
         if(entityExists("Person", "Email", email)) {
             System.out.println(String.format("Person with email '%s' already exists", email));
@@ -558,6 +565,19 @@ public class DatabaseManager {
         
         return query.getResultList().isEmpty() ? null : query.getResultList().get(0);
     }
+    
+    /**
+      * Returns all entities of selected class name.
+      * 
+      * @param className - name of entity class, should always start with upper case letter and other letters be lower case
+      * @return 
+      */
+    public Object getAllEntities(String className){
+        className = className.toLowerCase();
+        Query query = em.createNamedQuery(capitalize(className)+".findAll");
+        
+        return query.getResultList().isEmpty() ? null : query.getResultList();
+    }
 
     /**
      * Persists and flushes entity to database.
@@ -592,6 +612,17 @@ public class DatabaseManager {
             house.setWeekprice(rand.nextInt(800));
             persistAndFlush(house);
         }
+    }
+    
+      /**
+     * Returns Type objects belonging to specific type class 
+     * 
+     * @param typeClass
+     */
+    public List<Type> retrieveTypes(String typeClass){
+        Query query = em.createQuery("SELECT t FROM Type t WHERE t.internalname LIKE :typeClass").setParameter("typeClass", typeClass+".%");
+        
+        return query.getResultList();
     }
     
     public static String capitalize(String string) {

@@ -10,12 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.data_models.AdminUserFormProperty;
 import lt.vu.mif.labanoro_draugai.data_models.UserFormProperty;
+import lt.vu.mif.labanoro_draugai.entities.Formattribute;
+import lt.vu.mif.labanoro_draugai.entities.Type;
 import org.primefaces.context.RequestContext;
 import org.primefaces.extensions.model.dynaform.DynaFormControl;
 import org.primefaces.extensions.model.dynaform.DynaFormLabel;
@@ -28,11 +32,9 @@ import org.primefaces.extensions.model.dynaform.DynaFormRow;
  *
  * @author Karolis
  */
-@ManagedBean(name = "userFormCreationManager")
+@Named
 @ViewScoped
 public class UserFormCreationManager implements Serializable{
-
-  
     private static final long serialVersionUID = 20120423L;  
   
     private DynaFormModel model;
@@ -41,6 +43,9 @@ public class UserFormCreationManager implements Serializable{
     private List<AdminUserFormProperty> adminFormProperties;
     private List<SelectItem> fieldTypes;
     
+    @Inject
+    DatabaseManager dbm;
+    
     @PostConstruct  
     protected void initialize() {  
         model = new DynaFormModel();
@@ -48,25 +53,27 @@ public class UserFormCreationManager implements Serializable{
         updateDisplayDynaForm();
         
         //get types from db
+        List<Type> formElementTypes = dbm.retrieveTypes("FormElement");
+        System.out.println("Type count:"+ formElementTypes.size());
         fieldTypes = new ArrayList<>();
-        fieldTypes.add(new SelectItem("input","Teksto laukas"));
-        fieldTypes.add(new SelectItem("select","Pasirinkti vieną"));
-        fieldTypes.add(new SelectItem("textarea","Didelis teksto laukas"));
-        fieldTypes.add(new SelectItem("calendar","Datos pasirinkimas"));
-        fieldTypes.add(new SelectItem("number","Skaičius"));
-        //load current form
-
-        
-        for(int i =0;i<1;i++){
-            DynaFormRow row = model.createRegularRow();
-            
-            AdminUserFormProperty adminProp = new AdminUserFormProperty(fieldTypes,i);
-            addAdminPropertyToRowAndList(row, adminProp);
+        for(Type type : formElementTypes){
+            fieldTypes.add(new SelectItem(type.getInternalname(),type.getTitle()));
         }
+        //load current form
+        List<Formattribute> attributes = (List<Formattribute>)dbm.getAllEntities("Formattribute");
+        int index = 0;
+        for(Formattribute attr:attributes){
+            DynaFormRow row = model.createRegularRow();
+            AdminUserFormProperty adminProp = new AdminUserFormProperty(attr, fieldTypes, index);
+            addAdminPropertyToRowAndList(row, adminProp);
+            index++;
+        }
+        
         System.out.println("eilucius skaicius administravimo formoje: " + adminFormProperties.size());
     }  
   
     public void removeAdminFormPropery(AdminUserFormProperty property) {  
+        if(adminFormProperties.size() == 1) return;
         model.removeRegularRow(property.getIndex());          
         adminFormProperties.remove(property);  
           
@@ -141,7 +148,7 @@ public class UserFormCreationManager implements Serializable{
             DynaFormRow row = displayModel.createRegularRow();
             
             DynaFormLabel label = row.addLabel(adminProp.getLabelName()); 
-            DynaFormControl control = adminProp.getSelectedType().equals("select")?
+            DynaFormControl control = adminProp.getSelectedType().equals("FormElement.Select")?
                 row.addControl(new UserFormProperty(adminProp.getLabelName(),adminProp.isRequired(),parseSelectValues(adminProp.getSelectionValues())), adminProp.getSelectedType()):
                 row.addControl(new UserFormProperty(adminProp.getLabelName(),adminProp.isRequired()), adminProp.getSelectedType());  
              label.setForControl(control);
