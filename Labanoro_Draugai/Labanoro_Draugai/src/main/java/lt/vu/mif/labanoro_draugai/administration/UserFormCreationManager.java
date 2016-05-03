@@ -64,12 +64,20 @@ public class UserFormCreationManager implements Serializable{
         //load current form
         List<Formattribute> attributes = (List<Formattribute>)dbm.getAllEntities("Formattribute");
         int index = 0;
-        for(Formattribute attr:attributes){
+        if(attributes.isEmpty()){
+            DynaFormRow row = model.createRegularRow();
+            AdminUserFormProperty adminProp = new AdminUserFormProperty(fieldTypes, index);
+            addAdminPropertyToRowAndList(row, adminProp);
+            index++;
+        }else{
+            for(Formattribute attr:attributes){
             DynaFormRow row = model.createRegularRow();
             AdminUserFormProperty adminProp = new AdminUserFormProperty(attr, fieldTypes, index);
             addAdminPropertyToRowAndList(row, adminProp);
             index++;
+            }
         }
+        
         
         System.out.println("eilucius skaicius administravimo formoje: " + adminFormProperties.size());
     }  
