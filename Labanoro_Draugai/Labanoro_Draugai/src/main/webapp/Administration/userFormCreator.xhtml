@@ -23,7 +23,7 @@ and open the template in the editor.
     </h:head>
     <h:body>
         <ui:include src="/WEB-INF/other_pages/navigation.xhtml" />
-        <div class="container">
+        <div>
             <h1>Vartotojo Formos kūrimas</h1>
  
             <h:form id="mainForm">
@@ -51,12 +51,15 @@ and open the template in the editor.
                                            action="#{userFormCreationManager.removeAdminFormPropery(data)}"  
                                            global="false" style="margin-left:10px"/>  
                         </pe:dynaFormControl> 
-                        <f:facet name="buttonBar">
+                        <f:facet name="buttonBar"> 
                             <p:commandLink value="+Pridėti eilutę" action="#{userFormCreationManager.addAdminFormPropery()}"  
-                                           global="false" style="position: relative;left: -80%; bottom: -35%" process="dynaForm" update=":mainForm:dynaFormGroup"/>   
-                            <p:commandButton value="Peržiūrėti formą" action="#{userFormCreationManager.submitForm}"  
+                                        global="false" process="dynaForm" update=":mainForm:dynaFormGroup"/> 
+                            <p:commandButton value="Peržiūrėti formą" action="#{userFormCreationManager.viewForm}"  
                                              process="dynaForm" update=":mainForm:dynaFormGroup :mainForm:displayDynaForm"  
-                                             oncomplete=""/>  
+                                             oncomplete=""/>
+                            <p:commandButton value="Išsaugoti formą" action="#{userFormCreationManager.saveForm}"
+                                             process="dynaForm" update=":mainForm:informationDialog :mainForm:dynaFormGroup :mainForm:displayDynaForm "  
+                                             oncomplete="if (args &amp;&amp; !args.validationFailed) PF('infoWidget').show()"/> 
                         </f:facet>  
                     </pe:dynaForm>
                 </h:panelGroup>  
@@ -70,12 +73,8 @@ and open the template in the editor.
                 </ui:include>   
             </p:panel>
             
-            <p:dialog header="Input values" widgetVar="inputValuesWidget">  
-                <p:dataList id="inputValues" value="#{userFormCreationManager.adminUserProperties}" var="prop"  
-                            style="margin:10px;">  
-                    <h:outputText value="#{prop.labelName}: #{prop.index}"  
-                                  style="margin-right: 10px;"/>  
-                </p:dataList>  
+            <p:dialog id="informationDialog" header="Išsaugota sėkmingai!"  widgetVar="infoWidget" resizable="false" draggable="false" responsive="true"
+                    closeOnEscape="true" fitViewport="true" position="center"  modal="true">
             </p:dialog>  
 
             <h:outputScript id="dynaFormScript" target="body">  

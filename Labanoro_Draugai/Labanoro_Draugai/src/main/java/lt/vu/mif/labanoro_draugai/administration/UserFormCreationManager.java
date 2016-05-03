@@ -37,6 +37,8 @@ import org.primefaces.extensions.model.dynaform.DynaFormRow;
 public class UserFormCreationManager implements Serializable{
     private static final long serialVersionUID = 20120423L;  
   
+    private String displayDialog;
+    
     private DynaFormModel model;
     private DynaFormModel displayModel;
     
@@ -95,7 +97,6 @@ public class UserFormCreationManager implements Serializable{
         }
         
         addAdminPropertyToRowAndList(row, adminProp);
-
     } 
     
     private void addAdminPropertyToRowAndList(DynaFormRow row, AdminUserFormProperty adminProp){
@@ -129,16 +130,33 @@ public class UserFormCreationManager implements Serializable{
         return adminFormProperties;  
     }  
   
-    public String submitForm() {  
+    public void viewForm() {  
         FacesMessage.Severity sev = FacesContext.getCurrentInstance().getMaximumSeverity();  
         boolean hasErrors = (sev != null && (FacesMessage.SEVERITY_ERROR.compareTo(sev) >= 0));  
   
         RequestContext requestContext = RequestContext.getCurrentInstance();  
         requestContext.addCallbackParam("isValid", !hasErrors);  
-  
+        
+        if(hasErrors) return;
         updateDisplayDynaForm();
         
-        return null;  
+        return;  
+    }
+    
+    public void saveForm() {  
+        FacesMessage.Severity sev = FacesContext.getCurrentInstance().getMaximumSeverity();  
+        boolean hasErrors = (sev != null && (FacesMessage.SEVERITY_ERROR.compareTo(sev) >= 0));  
+  
+        RequestContext requestContext = RequestContext.getCurrentInstance();  
+        requestContext.addCallbackParam("isValid", !hasErrors);  
+        
+        if(hasErrors){
+            return;
+        }
+        updateDisplayDynaForm();
+        if(!dbm.saveFormAttributes(adminFormProperties)){
+            System.err.println("Problem saving Formattributes to db");
+        }
     }
     
     private void updateDisplayDynaForm(){
@@ -171,6 +189,12 @@ public class UserFormCreationManager implements Serializable{
 
     public void setDisplayModel(DynaFormModel displayModel) {
         this.displayModel = displayModel;
+    }
+
+    public String getDisplayDialog() {
+        if(displayDialog == null || displayDialog.isEmpty()) return null;
+        if(displayDialog.equals("none"))return null;
+        return "PF('%s').show()".format(displayDialog);
     }
     
 }

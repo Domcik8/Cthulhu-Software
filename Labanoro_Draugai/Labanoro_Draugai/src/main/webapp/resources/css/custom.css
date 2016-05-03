@@ -87,3 +87,6 @@ body {
 .top-alignment {
      vertical-align: top;
 }
+.form-button-bar{
+    width: 100%;
+}

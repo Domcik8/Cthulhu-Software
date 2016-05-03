@@ -22,6 +22,8 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.transaction.TransactionSynchronizationRegistry;
 import jdk.nashorn.internal.runtime.regexp.joni.Regex;
+import lt.vu.mif.labanoro_draugai.data_models.AdminUserFormProperty;
+import lt.vu.mif.labanoro_draugai.entities.Formattribute;
 import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Houseimage;
 import lt.vu.mif.labanoro_draugai.entities.Person;
@@ -597,6 +599,26 @@ public class DatabaseManager {
         } 
         return true;
     }
+    
+    public boolean saveFormAttributes(List<AdminUserFormProperty> properties){
+        //drop table
+        em.createQuery("DELETE FROM Formattribute e").executeUpdate();
+        //insert
+        for(AdminUserFormProperty prop : properties){
+            Formattribute attr = new Formattribute();
+            attr.setName(prop.getLabelName());
+            attr.setInternalname(prop.getLabelName());
+            attr.setIsdeleted(Boolean.FALSE);
+            attr.setIsrequired(prop.isRequired());
+            attr.setListitems(prop.getSelectionValues());
+            Type type = (Type)getEntity("Type", "internalname", prop.getSelectedType());
+            attr.setTypeid(type);
+            if(!persistAndFlush(attr))
+                return false;
+        }    
+        return true;
+    }
+
     
     public void editHouses(){
         Random rand = new Random();
