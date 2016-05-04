@@ -61,7 +61,7 @@ public class LoginForm {
                 if (controller.isUser(this.username)) {     // check if user already exists
                     request.login(this.username, this.password);
 
-                    if (request.getUserPrincipal().getName() == this.username) {
+                    if (request.getUserPrincipal().getName().equals(this.username)) {
                         System.out.println("Internal login worked");
                         return "/index?faces-redirect=true";
                     }

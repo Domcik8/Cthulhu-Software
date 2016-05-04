@@ -90,7 +90,7 @@ public class RegistrationManager implements Serializable{
         persistList.add(person);
         persistList.add(regInfo);
         if(!dbm.persistAndFlushList(persistList)) return null;
-        return "/user/login";
+        return "/user/login?faces-redirect=true";
     }
     
     private List<SelectItem> parseSelectValues(String selectionValues){
