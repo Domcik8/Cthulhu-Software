@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Registracija</title>
+        <h:outputStylesheet library="css" name="custom.css"/>
+        <link href="resources/css/custom.css" type="text/css"/> 
+        <script src="https://code.jquery.com/jquery-2.2.2.min.js"   integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI="   crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous"/>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"   integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw="   crossorigin="anonymous"></script>
+    </h:head>
+    <body>
+        <div class="container">
+        <h1>
+            Registracija
+        </h1>
+            <p:panel>
+                <h:form id="registrationForm" >
+                    <h2>Prisijungimo informacija</h2>
+                    <h:panelGrid columns="2" border="0" columnClasses="align-right,align-left">
+                        <p:outputLabel id="emailLabel" for="email" value="Elektroninio pašto adresas "/>
+                        <p:inputText id="email" value="#{registrationManager.email}" required="true"/>
+                        <p:outputLabel id="pswLabel" for="psw" value="Slaptažodis "/>
+                        <p:password id="psw" value="#{registrationManager.password}" required="true"/>
+                        <p:outputLabel id="psw2Label" for="psw2" value="Pakartokite slaptažodį "/>
+                        <p:password id="psw2" value="#{registrationManager.passwordConfirm}" required="true"/>
+                    </h:panelGrid>
+                    <h2>Papasakok apie save</h2>
+                    <ui:include src="/WEB-INF/other_pages/dynamicUserForm.xhtml">
+                        <ui:param name="model" value="#{registrationManager.displayModel}" />
+                    </ui:include>
+                    <p:commandLink oncomplete="PF('termsWidget').show()" update=":termsForm:termsDialog">
+                        <p:outputLabel for="terms" id="termsLabel" value="Sutinku su taisyklėmis "/> 
+                    </p:commandLink>
+                    <p:selectBooleanCheckbox id="terms" value="#{registrationManager.isAgreeingToTerms}" required="true"/>
+                    <br/>
+                    <p:commandButton value="Patvirtinti" action="#{registrationManager.submitRegistration()}"
+                                             process="registrationForm" update="registrationForm"  /> 
+                </h:form>
+            </p:panel>
+            <h:form id="termsForm">
+                <p:dialog id="termsDialog" header="Taisyklės"
+                                  width="300" height="350"
+                                  modal="true" widgetVar="termsWidget"
+                                  resizable="false" draggable="false" responsive="true"
+                                  closeOnEscape="true" fitViewport="true" position="center">
+                    <h:form >
+                        <h:outputText value="#{registrationManager.termsAndConditions}" />
+                    </h:form>
+                </p:dialog>
+            </h:form>
+        </div>
+              
+    </body>
+</html>

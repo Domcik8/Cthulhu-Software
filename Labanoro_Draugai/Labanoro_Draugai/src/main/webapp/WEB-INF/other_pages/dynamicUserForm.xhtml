@@ -12,24 +12,24 @@ and open the template in the editor.
     xmlns:pe="http://primefaces.org/ui/extensions"
     xmlns:f="http://xmlns.jcp.org/jsf/core">
         <h:panelGroup id="displayDynaFormGroup">  
-                        <pe:dynaForm id="displayDynaForm" value="#{model}" var="data">  
-                            <pe:dynaFormControl type="FormElement.Input" for="txtd">  
-                                <p:inputText id="txtd" value="#{data.value}" required="#{data.required}"/>  
-                            </pe:dynaFormControl>
-                            <pe:dynaFormControl type="FormElement.Number" for="numd">  
-                                <p:spinner id="numd" value="#{data.value}" required="#{data.required}"/>  
-                            </pe:dynaFormControl>
-                            <pe:dynaFormControl type="FormElement.Calendar" for="cald" styleClass="calendar" >  
-                                <p:calendar id="cald" value="#{data.value}" required="#{data.required}" showOn="button" pattern="yyyy-MM-dd" locale="lt" navigator="true" yearRange="-110:-10" readonlyInput="true"/>  
-                            </pe:dynaFormControl>  
-                            <pe:dynaFormControl type="FormElement.Select" for="seld" styleClass="select">  
-                                <h:selectOneMenu id="seld" value="#{data.value}" required="#{data.required}">  
-                                    <f:selectItems value="#{data.selectItems}"/>  
-                                </h:selectOneMenu>  
-                            </pe:dynaFormControl>  
-                            <pe:dynaFormControl type="FormElement.Textarea" for="taread">  
-                                <p:inputTextarea id="taread" value="#{data.value}" required="#{data.required}" autoResize="true" rows="5" cols="150" style="width: 100%"/>  
-                            </pe:dynaFormControl>   
-                        </pe:dynaForm>
-                    </h:panelGroup>
+            <pe:dynaForm id="displayDynaForm" value="#{model}" var="data">  
+                <pe:dynaFormControl type="FormElement.Input" for="txtd">  
+                    <p:inputText id="txtd" value="#{data.value}" required="#{data.required}"/>  
+                </pe:dynaFormControl>
+                <pe:dynaFormControl type="FormElement.Number" for="numd">  
+                    <p:spinner id="numd" value="#{data.value}" required="#{data.required}"/>  
+                </pe:dynaFormControl>
+                <pe:dynaFormControl type="FormElement.Calendar" for="cald" styleClass="calendar" >  
+                    <p:calendar id="cald" value="#{data.value}" required="#{data.required}" showOn="button" pattern="yyyy-MM-dd" locale="lt" navigator="true" yearRange="-110:-10" readonlyInput="true"/>  
+                </pe:dynaFormControl>  
+                <pe:dynaFormControl type="FormElement.Select" for="seld" styleClass="select">  
+                    <h:selectOneMenu id="seld" value="#{data.value}" required="#{data.required}">  
+                        <f:selectItems value="#{data.selectItems}"/>  
+                    </h:selectOneMenu>  
+                </pe:dynaFormControl>  
+                <pe:dynaFormControl type="FormElement.Textarea" for="taread">  
+                    <p:inputTextarea id="taread" value="#{data.value}" required="#{data.required}" autoResize="true" rows="5" cols="150" style="width: 100%"/>  
+                </pe:dynaFormControl>   
+            </pe:dynaForm>
+        </h:panelGroup>
 </ui:composition>

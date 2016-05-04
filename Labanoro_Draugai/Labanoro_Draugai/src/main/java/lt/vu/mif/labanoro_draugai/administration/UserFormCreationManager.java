@@ -110,7 +110,8 @@ public class UserFormCreationManager implements Serializable{
     private void addAdminPropertyToRowAndList(DynaFormRow row, AdminUserFormProperty adminProp){
         adminFormProperties.add(adminProp);
             
-        DynaFormLabel label = row.addLabel("Pavadinimas:");  
+        DynaFormLabel label = row.addLabel("Pavadinimas:"); 
+        
         DynaFormControl control = row.addControl(adminProp, "inputName");  
         label.setForControl(control);
 

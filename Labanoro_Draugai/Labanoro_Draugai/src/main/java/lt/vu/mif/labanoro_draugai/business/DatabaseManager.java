@@ -73,6 +73,7 @@ public class DatabaseManager {
     public void fillBasicTypes() {
         addType("SystemParameter", "SystemParameter");
         addType("Person", "Person");
+        addType("Person.Form", "Form");
         addType("Person.Administrator", "Administrator");
         addType("Person.User", "User");
         addType("Person.Candidate", "Candidate");
@@ -594,6 +595,28 @@ public class DatabaseManager {
             em.flush();
         } catch(PersistenceException pe) {
             System.out.println(String.format("Failed to insert '%s' to database", newEntity.toString()));
+            em.clear();
+            return false;
+        } 
+        return true;
+    }
+    
+        /**
+     * Persists and flushes entity to database.
+     * Returns true if operation was successful, false otherwise.
+     * Before using this method check if newEntity does not already exist in database.
+     * 
+     * @param newEntities 
+     * @return true if success
+     */
+    public boolean persistAndFlushList(List<Object> newEntities) {
+        try {
+            for(Object newEntity:newEntities){
+                em.persist(newEntity);
+            }
+            em.flush();
+        } catch(PersistenceException pe) {
+            System.out.println(String.format("Failed to insert list'%s' to database", newEntities.toString()));
             em.clear();
             return false;
         } 
