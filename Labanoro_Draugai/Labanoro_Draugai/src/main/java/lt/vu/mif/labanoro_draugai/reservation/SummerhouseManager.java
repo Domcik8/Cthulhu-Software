@@ -62,7 +62,7 @@ public class SummerhouseManager implements Serializable{
         System.out.println(toString() + " constructed.");
     }
     
-    public String firstImageName(House house){
+    public String firstImageName(House house) {
         if(house ==null || house.getHouseimageList() == null || house.getHouseimageList().isEmpty()) return null;
         Predicate condition = new Predicate() {
             public boolean evaluate(Object sample) {
