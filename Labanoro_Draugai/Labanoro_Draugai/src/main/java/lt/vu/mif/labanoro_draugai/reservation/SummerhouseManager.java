@@ -5,8 +5,6 @@
  */
 package lt.vu.mif.labanoro_draugai.reservation;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
