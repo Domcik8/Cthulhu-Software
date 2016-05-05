@@ -105,6 +105,14 @@
             <version>19.0</version>
         </dependency>
         
+        <!-- Mail service -->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.7</version>
+        </dependency>
+
+        
         <!-- Others -->
         <dependency>
             <groupId>com.github.scribejava</groupId>
