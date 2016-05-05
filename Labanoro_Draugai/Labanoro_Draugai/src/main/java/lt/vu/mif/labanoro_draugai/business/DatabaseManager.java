@@ -1,5 +1,7 @@
 package lt.vu.mif.labanoro_draugai.business;
 
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -36,20 +38,21 @@ import org.apache.commons.io.IOUtils;
 @Named
 @Stateless
 public class DatabaseManager {
-    
-    public DatabaseManager() {}
-    
+
+    public DatabaseManager() {
+    }
+
     @Resource
     private TransactionSynchronizationRegistry tx;
-    
+
     @PersistenceContext
     private EntityManager em;
-    
+
     @PostConstruct
     private void onCreation() {
         System.out.println(this + " has been created.");
     }
-    
+
     @PreDestroy
     private void onDeletion() {
         System.out.println(this + " has been destroyed.");
@@ -63,7 +66,7 @@ public class DatabaseManager {
         fillBasicReservations();
         fillBasicSystemParameters();
         fillBasicHouseImages();
-        
+
         return "DataBase has been filled";
     }
 
@@ -97,15 +100,45 @@ public class DatabaseManager {
     /**
      * Fills database with basic people
      */
-    private void fillBasicPeople() {
-        addPerson("doli@test.com", "Dominik", "Lisovski", "Person.Administrator");
-        addPerson("erba@test.com", "Ernest", "Barkovski", "Person.Administrator");
-        addPerson("erja@test.com", "Ernest", "Jascanin", "Person.Administrator");
-        addPerson("kauz@test.com", "Karolis", "Uždanavičius", "Person.Administrator");
-        addPerson("paru@test.com", "Paulius", "Rudzinskas", "Person.Administrator");
-        addPerson("admin", "admin", "admin", "Person.Administrator");
+    public void fillBasicPeople() {
+
+        Person person = null;
+        String passwordHash = null;
+
+        person = addPerson("doli@test.com", "Dominik", "Lisovski", "Person.Administrator");
+        passwordHash = Hashing.sha256().hashString("admin", Charsets.UTF_8).toString();
+        person.setPassword(passwordHash);
+
+        person = addPerson("erba@test.com", "Ernest", "Barkovski", "Person.Administrator");
+        passwordHash = Hashing.sha256().hashString("admin", Charsets.UTF_8).toString();
+        person.setPassword(passwordHash);
+
+        person = addPerson("erja@test.com", "Ernest", "Jascanin", "Person.Administrator");
+        passwordHash = Hashing.sha256().hashString("admin", Charsets.UTF_8).toString();
+        person.setPassword(passwordHash);
+
+        person = addPerson("kauz@test.com", "Karolis", "Uždanavičius", "Person.Administrator");
+        passwordHash = Hashing.sha256().hashString("admin", Charsets.UTF_8).toString();
+        person.setPassword(passwordHash);
+
+        person = addPerson("paru@test.com", "Paulius", "Rudzinskas", "Person.Administrator");
+        passwordHash = Hashing.sha256().hashString("admin", Charsets.UTF_8).toString();
+        person.setPassword(passwordHash);
+
+        person = addPerson("admin", "admin", "admin", "Person.Administrator");
+        passwordHash = Hashing.sha256().hashString("admin", Charsets.UTF_8).toString();
+        person.setPassword(passwordHash);
+        
+        person = addPerson("can", "can", "can", "Person.Candidate");
+        passwordHash = Hashing.sha256().hashString("admin", Charsets.UTF_8).toString();
+        person.setPassword(passwordHash);
+        
+        person = addPerson("user", "user", "user", "Person.User");
+        passwordHash = Hashing.sha256().hashString("admin", Charsets.UTF_8).toString();
+        person.setPassword(passwordHash);
+        
     }
-    
+
     /**
      * Fills database with basic houses
      */
@@ -131,7 +164,7 @@ public class DatabaseManager {
         addHouse("New small house", "Vilnius", "HouseReg-19", "House.Penthouse");
         addHouse("Old small house", "Vilnius", "HouseReg-20", "House.Penthouse");
     }
-    
+
     /**
      * Fills database with basic services
      */
@@ -139,7 +172,7 @@ public class DatabaseManager {
         addService("New red lamborghini", "ServiceReg-1", "HouseReg-1", "Service.Vehicle.Car");
         addService("New blue bike", "ServiceReg-2", "HouseReg-1", "Service.Vehicle.Bike");
     }
-    
+
     /**
      * Fills database with basic reservations
      */
@@ -149,189 +182,195 @@ public class DatabaseManager {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             services.add("ServiceReg-1");
             services.add("ServiceReg-2");
-            
-            addReservation("ReservationReg-1", "HouseReg-1", "Reservation", "doli@test.com", null,format.parse("2016-06-06"),format.parse("2016-06-12"));
-            addReservation("ReservationReg-2", "HouseReg-1", "Reservation", "doli@test.com", services,format.parse("2016-06-27"),format.parse("2016-07-10"));
+
+            addReservation("ReservationReg-1", "HouseReg-1", "Reservation", "doli@test.com", null, format.parse("2016-06-06"), format.parse("2016-06-12"));
+            addReservation("ReservationReg-2", "HouseReg-1", "Reservation", "doli@test.com", services, format.parse("2016-06-27"), format.parse("2016-07-10"));
         } catch (ParseException ex) {
             Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
      * Fills database with basic system parameters
      */
     private void fillBasicSystemParameters() {
         addSystemParameter("ServiceParameter.Test", "Test", "SystemParameter");
     }
-    
-     /**
+
+    /**
      * Fills database with basic house pictures
      */
     private void fillBasicHouseImages() {
-        for(int i = 2;i<=20;i++){
-            addHouseImage("Picture.HouseReg-"+i+"_1", "Images/House/House-1_1.JPG", 1, "HouseReg-"+i, "Picture.House");
+        for (int i = 2; i <= 20; i++) {
+            addHouseImage("Picture.HouseReg-" + i + "_1", "Images/House/House-1_1.JPG", 1, "HouseReg-" + i, "Picture.House");
         }
         addHouseImage("Picture.HouseReg-1_1", "Images/House/House-2_1.JPG", 1, "HouseReg-1", "Picture.House");
         addHouseImage("Picture.HouseReg-1_2", "Images/House/House-2_2.JPG", 2, "HouseReg-1", "Picture.House");
         addHouseImage("Picture.HouseReg-1_3", "Images/House/House-2_3.JPG", 3, "HouseReg-1", "Picture.House");
         addHouseImage("Picture.HouseReg-2_2", "Images/House/House-1_2.JPG", 2, "HouseReg-2", "Picture.House");
-       
+
     }
-    
+
     /**
-     * Creates new entity type and flushes it to database.
-     * Returns type entity if created sucessfully
-     * 
+     * Creates new entity type and flushes it to database. Returns type entity
+     * if created sucessfully
+     *
      * @param internalName
      * @param title
      * @param description
-     * @param isDeleted 
+     * @param isDeleted
      */
-    private Type addType(String internalName, String title){
+    private Type addType(String internalName, String title) {
         Type newType = new Type();
-        
+
         newType.setInternalname(internalName);
         newType.setTitle(title);
-        
-        if(entityExists("Type", "Internalname", internalName)) {
+
+        if (entityExists("Type", "Internalname", internalName)) {
             System.out.println(String.format("Type with internal name '%s' already exists", internalName));
             return null;
         }
-        
-        if(persistAndFlush(newType))
+
+        if (persistAndFlush(newType)) {
             System.out.println(String.format("Type '%s' created successfully", internalName));
-        else
+        } else {
             return null;
+        }
         return newType;
     }
-    
+
     /**
-     * Creates new person and flushes it to database.
-     * Returns person entity if created sucessfully
-     * 
+     * Creates new person and flushes it to database. Returns person entity if
+     * created sucessfully
+     *
      * @param firstName
      * @param lastName
-     * @param internalName 
+     * @param internalName
      */
     public Person addPerson(String email, String firstName, String lastName, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
-        
-        if(type == null) {
+
+        if (type == null) {
             System.out.println(String.format("There is no type '%s'", typeInternalName));
             return null;
         }
-        
+
         Person newPerson = new Person();
         newPerson.setEmail(email);
         newPerson.setFirstname(firstName);
         newPerson.setLastname(lastName);
         newPerson.setTypeid(type);
-        
-        if(entityExists("Person", "Email", email)) {
+
+        if (entityExists("Person", "Email", email)) {
             System.out.println(String.format("Person with email '%s' already exists", email));
             return null;
         }
-        
-        if(persistAndFlush(newPerson))
+
+        if (persistAndFlush(newPerson)) {
             System.out.println(String.format("Person '%s' created successfully", firstName + ":" + lastName));
-        else
+        } else {
             return null;
+        }
         return newPerson;
     }
-    
+
     /**
-     * Creates new house and flushes it to database.
-     * Returns person entity if created sucessfully
-     * 
+     * Creates new house and flushes it to database. Returns person entity if
+     * created sucessfully
+     *
      * @param firstName
      * @param lastName
-     * @param internalName 
+     * @param internalName
      */
     public House addHouse(String title, String address, String houseReg, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
-        
-        if(type == null) {
+
+        if (type == null) {
             System.out.println(String.format("There is no type '%s'", typeInternalName));
             return null;
         }
-        
+
         House newHouse = new House();
         newHouse.setTitle(title);
         newHouse.setAddress(address);
         newHouse.setHousereg(houseReg);
         newHouse.setTypeid(type);
-        
-        if(entityExists("House", "Housereg", houseReg)) {
+
+        if (entityExists("House", "Housereg", houseReg)) {
             System.out.println(String.format("House with registration '%s' already exists", houseReg));
             return null;
         }
-        
-        if(persistAndFlush(newHouse))
+
+        if (persistAndFlush(newHouse)) {
             System.out.println(String.format("House '%s' created successfully", title));
-        else
+        } else {
             return null;
+        }
         return newHouse;
     }
-    
-    /***
-     * Creates new service and flushes it to database.
-     * Returns entity if created sucessfully
-     * 
+
+    /**
+     * *
+     * Creates new service and flushes it to database. Returns entity if created
+     * sucessfully
+     *
      * @param title
      * @param serviceReg
      * @param houseReg
      * @param typeInternalName
-     * @return 
+     * @return
      */
     private Service addService(String title, String serviceReg, String houseReg, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
         House house = (House) getEntity("House", "Housereg", houseReg);
-        
-        if(type == null) {
+
+        if (type == null) {
             System.out.println(String.format("There is no type '%s'", typeInternalName));
             return null;
         }
-        
-        if(house == null) {
+
+        if (house == null) {
             System.out.println(String.format("House with registration '%s' does not exist", houseReg));
             return null;
         }
-        
+
         Service newService = new Service();
         newService.setTitle(title);
         newService.setServicereg(serviceReg);
         newService.setTypeid(type);
-        
-        if(entityExists("Service", "Servicereg", serviceReg)) {
+
+        if (entityExists("Service", "Servicereg", serviceReg)) {
             System.out.println(String.format("Service with registration '%s' already exists", serviceReg));
             return null;
         }
-        
-        if(persistAndFlush(newService))
+
+        if (persistAndFlush(newService)) {
             System.out.println(String.format("Service '%s' created successfully", title));
-        else
+        } else {
             return null;
-        
+        }
+
         house.getServiceList().add(newService);
-        
+
         return newService;
     }
-    
-    /***
-     * Creates new service and flushes it to database.
-     * Returns entity if created sucessfully
-     * 
+
+    /**
+     * *
+     * Creates new service and flushes it to database. Returns entity if created
+     * sucessfully
+     *
      * @param reservationReg
      * @param houseReg
      * @param typeInternalName
      * @param services
-     * @return 
+     * @return
      */
     private Reservation addReservation(String reservationReg, String houseReg, String typeInternalName, String personEmail, List<String> services, Date dateFrom, Date dateTo) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
         House house = (House) getEntity("House", "Housereg", houseReg);
         Person person = (Person) getEntity("Person", "Email", personEmail);
-        
+
         Reservation newReservation = new Reservation();
         newReservation.setReservationreg(reservationReg);
         newReservation.setTypeid(type);
@@ -340,153 +379,156 @@ public class DatabaseManager {
         newReservation.setStartdate(dateFrom);
         newReservation.setEnddate(dateTo);
         newReservation.setServiceList(new ArrayList<Service>());
-        
-        if(type == null) {
+
+        if (type == null) {
             System.out.println(String.format("There is no type '%s'", typeInternalName));
             return null;
         }
-        
-        if(house == null) {
+
+        if (house == null) {
             System.out.println(String.format("House with registration '%s' does not exist", houseReg));
             return null;
         }
-        
-        if(person == null) {
+
+        if (person == null) {
             System.out.println(String.format("Person with email '%s' does not exist", personEmail));
             return null;
         }
-        
-        if(services != null)
-            for(String serviceReg: services){
+
+        if (services != null) {
+            for (String serviceReg : services) {
                 Service service = (Service) getEntity("Service", "Servicereg", serviceReg);
-                if(service == null)
-                {
+                if (service == null) {
                     System.out.println(String.format("Service with registration '%s' does not exist", serviceReg));
-                    return null;  
-                }
-                else 
-                {
+                    return null;
+                } else {
                     newReservation.getServiceList().add(service);
                 }
             }
-        
-        if(entityExists("Reservation", "Reservationreg", reservationReg)) {
+        }
+
+        if (entityExists("Reservation", "Reservationreg", reservationReg)) {
             System.out.println(String.format("Reservation with registration '%s' already exists", reservationReg));
             return null;
         }
-        
-        if(persistAndFlush(newReservation))
+
+        if (persistAndFlush(newReservation)) {
             System.out.println(String.format("Reservation '%s' created successfully", reservationReg));
-        else
+        } else {
             return null;
-       
+        }
+
         return newReservation;
     }
-    
-     /***
-      * Creates new system parameter and flushes it to database.
-      * Returns system parameter entity if created sucessfully
-      * 
-      * @param internalName
-      * @param title
-      * @param typeInternalName
-      * @return 
-      */
-    private Systemparameter addSystemParameter(String internalName, String title, String typeInternalName){
+
+    /**
+     * *
+     * Creates new system parameter and flushes it to database. Returns system
+     * parameter entity if created sucessfully
+     *
+     * @param internalName
+     * @param title
+     * @param typeInternalName
+     * @return
+     */
+    private Systemparameter addSystemParameter(String internalName, String title, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
-        
-        if(type == null) {
+
+        if (type == null) {
             System.out.println(String.format("There is no type '%s'", typeInternalName));
             return null;
         }
-        
+
         Systemparameter newSystemParameter = new Systemparameter();
-        
+
         newSystemParameter.setInternalname(internalName);
         newSystemParameter.setTitle(title);
         newSystemParameter.setTypeid(type);
-        
-        if(entityExists("Systemparameter", "Internalname", internalName)) {
+
+        if (entityExists("Systemparameter", "Internalname", internalName)) {
             System.out.println(String.format("System parameter with internal name '%s' already exists", internalName));
             return null;
         }
-        
-        if(persistAndFlush(newSystemParameter))
+
+        if (persistAndFlush(newSystemParameter)) {
             System.out.println(String.format("System parameter '%s' created successfully", internalName));
-        else
+        } else {
             return null;
+        }
         return newSystemParameter;
     }
-    
-    /***
-     * Creates new house image and flushes it to database.
-     * Returns house image entity if created sucessfully
-     * 
+
+    /**
+     * *
+     * Creates new house image and flushes it to database. Returns house image
+     * entity if created sucessfully
+     *
      * @param internalName
      * @param path
      * @param sequence
      * @param houseReg
      * @param typeInternalName
-     * @return 
+     * @return
      */
-    private Houseimage addHouseImage(String internalName, String path, int sequence, String houseReg, String typeInternalName){
+    private Houseimage addHouseImage(String internalName, String path, int sequence, String houseReg, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
         House house = (House) getEntity("House", "Housereg", houseReg);
-        
+
         Houseimage newHouseimage = new Houseimage();
-        
+
         newHouseimage.setInternalname(internalName);
         newHouseimage.setImage(getImageFromResources(path));
         newHouseimage.setSequence(sequence);
         newHouseimage.setHouseid(house);
         newHouseimage.setTypeid(type);
         newHouseimage.setMimetype(getImageMimeType(path));
-        
-        if(type == null) {
+
+        if (type == null) {
             System.out.println(String.format("There is no type '%s'", typeInternalName));
             return null;
-        }  
-        
-        if(house == null) {
+        }
+
+        if (house == null) {
             System.out.println(String.format("House with registration '%s' does not exist", houseReg));
             return null;
         }
-        
-        if(newHouseimage.getImage() == null) {
+
+        if (newHouseimage.getImage() == null) {
             System.out.println(String.format("Could't find file at '%s'", path));
             return null;
         }
-        
-        if(newHouseimage.getMimetype() == null) {
+
+        if (newHouseimage.getMimetype() == null) {
             System.out.println(String.format("Could not define Mime type of file '%s'", path));
             return null;
         }
-        
-        if(entityExists("Houseimage", "Internalname", internalName)) {
+
+        if (entityExists("Houseimage", "Internalname", internalName)) {
             System.out.println(String.format("House image with internal name '%s' already exists", internalName));
             return null;
         }
-        
-        if(persistAndFlush(newHouseimage))
+
+        if (persistAndFlush(newHouseimage)) {
             System.out.println(String.format("House image '%s' created successfully", internalName));
-        else
+        } else {
             return null;
-        
+        }
+
         return newHouseimage;
     }
-    
-    /***
+
+    /**
+     * *
      * Gets byte[] of image in given path
-     * 
+     *
      * @param path - path to image
-     * @return 
+     * @return
      */
-    private byte[] getImage(String path)
-    {
+    private byte[] getImage(String path) {
         FileInputStream fis = null;
         byte[] imageInBytes = null;
         File image = null;
-        
+
         try {
             image = new File(path);
             fis = new FileInputStream(image);
@@ -494,30 +536,31 @@ public class DatabaseManager {
             fis.read(imageInBytes);
         } catch (Exception e) {
             System.out.println("Error");
-        }
-        finally {
-            try{
-                fis.close();  
+        } finally {
+            try {
+                fis.close();
             } catch (Exception e) {
                 System.out.println("Error");
             }
-        } 
+        }
         return imageInBytes;
     }
-    
-    /***
-    * Gets byte[] of image in given resource path
-    * 
-    * @param path - path to image in resources
-    * @return 
-    */  
-    private byte[] getImageFromResources(String path)
-    {
+
+    /**
+     * *
+     * Gets byte[] of image in given resource path
+     *
+     * @param path - path to image in resources
+     * @return
+     */
+    private byte[] getImageFromResources(String path) {
         byte[] imageInBytes = null;
         InputStream in = null;
         try {
             in = this.getClass().getClassLoader().getResourceAsStream(path);
-            if(in==null) System.out.println("input stream is null");
+            if (in == null) {
+                System.out.println("input stream is null");
+            }
             imageInBytes = IOUtils.toByteArray(in);
         } catch (Exception e) {
             System.out.println("Error reading image from resources");
@@ -525,129 +568,134 @@ public class DatabaseManager {
         }
         return imageInBytes;
     }
-    
-    /***
-     * Returns MimeType of file  in given path
-     * 
+
+    /**
+     * *
+     * Returns MimeType of file in given path
+     *
      * @param path - path of image
-     * @return 
+     * @return
      */
-    private String getImageMimeType(String path)
-    {
+    private String getImageMimeType(String path) {
         String[] pathParts = path.split("\\.");
-        
+
         return pathParts[pathParts.length - 1];
     }
-    
-     /**
-      * Returns true if specified entity exists with specified parameter
-      * 
-      * @param className - name of entity class, should always start with upper case letter and other letters be lower case
-      * @param findBy - search criteria, should always start with upper case letter and other letters be lower case
-      * @param parameter - parameter value
-      * @return 
-      */
+
+    /**
+     * Returns true if specified entity exists with specified parameter
+     *
+     * @param className - name of entity class, should always start with upper
+     * case letter and other letters be lower case
+     * @param findBy - search criteria, should always start with upper case
+     * letter and other letters be lower case
+     * @param parameter - parameter value
+     * @return
+     */
     public boolean entityExists(String className, String findBy, String parameter) {
         Object entity = getEntity(className, findBy, parameter);
         return entity != null ? true : false;
     }
-    
+
     /**
-      * Returns entity if specified entity exists with specified parameter
-      * 
-      * @param className - name of entity class, should always start with upper case letter and other letters be lower case
-      * @param findBy - search criteria, should always start with upper case letter and other letters be lower case
-      * @param parameter - parameter value
-      * @return 
-      */
-    public Object getEntity(String className, String findBy, String parameter){
+     * Returns entity if specified entity exists with specified parameter
+     *
+     * @param className - name of entity class, should always start with upper
+     * case letter and other letters be lower case
+     * @param findBy - search criteria, should always start with upper case
+     * letter and other letters be lower case
+     * @param parameter - parameter value
+     * @return
+     */
+    public Object getEntity(String className, String findBy, String parameter) {
         className = className.toLowerCase();
         findBy = findBy.toLowerCase();
         Query query = em.createNamedQuery(capitalize(className) + ".findBy" + capitalize(findBy)).setParameter(findBy, parameter);
-        
+
         return query.getResultList().isEmpty() ? null : query.getResultList().get(0);
     }
-    
+
     /**
-      * Returns all entities of selected class name.
-      * 
-      * @param className - name of entity class, should always start with upper case letter and other letters be lower case
-      * @return 
-      */
-    public Object getAllEntities(String className){
+     * Returns all entities of selected class name.
+     *
+     * @param className - name of entity class, should always start with upper
+     * case letter and other letters be lower case
+     * @return
+     */
+    public Object getAllEntities(String className) {
         className = className.toLowerCase();
-        Query query = em.createNamedQuery(capitalize(className)+".findAll");
-        
+        Query query = em.createNamedQuery(capitalize(className) + ".findAll");
+
         return query.getResultList().isEmpty() ? null : query.getResultList();
     }
 
     /**
-     * Persists and flushes entity to database.
-     * Returns true if operation was successful, false otherwise.
-     * Before using this method check if newEntity does not already exist in database.
-     * 
-     * @param newEntity 
+     * Persists and flushes entity to database. Returns true if operation was
+     * successful, false otherwise. Before using this method check if newEntity
+     * does not already exist in database.
+     *
+     * @param newEntity
      */
     public boolean persistAndFlush(Object newEntity) {
         try {
             em.persist(newEntity);
             em.flush();
-        } catch(PersistenceException pe) {
+        } catch (PersistenceException pe) {
             System.out.println(String.format("Failed to insert '%s' to database", newEntity.toString()));
             em.clear();
             return false;
-        } 
+        }
         return true;
     }
-    
-        /**
-     * Persists and flushes entity to database.
-     * Returns true if operation was successful, false otherwise.
-     * Before using this method check if newEntity does not already exist in database.
-     * 
-     * @param newEntities 
+
+    /**
+     * Persists and flushes entity to database. Returns true if operation was
+     * successful, false otherwise. Before using this method check if newEntity
+     * does not already exist in database.
+     *
+     * @param newEntities
      * @return true if success
      */
     public boolean persistAndFlushList(List<Object> newEntities) {
         try {
-            for(Object newEntity:newEntities){
+            for (Object newEntity : newEntities) {
                 em.persist(newEntity);
             }
             em.flush();
-        } catch(PersistenceException pe) {
+        } catch (PersistenceException pe) {
             System.out.println(String.format("Failed to insert list'%s' to database", newEntities.toString()));
             em.clear();
             return false;
-        } 
+        }
         return true;
     }
-    
-    public boolean saveFormAttributes(List<AdminUserFormProperty> properties){
+
+    public boolean saveFormAttributes(List<AdminUserFormProperty> properties) {
         //drop table
         em.createQuery("DELETE FROM Formattribute e").executeUpdate();
         //insert
-        for(AdminUserFormProperty prop : properties){
+        for (AdminUserFormProperty prop : properties) {
             Formattribute attr = new Formattribute();
             attr.setName(prop.getLabelName());
             attr.setInternalname(prop.getLabelName());
             attr.setIsdeleted(Boolean.FALSE);
             attr.setIsrequired(prop.isRequired());
             attr.setListitems(prop.getSelectionValues());
-            Type type = (Type)getEntity("Type", "internalname", prop.getSelectedType());
+            Type type = (Type) getEntity("Type", "internalname", prop.getSelectedType());
             attr.setTypeid(type);
-            if(!persistAndFlush(attr))
+            if (!persistAndFlush(attr)) {
                 return false;
-        }    
+            }
+        }
         return true;
     }
 
-    
-    public void editHouses(){
+    public void editHouses() {
         Random rand = new Random();
         Query query = em.createNamedQuery("House.findAll");
-        List<House> houses=query.getResultList();
-        for(House house:houses){
-            house.setTitle(house.getTitle()+rand.nextInt(1000));
+        List<House> houses = query.getResultList();
+        for (House house : houses) {
+            house.setTitle(house.getTitle() + rand.nextInt(1000));
             house.setIsactive(true);
             //house.setSeasonstartdate(new Date());
             //house.setSeasonenddate(new Date(2017,04,11));
@@ -657,18 +705,18 @@ public class DatabaseManager {
             persistAndFlush(house);
         }
     }
-    
-      /**
-     * Returns Type objects belonging to specific type class 
-     * 
+
+    /**
+     * Returns Type objects belonging to specific type class
+     *
      * @param typeClass
      */
-    public List<Type> retrieveTypes(String typeClass){
-        Query query = em.createQuery("SELECT t FROM Type t WHERE t.internalname LIKE :typeClass").setParameter("typeClass", typeClass+".%");
-        
+    public List<Type> retrieveTypes(String typeClass) {
+        Query query = em.createQuery("SELECT t FROM Type t WHERE t.internalname LIKE :typeClass").setParameter("typeClass", typeClass + ".%");
+
         return query.getResultList();
     }
-    
+
     public static String capitalize(String string) {
         if (string == null || string.length() == 0) {
             return string;
