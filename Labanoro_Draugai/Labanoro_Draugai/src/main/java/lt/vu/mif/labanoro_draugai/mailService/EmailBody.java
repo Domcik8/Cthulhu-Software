@@ -1,37 +1,37 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lt.vu.mif.labanoro_draugai.mailService;
 
-import java.util.*;
-import javax.mail.*;
-import javax.mail.internet.*;
-import javax.activation.*;
+import javax.ejb.Stateless;
 
 /**
  *
- * @author NecrQ
+ * @author Ernest J
  */
+@Stateless
 public class EmailBody {
 
-    // Recipient's email ID needs to be mentioned.
-    String to = "abcd@gmail.com";
+    public EmailBody() {
+    }
 
-    // Sender's email ID needs to be mentioned
-    String from = "web@gmail.com";
+    public String getRegistrationConfirmationMessage() {
 
-    // Assuming you are sending email from localhost
-    String host = "localhost";
+        String message = "Sveiki";
+        message += "<br/> Sveikiname uzsiregistravus <b>Labanoro draugai</b> klube <br/>";
+        message += "Dabar jums reikia surinkti bent 2 rekomendacijos esamu nariu, kad galetume tapti pilnaverciu klubo nariu!";
 
-    // Get system properties
-    Properties properties = System.getProperties();
+        return message;
+    }
 
-    // Setup mail server
-   // properties.setProperty("mail.smtp.host", host);
+    public String getCandidateConfirmationMessage() {
 
-      // Get the default Session object.
-    Session session = Session.getDefaultInstance(properties);
-    
+        String message = "";
+
+        return message;
+    }
+
+    public String getCandidateRecommendationRequestMessage() {
+
+        String message = "";
+
+        return message;
+    }
 }
