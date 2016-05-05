@@ -212,6 +212,9 @@ CREATE TABLE PersonRegistrationForm
 );
 
 
-CREATE VIEW GroupView (ID, InternalName, Title, Description, IsDeleted, OptLockVersion)
-    AS SELECT ID, InternalName, Title, Description, IsDeleted, OptLockVersion
-    FROM Type WHERE InternalName like 'Person.%'
+-- CREATE VIEW GroupView (ID, InternalName, Title, Description, IsDeleted, OptLockVersion)
+--     AS SELECT ID, InternalName, Title, Description, IsDeleted, OptLockVersion
+--     FROM Type WHERE InternalName like 'Person.%';
+CREATE VIEW GroupView (Email, Title) AS
+    SELECT Email, Title FROM LABANORODB.Person, LABANORODB."TYPE"
+    WHERE Person.TYPEID = "TYPE".ID;

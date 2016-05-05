@@ -75,7 +75,7 @@ public class FBLoginServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Auth error caught: " + request.getContextPath());
-            response.sendRedirect(request.getContextPath() + "/user/loginError.html");
+            response.sendRedirect(request.getContextPath() + "/loginError.html");
             return;
         }
 

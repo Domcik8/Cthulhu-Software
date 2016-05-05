@@ -1,6 +1,9 @@
 package lt.vu.mif.labanoro_draugai.administration;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -14,9 +17,14 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 import javax.persistence.Query;
+import javax.persistence.SynchronizationType;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.House;
+import lt.vu.mif.labanoro_draugai.entities.Houseimage;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 
 /**
  *
@@ -29,31 +37,28 @@ import lt.vu.mif.labanoro_draugai.entities.House;
 @ViewScoped
 @Stateful
 public class EditableHouse implements Serializable {
-    //@PersistenceContext(type=PersistenceContextType.EXTENDED, synchronization=SynchronizationType.UNSYNCHRONIZED) 
 
     private List<House> houses;
     
     private House house;
     
-    @PersistenceContext//(type=PersistenceContextType.EXTENDED, synchronization=SynchronizationType.UNSYNCHRONIZED)
+    @PersistenceContext(type=PersistenceContextType.EXTENDED, synchronization=SynchronizationType.UNSYNCHRONIZED)
     private EntityManager em;
 
     @Inject
     DatabaseManager dbm;
+    
+    private List<String> images;
 
     @PostConstruct
     public void init() {
         house = getEditableHouse();
+        initImages();
     }
     
     public EditableHouse() {
         //house = new House();
         //house = getEditableHouse();
-    }
-    
-    public House getHouse() {
-        //house.getTypeid().getTitle();
-        return house;
     }
     
     public House getEditableHouse() {
@@ -99,11 +104,6 @@ public class EditableHouse implements Serializable {
         }
     }
     
-    /*private boolean isExisting(House h) {
-        List<House> hs = em.createNamedQuery("House.findById").setParameter("id",  h.getId()).getResultList();
-        return !hs.isEmpty();
-    }*/
-    
     private boolean insertHouse(House h) {
         try {
             em.joinTransaction();
@@ -121,10 +121,7 @@ public class EditableHouse implements Serializable {
             savingSuccess = updateHouse(house);
         else
             savingSuccess = insertHouse(house);
-        
-        //if (!savingSuccess)
-            //show error page
-        //else
+
         return "houses";
     }
 
@@ -171,11 +168,45 @@ public class EditableHouse implements Serializable {
         }
     }
     
+    /*public String firstImageName() {
+        if(house == null || house.getHouseimageList() == null || house.getHouseimageList().isEmpty()) return null;
+        Predicate condition = new Predicate() {
+            public boolean evaluate(Object sample) {
+                 return ((Houseimage)sample).getSequence().equals(1);
+            }
+         };
+         Houseimage result = (Houseimage)CollectionUtils.select(house.getHouseimageList(), condition ).iterator().next();
+         return result.getInternalname();
+    }*/
+    
+    private void initImages() {
+        images = getImagesList();
+    }
+    
+    public List<String> getImagesList() {
+        List<String> imgs = new ArrayList<String>();
+        
+        if(house == null || house.getHouseimageList() == null || house.getHouseimageList().isEmpty()) return null;
+        List<Houseimage> result = house.getHouseimageList();
+        //return result.getInternalname();
+         
+        for (Houseimage img : result) {
+            imgs.add(img.getInternalname());
+        }
+         
+        return imgs;
+    }
+    
     public boolean getIsActive() {
-        if (house.getId() == null)
-            return true;
-        else
-            return house.getIsactive();
+        try {
+            if (house.getId() == null)
+                return true;
+            else
+                return house.getIsactive();
+        }
+        catch (Exception ex) {
+            return false;
+        }
     }
     
     public void setIsActive(boolean isa) {
@@ -184,6 +215,14 @@ public class EditableHouse implements Serializable {
     
     public String getType() {
         return house.getTypeid().getTitle();
+    }
+    
+    public List<String> getImages() {
+        return images;
+    }
+    
+    public House getHouse() {
+        return house;
     }
     
     public void error() {

@@ -78,20 +78,21 @@ public class LoginController {
             SecureRandom random = new SecureRandom();
             String password = new BigInteger(130, random).toString(32);
 
-//            String passwordHash = Hashing.sha256().hashString(password, Charsets.UTF_8).toString();
-//            String output = MessageFormat.format("{0} hashed to: {1}", password, passwordHash);
-//            System.out.println(output);
-            
+            String passwordHash = Hashing.sha256().hashString(password, Charsets.UTF_8).toString();
+            String output = MessageFormat.format("{0} hashed to: {1}", password, passwordHash);
+            System.out.println(output);
+
             person.setFacebookid(facebookId);
-            person.setPassword(password);
+            person.setFacebookaccesstoken(password);
+            person.setPassword(passwordHash);
         }
     }
-    
+
     public String getRegisteredUserP(String email, String facebookId) {
-        
-        if(isFbUser(email, facebookId)) {
+
+        if (isFbUser(email, facebookId)) {
             Person user = (Person) db.getEntity("Person", "Email", email);
-            return user.getPassword();
+            return user.getFacebookaccesstoken();
         }
         return null;
     }
@@ -99,6 +100,12 @@ public class LoginController {
     public void registerUser(String email, String firstName, String lastName) {
 
         db.addPerson(email, firstName, lastName, "Person.Candidate");
+    }
+
+    private void generateHash(String password) {
+
+        String hash = Hashing.sha256().hashString(password, Charsets.UTF_8).toString();
+        String output = MessageFormat.format("{0} hashed to: {1}", password, hash);
     }
 
 }

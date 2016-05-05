@@ -33,7 +33,7 @@ and open the template in the editor.
                  rowsPerPageTemplate="10,50,100" rows="10" currentPageReportTemplate="{currentPage} iš {totalPages}">
  
                 <f:facet name="header">
-                    <p:outputPanel>
+                    <p:outputPanel style="float:right;margin-top: 4px">
                         <h:outputText value="Ieškoti visuose stulpeliuose:" />
                         <p:inputText id="globalFilter" onkeyup="PF('usersTable').filter()" style="width:150px"/>
                     </p:outputPanel>
@@ -73,7 +73,7 @@ and open the template in the editor.
                 
                 <p:column filterBy="#{user.membershipdue}" headerText="Narys iki" filterMatchMode="contains">
                     <f:facet name="filter">
-                        <p:calendar id="popup" value="#{adminUserManager.calendar}" pattern="yyyy-MM-dd" mindate="#{adminUserManager.getCurrentDate()}"/>
+                        <p:calendar id="popup" value="#{adminUserManager.calendar}" pattern="yyyy-MM-dd" mindate="#{adminUserManager.getCurrentDate()}" readonly="true"/>
                     </f:facet>
                     <h:outputText value="#{user.membershipdue}">
                         <f:convertDateTime pattern="yyyy-MM-dd" />

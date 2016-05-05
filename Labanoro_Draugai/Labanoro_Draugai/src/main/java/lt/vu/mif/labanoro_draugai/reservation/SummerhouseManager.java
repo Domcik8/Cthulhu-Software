@@ -5,8 +5,6 @@
  */
 package lt.vu.mif.labanoro_draugai.reservation;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,10 +28,7 @@ import lt.vu.mif.labanoro_draugai.entities.Houseimage;
 import lt.vu.mif.labanoro_draugai.entities.Service;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.apache.commons.io.IOUtils;
 import org.primefaces.event.CloseEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
  
 /**
  *
@@ -65,7 +60,7 @@ public class SummerhouseManager implements Serializable{
         System.out.println(toString() + " constructed.");
     }
     
-    public String firstImageName(House house){
+    public String firstImageName(House house) {
         if(house ==null || house.getHouseimageList() == null || house.getHouseimageList().isEmpty()) return null;
         Predicate condition = new Predicate() {
             public boolean evaluate(Object sample) {

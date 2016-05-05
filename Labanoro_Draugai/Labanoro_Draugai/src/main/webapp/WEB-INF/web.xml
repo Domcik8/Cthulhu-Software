@@ -20,7 +20,6 @@
         <exception-type>java.lang.Throwable</exception-type>
         <location>/error</location>
     </error-page>
-    
     <!-- Servlets & mapping -->
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
@@ -31,7 +30,6 @@
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.html</url-pattern>
     </servlet-mapping>
-
     <servlet>
         <servlet-name>login</servlet-name>
         <servlet-class>lt.vu.mif.labanoro_draugai.authentication.SecurityServlet</servlet-class>
@@ -40,34 +38,30 @@
         <servlet-name>login</servlet-name>
         <url-pattern>/user/login</url-pattern>
     </servlet-mapping>
-    
-    
     <!-- Security constraints -->
     <security-constraint>
         <display-name>UserConstraint</display-name>
         <web-resource-collection>
-            <web-resource-name>users</web-resource-name>
+            <web-resource-name>user</web-resource-name>
             <description/>
-            <url-pattern>/Administration/*</url-pattern>
+            <url-pattern>/user/*</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>
         <auth-constraint>
             <description/>
-            <role-name>users</role-name>
-            <role-name>admin</role-name>
+            <role-name>user</role-name>
+            <role-name>administrator</role-name>
         </auth-constraint>
         <user-data-constraint>
             <description/>
-            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+            <transport-guarantee>NONE</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
-    
-    
     <security-constraint>
         <display-name>AdminConstraint</display-name>
         <web-resource-collection>
-            <web-resource-name>admins</web-resource-name>
+            <web-resource-name>administrator</web-resource-name>
             <description/>
             <url-pattern>/Administration/*</url-pattern>
             <http-method>GET</http-method>
@@ -75,15 +69,13 @@
         </web-resource-collection>
         <auth-constraint>
             <description/>
-            <role-name>admin</role-name>
+            <role-name>administrator</role-name>
         </auth-constraint>
         <user-data-constraint>
             <description/>
-            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+            <transport-guarantee>NONE</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
-    
-    
     <security-constraint>
         <display-name>CandidateConstraint</display-name>
         <web-resource-collection>
@@ -100,31 +92,27 @@
         </auth-constraint>
         <user-data-constraint>
             <description/>
-            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+            <transport-guarantee>NONE</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
-    
-    
     <login-config>
         <auth-method>FORM</auth-method>
-        <realm-name>file</realm-name>
-        <!--        <realm-name>jdbc-realm</realm-name>-->
+        <!--<realm-name>file</realm-name>-->
+        <realm-name>labanoro-realm</realm-name>
         <form-login-config>
-            <form-login-page>/user/login.html</form-login-page>
-            <form-error-page>/user/loginError.html</form-error-page>
+            <form-login-page>/login.html</form-login-page>
+            <form-error-page>/loginError.html</form-error-page>
         </form-login-config>
     </login-config>
-    
-    
     <!-- Security roles used by this web application -->
     <security-role>
         <description/>
-        <role-name>admin</role-name>
+        <role-name>administrator</role-name>
         <!-- have access to everything -->
     </security-role>
     <security-role>
         <description/>
-        <role-name>users</role-name>
+        <role-name>user</role-name>
         <!-- normal user -->
     </security-role>
     <security-role>
@@ -132,14 +120,12 @@
         <role-name>candidate</role-name>
         <!-- not accepted user [Payment/reservation not allowed] -->
     </security-role>
-    
     <resource-ref>
         <res-ref-name>java:app/jdbc/LabanoroDatasource</res-ref-name>
         <res-type>javax.sql.DataSource</res-type>
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
     </resource-ref>
-    
     <data-source>
         <name>java:app/env/LabanoroDB</name>
         <class-name>org.apache.derby.jdbc.ClientXADataSource</class-name>

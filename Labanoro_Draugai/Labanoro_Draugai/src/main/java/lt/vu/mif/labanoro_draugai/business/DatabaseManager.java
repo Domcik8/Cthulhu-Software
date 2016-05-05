@@ -22,6 +22,8 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.transaction.TransactionSynchronizationRegistry;
 import jdk.nashorn.internal.runtime.regexp.joni.Regex;
+import lt.vu.mif.labanoro_draugai.data_models.AdminUserFormProperty;
+import lt.vu.mif.labanoro_draugai.entities.Formattribute;
 import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Houseimage;
 import lt.vu.mif.labanoro_draugai.entities.Person;
@@ -71,6 +73,7 @@ public class DatabaseManager {
     public void fillBasicTypes() {
         addType("SystemParameter", "SystemParameter");
         addType("Person", "Person");
+        addType("Person.Form", "Form");
         addType("Person.Administrator", "Administrator");
         addType("Person.User", "User");
         addType("Person.Candidate", "Candidate");
@@ -84,6 +87,11 @@ public class DatabaseManager {
         addType("Picture", "Picture");
         addType("Picture.House", "House picture");
         addType("Picture.Service", "Service picture");
+        addType("FormElement.Calendar", "Kalendorius");
+        addType("FormElement.Input", "Teksto laukas");
+        addType("FormElement.Select", "Pasirinkti vieną");
+        addType("FormElement.Textarea", "Didelis teksto laukas");
+        addType("FormElement.Number", "Skaičius");
     }
 
     /**
@@ -95,6 +103,7 @@ public class DatabaseManager {
         addPerson("erja@test.com", "Ernest", "Jascanin", "Person.Administrator");
         addPerson("kauz@test.com", "Karolis", "Uždanavičius", "Person.Administrator");
         addPerson("paru@test.com", "Paulius", "Rudzinskas", "Person.Administrator");
+        addPerson("admin", "admin", "admin", "Person.Administrator");
     }
     
     /**
@@ -217,6 +226,7 @@ public class DatabaseManager {
         newPerson.setFirstname(firstName);
         newPerson.setLastname(lastName);
         newPerson.setTypeid(type);
+        newPerson.setPassword("admin");
         
         if(entityExists("Person", "Email", email)) {
             System.out.println(String.format("Person with email '%s' already exists", email));
@@ -558,6 +568,19 @@ public class DatabaseManager {
         
         return query.getResultList().isEmpty() ? null : query.getResultList().get(0);
     }
+    
+    /**
+      * Returns all entities of selected class name.
+      * 
+      * @param className - name of entity class, should always start with upper case letter and other letters be lower case
+      * @return 
+      */
+    public Object getAllEntities(String className){
+        className = className.toLowerCase();
+        Query query = em.createNamedQuery(capitalize(className)+".findAll");
+        
+        return query.getResultList().isEmpty() ? null : query.getResultList();
+    }
 
     /**
      * Persists and flushes entity to database.
@@ -578,6 +601,48 @@ public class DatabaseManager {
         return true;
     }
     
+        /**
+     * Persists and flushes entity to database.
+     * Returns true if operation was successful, false otherwise.
+     * Before using this method check if newEntity does not already exist in database.
+     * 
+     * @param newEntities 
+     * @return true if success
+     */
+    public boolean persistAndFlushList(List<Object> newEntities) {
+        try {
+            for(Object newEntity:newEntities){
+                em.persist(newEntity);
+            }
+            em.flush();
+        } catch(PersistenceException pe) {
+            System.out.println(String.format("Failed to insert list'%s' to database", newEntities.toString()));
+            em.clear();
+            return false;
+        } 
+        return true;
+    }
+    
+    public boolean saveFormAttributes(List<AdminUserFormProperty> properties){
+        //drop table
+        em.createQuery("DELETE FROM Formattribute e").executeUpdate();
+        //insert
+        for(AdminUserFormProperty prop : properties){
+            Formattribute attr = new Formattribute();
+            attr.setName(prop.getLabelName());
+            attr.setInternalname(prop.getLabelName());
+            attr.setIsdeleted(Boolean.FALSE);
+            attr.setIsrequired(prop.isRequired());
+            attr.setListitems(prop.getSelectionValues());
+            Type type = (Type)getEntity("Type", "internalname", prop.getSelectedType());
+            attr.setTypeid(type);
+            if(!persistAndFlush(attr))
+                return false;
+        }    
+        return true;
+    }
+
+    
     public void editHouses(){
         Random rand = new Random();
         Query query = em.createNamedQuery("House.findAll");
@@ -592,6 +657,17 @@ public class DatabaseManager {
             house.setWeekprice(rand.nextInt(800));
             persistAndFlush(house);
         }
+    }
+    
+      /**
+     * Returns Type objects belonging to specific type class 
+     * 
+     * @param typeClass
+     */
+    public List<Type> retrieveTypes(String typeClass){
+        Query query = em.createQuery("SELECT t FROM Type t WHERE t.internalname LIKE :typeClass").setParameter("typeClass", typeClass+".%");
+        
+        return query.getResultList();
     }
     
     public static String capitalize(String string) {

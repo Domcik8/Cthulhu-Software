@@ -8,6 +8,7 @@ package lt.vu.mif.labanoro_draugai.data_models;
 import java.io.Serializable;
 import java.util.List;
 import javax.faces.model.SelectItem;
+import lt.vu.mif.labanoro_draugai.entities.Formattribute;
 
 /**
  *
@@ -23,6 +24,14 @@ public class AdminUserFormProperty implements Serializable{
     private List<SelectItem> type;  
     private int index;
 
+    public AdminUserFormProperty(Formattribute attr, List<SelectItem> type, int index){
+        this(type,index);
+        labelName = attr.getName();
+        selectionValues = attr.getListitems();
+        selectedType = attr.getTypeid().getInternalname();
+        required = attr.getIsrequired();
+    }
+    
     public AdminUserFormProperty(List<SelectItem> type, int index) {
         this.type = type;
         this.index = index;

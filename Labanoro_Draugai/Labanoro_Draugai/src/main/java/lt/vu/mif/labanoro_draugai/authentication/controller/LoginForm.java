@@ -61,7 +61,7 @@ public class LoginForm {
                 if (controller.isUser(this.username)) {     // check if user already exists
                     request.login(this.username, this.password);
 
-                    if (request.getUserPrincipal().getName() == this.username) {
+                    if (request.getUserPrincipal().getName().equals(this.username)) {
                         System.out.println("Internal login worked");
                         return "/index?faces-redirect=true";
                     }
@@ -71,10 +71,10 @@ public class LoginForm {
         } catch (ServletException e) {
             System.out.println("Failed to log in user!");
             context.addMessage(null, new FacesMessage("Login failed."));
-            return "/user/loginError.html?faces-redirect=true";
+            return "/loginError.html?faces-redirect=true";
         }
 
-        return "/user/loginError.html?faces-redirect=true";
+        return "/loginError.html?faces-redirect=true";
     }
 
     public String logout() {
@@ -94,10 +94,4 @@ public class LoginForm {
         return destination;
     }
 
-    private void generateHash(String password) {
-
-        String hash = Hashing.sha256().hashString(password, Charsets.UTF_8).toString();
-        String output = MessageFormat.format("{0} hashed to: {1}", password, hash);
-        System.out.println(output);
-    }
 }
