@@ -2,6 +2,13 @@
 <faces-config version="2.2"
               xmlns="http://xmlns.jcp.org/xml/ns/javaee"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
-
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"> F
+    <navigation-rule>
+        <from-view-id>Administration/TestChamber/chamberOfCalculations.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>enough</from-outcome>
+            <to-view-id>Administration/TestChamber/bye.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
 </faces-config>
+ 
