@@ -1,4 +1,4 @@
-package lt.vu.mif.labanoro_draugai.business;
+package lt.vu.mif.labanoro_draugai.Atsiskaitymui;
 
 import java.util.Date;
 import javax.annotation.PostConstruct;
@@ -9,10 +9,18 @@ import javax.ejb.AfterCompletion;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.persistence.EntityManager;
+import static javax.persistence.PersistenceContextType.EXTENDED;
+import static javax.persistence.PersistenceContextType.TRANSACTION;
+import javax.persistence.PersistenceContext;
 import javax.transaction.TransactionSynchronizationRegistry;
 
 @Stateful
 public class AntrasBean {
+    @PersistenceContext(type=TRANSACTION)
+    //@PersistenceContext(type=EXTENDED)
+    private EntityManager em;
+    
     @Resource
     private TransactionSynchronizationRegistry tx;
     
@@ -31,6 +39,7 @@ public class AntrasBean {
     //@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public String sayKuku() {
         System.out.println(this + " Vykdau dalykinÄ¯ funkcionalumÄ…, raÅ¡au/skaitau DB...");
+        System.out.println(this + ": gavau EntityManager = " + em.getDelegate());
         return "AntrasBean sako: " + new Date() + " " + toString();
     }
     

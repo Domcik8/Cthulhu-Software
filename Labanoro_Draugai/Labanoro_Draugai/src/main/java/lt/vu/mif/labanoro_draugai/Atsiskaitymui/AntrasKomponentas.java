@@ -1,4 +1,4 @@
-package lt.vu.mif.labanoro_draugai.business;
+package lt.vu.mif.labanoro_draugai.Atsiskaitymui;
 
 import java.util.Date;
 import javax.annotation.PostConstruct;

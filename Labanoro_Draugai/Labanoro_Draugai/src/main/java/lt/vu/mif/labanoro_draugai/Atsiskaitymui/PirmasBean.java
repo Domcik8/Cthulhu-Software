@@ -1,6 +1,7 @@
-package lt.vu.mif.labanoro_draugai.business;
+package lt.vu.mif.labanoro_draugai.Atsiskaitymui;
 
 import java.util.Date;
+import java.util.Random;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
@@ -11,19 +12,25 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import static javax.persistence.PersistenceContextType.EXTENDED;
+import static javax.persistence.PersistenceContextType.TRANSACTION;
 import javax.transaction.TransactionSynchronizationRegistry;
+import lt.vu.mif.labanoro_draugai.entities.Type;
 
 @Named
 @Stateful
 public class PirmasBean {
+    @PersistenceContext(type=TRANSACTION)
+    //@PersistenceContext(type=EXTENDED)
+    private EntityManager em;
+    
     @Resource
     private TransactionSynchronizationRegistry tx;
     
-    @PersistenceContext
-    private EntityManager em;
-    
     @Inject
     private AntrasBean antrasBean;
+    
+    Random random = new Random();
     
     @PostConstruct
     private void gimiau() {
@@ -39,14 +46,15 @@ public class PirmasBean {
 
     public String sayKuku() {
         System.out.println(this + " Vykdau dalykinÄ¯ funkcionalumÄ…, raÅ¡au/skaitau DB...");
+        System.out.println(this + ": gavau EntityManager = " + em.getDelegate());
+        
+        Type type = new Type();
+        type.setTitle("Test");
+        type.setInternalname("TEST" + random.nextInt());
+        
+        em.persist(type);
+        
         return "Kuku " + new Date() + " " + toString() + " | " + antrasBean.sayKuku();
-    }
-    public String fillDataBase() {
-        /*addType("Person.Administrator");
-        addType("Person.User");*/
-        
-        
-        return "DataBase has been filled";
     }
     //---------------------------------
 
