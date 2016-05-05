@@ -20,11 +20,13 @@
         <ui:include src="/WEB-INF/other_pages/navigation.xhtml" />
         <!-- End of Navigation panel -->
         <h:form>
-            <h:commandLink type="button" class="btn btn-lg btn-danger" action="#{databaseManager.fillDataBase()}">Fill databases</h:commandLink>
-            <br/>
-            <h:commandLink type="button" class="btn btn-lg btn-danger" action="#{databaseManager.editHouses}">Edit houses</h:commandLink>
+            <h:commandLink type="button" class="btn btn-lg btn-danger" action="#{databaseManager.fillDataBase()}">Fill databases and edit houses</h:commandLink>
             <br/>
             <h:commandLink type="button" class="btn btn-lg btn-danger" action="/register">Registracijos forma</h:commandLink>
+            <br/>
+            <h:commandLink type="button" class="btn btn-lg btn-danger" action="TestChamber/chamberOfSecrets">Dominik's chamber of secrets</h:commandLink>
+            <br/>
+            <h:commandLink type="button" class="btn btn-lg btn-danger" action="TestChamber/chamberOfCalculations">Dominik's chamber of calculations</h:commandLink>
             <br/>
         </h:form>
 

@@ -66,8 +66,10 @@ public class DatabaseManager {
         fillBasicReservations();
         fillBasicSystemParameters();
         fillBasicHouseImages();
+        
+        editHouses();
 
-        return "DataBase has been filled";
+        return "DataBase has been filled and have been houses edited";
     }
 
     /**
@@ -105,38 +107,13 @@ public class DatabaseManager {
         Person person = null;
         String passwordHash = null;
 
-        person = addPerson("doli@test.com", "Dominik", "Lisovski", "Person.Administrator");
-        passwordHash = Hashing.sha256().hashString("admin", Charsets.UTF_8).toString();
-        person.setPassword(passwordHash);
-
-        person = addPerson("erba@test.com", "Ernest", "Barkovski", "Person.Administrator");
-        passwordHash = Hashing.sha256().hashString("admin", Charsets.UTF_8).toString();
-        person.setPassword(passwordHash);
-
-        person = addPerson("erja@test.com", "Ernest", "Jascanin", "Person.Administrator");
-        passwordHash = Hashing.sha256().hashString("admin", Charsets.UTF_8).toString();
-        person.setPassword(passwordHash);
-
-        person = addPerson("kauz@test.com", "Karolis", "Uždanavičius", "Person.Administrator");
-        passwordHash = Hashing.sha256().hashString("admin", Charsets.UTF_8).toString();
-        person.setPassword(passwordHash);
-
-        person = addPerson("paru@test.com", "Paulius", "Rudzinskas", "Person.Administrator");
-        passwordHash = Hashing.sha256().hashString("admin", Charsets.UTF_8).toString();
-        person.setPassword(passwordHash);
-
-        person = addPerson("admin", "admin", "admin", "Person.Administrator");
-        passwordHash = Hashing.sha256().hashString("admin", Charsets.UTF_8).toString();
-        person.setPassword(passwordHash);
-        
-        person = addPerson("can", "can", "can", "Person.Candidate");
-        passwordHash = Hashing.sha256().hashString("admin", Charsets.UTF_8).toString();
-        person.setPassword(passwordHash);
-        
-        person = addPerson("user", "user", "user", "Person.User");
-        passwordHash = Hashing.sha256().hashString("admin", Charsets.UTF_8).toString();
-        person.setPassword(passwordHash);
-        
+        person = addPerson("doli@test.com", "admin", "Dominik", "Lisovski", "Person.Administrator");
+        person = addPerson("erba@test.com", "admin", "Ernest", "Barkovski", "Person.Administrator");
+        person = addPerson("erja@test.com", "admin", "Ernest", "Jascanin", "Person.Administrator");
+        person = addPerson("kauz@test.com", "admin", "Karolis", "Uždanavičius", "Person.Administrator");
+        person = addPerson("paru@test.com", "admin", "Paulius", "Rudzinskas", "Person.Administrator");
+        person = addPerson("admin", "admin", "admin", "admin", "Person.Administrator");
+        person = addPerson("can", "admin", "can", "can", "Person.Candidate");
     }
 
     /**
@@ -238,14 +215,25 @@ public class DatabaseManager {
         }
         return newType;
     }
+    
+    /**
+     * Creates new person and flushes it to database. Returns person entity if
+     * created sucessfully
+     */
+    public Person addPerson(String email, String password, String firstName, String lastName, String typeInternalName) {
+        Person person = addPerson(email, firstName, lastName, typeInternalName);
+        if(person != null)
+        {
+            String hashedPassoword = Hashing.sha256().hashString(password, Charsets.UTF_8).toString();
+            person.setPassword(hashedPassoword);
+        }
+        
+        return person;
+    }
 
     /**
      * Creates new person and flushes it to database. Returns person entity if
      * created sucessfully
-     *
-     * @param firstName
-     * @param lastName
-     * @param internalName
      */
     public Person addPerson(String email, String firstName, String lastName, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
