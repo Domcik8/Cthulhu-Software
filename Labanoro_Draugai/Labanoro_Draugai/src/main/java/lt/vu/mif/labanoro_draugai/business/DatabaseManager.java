@@ -226,7 +226,6 @@ public class DatabaseManager {
         newPerson.setFirstname(firstName);
         newPerson.setLastname(lastName);
         newPerson.setTypeid(type);
-        newPerson.setPassword("admin");
         
         if(entityExists("Person", "Email", email)) {
             System.out.println(String.format("Person with email '%s' already exists", email));
