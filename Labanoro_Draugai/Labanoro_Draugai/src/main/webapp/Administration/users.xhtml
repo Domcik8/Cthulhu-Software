@@ -33,7 +33,7 @@ and open the template in the editor.
                  rowsPerPageTemplate="10,50,100" rows="10" currentPageReportTemplate="{currentPage} iš {totalPages}">
  
                 <f:facet name="header">
-                    <p:outputPanel style="float:right;margin-top: 4px">
+                    <p:outputPanel style="margin-top: 4px">
                         <h:outputText value="Ieškoti visuose stulpeliuose:" />
                         <p:inputText id="globalFilter" onkeyup="PF('usersTable').filter()" style="width:150px"/>
                     </p:outputPanel>
@@ -92,7 +92,6 @@ and open the template in the editor.
         
         <!-- scripts -->
         <h:outputScript library="js" name="custom.js" />
-        <h:outputScript library="js" name="administration.js" />
         <!-- end of scripts -->
     </h:body>
 </html>

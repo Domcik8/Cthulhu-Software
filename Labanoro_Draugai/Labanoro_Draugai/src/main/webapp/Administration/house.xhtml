@@ -99,11 +99,16 @@ and open the template in the editor.
                     </ui:repeat>
                 </h:panelGrid>
             </h:form>
+            
+            <h:form enctype="multipart/form-data">
+                <p:growl id="messages" showDetail="true" />
+                <p:fileUpload value="#{editableHouse.file}" mode="simple" skinSimple="true"/>
+                <p:commandButton value="Submit" ajax="true" actionListener="#{editableHouse.upload}" />
+            </h:form>
         </div>
         
         <!-- scripts -->
         <h:outputScript library="js" name="custom.js" />
-        <h:outputScript library="js" name="administration.js" />
         <!-- end of scripts -->
     </h:body>
 </html>

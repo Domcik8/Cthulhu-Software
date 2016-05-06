@@ -1,9 +1,8 @@
 package lt.vu.mif.labanoro_draugai.administration;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -12,7 +11,6 @@ import javax.faces.application.FacesMessage;
 //import javax.faces.bean.ViewScoped;
 import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.validator.ValidatorException;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -23,8 +21,10 @@ import javax.persistence.SynchronizationType;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Houseimage;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
+import org.primefaces.model.UploadedFile;
+import org.apache.commons.fileupload.FileUpload;
+import org.apache.commons.io.IOUtils;
+import org.primefaces.event.FileUploadEvent;
 
 /**
  *
@@ -38,6 +38,7 @@ import org.apache.commons.collections.Predicate;
 @Stateful
 public class EditableHouse implements Serializable {
 
+    //======================= FIELDS ===========================
     private List<House> houses;
     
     private House house;
@@ -49,7 +50,13 @@ public class EditableHouse implements Serializable {
     DatabaseManager dbm;
     
     private List<String> images;
+    
+    private UploadedFile file;
+    
+    //private FileUpload file;
 
+    //======================= CONSTRUCT ===========================
+    
     @PostConstruct
     public void init() {
         house = getEditableHouse();
@@ -60,6 +67,8 @@ public class EditableHouse implements Serializable {
         //house = new House();
         //house = getEditableHouse();
     }
+    
+    //======================= HOUSE INFO ===========================
     
     public House getEditableHouse() {
         try {
@@ -179,23 +188,7 @@ public class EditableHouse implements Serializable {
          return result.getInternalname();
     }*/
     
-    private void initImages() {
-        images = getImagesList();
-    }
-    
-    public List<String> getImagesList() {
-        List<String> imgs = new ArrayList<String>();
-        
-        if(house == null || house.getHouseimageList() == null || house.getHouseimageList().isEmpty()) return null;
-        List<Houseimage> result = house.getHouseimageList();
-        //return result.getInternalname();
-         
-        for (Houseimage img : result) {
-            imgs.add(img.getInternalname());
-        }
-         
-        return imgs;
-    }
+    //======================= GETTERS SETTERS ===========================
     
     public boolean getIsActive() {
         try {
@@ -227,5 +220,51 @@ public class EditableHouse implements Serializable {
     
     public void error() {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Klaida!", "Įvyko klaida."));
+    }
+    
+    //======================= IMAGES ===========================
+    
+    private void initImages() {
+        images = getImagesList();
+    }
+    
+    public List<String> getImagesList() {
+        List<String> imgs = new ArrayList<String>();
+        
+        if(house == null || house.getHouseimageList() == null || house.getHouseimageList().isEmpty()) return null;
+        List<Houseimage> result = house.getHouseimageList();
+        //return result.getInternalname();
+         
+        for (Houseimage img : result) {
+            imgs.add(img.getInternalname());
+        }
+         
+        return imgs;
+    }
+    
+    //======================= FILE UPLOAD ===========================
+    
+    public UploadedFile getFile() {
+        return file;
+    }
+ 
+    public void setFile(UploadedFile file) {
+        this.file = file;
+    }
+    
+    public void upload(FileUploadEvent event) {
+        if(file != null) {
+            FacesMessage message = new FacesMessage("Succesful", file.getFileName() + " is uploaded.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
+    }
+    
+    public void handleFileUpload(FileUploadEvent event) throws IOException {
+        UploadedFile file = event.getFile();
+        System.out.println(file.getFileName());
+
+        byte[] foto = IOUtils.toByteArray(file.getInputstream());
+        System.out.println(foto);
+     //application code
     }
 }
