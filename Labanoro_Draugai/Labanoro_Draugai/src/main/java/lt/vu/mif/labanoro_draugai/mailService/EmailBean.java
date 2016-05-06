@@ -26,15 +26,15 @@ public class EmailBean {
 
     public void sendRegisterConfirmationMessage() {
 
-        String to = "";             // nurodyti adresat'a, kam bus nusiustas emailas
-        String subject = "test";    // nurodyti laisko "Title"
+        String to = ""              ;                        // nurodyti adresat'a, kam bus nusiustas emailas
+        String subject = "test";                                // nurodyti laisko "Title"
         sendEmail(to, subject, body.getRegistrationConfirmationMessage());
     }
 
     private void sendEmail(String to, String subject, String body) {
 
-        final String fromEmail = "";            // get from administration settings
-        final String emailPassword = "";        // get from administration settings
+        final String fromEmail = "Labanorai@gmail.com";             // get from administration settings
+        final String emailPassword = "LabanoroDraugas";             // get from administration settings
 
         Properties properties = System.getProperties();
         properties.put("mail.smtp.host", "smtp.gmail.com");
