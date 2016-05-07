@@ -175,7 +175,10 @@ public class DatabaseManager {
     private void fillBasicSystemParameters() {
         addSystemParameter("ServiceParameter.RequiredRecommendations", "Number of required recommendations", "SystemParameter");
         addSystemParameter("ServiceParameter.MaxRecommendations", "Max number of recommendations that can be requested", "SystemParameter");
-        
+        addSystemParameter("ServiceParameter.StripeTestSecretKey", "sk_test_6K4uBYlsGNPy5H161DtWjZcm", "SystemParameter");
+        addSystemParameter("ServiceParameter.StripeTestPublishableKey", "pk_test_tK93j3DH8bSqL4VHi65SnJ9e ", "SystemParameter");
+        addSystemParameter("ServiceParameter.StripeLiveSecretKey", "sk_live_zzW2TvQpbW5HLntoGzHC6o3r ", "SystemParameter");
+        addSystemParameter("ServiceParameter.StripeLivePublishableKey", "pk_live_qW95KiaHrQokdCXpL6WCaZl2", "SystemParameter");
     }
 
     /**
