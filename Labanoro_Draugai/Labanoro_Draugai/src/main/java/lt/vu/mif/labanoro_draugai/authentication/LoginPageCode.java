@@ -1,8 +1,8 @@
 package lt.vu.mif.labanoro_draugai.authentication;
 
 import java.io.Serializable;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
