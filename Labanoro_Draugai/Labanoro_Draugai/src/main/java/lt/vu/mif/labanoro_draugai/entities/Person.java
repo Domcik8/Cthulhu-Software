@@ -40,7 +40,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Person.findByPriority", query = "SELECT p FROM Person p WHERE p.priority = :priority"),
     @NamedQuery(name = "Person.findByPoints", query = "SELECT p FROM Person p WHERE p.points = :points"),
     @NamedQuery(name = "Person.findByFacebookid", query = "SELECT p FROM Person p WHERE p.facebookid = :facebookid"),
-    @NamedQuery(name = "Person.findByFacebookaccesstoken", query = "SELECT p FROM Person p WHERE p.facebookaccesstoken = :facebookaccesstoken"),
+    @NamedQuery(name = "Person.findByFacebookpassword", query = "SELECT p FROM Person p WHERE p.facebookpassword = :facebookpassword"),
     @NamedQuery(name = "Person.findByFirstname", query = "SELECT p FROM Person p WHERE p.firstname = :firstname"),
     @NamedQuery(name = "Person.findByMiddlename", query = "SELECT p FROM Person p WHERE p.middlename = :middlename"),
     @NamedQuery(name = "Person.findByLastname", query = "SELECT p FROM Person p WHERE p.lastname = :lastname"),
@@ -72,8 +72,8 @@ public class Person implements Serializable {
     @Column(name = "FACEBOOKID")
     private String facebookid;
     @Size(max = 255)
-    @Column(name = "FACEBOOKACCESSTOKEN")
-    private String facebookaccesstoken;
+    @Column(name = "FACEBOOKPASSWORD")
+    private String facebookpassword;
     @Size(max = 255)
     @Column(name = "FIRSTNAME")
     private String firstname;
@@ -105,9 +105,9 @@ public class Person implements Serializable {
     private List<Reservation> reservationList;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "personid")
     private Personregistrationform personregistrationform;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recomenderid")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recommenderid")
     private List<Recommendation> recommendationList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recomendedid")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recommendedid")
     private List<Recommendation> recommendationList1;
 
     public Person() {
@@ -165,12 +165,12 @@ public class Person implements Serializable {
         this.facebookid = facebookid;
     }
 
-    public String getFacebookaccesstoken() {
-        return facebookaccesstoken;
+    public String getFacebookpassword() {
+        return facebookpassword;
     }
 
-    public void setFacebookaccesstoken(String facebookaccesstoken) {
-        this.facebookaccesstoken = facebookaccesstoken;
+    public void setFacebookpassword(String facebookpassword) {
+        this.facebookpassword = facebookpassword;
     }
 
     public String getFirstname() {

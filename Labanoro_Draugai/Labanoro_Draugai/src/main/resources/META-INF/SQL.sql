@@ -39,7 +39,7 @@ CREATE TABLE Person
     Priority            INTEGER,
     Points              DECIMAL,
     FacebookID          VARCHAR(255),
-    FacebookAccessToken VARCHAR(255),
+    FacebookPassword    VARCHAR(255),
     FirstName           VARCHAR(255),
     MiddleName          VARCHAR(255),
     LastName            VARCHAR(255),
@@ -56,14 +56,14 @@ CREATE TABLE Recommendation
 (
     ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
     TypeID              INTEGER         NOT NULL,
-    RecomendedID        INTEGER         NOT NULL,
-    RecomenderID        INTEGER         NOT NULL,
-    RecomendationDate   DATE,
+    RecommendedID       INTEGER         NOT NULL,
+    RecommenderID       INTEGER         NOT NULL,
+    RecommendationDate  DATE,
     IsDeleted           BOOLEAN,
     OptLockVersion     INTEGER,
     FOREIGN KEY (TypeID) REFERENCES Type (ID),
-    FOREIGN KEY (RecomendedID) REFERENCES Person (ID),
-    FOREIGN KEY (RecomenderID) REFERENCES Person (ID),
+    FOREIGN KEY (RecommendedID) REFERENCES Person (ID),
+    FOREIGN KEY (RecommenderID) REFERENCES Person (ID),
     PRIMARY KEY (ID)
 );
 

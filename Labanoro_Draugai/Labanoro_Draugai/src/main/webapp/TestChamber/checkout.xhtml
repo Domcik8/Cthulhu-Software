@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Sąskaita</title>
+    </h:head>
+    <h:body>
+        <h1>Sąskaita</h1>
+
+        <h:form id="forma">
+            <h:dataTable value="#{shop.selectedProducts}" var="product" rules="rows">
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Pavadinimas" />
+                    </f:facet>
+                    <h:outputText value="#{product.name}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Aprašymas"/>
+                    </f:facet>
+                    <h:outputText value="#{product.description}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Kaina"/>
+                    </f:facet>
+                    <h:outputText value="#{product.price} Lt" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Kiekis"/>
+                    </f:facet>
+                    <h:outputText value="#{product.kiekPirksim}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Suma"/>
+                    </f:facet>
+                    <h:outputText value="#{product.price * product.kiekPirksim}" />
+                </h:column>
+
+            </h:dataTable>
+            <br/>
+            <h:commandButton value="Grąžinti į prekių katalogą…" action="chamberOfProducts" />
+        </h:form>
+    </h:body>
+</html>

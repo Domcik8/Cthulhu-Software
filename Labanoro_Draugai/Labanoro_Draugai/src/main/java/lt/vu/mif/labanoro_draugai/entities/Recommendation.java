@@ -30,7 +30,7 @@ import javax.persistence.TemporalType;
 @NamedQueries({
     @NamedQuery(name = "Recommendation.findAll", query = "SELECT r FROM Recommendation r"),
     @NamedQuery(name = "Recommendation.findById", query = "SELECT r FROM Recommendation r WHERE r.id = :id"),
-    @NamedQuery(name = "Recommendation.findByRecomendationdate", query = "SELECT r FROM Recommendation r WHERE r.recomendationdate = :recomendationdate"),
+    @NamedQuery(name = "Recommendation.findByRecommendationdate", query = "SELECT r FROM Recommendation r WHERE r.recommendationdate = :recommendationdate"),
     @NamedQuery(name = "Recommendation.findByIsdeleted", query = "SELECT r FROM Recommendation r WHERE r.isdeleted = :isdeleted"),
     @NamedQuery(name = "Recommendation.findByOptlockversion", query = "SELECT r FROM Recommendation r WHERE r.optlockversion = :optlockversion")})
 public class Recommendation implements Serializable {
@@ -41,19 +41,19 @@ public class Recommendation implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
-    @Column(name = "RECOMENDATIONDATE")
+    @Column(name = "RECOMMENDATIONDATE")
     @Temporal(TemporalType.DATE)
-    private Date recomendationdate;
+    private Date recommendationdate;
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
     @Column(name = "OPTLOCKVERSION")
     private Integer optlockversion;
-    @JoinColumn(name = "RECOMENDERID", referencedColumnName = "ID")
+    @JoinColumn(name = "RECOMMENDERID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
-    private Person recomenderid;
-    @JoinColumn(name = "RECOMENDEDID", referencedColumnName = "ID")
+    private Person recommenderid;
+    @JoinColumn(name = "RECOMMENDEDID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
-    private Person recomendedid;
+    private Person recommendedid;
     @JoinColumn(name = "TYPEID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Type typeid;
@@ -73,12 +73,12 @@ public class Recommendation implements Serializable {
         this.id = id;
     }
 
-    public Date getRecomendationdate() {
-        return recomendationdate;
+    public Date getRecommendationdate() {
+        return recommendationdate;
     }
 
-    public void setRecomendationdate(Date recomendationdate) {
-        this.recomendationdate = recomendationdate;
+    public void setRecommendationdate(Date recommendationdate) {
+        this.recommendationdate = recommendationdate;
     }
 
     public Boolean getIsdeleted() {
@@ -97,20 +97,20 @@ public class Recommendation implements Serializable {
         this.optlockversion = optlockversion;
     }
 
-    public Person getRecomenderid() {
-        return recomenderid;
+    public Person getRecommenderid() {
+        return recommenderid;
     }
 
-    public void setRecomenderid(Person recomenderid) {
-        this.recomenderid = recomenderid;
+    public void setRecommenderid(Person recommenderid) {
+        this.recommenderid = recommenderid;
     }
 
-    public Person getRecomendedid() {
-        return recomendedid;
+    public Person getRecommendedid() {
+        return recommendedid;
     }
 
-    public void setRecomendedid(Person recomendedid) {
-        this.recomendedid = recomendedid;
+    public void setRecommendedid(Person recommendedid) {
+        this.recommendedid = recommendedid;
     }
 
     public Type getTypeid() {

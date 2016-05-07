@@ -83,7 +83,7 @@ public class LoginController {
             System.out.println(output);
 
             person.setFacebookid(facebookId);
-            person.setFacebookaccesstoken(password);
+            person.setFacebookpassword(password);
             person.setPassword(passwordHash);
         }
     }
@@ -92,7 +92,7 @@ public class LoginController {
 
         if (isFbUser(email, facebookId)) {
             Person user = (Person) db.getEntity("Person", "Email", email);
-            return user.getFacebookaccesstoken();
+            return user.getFacebookpassword();
         }
         return null;
     }
