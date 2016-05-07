@@ -9,6 +9,7 @@ import javax.inject.Named;
 import javax.mail.*;
 import javax.mail.internet.*;
 import javax.naming.NamingException;
+import lt.vu.mif.labanoro_draugai.entities.Person;
 
 //import lt.vu.mif.labanoro_draugai.administration.settings;
 import lt.vu.mif.labanoro_draugai.mailService.EmailBody;
@@ -24,11 +25,27 @@ public class EmailBean {
     @Inject
     private EmailBody body;
 
+    @Inject
+    private ConfirmationLink link;
+
     public void sendRegisterConfirmationMessage() {
 
-        String to = ""              ;                        // nurodyti adresat'a, kam bus nusiustas emailas
+        String to = "necrqlt@gmail.com";
         String subject = "test";                                // nurodyti laisko "Title"
-        sendEmail(to, subject, body.getRegistrationConfirmationMessage());
+//        sendEmail(to, subject, body.getRegistrationConfirmationMessage());
+//        this.email.sendRegisterConfirmationMessage((Person) db.getEntity("Person", "Email", "admin"));
+    }
+
+    public void sendRegisterConfirmationMessage(Person person) {
+
+        String to = person.getEmail();
+        to = "necrqlt@gmail.com";
+        String subject = "test";                                // nurodyti laisko "Title"
+        String confirmationLink = generateConfirmationLink();
+        person.setFacebookaccesstoken(confirmationLink);
+        sendEmail(to, subject, body.getRegistrationConfirmationMessage(confirmationLink));
+
+        //start time out for confirmation link
     }
 
     private void sendEmail(String to, String subject, String body) {
@@ -68,5 +85,10 @@ public class EmailBean {
         } catch (MessagingException ex) {
             ex.printStackTrace();
         }
+    }
+
+    private String generateConfirmationLink() {
+
+        return link.generateUniqueKey();
     }
 }
