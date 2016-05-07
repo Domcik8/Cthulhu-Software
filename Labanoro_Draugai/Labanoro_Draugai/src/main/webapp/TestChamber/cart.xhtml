@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Prekų krepšelis</title>
+    </h:head>
+    <h:body>
+        <h1>
+            <h:outputText value="Prekių krepšelis" rendered="#{!empty shop.selectedProducts}" />
+            <h:outputText value="Prekių krepšelis tuščias" rendered="#{empty shop.selectedProducts}" />
+        </h1>
+        <h:form>
+            <h:dataTable value="#{shop.selectedProducts}" var="product" rendered="#{!empty shop.selectedProducts}" frame="box" rules="all">
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Pavadinimas" />
+                    </f:facet>
+                    <h:outputText value="#{product.name}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Aprašymas"/>
+                    </f:facet>
+                    <h:outputText value="#{product.description}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Kaina"/>
+                    </f:facet>
+                    <h:outputText value="#{product.price} Lt" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Kiekis"/>
+                    </f:facet>
+                    <h:inputText id="kiekis" value="#{product.kiekPirksim}" size="3">
+                        <f:validateLongRange minimum="0" maximum="10"/>
+                    </h:inputText>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Suma"/>
+                    </f:facet>
+                    <h:outputText value="#{product.price * product.kiekPirksim}" />
+                </h:column>
+
+                <h:column>
+                    <h:commandLink id="link" action="#{shop.deleteProduct(product)}">
+                        <h:outputText value="Trinti" />
+                    </h:commandLink>
+                </h:column>
+
+            </h:dataTable>
+
+            <h:messages style="color: red" />
+            <br/>
+            <h:commandButton value="Išrašyti sąskaitą…" action="checkout" rendered="#{!empty shop.selectedProducts}" />
+            <h:commandButton value="Grąžinti į prekių katalogą…" action="index" rendered="#{empty shop.selectedProducts}" />
+        </h:form>
+    </h:body>
+</html>

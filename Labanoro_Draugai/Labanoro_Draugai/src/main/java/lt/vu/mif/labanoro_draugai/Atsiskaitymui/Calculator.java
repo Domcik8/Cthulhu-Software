@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 @Named
-//@SessionScoped
+@SessionScoped
 //@RequestScoped
 @Stateful
 //@Stateless
