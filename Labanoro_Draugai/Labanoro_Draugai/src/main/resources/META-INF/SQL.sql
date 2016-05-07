@@ -9,6 +9,7 @@ drop table HousePictures;
 drop table SystemParameter;
 drop table MultiselectReservationToService;
 drop table MultiselectHouseToService;
+drop table Recommendation;
 drop table Reservation;
 drop table Service;
 drop table Payment;
@@ -51,17 +52,20 @@ CREATE TABLE Person
     PRIMARY KEY (ID)
 );
 
-/*CREATE TABLE Role
+CREATE TABLE Recommendation
 (
     ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
     TypeID              INTEGER         NOT NULL,
-    Title               VARCHAR(255)                    UNIQUE,
-    Description         VARCHAR(255),
+    RecomendedID        INTEGER         NOT NULL,
+    RecomenderID        INTEGER         NOT NULL,
+    RecomendationDate   DATE,
     IsDeleted           BOOLEAN,
     OptLockVersion     INTEGER,
     FOREIGN KEY (TypeID) REFERENCES Type (ID),
+    FOREIGN KEY (RecomendedID) REFERENCES Person (ID),
+    FOREIGN KEY (RecomenderID) REFERENCES Person (ID),
     PRIMARY KEY (ID)
-);*/
+);
 
 CREATE TABLE Payment
 (
@@ -70,8 +74,9 @@ CREATE TABLE Payment
     PaymentReg          VARCHAR(255)                    UNIQUE,
     PersonID            INTEGER         NOT NULL,
     PaymentPrice        DECIMAL,
-    PaymentDate         Date,
+    PaymentDate         DATE,
     PaidWithMoney       INTEGER,
+    ApprovedDate        DATE,
     IsDeleted           BOOLEAN,
     OptLockVersion      INTEGER,
     FOREIGN KEY (TypeID) REFERENCES Type (ID),

@@ -35,6 +35,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Payment.findByPaymentprice", query = "SELECT p FROM Payment p WHERE p.paymentprice = :paymentprice"),
     @NamedQuery(name = "Payment.findByPaymentdate", query = "SELECT p FROM Payment p WHERE p.paymentdate = :paymentdate"),
     @NamedQuery(name = "Payment.findByPaidwithmoney", query = "SELECT p FROM Payment p WHERE p.paidwithmoney = :paidwithmoney"),
+    @NamedQuery(name = "Payment.findByApproveddate", query = "SELECT p FROM Payment p WHERE p.approveddate = :approveddate"),
     @NamedQuery(name = "Payment.findByIsdeleted", query = "SELECT p FROM Payment p WHERE p.isdeleted = :isdeleted"),
     @NamedQuery(name = "Payment.findByOptlockversion", query = "SELECT p FROM Payment p WHERE p.optlockversion = :optlockversion")})
 public class Payment implements Serializable {
@@ -55,6 +56,9 @@ public class Payment implements Serializable {
     private Date paymentdate;
     @Column(name = "PAIDWITHMONEY")
     private Integer paidwithmoney;
+    @Column(name = "APPROVEDDATE")
+    @Temporal(TemporalType.DATE)
+    private Date approveddate;
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
     @Column(name = "OPTLOCKVERSION")
@@ -111,6 +115,14 @@ public class Payment implements Serializable {
 
     public void setPaidwithmoney(Integer paidwithmoney) {
         this.paidwithmoney = paidwithmoney;
+    }
+
+    public Date getApproveddate() {
+        return approveddate;
+    }
+
+    public void setApproveddate(Date approveddate) {
+        this.approveddate = approveddate;
     }
 
     public Boolean getIsdeleted() {

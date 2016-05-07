@@ -6,15 +6,15 @@ import javax.annotation.PreDestroy;
 import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 @Named
 //@RequestScoped 
-//@SessionScoped
-//@Stateful
-@Stateless
+@SessionScoped
+@Stateful
+//@Stateless
 public class PirmasKomponentas {
     
     @Inject

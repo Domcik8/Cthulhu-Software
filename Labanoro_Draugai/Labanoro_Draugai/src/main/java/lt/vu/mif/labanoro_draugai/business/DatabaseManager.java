@@ -82,6 +82,7 @@ public class DatabaseManager {
         addType("Person.Administrator", "Administrator");
         addType("Person.User", "User");
         addType("Person.Candidate", "Candidate");
+        addType("Recommendation", "Recommendation");
         addType("House", "House");
         addType("House.Penthouse", "Penthouse");
         addType("Service", "Service");
@@ -91,7 +92,7 @@ public class DatabaseManager {
         addType("Reservation", "Reservation");
         addType("Picture", "Picture");
         addType("Picture.House", "House picture");
-        addType("Picture.Service", "Service picture");
+        addType("FormElement", "Formos elementas");
         addType("FormElement.Calendar", "Kalendorius");
         addType("FormElement.Input", "Teksto laukas");
         addType("FormElement.Select", "Pasirinkti vieną");
@@ -171,7 +172,9 @@ public class DatabaseManager {
      * Fills database with basic system parameters
      */
     private void fillBasicSystemParameters() {
-        addSystemParameter("ServiceParameter.Test", "Test", "SystemParameter");
+        addSystemParameter("ServiceParameter.RequiredRecommendations", "Number of required recommendations", "SystemParameter");
+        addSystemParameter("ServiceParameter.MaxRecommendations", "Max number of recommendations that can be requested", "SystemParameter");
+        
     }
 
     /**

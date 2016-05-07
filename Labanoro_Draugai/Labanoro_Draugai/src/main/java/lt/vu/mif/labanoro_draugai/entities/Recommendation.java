@@ -6,6 +6,7 @@
 package lt.vu.mif.labanoro_draugai.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,28 +14,26 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
  * @author Dominik Lisovski
  */
 @Entity
-@Table(name = "PERSONREGISTRATIONFORM")
+@Table(name = "RECOMMENDATION")
 @NamedQueries({
-    @NamedQuery(name = "Personregistrationform.findAll", query = "SELECT p FROM Personregistrationform p"),
-    @NamedQuery(name = "Personregistrationform.findById", query = "SELECT p FROM Personregistrationform p WHERE p.id = :id"),
-    @NamedQuery(name = "Personregistrationform.findByInternalname", query = "SELECT p FROM Personregistrationform p WHERE p.internalname = :internalname"),
-    @NamedQuery(name = "Personregistrationform.findByIsdeleted", query = "SELECT p FROM Personregistrationform p WHERE p.isdeleted = :isdeleted"),
-    @NamedQuery(name = "Personregistrationform.findByOptlockversion", query = "SELECT p FROM Personregistrationform p WHERE p.optlockversion = :optlockversion")})
-public class Personregistrationform implements Serializable {
+    @NamedQuery(name = "Recommendation.findAll", query = "SELECT r FROM Recommendation r"),
+    @NamedQuery(name = "Recommendation.findById", query = "SELECT r FROM Recommendation r WHERE r.id = :id"),
+    @NamedQuery(name = "Recommendation.findByRecomendationdate", query = "SELECT r FROM Recommendation r WHERE r.recomendationdate = :recomendationdate"),
+    @NamedQuery(name = "Recommendation.findByIsdeleted", query = "SELECT r FROM Recommendation r WHERE r.isdeleted = :isdeleted"),
+    @NamedQuery(name = "Recommendation.findByOptlockversion", query = "SELECT r FROM Recommendation r WHERE r.optlockversion = :optlockversion")})
+public class Recommendation implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -42,36 +41,28 @@ public class Personregistrationform implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "INTERNALNAME")
-    private String internalname;
-    @Lob
-    @Size(max = 32700)
-    @Column(name = "FORMVALUE")
-    private String formvalue;
+    @Column(name = "RECOMENDATIONDATE")
+    @Temporal(TemporalType.DATE)
+    private Date recomendationdate;
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
     @Column(name = "OPTLOCKVERSION")
     private Integer optlockversion;
-    @JoinColumn(name = "PERSONID", referencedColumnName = "ID")
-    @OneToOne(optional = false)
-    private Person personid;
+    @JoinColumn(name = "RECOMENDERID", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private Person recomenderid;
+    @JoinColumn(name = "RECOMENDEDID", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private Person recomendedid;
     @JoinColumn(name = "TYPEID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Type typeid;
 
-    public Personregistrationform() {
+    public Recommendation() {
     }
 
-    public Personregistrationform(Integer id) {
+    public Recommendation(Integer id) {
         this.id = id;
-    }
-
-    public Personregistrationform(Integer id, String internalname) {
-        this.id = id;
-        this.internalname = internalname;
     }
 
     public Integer getId() {
@@ -82,20 +73,12 @@ public class Personregistrationform implements Serializable {
         this.id = id;
     }
 
-    public String getInternalname() {
-        return internalname;
+    public Date getRecomendationdate() {
+        return recomendationdate;
     }
 
-    public void setInternalname(String internalname) {
-        this.internalname = internalname;
-    }
-
-    public String getFormvalue() {
-        return formvalue;
-    }
-
-    public void setFormvalue(String formvalue) {
-        this.formvalue = formvalue;
+    public void setRecomendationdate(Date recomendationdate) {
+        this.recomendationdate = recomendationdate;
     }
 
     public Boolean getIsdeleted() {
@@ -114,12 +97,20 @@ public class Personregistrationform implements Serializable {
         this.optlockversion = optlockversion;
     }
 
-    public Person getPersonid() {
-        return personid;
+    public Person getRecomenderid() {
+        return recomenderid;
     }
 
-    public void setPersonid(Person personid) {
-        this.personid = personid;
+    public void setRecomenderid(Person recomenderid) {
+        this.recomenderid = recomenderid;
+    }
+
+    public Person getRecomendedid() {
+        return recomendedid;
+    }
+
+    public void setRecomendedid(Person recomendedid) {
+        this.recomendedid = recomendedid;
     }
 
     public Type getTypeid() {
@@ -140,10 +131,10 @@ public class Personregistrationform implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Personregistrationform)) {
+        if (!(object instanceof Recommendation)) {
             return false;
         }
-        Personregistrationform other = (Personregistrationform) object;
+        Recommendation other = (Recommendation) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -152,7 +143,7 @@ public class Personregistrationform implements Serializable {
 
     @Override
     public String toString() {
-        return "lt.vu.mif.labanoro_draugai.entities.Personregistrationform[ id=" + id + " ]";
+        return "lt.vu.mif.labanoro_draugai.entities.Recommendation[ id=" + id + " ]";
     }
     
 }

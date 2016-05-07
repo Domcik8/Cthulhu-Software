@@ -105,6 +105,10 @@ public class Person implements Serializable {
     private List<Reservation> reservationList;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "personid")
     private Personregistrationform personregistrationform;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recomenderid")
+    private List<Recommendation> recommendationList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recomendedid")
+    private List<Recommendation> recommendationList1;
 
     public Person() {
     }
@@ -263,6 +267,22 @@ public class Person implements Serializable {
 
     public void setPersonregistrationform(Personregistrationform personregistrationform) {
         this.personregistrationform = personregistrationform;
+    }
+
+    public List<Recommendation> getRecommendationList() {
+        return recommendationList;
+    }
+
+    public void setRecommendationList(List<Recommendation> recommendationList) {
+        this.recommendationList = recommendationList;
+    }
+
+    public List<Recommendation> getRecommendationList1() {
+        return recommendationList1;
+    }
+
+    public void setRecommendationList1(List<Recommendation> recommendationList1) {
+        this.recommendationList1 = recommendationList1;
     }
 
     @Override

@@ -70,6 +70,8 @@ public class Type implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
     private List<House> houseList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
+    private List<Recommendation> recommendationList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
     private List<Houseimage> houseimageList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
     private List<Systemparameter> systemparameterList;
@@ -183,6 +185,14 @@ public class Type implements Serializable {
 
     public void setHouseList(List<House> houseList) {
         this.houseList = houseList;
+    }
+
+    public List<Recommendation> getRecommendationList() {
+        return recommendationList;
+    }
+
+    public void setRecommendationList(List<Recommendation> recommendationList) {
+        this.recommendationList = recommendationList;
     }
 
     public List<Houseimage> getHouseimageList() {

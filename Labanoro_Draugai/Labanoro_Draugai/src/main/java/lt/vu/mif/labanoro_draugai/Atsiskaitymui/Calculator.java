@@ -8,16 +8,13 @@ import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
-
-//is faces nenauduot, 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 @Named
-@SessionScoped
+//@SessionScoped
 //@RequestScoped
 @Stateful
-
 //@Stateless
 public class Calculator implements Serializable {
     
