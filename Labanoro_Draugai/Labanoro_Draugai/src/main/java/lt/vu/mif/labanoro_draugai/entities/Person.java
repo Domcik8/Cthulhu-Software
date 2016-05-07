@@ -47,6 +47,8 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Person.findByAddress", query = "SELECT p FROM Person p WHERE p.address = :address"),
     @NamedQuery(name = "Person.findByPersonalid", query = "SELECT p FROM Person p WHERE p.personalid = :personalid"),
     @NamedQuery(name = "Person.findByMembershipdue", query = "SELECT p FROM Person p WHERE p.membershipdue = :membershipdue"),
+    @NamedQuery(name = "Person.findByEmailconfirmation", query = "SELECT p FROM Person p WHERE p.emailconfirmation = :emailconfirmation"),
+    @NamedQuery(name = "Person.findByUniquekey", query = "SELECT p FROM Person p WHERE p.uniquekey = :uniquekey"),
     @NamedQuery(name = "Person.findByIsdeleted", query = "SELECT p FROM Person p WHERE p.isdeleted = :isdeleted"),
     @NamedQuery(name = "Person.findByOptlockversion", query = "SELECT p FROM Person p WHERE p.optlockversion = :optlockversion")})
 public class Person implements Serializable {
@@ -92,6 +94,12 @@ public class Person implements Serializable {
     @Column(name = "MEMBERSHIPDUE")
     @Temporal(TemporalType.DATE)
     private Date membershipdue;
+    @Size(max = 255)
+    @Column(name = "EMAILCONFIRMATION")
+    private String emailconfirmation;
+    @Size(max = 255)
+    @Column(name = "UNIQUEKEY")
+    private String uniquekey;
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
     @Column(name = "OPTLOCKVERSION")
@@ -219,6 +227,22 @@ public class Person implements Serializable {
 
     public void setMembershipdue(Date membershipdue) {
         this.membershipdue = membershipdue;
+    }
+
+    public String getEmailconfirmation() {
+        return emailconfirmation;
+    }
+
+    public void setEmailconfirmation(String emailconfirmation) {
+        this.emailconfirmation = emailconfirmation;
+    }
+
+    public String getUniquekey() {
+        return uniquekey;
+    }
+
+    public void setUniquekey(String uniquekey) {
+        this.uniquekey = uniquekey;
     }
 
     public Boolean getIsdeleted() {

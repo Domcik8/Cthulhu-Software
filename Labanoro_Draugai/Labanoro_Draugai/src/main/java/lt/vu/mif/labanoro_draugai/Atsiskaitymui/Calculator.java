@@ -17,26 +17,25 @@ import javax.inject.Named;
 @Stateful
 //@Stateless
 public class Calculator implements Serializable {
-    
-// Read/write property "number":
-private int number = 5;
+    // Read/write property "number":
+    private int number = 5;
 
-public int getNumber() { return number; }
+    public int getNumber() { return number; }
 
-public void setNumber(int number) { this.number = number; }
+    public void setNumber(int number) { this.number = number; }
 
-// Read-only property "result":
-private Integer result = null;
+    // Read-only property "result":
+    private Integer result = null;
 
-public Integer getResult() { return result; }
+    public Integer getResult() { return result; }
 
-// Method to square a number
-public void square() { result = number * number; }
+    // Method to square a number
+    public void square() { result = number * number; }
 
-// Method to navigate to the second page
-public String bye() { return "enough"; }
+    // Method to navigate to the second page
+    public String bye() { return "enough"; }
 
-@PostConstruct
+    @PostConstruct
     public void init() {
       System.out.println(toString() + " constructed.");
     }

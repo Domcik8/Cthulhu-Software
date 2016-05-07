@@ -46,6 +46,8 @@ CREATE TABLE Person
     Address             VARCHAR(255),
     PersonalID          VARCHAR(255)                UNIQUE,
     MembershipDue       DATE,
+    EmailConfirmation   VARCHAR(255)                UNIQUE,
+    UniqueKey           VARCHAR(255)                UNIQUE,
     IsDeleted           BOOLEAN,
     OptLockVersion      INTEGER,
     FOREIGN KEY (TypeID) REFERENCES Type (ID),
@@ -216,10 +218,6 @@ CREATE TABLE PersonRegistrationForm
     PRIMARY KEY (ID)
 );
 
-
--- CREATE VIEW GroupView (ID, InternalName, Title, Description, IsDeleted, OptLockVersion)
---     AS SELECT ID, InternalName, Title, Description, IsDeleted, OptLockVersion
---     FROM Type WHERE InternalName like 'Person.%';
 CREATE VIEW GroupView (Email, Title) AS
     SELECT Email, Title FROM LABANORODB.Person, LABANORODB."TYPE"
     WHERE Person.TYPEID = "TYPE".ID;

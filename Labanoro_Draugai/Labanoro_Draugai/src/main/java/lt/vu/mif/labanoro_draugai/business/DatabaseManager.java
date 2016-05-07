@@ -25,14 +25,7 @@ import javax.persistence.Query;
 import javax.transaction.TransactionSynchronizationRegistry;
 import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import lt.vu.mif.labanoro_draugai.data_models.AdminUserFormProperty;
-import lt.vu.mif.labanoro_draugai.entities.Formattribute;
-import lt.vu.mif.labanoro_draugai.entities.House;
-import lt.vu.mif.labanoro_draugai.entities.Houseimage;
-import lt.vu.mif.labanoro_draugai.entities.Person;
-import lt.vu.mif.labanoro_draugai.entities.Reservation;
-import lt.vu.mif.labanoro_draugai.entities.Service;
-import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
-import lt.vu.mif.labanoro_draugai.entities.Type;
+import lt.vu.mif.labanoro_draugai.entities.*;
 import org.apache.commons.io.IOUtils;
 
 @Named
@@ -66,7 +59,9 @@ public class DatabaseManager {
         fillBasicReservations();
         fillBasicSystemParameters();
         fillBasicHouseImages();
+        fillBasicRecommendations();
         
+        editPeople();
         editHouses();
 
         return "DataBase has been filled and have been houses edited";
@@ -76,28 +71,28 @@ public class DatabaseManager {
      * Fills database with basic types
      */
     public void fillBasicTypes() {
-        addType("SystemParameter", "SystemParameter");
-        addType("Person", "Person");
-        addType("Person.Form", "Form");
+        addType("SystemParameter",      "SystemParameter");
+        addType("Person",               "Person");
+        addType("Person.Form",          "Form");
         addType("Person.Administrator", "Administrator");
-        addType("Person.User", "User");
-        addType("Person.Candidate", "Candidate");
-        addType("Recommendation", "Recommendation");
-        addType("House", "House");
-        addType("House.Penthouse", "Penthouse");
-        addType("Service", "Service");
-        addType("Service.Vehicle", "Vehicle");
-        addType("Service.Vehicle.Car", "Car");
+        addType("Person.User",          "User");
+        addType("Person.Candidate",     "Candidate");
+        addType("Recommendation",       "Recommendation");
+        addType("House",                "House");
+        addType("House.Penthouse",      "Penthouse");
+        addType("Service",              "Service");
+        addType("Service.Vehicle",      "Vehicle");
+        addType("Service.Vehicle.Car",  "Car");
         addType("Service.Vehicle.Bike", "Bike");
-        addType("Reservation", "Reservation");
-        addType("Picture", "Picture");
-        addType("Picture.House", "House picture");
-        addType("FormElement", "Formos elementas");
+        addType("Reservation",          "Reservation");
+        addType("Picture",              "Picture");
+        addType("Picture.House",        "House picture");
+        addType("FormElement",          "Formos elementas");
         addType("FormElement.Calendar", "Kalendorius");
-        addType("FormElement.Input", "Teksto laukas");
-        addType("FormElement.Select", "Pasirinkti vieną");
+        addType("FormElement.Input",    "Teksto laukas");
+        addType("FormElement.Select",   "Pasirinkti vieną");
         addType("FormElement.Textarea", "Didelis teksto laukas");
-        addType("FormElement.Number", "Skaičius");
+        addType("FormElement.Number",   "Skaičius");
     }
 
     /**
@@ -179,6 +174,13 @@ public class DatabaseManager {
         addSystemParameter("ServiceParameter.StripeLiveSecretKey", "sk_live_zzW2TvQpbW5HLntoGzHC6o3r ", "SystemParameter");
         addSystemParameter("ServiceParameter.StripeLivePublishableKey", "pk_live_qW95KiaHrQokdCXpL6WCaZl2", "SystemParameter");
     }
+    
+    /**
+     * Fills database with basic recommendations
+     */
+    private void fillBasicRecommendations() {
+        addRecommendation("doli@test.com", "erba@test.com", "Recommendation");
+    }
 
     /**
      * Fills database with basic house pictures
@@ -197,11 +199,6 @@ public class DatabaseManager {
     /**
      * Creates new entity type and flushes it to database. Returns type entity
      * if created sucessfully
-     *
-     * @param internalName
-     * @param title
-     * @param description
-     * @param isDeleted
      */
     private Type addType(String internalName, String title) {
         Type newType = new Type();
@@ -271,10 +268,6 @@ public class DatabaseManager {
     /**
      * Creates new house and flushes it to database. Returns person entity if
      * created sucessfully
-     *
-     * @param firstName
-     * @param lastName
-     * @param internalName
      */
     public House addHouse(String title, String address, String houseReg, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
@@ -304,15 +297,8 @@ public class DatabaseManager {
     }
 
     /**
-     * *
      * Creates new service and flushes it to database. Returns entity if created
      * sucessfully
-     *
-     * @param title
-     * @param serviceReg
-     * @param houseReg
-     * @param typeInternalName
-     * @return
      */
     private Service addService(String title, String serviceReg, String houseReg, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
@@ -350,15 +336,8 @@ public class DatabaseManager {
     }
 
     /**
-     * *
      * Creates new service and flushes it to database. Returns entity if created
      * sucessfully
-     *
-     * @param reservationReg
-     * @param houseReg
-     * @param typeInternalName
-     * @param services
-     * @return
      */
     private Reservation addReservation(String reservationReg, String houseReg, String typeInternalName, String personEmail, List<String> services, Date dateFrom, Date dateTo) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
@@ -416,14 +395,8 @@ public class DatabaseManager {
     }
 
     /**
-     * *
      * Creates new system parameter and flushes it to database. Returns system
      * parameter entity if created sucessfully
-     *
-     * @param internalName
-     * @param title
-     * @param typeInternalName
-     * @return
      */
     private Systemparameter addSystemParameter(String internalName, String title, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
@@ -453,16 +426,8 @@ public class DatabaseManager {
     }
 
     /**
-     * *
      * Creates new house image and flushes it to database. Returns house image
      * entity if created sucessfully
-     *
-     * @param internalName
-     * @param path
-     * @param sequence
-     * @param houseReg
-     * @param typeInternalName
-     * @return
      */
     private Houseimage addHouseImage(String internalName, String path, int sequence, String houseReg, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
@@ -510,13 +475,49 @@ public class DatabaseManager {
 
         return newHouseimage;
     }
+    
+       /**
+     * Creates new recommendation and flushes it to database. Returns recommendation
+     * entity if created sucessfully
+     */
+    private Recommendation addRecommendation(String recommenderEmail, String recommendedEmail, String typeInternalName) {
+        Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
+        Person recommender = (Person) getEntity("Person", "Email", recommenderEmail);
+        Person recommended = (Person) getEntity("Person", "Email", recommendedEmail);
+
+        Recommendation newRecommendation = new Recommendation();
+
+        newRecommendation.setTypeid(type);
+        newRecommendation.setRecommendedid(recommended);
+        newRecommendation.setRecommenderid(recommender);
+        newRecommendation.setRecommendationdate(new Date());
+
+        if (type == null) {
+            System.out.println(String.format("There is no type '%s'", typeInternalName));
+            return null;
+        }
+
+        if (recommender == null) {
+            System.out.println(String.format("Person with email '%s' does not exist", recommenderEmail));
+            return null;
+        }
+        
+        if (recommended == null) {
+            System.out.println(String.format("Person with email '%s' does not exist", recommendedEmail));
+            return null;
+        }
+
+        if (persistAndFlush(newRecommendation)) {
+            System.out.println(String.format("Recommendation from '%s' to '%s' created successfully", recommenderEmail, recommendedEmail));
+        } else {
+            return null;
+        }
+
+        return newRecommendation;
+    }
 
     /**
-     * *
      * Gets byte[] of image in given path
-     *
-     * @param path - path to image
-     * @return
      */
     private byte[] getImage(String path) {
         FileInputStream fis = null;
@@ -543,9 +544,6 @@ public class DatabaseManager {
     /**
      * *
      * Gets byte[] of image in given resource path
-     *
-     * @param path - path to image in resources
-     * @return
      */
     private byte[] getImageFromResources(String path) {
         byte[] imageInBytes = null;
@@ -566,9 +564,6 @@ public class DatabaseManager {
     /**
      * *
      * Returns MimeType of file in given path
-     *
-     * @param path - path of image
-     * @return
      */
     private String getImageMimeType(String path) {
         String[] pathParts = path.split("\\.");
@@ -578,13 +573,6 @@ public class DatabaseManager {
 
     /**
      * Returns true if specified entity exists with specified parameter
-     *
-     * @param className - name of entity class, should always start with upper
-     * case letter and other letters be lower case
-     * @param findBy - search criteria, should always start with upper case
-     * letter and other letters be lower case
-     * @param parameter - parameter value
-     * @return
      */
     public boolean entityExists(String className, String findBy, String parameter) {
         Object entity = getEntity(className, findBy, parameter);
@@ -593,28 +581,26 @@ public class DatabaseManager {
 
     /**
      * Returns entity if specified entity exists with specified parameter
-     *
-     * @param className - name of entity class, should always start with upper
-     * case letter and other letters be lower case
-     * @param findBy - search criteria, should always start with upper case
-     * letter and other letters be lower case
-     * @param parameter - parameter value
-     * @return
      */
     public Object getEntity(String className, String findBy, String parameter) {
+        List entityList = getEntityList(className, findBy, parameter);
+        return entityList == null ? null : entityList.get(0);
+    }
+    
+    /**
+     * Returns entity if specified entity exists with specified parameter
+     */
+    public List getEntityList(String className, String findBy, String parameter) {
         className = className.toLowerCase();
         findBy = findBy.toLowerCase();
         Query query = em.createNamedQuery(capitalize(className) + ".findBy" + capitalize(findBy)).setParameter(findBy, parameter);
+        List entities = query.getResultList();
 
-        return query.getResultList().isEmpty() ? null : query.getResultList().get(0);
+        return entities.isEmpty() ? null : entities;
     }
 
     /**
      * Returns all entities of selected class name.
-     *
-     * @param className - name of entity class, should always start with upper
-     * case letter and other letters be lower case
-     * @return
      */
     public Object getAllEntities(String className) {
         className = className.toLowerCase();
@@ -627,8 +613,6 @@ public class DatabaseManager {
      * Persists and flushes entity to database. Returns true if operation was
      * successful, false otherwise. Before using this method check if newEntity
      * does not already exist in database.
-     *
-     * @param newEntity
      */
     public boolean persistAndFlush(Object newEntity) {
         try {
@@ -646,9 +630,6 @@ public class DatabaseManager {
      * Persists and flushes entity to database. Returns true if operation was
      * successful, false otherwise. Before using this method check if newEntity
      * does not already exist in database.
-     *
-     * @param newEntities
-     * @return true if success
      */
     public boolean persistAndFlushList(List<Object> newEntities) {
         try {
@@ -696,7 +677,20 @@ public class DatabaseManager {
             house.setIsdeleted(false);
             house.setNumberofplaces(rand.nextInt(30));
             house.setWeekprice(rand.nextInt(800));
-            persistAndFlush(house);
+            em.persist(house);
+        }
+    }
+    
+    public void editPeople() {
+        Random rand = new Random();
+        Query query = em.createNamedQuery("Person.findAll");
+        List<Person> people = query.getResultList();
+        for (Person person : people) {
+            person.setPriority(rand.nextInt(7));
+            person.setPoints(rand.nextInt(1000));
+            person.setAddress(person.getFirstname() + rand.nextInt(1000));
+            person.setMembershipdue(new Date(2017, 01, 01));
+            em.persist(person);
         }
     }
 
