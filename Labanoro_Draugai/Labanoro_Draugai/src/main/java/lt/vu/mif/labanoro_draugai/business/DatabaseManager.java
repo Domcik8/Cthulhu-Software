@@ -110,6 +110,7 @@ public class DatabaseManager {
         person = addPerson("paru@test.com", "admin", "Paulius", "Rudzinskas", "Person.Administrator");
         person = addPerson("admin", "admin", "admin", "admin", "Person.Administrator");
         person = addPerson("can", "admin", "can", "can", "Person.Candidate");
+        person = addPerson("user", "admin", "user", "user", "Person.User");
     }
 
     /**

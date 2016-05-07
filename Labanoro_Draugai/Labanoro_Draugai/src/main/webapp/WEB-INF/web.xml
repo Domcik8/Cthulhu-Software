@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.html</welcome-file>             <!-- Later change to login.html -->
     </welcome-file-list>
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
@@ -39,12 +39,13 @@
         <url-pattern>/user/login</url-pattern>
     </servlet-mapping>
     <!-- Security constraints -->
-    <security-constraint>
+<!--    <security-constraint>
         <display-name>UserConstraint</display-name>
         <web-resource-collection>
             <web-resource-name>user</web-resource-name>
             <description/>
             <url-pattern>/user/*</url-pattern>
+            <url-pattern>/index.html</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>
@@ -64,6 +65,7 @@
             <web-resource-name>administrator</web-resource-name>
             <description/>
             <url-pattern>/Administration/*</url-pattern>
+            <url-pattern>/index.html</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>
@@ -83,6 +85,7 @@
             <description/>
             <url-pattern>/reservation/*</url-pattern>
             <url-pattern>/user/*</url-pattern>
+            <url-pattern>/index.html</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>
@@ -94,7 +97,7 @@
             <description/>
             <transport-guarantee>NONE</transport-guarantee>
         </user-data-constraint>
-    </security-constraint>
+    </security-constraint>-->
     <login-config>
         <auth-method>FORM</auth-method>
         <!--<realm-name>file</realm-name>-->
