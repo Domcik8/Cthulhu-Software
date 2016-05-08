@@ -60,7 +60,7 @@ public class DatabaseManager {
         fillBasicSystemParameters();
         fillBasicHouseImages();
         fillBasicRecommendations();
-        
+
         editPeople();
         editHouses();
 
@@ -71,28 +71,28 @@ public class DatabaseManager {
      * Fills database with basic types
      */
     public void fillBasicTypes() {
-        addType("SystemParameter",      "SystemParameter");
-        addType("Person",               "Person");
-        addType("Person.Form",          "Form");
+        addType("SystemParameter", "SystemParameter");
+        addType("Person", "Person");
+        addType("Person.Form", "Form");
         addType("Person.Administrator", "Administrator");
-        addType("Person.User",          "User");
-        addType("Person.Candidate",     "Candidate");
-        addType("Recommendation",       "Recommendation");
-        addType("House",                "House");
-        addType("House.Penthouse",      "Penthouse");
-        addType("Service",              "Service");
-        addType("Service.Vehicle",      "Vehicle");
-        addType("Service.Vehicle.Car",  "Car");
+        addType("Person.User", "User");
+        addType("Person.Candidate", "Candidate");
+        addType("Recommendation", "Recommendation");
+        addType("House", "House");
+        addType("House.Penthouse", "Penthouse");
+        addType("Service", "Service");
+        addType("Service.Vehicle", "Vehicle");
+        addType("Service.Vehicle.Car", "Car");
         addType("Service.Vehicle.Bike", "Bike");
-        addType("Reservation",          "Reservation");
-        addType("Picture",              "Picture");
-        addType("Picture.House",        "House picture");
-        addType("FormElement",          "Formos elementas");
+        addType("Reservation", "Reservation");
+        addType("Picture", "Picture");
+        addType("Picture.House", "House picture");
+        addType("FormElement", "Formos elementas");
         addType("FormElement.Calendar", "Kalendorius");
-        addType("FormElement.Input",    "Teksto laukas");
-        addType("FormElement.Select",   "Pasirinkti vieną");
+        addType("FormElement.Input", "Teksto laukas");
+        addType("FormElement.Select", "Pasirinkti vieną");
         addType("FormElement.Textarea", "Didelis teksto laukas");
-        addType("FormElement.Number",   "Skaičius");
+        addType("FormElement.Number", "Skaičius");
     }
 
     /**
@@ -175,8 +175,20 @@ public class DatabaseManager {
         addSystemParameter("ServiceParameter.StripeLiveSecretKey", "sk_live_zzW2TvQpbW5HLntoGzHC6o3r ", "SystemParameter");
         addSystemParameter("ServiceParameter.StripeLivePublishableKey", "pk_live_qW95KiaHrQokdCXpL6WCaZl2", "SystemParameter");
         addSystemParameter("ServiceParameter.TermsAndConditions", "Nadodamiesi mūsų sistema jūs sutinkate, kad \"Labanoro draugai\" nėra atsakingi už sistmos nesklandumus ar kitus žalingus incidentus.", "SystemParameter");
+        addSystemParameter("ServiceParameter.Facebook.AppId", "Facebook application ID", "SystemParameter");
+        addSystemParameter("ServiceParameter.Facebook.AppSecret", "Facebook application Secret", "SystemParameter");
+        addSystemParameter("ServiceParameter.Facebook.Redirect", "Redirect during external facebook authentication", "SystemParameter");
+        addSystemParameter("ServiceParameter.Redirect.Login", "Redirect to specified page after successful login", "SystemParameter");
+        addSystemParameter("ServiceParameter.Redirect.LoginError", "Redirect to page after bad login", "SystemParameter");
+        addSystemParameter("ServiceParameter.Redirect.GlobalError", "Redirect to page after gloabal error", "SystemParameter");
+        addSystemParameter("ServiceParameter.Mail.Address", "", "SystemParameter");
+        addSystemParameter("ServiceParameter.Mail.Password", "", "SystemParameter");
+        addSystemParameter("ServiceParameter.Mail.Smtp.host", "Smtp host used for mail service", "SystemParameter");
+        addSystemParameter("ServiceParameter.Mail.Smtp.port", "Smtp port used for mail service communication", "SystemParameter");
+        addSystemParameter("ServiceParameter.Mail.Smtp.auth", "If authentication is required for connection", "SystemParameter");
+        addSystemParameter("ServiceParameter.Mail.Smtp.starttls.enable", "If transport layer security should be enabled", "SystemParameter");
     }
-    
+
     /**
      * Fills database with basic recommendations
      */
@@ -220,19 +232,18 @@ public class DatabaseManager {
         }
         return newType;
     }
-    
+
     /**
      * Creates new person and flushes it to database. Returns person entity if
      * created sucessfully
      */
     public Person addPerson(String email, String password, String firstName, String lastName, String typeInternalName) {
         Person person = addPerson(email, firstName, lastName, typeInternalName);
-        if(person != null)
-        {
+        if (person != null) {
             String hashedPassoword = Hashing.sha256().hashString(password, Charsets.UTF_8).toString();
             person.setPassword(hashedPassoword);
         }
-        
+
         return person;
     }
 
@@ -477,10 +488,10 @@ public class DatabaseManager {
 
         return newHouseimage;
     }
-    
-       /**
-     * Creates new recommendation and flushes it to database. Returns recommendation
-     * entity if created sucessfully
+
+    /**
+     * Creates new recommendation and flushes it to database. Returns
+     * recommendation entity if created sucessfully
      */
     public Recommendation addRecommendation(String recommenderEmail, String recommendedEmail, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
@@ -503,7 +514,7 @@ public class DatabaseManager {
             System.out.println(String.format("Person with email '%s' does not exist", recommenderEmail));
             return null;
         }
-        
+
         if (recommended == null) {
             System.out.println(String.format("Person with email '%s' does not exist", recommendedEmail));
             return null;
@@ -588,7 +599,7 @@ public class DatabaseManager {
         List entityList = getEntityList(className, findBy, parameter);
         return entityList == null ? null : entityList.get(0);
     }
-    
+
     /**
      * Returns entity if specified entity exists with specified parameter
      */
@@ -682,7 +693,7 @@ public class DatabaseManager {
             em.persist(house);
         }
     }
-    
+
     public void editPeople() {
         Random rand = new Random();
         Query query = em.createNamedQuery("Person.findAll");

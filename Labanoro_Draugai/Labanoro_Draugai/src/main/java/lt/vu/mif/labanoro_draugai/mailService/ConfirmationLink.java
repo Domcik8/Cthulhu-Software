@@ -20,9 +20,6 @@ import javax.persistence.PersistenceContext;
 @Stateless
 public class ConfirmationLink {
 
-    @PersistenceContext
-    EntityManager em;
-
     public ConfirmationLink() {
     }
 
