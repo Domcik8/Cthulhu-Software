@@ -13,49 +13,99 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.faces.bean.ManagedBean;
+import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Reservation;
-import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.inject.Named;
 import lt.vu.mif.labanoro_draugai.entities.Houseimage;
 import lt.vu.mif.labanoro_draugai.entities.Service;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.omnifaces.cdi.ViewScoped;
 import org.primefaces.event.CloseEvent;
  
 /**
  *
  * @author Karolis
  */
-@ManagedBean(name="summerhouseManager")
+@Named
 @ViewScoped
 public class SummerhouseManager implements Serializable{
+    enum Ordering{
+    Cheap,Expensive,Old,New
+    }
+    
+    private static final long serialVersionUID = 1L;
     private List<House> summerhouses;
     private List<House> filteredSummerhouses;
     private boolean isFiltered = false;
     List<String> selectedHouseImages; 
     
-    @ManagedProperty(value="#{houseFilter}")
-    private HouseFilter filter;
+    //Dialog
+    private House selectedHouse;
+    private Date selectedDateFrom;
+    private Date selectedDateTo;
+    private String selectedHouseReservedDays;
+    private List<String> selectedHouseAvailableServices;
+    private String[] selectedHouseSelectedServices;
     
-    @PersistenceContext
-    EntityManager em;
+    //Datepicker
+    private Date dateFrom = getNextMonday();
+    private Date dateTo;
+    
+    //Price slider
+    private float maxHousePrice;
+    private float priceFrom = 0;
+    private float priceTo;
+    
+    //place count spinner
+    private int placeCount;
+
+    private Ordering ordering;
+    private Map<String,Ordering> availableOrderings;
+    
+    //Service checkbox list
+    private List<String> availableFilters;
+    private String[] selectedFilters;
+    
+    @Inject
+    DatabaseManager dbm;
     
     @PostConstruct
     public void init() {
-        Query query = em.createNamedQuery("House.findAll");
-        
-        summerhouses = query.getResultList();
-        filteredSummerhouses = query.getResultList();
+        summerhouses = (List<House>)dbm.getAllEntities("House"); 
+        filteredSummerhouses = (List<House>)dbm.getAllEntities("House");
         Collections.reverse(summerhouses);
         Collections.reverse(filteredSummerhouses);
+        System.out.println("summerhouses size:"+summerhouses.size());
+        //filter
+        //Papulint servisus is db
+        List<Service> services = (List<Service>)dbm.getAllEntities("Service");
+
+        availableFilters = new ArrayList<>();
+        for(Service service:services){
+            availableFilters.add(service.getTitle());
+        }
+        ////////////////////////
+        
+        availableOrderings = new LinkedHashMap<>();
+        availableOrderings.put("Naujausi", Ordering.New);
+        availableOrderings.put("Seniausi", Ordering.Old);
+        availableOrderings.put("Pigiausi", Ordering.Cheap);
+        availableOrderings.put("Brangiausi", Ordering.Expensive);
+        
+        
+        System.out.println(toString() + " constructed.");
+        
+        setMaxHousePrice(1000);
+        setPriceTo(getMaxHousePrice());
         
         System.out.println(toString() + " constructed.");
     }
@@ -71,7 +121,7 @@ public class SummerhouseManager implements Serializable{
          return result.getInternalname();
     }
     
-        public List<String> HouseImageNames(House house){
+    public List<String> HouseImageNames(House house){
         if(house ==null || house.getHouseimageList() == null || house.getHouseimageList().isEmpty()) return null;
         List<String> result = new ArrayList<>();
         for(Houseimage img : house.getHouseimageList()){
@@ -82,13 +132,13 @@ public class SummerhouseManager implements Serializable{
     
     //TODO availability filter
     public void filter(){
-        System.out.println("This is filter:"+filter.getOrdering());
+        System.out.println("This is filter:"+getOrdering());
         
         filteredSummerhouses = new ArrayList<>();
         for(House house:summerhouses){
-            if((filter.getPlaceCount() == 0 || house.getNumberofplaces()>=filter.getPlaceCount()) &&
-                    (filter.getPriceFrom() <= house.getWeekprice() && house.getWeekprice() <= filter.getPriceTo()) &&
-                    isHouseAvailable(house, filter.getDateFrom(), filter.getDateTo()) && hasSelectedServices(house, filter.getSelectedFilters()))
+            if((getPlaceCount() == 0 || house.getNumberofplaces()>=getPlaceCount()) &&
+                    (getPriceFrom() <= house.getWeekprice() && house.getWeekprice() <= getPriceTo()) &&
+                    isHouseAvailable(house, getDateFrom(), getDateTo()) && hasSelectedServices(house, getSelectedFilters()))
             filteredSummerhouses.add(house);
         }
         
@@ -121,7 +171,7 @@ public class SummerhouseManager implements Serializable{
     }
     
     private void sortHouses(){
-        switch(filter.getOrdering()){
+        switch(getOrdering()){
             case Cheap:
                 Collections.sort(filteredSummerhouses, new Comparator<House>() {
                     @Override
@@ -169,26 +219,26 @@ public class SummerhouseManager implements Serializable{
         isFiltered = false;
     }
 
-    public List<House> getFilteredSummerhouses() {
-        return filteredSummerhouses;
-    }
-
-    public HouseFilter getFilter() {
-        return filter;
-    }
-    public void setFilter(HouseFilter filter) {
-        this.filter = filter;
+    //TODO Sezono pradžia čia turi but<-------------------------------------------------------
+    public Date getEndOfSeason(){
+        Calendar today = Calendar.getInstance(); 
+        today.add(Calendar.YEAR, 1);
+        return today.getTime();
     }
     
-    
-    
-    //Dialog
-    private House selectedHouse;
-    private Date selectedDateFrom;
-    private Date selectedDateTo;
-    private String selectedHouseReservedDays;
-    private List<String> selectedHouseAvailableServices;
-    public String[] selectedHouseSelectedServices;
+    public Date getNextMonday(){
+        Calendar now = Calendar.getInstance();
+        int weekday = now.get(Calendar.DAY_OF_WEEK);
+        if (weekday != Calendar.MONDAY)
+        {
+            // calculate how much to add
+            // the 2 is the difference between Saturday and Monday
+            int days = (Calendar.SATURDAY - weekday + 2) % 7;
+            now.add(Calendar.DAY_OF_YEAR, days);
+        }
+        // now is the date you want
+        return now.getTime();
+    }
 
     public void handleDialogClose(CloseEvent event){
         selectedHouse = null;
@@ -199,27 +249,6 @@ public class SummerhouseManager implements Serializable{
         selectedHouseSelectedServices = null;
     }
     
-    
-    public List<String> getSelectedHouseAvailableServices() {
-        return selectedHouseAvailableServices;
-    }
-
-    public void setSelectedHouseAvailableServices(List<String> selectedHouseAvailableServices) {
-        this.selectedHouseAvailableServices = selectedHouseAvailableServices;
-    }
-
-    public String[] getSelectedHouseSelectedServices() {
-        return selectedHouseSelectedServices;
-    }
-
-    public void setSelectedHouseSelectedServices(String[] selectedHouseSelectedServices) {
-        this.selectedHouseSelectedServices = selectedHouseSelectedServices;
-    }
-    
-    public void setSelectedHouseReservedDays(String selectedHouseReservedDays) {
-        this.selectedHouseReservedDays = selectedHouseReservedDays;
-    }
-    
     public Date selectedHouseMinDate(){
         Date mon = getNextMonday();
         if(selectedHouse == null || selectedHouse.getSeasonstartdate()==null) return mon;
@@ -227,8 +256,8 @@ public class SummerhouseManager implements Serializable{
     }
     
     public Date selectedHouseMaxDate(){
-        if(selectedHouse == null || selectedHouse.getSeasonenddate()==null) return filter.getEndOfSeason();
-        return selectedHouse.getSeasonenddate().before(filter.getEndOfSeason())? selectedHouse.getSeasonenddate():filter.getEndOfSeason();
+        if(selectedHouse == null || selectedHouse.getSeasonenddate()==null) return getEndOfSeason();
+        return selectedHouse.getSeasonenddate().before(getEndOfSeason())? selectedHouse.getSeasonenddate():getEndOfSeason();
     }
     
     public Date selectedHouseMaxDateTo(){
@@ -238,38 +267,6 @@ public class SummerhouseManager implements Serializable{
             if(reservation.getStartdate().before(maxDate) && reservation.getStartdate().after(selectedDateFrom)) maxDate = reservation.getStartdate();
         }
         return maxDate;
-    }
-    
-    public Date getSelectedDateFrom() {
-        if(selectedDateFrom == null){
-            if(isFiltered) selectedDateFrom = filter.getDateFrom();
-            else selectedDateFrom = getNextMonday();
-        }
-        return selectedDateFrom;
-    }
-    public void setSelectedDateFrom(Date selectedDateFrom) {
-        this.selectedDateFrom = selectedDateFrom;
-    }
-    public Date getSelectedDateTo() {
-        if(selectedDateTo == null && isFiltered){
-            selectedDateTo = filter.getDateTo();
-        }
-        return selectedDateTo;
-    }
-    public void setSelectedDateTo(Date selectedDateTo) {
-        this.selectedDateTo = selectedDateTo;
-    }    
-    public House getSelectedHouse() {
-        return selectedHouse;
-    }
-    public void setSelectedHouse(House selectedHouse) {
-        selectedHouseAvailableServices = new ArrayList<>();
-        if(selectedHouse!= null){
-            for(Service service:selectedHouse.getServiceList()){
-                selectedHouseAvailableServices.add(service.getTitle());
-            }
-        }
-        this.selectedHouse = selectedHouse;
     }
     
     public void onDateSelect() {
@@ -299,9 +296,8 @@ public class SummerhouseManager implements Serializable{
         return selectedHouseReservedDays;
     }
     
-    
-    private List<Date> getDaysBetweenDates(Date startdate, Date enddate)
-    {
+   //Modded setters/getters 
+    private List<Date> getDaysBetweenDates(Date startdate, Date enddate){
         List<Date> dates = new ArrayList<>();
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(startdate);
@@ -320,21 +316,7 @@ public class SummerhouseManager implements Serializable{
         int dayCount = getDaysBetweenDates(selectedDateFrom, selectedDateTo).size()+1;
         return selectedHouse.getWeekprice() * (dayCount/7);
     }
-    
-    private Date getNextMonday(){
-        Calendar now = Calendar.getInstance();
-        int weekday = now.get(Calendar.DAY_OF_WEEK);
-        if (weekday != Calendar.MONDAY)
-        {
-            // calculate how much to add
-            // the 2 is the difference between Saturday and Monday
-            int days = (Calendar.SATURDAY - weekday + 2) % 7;
-            now.add(Calendar.DAY_OF_YEAR, days);
-        }
-        // now is the date you want
-        return now.getTime();
-    }
-    
+      
     public String confirmSelectedHouse(){
         if(selectedHouse== null || selectedDateFrom == null || selectedDateTo==null
                 || !isHouseAvailable(selectedHouse, selectedDateFrom, selectedDateTo)|| selectedHousePeriodPrice() == 0){
@@ -350,12 +332,129 @@ public class SummerhouseManager implements Serializable{
         return "reservationConfirmation.html";
     }
 
+    public void setSelectedFilters(String[] selectedFilters) {
+        if(selectedFilters!=null){
+            System.out.println("Selected services:");
+            for(String str:selectedFilters)
+                System.out.println("*"+str);
+        }
+        this.selectedFilters = selectedFilters;
+    }
+    
+    public void setSelectedHouse(House selectedHouse) {
+        selectedHouseAvailableServices = new ArrayList<>();
+        if(selectedHouse!= null){
+            for(Service service:selectedHouse.getServiceList()){
+                selectedHouseAvailableServices.add(service.getTitle());
+            }
+        }
+        this.selectedHouse = selectedHouse;
+    }
+    
+    public Date getSelectedDateTo() {
+        if(selectedDateTo == null && isFiltered){
+            selectedDateTo = getDateTo();
+        }
+        return selectedDateTo;
+    }
+        
+    public Date getSelectedDateFrom() {
+        if(selectedDateFrom == null){
+            if(isFiltered) selectedDateFrom = getDateFrom();
+            else selectedDateFrom = getNextMonday();
+        }
+        return selectedDateFrom;
+    }
+    
+    //Basic setters/getters
+    public void setSelectedDateFrom(Date selectedDateFrom) {
+        this.selectedDateFrom = selectedDateFrom;
+    }
+    public void setSelectedDateTo(Date selectedDateTo) {
+        this.selectedDateTo = selectedDateTo;
+    }    
+    public House getSelectedHouse() {
+        return selectedHouse;
+    } 
     public List<String> getSelectedHouseImages() {
         return selectedHouseImages;
     }
-
     public void setSelectedHouseImages(List<String> selectedHouseImages) {
         this.selectedHouseImages = selectedHouseImages;
     }
-    
+    public String[] getSelectedFilters() {
+        return selectedFilters;
+    }
+    public List<String> getAvailableFilters() {
+        return availableFilters;
+    }
+    public void setAvailableFilters(List<String> availableFilters) {
+        this.availableFilters = availableFilters;
+    }  
+    public Map<String, Ordering> getAvailableOrderings() {
+        return availableOrderings;
+    }
+    public void setAvailableOrderings(Map<String, Ordering> availableOrderings) {
+        this.availableOrderings = availableOrderings;
+    }   
+    public Ordering getOrdering() {
+        return ordering;
+    }
+    public void setOrdering(Ordering ordering) {
+        this.ordering = ordering;
+    }   
+    public int getPlaceCount() {
+        return placeCount;
+    }
+    public void setPlaceCount(int placeCount) {
+        this.placeCount = placeCount;
+    }   
+    public float getMaxHousePrice() {
+        return maxHousePrice;
+    }
+    public void setMaxHousePrice(float maxHousePrice) {
+        this.maxHousePrice = maxHousePrice;
+    }   
+    public float getPriceFrom() {
+        return priceFrom;
+    }
+    public void setPriceFrom(float priceFrom) {
+        this.priceFrom = priceFrom;
+    }
+    public float getPriceTo() {
+        return priceTo;
+    }
+    public void setPriceTo(float priceTo) {
+        this.priceTo = priceTo;
+    }    
+    public Date getDateFrom() {
+        return dateFrom;
+    }
+    public void setDateFrom(Date dateFrom) {
+        this.dateFrom = dateFrom;
+    }
+    public Date getDateTo() {
+        return dateTo;
+    }
+    public void setDateTo(Date dateTo) {
+        this.dateTo = dateTo;
+    }  
+    public List<String> getSelectedHouseAvailableServices() {
+        return selectedHouseAvailableServices;
+    }
+    public void setSelectedHouseAvailableServices(List<String> selectedHouseAvailableServices) {
+        this.selectedHouseAvailableServices = selectedHouseAvailableServices;
+    }
+    public String[] getSelectedHouseSelectedServices() {
+        return selectedHouseSelectedServices;
+    }
+    public void setSelectedHouseSelectedServices(String[] selectedHouseSelectedServices) {
+        this.selectedHouseSelectedServices = selectedHouseSelectedServices;
+    }   
+    public void setSelectedHouseReservedDays(String selectedHouseReservedDays) {
+        this.selectedHouseReservedDays = selectedHouseReservedDays;
+    }
+    public List<House> getFilteredSummerhouses() {
+        return filteredSummerhouses;
+    }
 }
