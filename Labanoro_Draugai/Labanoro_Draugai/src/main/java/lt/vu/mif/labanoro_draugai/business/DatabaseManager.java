@@ -482,7 +482,7 @@ public class DatabaseManager {
      * Creates new recommendation and flushes it to database. Returns recommendation
      * entity if created sucessfully
      */
-    private Recommendation addRecommendation(String recommenderEmail, String recommendedEmail, String typeInternalName) {
+    public Recommendation addRecommendation(String recommenderEmail, String recommendedEmail, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
         Person recommender = (Person) getEntity("Person", "Email", recommenderEmail);
         Person recommended = (Person) getEntity("Person", "Email", recommendedEmail);
