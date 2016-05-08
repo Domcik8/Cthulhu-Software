@@ -28,18 +28,22 @@ import lt.vu.mif.labanoro_draugai.entities.Person;
 public class priorityGroupManager {
     
     @Inject
-    DatabaseManager databaseManager;
+    DatabaseManager dbm;
     
     @PersistenceContext
     EntityManager em;
  
     public void countPriorities() {
-        Random random = new Random();
-        Query query = em.createNamedQuery("Person.findAll");
-        List<Person> people = query.getResultList();
+        List<Person> people = dbm.getAllEntities("Person");
         for (Person person : people) {
-            person.setPriority(random.nextInt(7));
-            em.persist(person);
+            countPriority(person);
         }
+    }
+    
+    private void countPriority(Person person) {
+        Random random = new Random();
+        
+        person.setPriority(random.nextInt(7));
+        em.persist(person);
     }
 }

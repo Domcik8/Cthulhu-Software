@@ -395,6 +395,16 @@ public class DatabaseManager {
 
         return newReservation;
     }
+    
+     /**
+     * Creates new system parameter and flushes it to database. Returns system
+     * parameter entity if created sucessfully
+     */
+    private Systemparameter addSystemParameter(String internalName, String title, String value, String description, String typeInternalName) {
+        Systemparameter newSystemParameter = addSystemParameter(internalName, title, value, typeInternalName);
+        newSystemParameter.setDescription(description);
+        return newSystemParameter;
+    }
 
     /**
      * Creates new system parameter and flushes it to database. Returns system
@@ -609,7 +619,7 @@ public class DatabaseManager {
     /**
      * Returns all entities of selected class name.
      */
-    public Object getAllEntities(String className) {
+    public List getAllEntities(String className) {
         className = className.toLowerCase();
         Query query = em.createNamedQuery(capitalize(className) + ".findAll");
 
