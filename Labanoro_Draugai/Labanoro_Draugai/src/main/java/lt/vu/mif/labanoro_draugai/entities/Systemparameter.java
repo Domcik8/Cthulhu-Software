@@ -31,8 +31,8 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Systemparameter.findById", query = "SELECT s FROM Systemparameter s WHERE s.id = :id"),
     @NamedQuery(name = "Systemparameter.findByInternalname", query = "SELECT s FROM Systemparameter s WHERE s.internalname = :internalname"),
     @NamedQuery(name = "Systemparameter.findByTitle", query = "SELECT s FROM Systemparameter s WHERE s.title = :title"),
-    @NamedQuery(name = "Systemparameter.findByDescription", query = "SELECT s FROM Systemparameter s WHERE s.description = :description"),
     @NamedQuery(name = "Systemparameter.findByValue", query = "SELECT s FROM Systemparameter s WHERE s.value = :value"),
+    @NamedQuery(name = "Systemparameter.findByDescription", query = "SELECT s FROM Systemparameter s WHERE s.description = :description"),
     @NamedQuery(name = "Systemparameter.findByIsdeleted", query = "SELECT s FROM Systemparameter s WHERE s.isdeleted = :isdeleted"),
     @NamedQuery(name = "Systemparameter.findByOptlockversion", query = "SELECT s FROM Systemparameter s WHERE s.optlockversion = :optlockversion")})
 public class Systemparameter implements Serializable {
@@ -48,14 +48,19 @@ public class Systemparameter implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "INTERNALNAME")
     private String internalname;
-    @Size(max = 255)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
     @Column(name = "TITLE")
     private String title;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "VALUE")
+    private String value;
     @Size(max = 255)
     @Column(name = "DESCRIPTION")
     private String description;
-    @Column(name = "VALUE")
-    private Integer value;
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
     @Column(name = "OPTLOCKVERSION")
@@ -71,9 +76,11 @@ public class Systemparameter implements Serializable {
         this.id = id;
     }
 
-    public Systemparameter(Integer id, String internalname) {
+    public Systemparameter(Integer id, String internalname, String title, String value) {
         this.id = id;
         this.internalname = internalname;
+        this.title = title;
+        this.value = value;
     }
 
     public Integer getId() {
@@ -100,20 +107,20 @@ public class Systemparameter implements Serializable {
         this.title = title;
     }
 
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Integer getValue() {
-        return value;
-    }
-
-    public void setValue(Integer value) {
-        this.value = value;
     }
 
     public Boolean getIsdeleted() {

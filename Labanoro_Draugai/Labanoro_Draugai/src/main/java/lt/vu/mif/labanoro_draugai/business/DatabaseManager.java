@@ -71,22 +71,22 @@ public class DatabaseManager {
      * Fills database with basic types
      */
     public void fillBasicTypes() {
-        addType("SystemParameter",      "SystemParameter");
-        addType("Person",               "Person");
-        addType("Person.Form",          "Form");
-        addType("Person.Administrator", "Administrator");
-        addType("Person.User",          "User");
-        addType("Person.Candidate",     "Candidate");
-        addType("Recommendation",       "Recommendation");
-        addType("House",                "House");
-        addType("House.Penthouse",      "Penthouse");
-        addType("Service",              "Service");
-        addType("Service.Vehicle",      "Vehicle");
-        addType("Service.Vehicle.Car",  "Car");
-        addType("Service.Vehicle.Bike", "Bike");
-        addType("Reservation",          "Reservation");
-        addType("Picture",              "Picture");
-        addType("Picture.House",        "House picture");
+        addType("SystemParameter",      "Sistemos parametras");
+        addType("Person",               "Asmuo");
+        addType("Person.Form",          "Forma");
+        addType("Person.Administrator", "Administratorius");
+        addType("Person.User",          "Vartotojas");
+        addType("Person.Candidate",     "Kandidatas");
+        addType("Recommendation",       "Rekomentacija");
+        addType("House",                "Namas");
+        addType("House.Penthouse",      "Mansarda");
+        addType("Service",              "Paslauga");
+        addType("Service.Vehicle",      "Transporto priemonė");
+        addType("Service.Vehicle.Car",  "Automobilis");
+        addType("Service.Vehicle.Bike", "Dviratis");
+        addType("Reservation",          "Rezervacija");
+        addType("Picture",              "Nuotrauka");
+        addType("Picture.House",        "Namo nuotrauka");
         addType("FormElement",          "Formos elementas");
         addType("FormElement.Calendar", "Kalendorius");
         addType("FormElement.Input",    "Teksto laukas");
@@ -168,13 +168,13 @@ public class DatabaseManager {
      * Fills database with basic system parameters
      */
     private void fillBasicSystemParameters() {
-        addSystemParameter("ServiceParameter.RequiredRecommendations", "Number of required recommendations", "SystemParameter");
-        addSystemParameter("ServiceParameter.MaxRecommendations", "Max number of recommendations that can be requested", "SystemParameter");
-        addSystemParameter("ServiceParameter.StripeTestSecretKey", "sk_test_6K4uBYlsGNPy5H161DtWjZcm", "SystemParameter");
-        addSystemParameter("ServiceParameter.StripeTestPublishableKey", "pk_test_tK93j3DH8bSqL4VHi65SnJ9e ", "SystemParameter");
-        addSystemParameter("ServiceParameter.StripeLiveSecretKey", "sk_live_zzW2TvQpbW5HLntoGzHC6o3r ", "SystemParameter");
-        addSystemParameter("ServiceParameter.StripeLivePublishableKey", "pk_live_qW95KiaHrQokdCXpL6WCaZl2", "SystemParameter");
-        addSystemParameter("ServiceParameter.TermsAndConditions", "Nadodamiesi mūsų sistema jūs sutinkate, kad \"Labanoro draugai\" nėra atsakingi už sistmos nesklandumus ar kitus žalingus incidentus.", "SystemParameter");
+        addSystemParameter("ServiceParameter.RequiredRecommendations", "Reikalingų rekomendacijų skaičius", "2", "SystemParameter");
+        addSystemParameter("ServiceParameter.MaxRecommendations", "Maksimalus rekomendacijų užklausų skaičius", "5", "SystemParameter");
+        addSystemParameter("ServiceParameter.StripeTestSecretKey", "Stripe testinis slaptas raktas", "sk_test_6K4uBYlsGNPy5H161DtWjZcm", "SystemParameter");
+        addSystemParameter("ServiceParameter.StripeTestPublishableKey", "Stripe testinis viešas raktas", "pk_test_tK93j3DH8bSqL4VHi65SnJ9e ", "SystemParameter");
+        addSystemParameter("ServiceParameter.StripeLiveSecretKey", "Stripe tikras slaptas raktas", "sk_live_zzW2TvQpbW5HLntoGzHC6o3r ", "SystemParameter");
+        addSystemParameter("ServiceParameter.StripeLivePublishableKey", "Stripe tikras viešas raktas", "pk_live_qW95KiaHrQokdCXpL6WCaZl2", "SystemParameter");
+        addSystemParameter("ServiceParameter.TermsAndConditions", "Nuostatos ir sąlygos", "Nadodamiesi mūsų sistema jūs sutinkate, kad \"Labanoro draugai\" nėra atsakingi už sistmos nesklandumus ar kitus žalingus incidentus.", "SystemParameter");
     }
     
     /**
@@ -400,7 +400,7 @@ public class DatabaseManager {
      * Creates new system parameter and flushes it to database. Returns system
      * parameter entity if created sucessfully
      */
-    private Systemparameter addSystemParameter(String internalName, String title, String typeInternalName) {
+    private Systemparameter addSystemParameter(String internalName, String title, String value, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
 
         if (type == null) {
@@ -412,6 +412,7 @@ public class DatabaseManager {
 
         newSystemParameter.setInternalname(internalName);
         newSystemParameter.setTitle(title);
+        newSystemParameter.setValue(value);
         newSystemParameter.setTypeid(type);
 
         if (entityExists("Systemparameter", "Internalname", internalName)) {
@@ -571,6 +572,10 @@ public class DatabaseManager {
         String[] pathParts = path.split("\\.");
 
         return pathParts[pathParts.length - 1];
+    }
+    
+    public Systemparameter getSystemParameter(String internalName) {
+        return (Systemparameter) getEntity("Systemparameter", "Internalname", internalName);
     }
 
     /**

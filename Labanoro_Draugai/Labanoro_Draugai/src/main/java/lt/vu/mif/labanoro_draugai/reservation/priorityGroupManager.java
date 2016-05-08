@@ -34,11 +34,11 @@ public class priorityGroupManager {
     EntityManager em;
  
     public void countPriorities() {
+        Random random = new Random();
         Query query = em.createNamedQuery("Person.findAll");
         List<Person> people = query.getResultList();
         for (Person person : people) {
-            
-            person.setPriority(0);
+            person.setPriority(random.nextInt(7));
             em.persist(person);
         }
     }
