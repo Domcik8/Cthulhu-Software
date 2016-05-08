@@ -181,8 +181,8 @@ public class DatabaseManager {
         addSystemParameter("ServiceParameter.Redirect.Login", "Redirect to specified page after successful login", "SystemParameter");
         addSystemParameter("ServiceParameter.Redirect.LoginError", "Redirect to page after bad login", "SystemParameter");
         addSystemParameter("ServiceParameter.Redirect.GlobalError", "Redirect to page after gloabal error", "SystemParameter");
-        addSystemParameter("ServiceParameter.Mail.Address", "", "SystemParameter");
-        addSystemParameter("ServiceParameter.Mail.Password", "", "SystemParameter");
+        addSystemParameter("ServiceParameter.Mail.Address", "Gmail addressed used for email sending", "SystemParameter");
+        addSystemParameter("ServiceParameter.Mail.Password", "Password for gmail address", "SystemParameter");
         addSystemParameter("ServiceParameter.Mail.Smtp.host", "Smtp host used for mail service", "SystemParameter");
         addSystemParameter("ServiceParameter.Mail.Smtp.port", "Smtp port used for mail service communication", "SystemParameter");
         addSystemParameter("ServiceParameter.Mail.Smtp.auth", "If authentication is required for connection", "SystemParameter");
