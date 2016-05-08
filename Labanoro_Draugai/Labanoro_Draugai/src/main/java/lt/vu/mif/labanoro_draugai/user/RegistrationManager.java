@@ -20,6 +20,7 @@ import lt.vu.mif.labanoro_draugai.entities.Formattribute;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.entities.Type;
 import lt.vu.mif.labanoro_draugai.entities.Personregistrationform;
+import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import net.sf.json.JSONObject;
 import org.primefaces.extensions.model.dynaform.DynaFormControl;
 import org.primefaces.extensions.model.dynaform.DynaFormLabel;
@@ -39,6 +40,8 @@ public class RegistrationManager implements Serializable{
     private String email;
     private String password;
     private String passwordConfirm;
+    private String firstName;
+    private String lastName;
     private String termsAndConditions;
     @AssertTrue
     private boolean isAgreeingToTerms;
@@ -52,7 +55,7 @@ public class RegistrationManager implements Serializable{
         List<Formattribute> attributes = (List<Formattribute>)dbm.getAllEntities("Formattribute");
         if(attributes == null) return;
         
-        termsAndConditions = "Būkite geri ir draugiški!";
+        termsAndConditions = ((Systemparameter)dbm.getEntity("Systemparameter", "Internalname", "ServiceParameter.TermsAndConditions")).getTitle();
         
         for(Formattribute attribute:attributes){
             DynaFormRow row = displayModel.createRegularRow();
@@ -73,6 +76,8 @@ public class RegistrationManager implements Serializable{
             jsonObject.element(control.getKey(), control.getData());
         }
         Person person = new Person();
+        person.setFirstname(firstName);
+        person.setLastname(lastName);
         person.setEmail(email);
         person.setIsdeleted(false);
         person.setPassword(password);
@@ -142,5 +147,21 @@ public class RegistrationManager implements Serializable{
 
     public String getTermsAndConditions() {
         return termsAndConditions;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

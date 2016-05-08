@@ -174,6 +174,7 @@ public class DatabaseManager {
         addSystemParameter("ServiceParameter.StripeTestPublishableKey", "pk_test_tK93j3DH8bSqL4VHi65SnJ9e ", "SystemParameter");
         addSystemParameter("ServiceParameter.StripeLiveSecretKey", "sk_live_zzW2TvQpbW5HLntoGzHC6o3r ", "SystemParameter");
         addSystemParameter("ServiceParameter.StripeLivePublishableKey", "pk_live_qW95KiaHrQokdCXpL6WCaZl2", "SystemParameter");
+        addSystemParameter("ServiceParameter.TermsAndConditions", "Nadodamiesi mūsų sistema jūs sutinkate, kad \"Labanoro draugai\" nėra atsakingi už sistmos nesklandumus ar kitus žalingus incidentus.", "SystemParameter");
     }
     
     /**
