@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pe="http://primefaces.org/ui/extensions"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
+       <form action="/Labanoro_Draugai/Stripe" method="POST">
+          <script
+            src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+            data-key="pk_test_NuMXQ4crxg12CBo9NxrjSO63"
+            data-amount="#{price}"
+            data-name="test"
+            data-description="Widget"
+            data-image="/img/documentation/checkout/marketplace.png"
+            data-locale="auto"
+            data-currency="eur">
+          </script>
+           <input type="hidden" name="Price1" value="#{price}"/>
+       </form> 
+</ui:composition>

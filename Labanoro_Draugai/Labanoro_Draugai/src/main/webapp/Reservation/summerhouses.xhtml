@@ -33,26 +33,26 @@ and open the template in the editor.
                                 <!--Dropdown orering--><!--Spinner place count-->
                                 <h:panelGrid id="panelGrid" columns="2" >    
                                     <h:outputLabel for="ordering" value="Viršuje:" />
-                                    <h:selectOneMenu id="ordering" value="#{houseFilter.ordering}" >
-                                        <f:selectItems value="#{houseFilter.availableOrderings}" />
+                                    <h:selectOneMenu id="ordering" value="#{summerhouseManager.ordering}" >
+                                        <f:selectItems value="#{summerhouseManager.availableOrderings}" />
                                     </h:selectOneMenu>
                                     <h:outputLabel for="placeCount" value="Vietų skaičius:" />
-                                    <p:spinner id="placeCount" value="#{houseFilter.placeCount}" min="0" max="99" size="1"/>
+                                    <p:spinner id="placeCount" value="#{summerhouseManager.placeCount}" min="0" max="99" size="1"/>
                                     <p:tooltip id="toolTipPlaceCount" for="placeCount" value="0 žymi visus vietų skaičius" trackMouse="true" />
                                 </h:panelGrid>
                                 
                                 <!--Price slider-->
                                 <p:outputLabel for="displayRange" value="Kaina:" /><br/>
-                                <h:outputText id="displayRange" value="Nuo #{houseFilter.priceFrom}€ iki #{houseFilter.priceTo}€" />
+                                <h:outputText id="displayRange" value="Nuo #{summerhouseManager.priceFrom}€ iki #{summerhouseManager.priceTo}€" />
                                 <p:slider id="priceSlider" 
                                           for="priceFrom,priceTo" 
                                           display="displayRange" 
                                           style="width: 170px" 
                                           range="true" 
                                           displayTemplate="Kaina nuo {min}€ iki {max}€" 
-                                          maxValue="#{houseFilter.maxHousePrice}" />
-                                <h:inputHidden id="priceFrom" value="#{houseFilter.priceFrom}" />
-                                <h:inputHidden id="priceTo" value="#{houseFilter.priceTo}" />
+                                          maxValue="#{summerhouseManager.maxHousePrice}" />
+                                <h:inputHidden id="priceFrom" value="#{summerhouseManager.priceFrom}" />
+                                <h:inputHidden id="priceTo" value="#{summerhouseManager.priceTo}" />
 
                                 <br/>
 
@@ -62,17 +62,17 @@ and open the template in the editor.
                                     <p:outputLabel for="dateFrom" value="Nuo: " />
                                     <p:calendar id="dateFrom" pattern="yyyy-MM-dd" size="10"
                                                 beforeShowDay="calendarOnlyMonday" locale="lt"
-                                                value="#{houseFilter.dateFrom}" 
-                                                mindate="#{houseFilter.nextMonday}" 
-                                                maxdate="#{houseFilter.endOfSeason}"  >
-                                        <p:ajax event="dateSelect" listener="#{houseFilter.onDateSelect}" update="dateTo" />
+                                                value="#{summerhouseManager.dateFrom}" 
+                                                mindate="#{summerhouseManager.nextMonday}" 
+                                                maxdate="#{summerhouseManager.endOfSeason}"  >
+                                        <p:ajax event="dateSelect" listener="#{summerhouseManager.onDateSelect}" update="dateTo" />
                                     </p:calendar>
                                     <p:outputLabel for="dateTo" value="Iki: " />
                                     <p:calendar id="dateTo" pattern="yyyy-MM-dd" size="10"
                                                 beforeShowDay="calendarOnlySunday" locale="lt"
-                                                value="#{houseFilter.dateTo}" 
-                                                mindate="#{houseFilter.dateFrom}"
-                                                maxdate="#{houseFilter.endOfSeason}" >
+                                                value="#{summerhouseManager.dateTo}" 
+                                                mindate="#{summerhouseManager.dateFrom}"
+                                                maxdate="#{summerhouseManager.endOfSeason}" >
                                         <p:ajax event="dateSelect" update="dateFrom" />
                                     </p:calendar>    
                                 </h:panelGrid>
@@ -80,8 +80,8 @@ and open the template in the editor.
                             
                             <!--Available services-->
                             <p:tab title="Paslaugos">
-                                <p:selectManyCheckbox id="grid2" value="#{houseFilter.selectedFilters}" layout="pageDirection" columns="3">
-                                    <f:selectItems value="#{houseFilter.availableFilters}" var="filter" itemLabel="#{filter}" itemValue="#{filter}" />
+                                <p:selectManyCheckbox id="grid2" value="#{summerhouseManager.selectedFilters}" layout="pageDirection" columns="3">
+                                    <f:selectItems value="#{summerhouseManager.availableFilters}" var="filter" itemLabel="#{filter}" itemValue="#{filter}" />
                                 </p:selectManyCheckbox> 
                             </p:tab>
                         </p:accordionPanel>    

@@ -37,7 +37,9 @@ and open the template in the editor.
                         <h:outputLabel> #{service}</h:outputLabel>
                     </p:dataList> 
                 </p:panelGrid>
-
+        <ui:include src="/WEB-INF/other_pages/stripeForm.xhtml">
+            <ui:param name="price" value="#{reservationConfirmationManager.house.weekprice}" />
+                    </ui:include>        
             </p:panel>            
         </div>
 
