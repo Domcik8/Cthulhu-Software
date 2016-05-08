@@ -58,5 +58,6 @@ public class StripeServlet extends HttpServlet {
         } catch (AuthenticationException | InvalidRequestException | APIConnectionException | APIException ex) {
             Logger.getLogger(StripeServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+        response.sendRedirect("/Labanoro_Draugai/index.html");
+    }   
 }
