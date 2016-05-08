@@ -607,7 +607,7 @@ public class DatabaseManager {
         className = className.toLowerCase();
         Query query = em.createNamedQuery(capitalize(className) + ".findAll");
 
-        return query.getResultList().isEmpty() ? null : query.getResultList();
+        return query.getResultList();
     }
 
     /**

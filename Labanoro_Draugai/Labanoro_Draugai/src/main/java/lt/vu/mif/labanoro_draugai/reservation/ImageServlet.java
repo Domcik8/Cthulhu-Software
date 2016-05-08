@@ -23,7 +23,7 @@ public class ImageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String imageId = String.valueOf(request.getPathInfo().substring(1)); // Gets string that goes after "/images/".
-
+        
         Houseimage image = (Houseimage)dbm.getEntity("Houseimage", "Internalname", imageId);
         if(image == null) return;
         
