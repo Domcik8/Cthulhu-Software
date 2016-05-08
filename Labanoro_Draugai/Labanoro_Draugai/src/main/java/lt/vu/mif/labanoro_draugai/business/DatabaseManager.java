@@ -176,7 +176,8 @@ public class DatabaseManager {
         addSystemParameter("ServiceParameter.StripeLivePublishableKey", "Stripe tikras viešas raktas", "pk_live_qW95KiaHrQokdCXpL6WCaZl2", "SystemParameter");
         addSystemParameter("ServiceParameter.TermsAndConditions", "Nuostatos ir sąlygos", "Nadodamiesi mūsų sistema jūs sutinkate, kad \"Labanoro draugai\" nėra atsakingi už sistmos nesklandumus ar kitus žalingus incidentus.", "SystemParameter");
         
-        addSystemParameter("ServiceParameter.Facebook.AppId", "Facebook application ID", "SystemParameter");
+        //Pridek value ir i lt kalba kas eis i GUI
+        /*addSystemParameter("ServiceParameter.Facebook.AppId", "Facebook application ID", "SystemParameter");
         addSystemParameter("ServiceParameter.Facebook.AppSecret", "Facebook application Secret", "SystemParameter");
         addSystemParameter("ServiceParameter.Facebook.Redirect", "Redirect during external facebook authentication", "SystemParameter");
         addSystemParameter("ServiceParameter.Redirect.Login", "Redirect to specified page after successful login", "SystemParameter");
@@ -187,7 +188,7 @@ public class DatabaseManager {
         addSystemParameter("ServiceParameter.Mail.Smtp.host", "Smtp host used for mail service", "SystemParameter");
         addSystemParameter("ServiceParameter.Mail.Smtp.port", "Smtp port used for mail service communication", "SystemParameter");
         addSystemParameter("ServiceParameter.Mail.Smtp.auth", "If authentication is required for connection", "SystemParameter");
-        addSystemParameter("ServiceParameter.Mail.Smtp.starttls.enable", "If transport layer security should be enabled", "SystemParameter");
+        addSystemParameter("ServiceParameter.Mail.Smtp.starttls.enable", "If transport layer security should be enabled", "SystemParameter");*/
         
     }
 
