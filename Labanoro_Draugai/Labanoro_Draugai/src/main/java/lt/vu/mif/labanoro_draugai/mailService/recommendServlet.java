@@ -13,24 +13,25 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.entities.Recommendation;
+import lt.vu.mif.labanoro_draugai.entities.Type;
 
 /**
  *
  * @author NecrQ
  */
 @WebServlet("/recommend")
-public class recommendServlet {
+public class recommendServlet extends HttpServlet {
 
     @Inject
     private DatabaseManager dbm;
-
-    @PersistenceContext
-    private EntityManager em;
+    private Integer minimumRecommendations = 2;
+    private Integer maximumRecommendations = 5;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -38,50 +39,60 @@ public class recommendServlet {
         doProcess(request, response);
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        doProcess(request, response);
-    }
-
-    private void doProcess(HttpServletRequest request, HttpServletResponse response) {
+    private void doProcess(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         if (request.getUserPrincipal() != null) {
 
             String recommenderEmail = request.getUserPrincipal().toString();
+            Person recommender = (Person) dbm.getEntity("Person", "Email", recommenderEmail);
             String userKey = request.getParameter("user");
 
-            Query query = em.createNamedQuery("Person.findByUniquekey").setParameter("Uniquekey", userKey);
-            Person recommendedPerson = (Person) query.getResultList().get(0);
-
-            if (recommendedPerson != null) {
-
-                String personEmail = recommendedPerson.getEmail();
-
-                // query for all recommendation for particular user and calculate results of list
-                List recommendationList = recommendedPerson.getRecommendationList();
-                if (recommendationList.size() > 2) {
-                    return;
-                }
-
-                // if recommendation number < required recommendations , add one more recommendation.
-                Recommendation recommend = dbm.addRecommendation(recommenderEmail, personEmail, userKey);
-                // add to Recommendation table
-                if (recommend != null) {
-
-                }
-                
-                // if enough recommendation reached, change user status from "Candidate" to "User"
-                recommendationList = recommendedPerson.getRecommendationList();
-                if (recommendationList.size() > 2) {
-                    
-                    //recommendedPerson.setTypeid(5);
-                    return;
-                }
-
+            try {
+                minimumRecommendations = Integer.parseInt(dbm.getSystemParameter("ServiceParameter.RequiredRecommendations").getValue());
+                maximumRecommendations = Integer.parseInt(dbm.getSystemParameter("ServiceParameter.MaxRecommendations").getValue());
+            } catch (NumberFormatException exc) {
             }
 
-        }
-    }
+            Person recommendedPerson = (Person) dbm.getEntity("Person", "Uniquekey", userKey);
 
+            // If recommendedPerson exists and if recommender != himself
+            if (recommendedPerson != null && !(recommendedPerson.getEmail()).equals(recommenderEmail)) {
+
+                String personEmail = recommendedPerson.getEmail();
+                
+                // Get list of persons who recommended this person
+                List<Recommendation> recommendationList = recommendedPerson.getRecommendationList1();
+                
+                // Check if this person has maximum allowed recommendation number
+                if (recommendationList.size() >= maximumRecommendations) {
+                    return;
+                }
+                
+                // Check if recommender hasn't already recommended this person
+                for (Recommendation rec : recommendationList) {
+                    if (rec.getRecommenderid().equals(recommender.getId())) {
+                        return;
+                    }
+                }
+
+                // add one more recommendation
+                Recommendation recommend = dbm.addRecommendation(recommenderEmail, personEmail, userKey);
+                if (recommend != null) {
+                    dbm.updateEntity(recommend);
+                }
+
+                // if enough recommendation reached, change user status from "Candidate" to "User"
+                recommendationList = recommendedPerson.getRecommendationList1();
+                if (recommendationList.size() > minimumRecommendations) {
+                    
+                    Type typeid = (Type) dbm.getEntity("Type", "Internalname", "Person.User");
+                    recommendedPerson.setTypeid(typeid);
+                    dbm.updateEntity(recommendedPerson);
+                    return;
+                }
+            }
+        }
+        
+        response.sendRedirect(request.getContextPath() + "/index.html");
+    }
 }

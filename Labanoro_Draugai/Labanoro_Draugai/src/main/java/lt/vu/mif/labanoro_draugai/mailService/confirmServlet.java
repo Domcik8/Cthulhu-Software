@@ -30,42 +30,27 @@ public class confirmServlet extends HttpServlet {
     @Inject
     private DatabaseManager dbm;
 
-    @PersistenceContext
-    private EntityManager em;
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         doProcess(request, response);
     }
 
-//    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-//            throws ServletException, IOException {
-//
-//        doProcess(request, response);
-//    }
-    private void doProcess(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+    private void doProcess(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 
         String confirmKey = request.getParameter("key");
-        System.out.println(confirmKey);
+        String redirect = dbm.getSystemParameter("ServiceParameter.Redirect.Login").getValue();
 
         try {
             Person person = (Person) dbm.getEntity("Person", "Emailconfirmation", confirmKey);
-
             if (person != null) {
-                System.out.println("Worked1");
-                person.setEmailconfirmation("validated");    
-                System.out.println("Worked2: " + person.getEmailconfirmation());
-                String test = dbm.getSystemParameter("ServiceParameter.Redirect.Login").getValue();
-                System.out.println("Worked3");
-                System.out.println(test);
-
-                response.sendRedirect(request.getContextPath() + test);
+                person.setEmailconfirmation("validated");
+                dbm.updateEntity(person);
             }
-        } catch (Exception e) {
-            System.out.println("some error arised");
-            e.printStackTrace();
-        }
+            response.sendRedirect(request.getContextPath() + redirect);
 
+        } catch (Exception e) {
+            response.sendRedirect(request.getContextPath() + redirect);
+        }
     }
 }

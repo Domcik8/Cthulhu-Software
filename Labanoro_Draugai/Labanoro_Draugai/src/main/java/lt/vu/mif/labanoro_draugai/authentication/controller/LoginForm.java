@@ -5,24 +5,19 @@
  */
 package lt.vu.mif.labanoro_draugai.authentication.controller;
 
-import com.google.common.base.Charsets;
-import com.google.common.hash.Hashing;
-import java.text.MessageFormat;
 import javax.ejb.Stateless;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-
-import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 
 /**
  *
  * @author Ernest J
  */
-@ManagedBean(name = "auth")
+@Named("auth")
 @Stateless
 public class LoginForm {
 
