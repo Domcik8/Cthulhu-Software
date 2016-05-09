@@ -3,14 +3,14 @@
 <glassfish-web-app error-url="">
   <security-role-mapping>
     <role-name>user</role-name>
-    <group-name>User</group-name>
+    <group-name>Person.User</group-name>
   </security-role-mapping>
   <security-role-mapping>
     <role-name>candidate</role-name>
-    <group-name>Candidate</group-name>
+    <group-name>Person.Candidate</group-name>
   </security-role-mapping>
   <security-role-mapping>
     <role-name>administrator</role-name>
-    <group-name>Administrator</group-name>
+    <group-name>Person.Administrator</group-name>
   </security-role-mapping>
 </glassfish-web-app>

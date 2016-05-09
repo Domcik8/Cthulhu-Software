@@ -218,6 +218,6 @@ CREATE TABLE PersonRegistrationForm
     PRIMARY KEY (ID)
 );
 
-CREATE VIEW GroupView (Email, Title) AS
-    SELECT Email, Title FROM LABANORODB.Person, LABANORODB."TYPE"
+CREATE VIEW GroupView (Email, InternalName) AS
+    SELECT Email, InternalName FROM LABANORODB.Person, LABANORODB."TYPE"
     WHERE Person.TYPEID = "TYPE".ID;
