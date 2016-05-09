@@ -82,7 +82,10 @@ and open the template in the editor.
                     <h:message for="endDate" style="color:red" />
                     
                     <p:outputLabel for="type" value="Tipas:"/>
-                    <p:inputText id="type" value="#{editableHouse.getType()}" readonly="true"/>
+                    <h:selectOneMenu id="type" value="#{editableHouse.houseType}" label="#{editableHouse.houseType}" style="width:200px">
+                        <f:selectItems value="#{editableHouse.houseTypes.entrySet()}" var="typ" itemValue="#{typ.key}" itemLabel="#{typ.value}" />
+                        <f:ajax listener="#{editableHouse.changeHouseType}" />
+                    </h:selectOneMenu>
                     <h:message for="type" style="color:red" />
                     
                     <p:outputLabel for="isActive" value="Aktyvus:"/>
