@@ -71,9 +71,8 @@ public class DatabaseManager {
      * Fills database with basic types
      */
     public void fillBasicTypes() {
-        addType("SystemParameter", "Sistemos parametras");
-        addType("Person", "Asmuo");
-        addType("Person.Form", "Forma");
+        addType("SystemParameter",      "Sistemos parametras");
+        addType("Person",               "Asmuo");
         addType("Person.Administrator", "Administratorius");
         addType("Person.User", "Vartotojas");
         addType("Person.Candidate", "Kandidatas");
@@ -89,10 +88,11 @@ public class DatabaseManager {
         addType("Picture.House", "Namo nuotrauka");
         addType("FormElement", "Formos elementas");
         addType("FormElement.Calendar", "Kalendorius");
-        addType("FormElement.Input", "Teksto laukas");
-        addType("FormElement.Select", "Pasirinkti vieną");
+        addType("FormElement.Input",    "Teksto laukas");
+        addType("FormElement.Select",   "Pasirinkti vieną");
         addType("FormElement.Textarea", "Didelis teksto laukas");
-        addType("FormElement.Number", "Skaičius");
+        addType("FormElement.Number",   "Skaičius");
+        addType("Form.Person",          "Forma");
     }
 
     /**
@@ -308,7 +308,10 @@ public class DatabaseManager {
         }
         return newHouse;
     }
-
+    
+    public Object updateEntity(Object obj){
+        return em.merge(obj);
+    }
     /**
      * Creates new service and flushes it to database. Returns entity if created
      * sucessfully

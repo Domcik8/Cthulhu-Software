@@ -70,32 +70,26 @@ public class RegistrationManager implements Serializable{
         if(!password.equals(passwordConfirm)) return null;
         EmailValidator emailValidator = EmailValidator.getInstance();
         if(!emailValidator.isValid(email)) return null;
-        if(dbm.getEntity("Person", "Email", email)!=null) return null;
         JSONObject jsonObject = new JSONObject();
         for(DynaFormControl control:displayModel.getControls()){
             jsonObject.element(control.getKey(), control.getData());
         }
-        Person person = new Person();
-        person.setFirstname(firstName);
-        person.setLastname(lastName);
-        person.setEmail(email);
-        person.setIsdeleted(false);
-        person.setPassword(password);
+        Person person = dbm.addPerson(email, password, firstName, lastName, "Person.Candidate");
         person.setPoints(0);
         person.setPriority(0);
-        person.setTypeid((Type)dbm.getEntity("Type", "internalname", "Person.Candidate"));
         Personregistrationform regInfo = new Personregistrationform();
         regInfo.setFormvalue(jsonObject.toString());
         regInfo.setInternalname(email);
         regInfo.setIsdeleted(false);
         regInfo.setPersonid(person);
-        regInfo.setTypeid((Type)dbm.getEntity("Type", "internalname", "Person.Form"));
+        regInfo.setTypeid((Type)dbm.getEntity("Type", "internalname", "Form.Person"));
         person.setPersonregistrationform(regInfo);
-        List persistList = new ArrayList<>();
-        persistList.add(person);
-        persistList.add(regInfo);
-        if(!dbm.persistAndFlushList(persistList)) return null;
-        return "/user/login?faces-redirect=true";
+//        List persistList = new ArrayList<>();
+//        persistList.add(person);
+//        persistList.add(regInfo);
+        if(!dbm.persistAndFlush(regInfo)) return null;
+        dbm.updateEntity(person);
+        return "/login?faces-redirect=true";
     }
     
     private List<SelectItem> parseSelectValues(String selectionValues){

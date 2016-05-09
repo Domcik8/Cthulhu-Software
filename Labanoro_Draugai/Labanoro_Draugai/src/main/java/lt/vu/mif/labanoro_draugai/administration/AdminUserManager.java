@@ -44,17 +44,8 @@ public class AdminUserManager implements Serializable {
     @Inject
     DatabaseManager dbm;
     
-    @Inject
-    private Conversation conversation;
-    
     @PostConstruct
-    public void init() { 
-        if (!conversation.isTransient()) {
-            conversation.end();
-        }
-        
-        conversation.begin();
-        
+    public void init() {        
         if (users == null || users.isEmpty()) {
             users = em.createNamedQuery("Person.findAll").getResultList();
         }
@@ -86,7 +77,6 @@ public class AdminUserManager implements Serializable {
 
             userToDelete.setIsdeleted(true);
 
-            conversation.end();
             em.joinTransaction();
             
             isSuccess = dbm.persistAndFlush(userToDelete);

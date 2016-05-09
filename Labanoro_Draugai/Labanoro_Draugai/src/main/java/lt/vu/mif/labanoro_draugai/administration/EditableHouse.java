@@ -3,6 +3,8 @@ package lt.vu.mif.labanoro_draugai.administration;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -21,6 +23,7 @@ import javax.persistence.SynchronizationType;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Houseimage;
+import lt.vu.mif.labanoro_draugai.entities.Type;
 import org.primefaces.model.UploadedFile;
 import org.apache.commons.fileupload.FileUpload;
 import org.apache.commons.io.IOUtils;
@@ -43,6 +46,9 @@ public class EditableHouse implements Serializable {
     
     private House house;
     
+    private Map<String, String> houseTypes;
+    private String houseType;
+    
     @PersistenceContext(type=PersistenceContextType.EXTENDED, synchronization=SynchronizationType.UNSYNCHRONIZED)
     private EntityManager em;
 
@@ -61,6 +67,7 @@ public class EditableHouse implements Serializable {
     public void init() {
         house = getEditableHouse();
         initImages();
+        initTypes();
     }
     
     public EditableHouse() {
@@ -206,16 +213,24 @@ public class EditableHouse implements Serializable {
         house.setIsactive(isa);
     }
     
-    public String getType() {
-        return house.getTypeid().getTitle();
-    }
-    
     public List<String> getImages() {
         return images;
     }
     
     public House getHouse() {
         return house;
+    }
+    
+    public Map<String, String> getHouseTypes() {
+        return houseTypes;
+    }
+    
+    public String getHouseType() {
+        return houseType;
+    }
+    
+    public void setHouseType(String ht) {
+        houseType = ht;
     }
     
     public void error() {
@@ -231,15 +246,60 @@ public class EditableHouse implements Serializable {
     public List<String> getImagesList() {
         List<String> imgs = new ArrayList<String>();
         
-        if(house == null || house.getHouseimageList() == null || house.getHouseimageList().isEmpty()) return null;
-        List<Houseimage> result = house.getHouseimageList();
-        //return result.getInternalname();
+        try {
+            if(house == null || house.getHouseimageList() == null || house.getHouseimageList().isEmpty()) 
+                return imgs;
+        }
+        catch (Exception ex) {
+            
+        }
+        
+        /*List<Houseimage> result = house.getHouseimageList();
          
         for (Houseimage img : result) {
             imgs.add(img.getInternalname());
-        }
+        }*/
          
         return imgs;
+    }
+    
+    //========================== TYPES ==============================
+    
+    private void initTypes() {
+        houseTypes = new LinkedHashMap<String, String>();
+        List<Type> allTypes = em.createNamedQuery("Type.findAll").getResultList();
+        
+        if (house.getId() != null) {
+            for (Type t : allTypes) {
+                if (t.getInternalname().startsWith("House")) {
+                    if (house.getTypeid() != null && t.getId() == house.getTypeid().getId())
+                        houseTypes.put(t.getId().toString(), t.getTitle());
+                }
+            }
+            for (Type t : allTypes) {
+                if (t.getInternalname().startsWith("House")) {
+                    if (house.getTypeid() != null && t.getId() != house.getTypeid().getId())
+                        houseTypes.put(t.getId().toString(), t.getTitle());
+                }
+            }
+        }
+        else {
+            for (Type t : allTypes) {
+                if (t.getInternalname().startsWith("House")) {
+                    houseTypes.put(t.getId().toString(), t.getTitle());
+                }
+            }
+        }
+    }
+    
+    public String getType() {
+        return /*house.getTypeid().getTitle() + */"aaa";
+    }
+    
+    public void changeHouseType() {
+        List<Type> newTypes = em.createNamedQuery("Type.findById").setParameter("id", Integer.parseInt(houseType)).getResultList();
+        Type newType = newTypes.get(0);
+        house.setTypeid(newType);
     }
     
     //======================= FILE UPLOAD ===========================
