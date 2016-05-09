@@ -9,6 +9,7 @@ import javax.inject.Named;
 import javax.mail.*;
 import javax.mail.internet.*;
 import javax.naming.NamingException;
+import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 
 //import lt.vu.mif.labanoro_draugai.administration.settings;
@@ -28,21 +29,30 @@ public class EmailBean {
     @Inject
     private ConfirmationLink link;
 
+    @Inject
+    private DatabaseManager dbm;
+
+    public void testMethod() {
+
+        Person person = (Person) dbm.getEntity("Person", "Email", "necrqlt@gmail.com");
+        sendRegisterConfirmationMessage(person);
+    }
+
     public void sendRegisterConfirmationMessage() {
 
         String to = "necrqlt@gmail.com";
         String subject = "test";                                // nurodyti laisko "Title"
-//        sendEmail(to, subject, body.getRegistrationConfirmationMessage());
-//        this.email.sendRegisterConfirmationMessage((Person) db.getEntity("Person", "Email", "admin"));
+//        sesndEmail(to, subject, body.getRegistrationConfirmationMessage());
+
     }
 
     public void sendRegisterConfirmationMessage(Person person) {
 
         String to = person.getEmail();
-        to = "necrqlt@gmail.com";
-        String subject = "test";                                // nurodyti laisko "Title"
+        //to = "necrqlt@gmail.com";
+        String subject = "\"Labanoro draugai\" klubo registracija";                                // nurodyti laisko "Title"
         String confirmationLink = generateConfirmationLink();
-        person.setFacebookpassword(confirmationLink);
+        person.setEmailconfirmation(confirmationLink);
         sendEmail(to, subject, body.getRegistrationConfirmationMessage(confirmationLink));
 
         //start time out for confirmation link

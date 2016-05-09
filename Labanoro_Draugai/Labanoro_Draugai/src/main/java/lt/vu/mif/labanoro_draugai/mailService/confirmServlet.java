@@ -6,7 +6,11 @@
 package lt.vu.mif.labanoro_draugai.mailService;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.logging.Logger;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,35 +30,41 @@ public class confirmServlet extends HttpServlet {
     @Inject
     private DatabaseManager dbm;
 
+    @PersistenceContext
+    private EntityManager em;
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         doProcess(request, response);
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+//    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
+//
+//        doProcess(request, response);
+//    }
+    private void doProcess(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 
-        doProcess(request, response);
-    }
-
-    private void doProcess(HttpServletRequest request, HttpServletResponse response) {
-
-        String conf = request.getParameter("confirm");
-        String user = request.getParameter("user");
-
-        System.out.println(user);
-        System.out.println(conf);
+        String confirmKey = request.getParameter("key");
+        System.out.println(confirmKey);
 
         try {
+            Person person = (Person) dbm.getEntity("Person", "Emailconfirmation", confirmKey);
 
-            Person person = (Person) dbm.getEntity("Person", "Email", user);
-            if (person.getEmailconfirmation().equals(conf)) {
-                person.setEmailconfirmation("");
-                response.sendRedirect(request.getContextPath() + "/index.html");
+            if (person != null) {
+                System.out.println("Worked1");
+                person.setEmailconfirmation("validated");    
+                System.out.println("Worked2: " + person.getEmailconfirmation());
+                String test = dbm.getSystemParameter("ServiceParameter.Redirect.Login").getValue();
+                System.out.println("Worked3");
+                System.out.println(test);
+
+                response.sendRedirect(request.getContextPath() + test);
             }
         } catch (Exception e) {
-
+            System.out.println("some error arised");
+            e.printStackTrace();
         }
 
     }
