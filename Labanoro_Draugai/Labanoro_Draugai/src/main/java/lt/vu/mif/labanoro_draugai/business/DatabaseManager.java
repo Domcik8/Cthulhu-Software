@@ -71,23 +71,23 @@ public class DatabaseManager {
      * Fills database with basic types
      */
     public void fillBasicTypes() {
-        addType("SystemParameter",      "Sistemos parametras");
-        addType("Person",               "Asmuo");
-        addType("Person.Form",          "Forma");
+        addType("SystemParameter", "Sistemos parametras");
+        addType("Person", "Asmuo");
+        addType("Person.Form", "Forma");
         addType("Person.Administrator", "Administratorius");
-        addType("Person.User",          "Vartotojas");
-        addType("Person.Candidate",     "Kandidatas");
-        addType("Recommendation",       "Rekomentacija");
-        addType("House",                "Namas");
-        addType("House.Penthouse",      "Mansarda");
-        addType("Service",              "Paslauga");
-        addType("Service.Vehicle",      "Transporto priemonė");
-        addType("Service.Vehicle.Car",  "Automobilis");
+        addType("Person.User", "Vartotojas");
+        addType("Person.Candidate", "Kandidatas");
+        addType("Recommendation", "Rekomentacija");
+        addType("House", "Namas");
+        addType("House.Penthouse", "Mansarda");
+        addType("Service", "Paslauga");
+        addType("Service.Vehicle", "Transporto priemonė");
+        addType("Service.Vehicle.Car", "Automobilis");
         addType("Service.Vehicle.Bike", "Dviratis");
-        addType("Reservation",          "Rezervacija");
-        addType("Picture",              "Nuotrauka");
-        addType("Picture.House",        "Namo nuotrauka");
-        addType("FormElement",          "Formos elementas");
+        addType("Reservation", "Rezervacija");
+        addType("Picture", "Nuotrauka");
+        addType("Picture.House", "Namo nuotrauka");
+        addType("FormElement", "Formos elementas");
         addType("FormElement.Calendar", "Kalendorius");
         addType("FormElement.Input", "Teksto laukas");
         addType("FormElement.Select", "Pasirinkti vieną");
@@ -174,22 +174,19 @@ public class DatabaseManager {
         addSystemParameter("ServiceParameter.StripeTestPublishableKey", "Stripe testinis viešas raktas", "pk_test_tK93j3DH8bSqL4VHi65SnJ9e ", "SystemParameter");
         addSystemParameter("ServiceParameter.StripeLiveSecretKey", "Stripe tikras slaptas raktas", "sk_live_zzW2TvQpbW5HLntoGzHC6o3r ", "SystemParameter");
         addSystemParameter("ServiceParameter.StripeLivePublishableKey", "Stripe tikras viešas raktas", "pk_live_qW95KiaHrQokdCXpL6WCaZl2", "SystemParameter");
-        addSystemParameter("ServiceParameter.TermsAndConditions", "Nuostatos ir sąlygos", "Nadodamiesi mūsų sistema jūs sutinkate, kad \"Labanoro draugai\" nėra atsakingi už sistmos nesklandumus ar kitus žalingus incidentus.", "SystemParameter");
-        
-        //Pridek value ir i lt kalba kas eis i GUI
-        /*addSystemParameter("ServiceParameter.Facebook.AppId", "Facebook application ID", "SystemParameter");
-        addSystemParameter("ServiceParameter.Facebook.AppSecret", "Facebook application Secret", "SystemParameter");
-        addSystemParameter("ServiceParameter.Facebook.Redirect", "Redirect during external facebook authentication", "SystemParameter");
-        addSystemParameter("ServiceParameter.Redirect.Login", "Redirect to specified page after successful login", "SystemParameter");
-        addSystemParameter("ServiceParameter.Redirect.LoginError", "Redirect to page after bad login", "SystemParameter");
-        addSystemParameter("ServiceParameter.Redirect.GlobalError", "Redirect to page after gloabal error", "SystemParameter");
-        addSystemParameter("ServiceParameter.Mail.Address", "Gmail addressed used for email sending", "SystemParameter");
-        addSystemParameter("ServiceParameter.Mail.Password", "Password for gmail address", "SystemParameter");
-        addSystemParameter("ServiceParameter.Mail.Smtp.host", "Smtp host used for mail service", "SystemParameter");
-        addSystemParameter("ServiceParameter.Mail.Smtp.port", "Smtp port used for mail service communication", "SystemParameter");
-        addSystemParameter("ServiceParameter.Mail.Smtp.auth", "If authentication is required for connection", "SystemParameter");
-        addSystemParameter("ServiceParameter.Mail.Smtp.starttls.enable", "If transport layer security should be enabled", "SystemParameter");*/
-        
+        addSystemParameter("ServiceParameter.TermsAndConditions", "Nuostatos ir sąlygos", "Naudodamiesi mūsų sistema jūs sutinkate, kad \"Labanoro draugai\" nėra atsakingi už sistmos nesklandumus ar kitus žalingus incidentus.", "SystemParameter");
+        addSystemParameter("ServiceParameter.Facebook.AppId", "FB aplikacijos kodas", "\"198659840500311\"", "Facebook uzregistruotos aplikacijos kodas ", "SystemParameter");
+        addSystemParameter("ServiceParameter.Facebook.AppSecret", "FB aplikacijos slaptas kodas", "\"97d6fc7c788463e2de89f1571385cc75\"", "Kodas skirtas autentifikuotis uzregistuotoje Facebook aplikacije", "SystemParameter");
+        addSystemParameter("ServiceParameter.Facebook.Redirect", "FB autentifikacija", "\"http://localhost:8080/Labanoro_Draugai\"", "Nukreipimas i puslapi facebook autentifikacijos metu", "SystemParameter");
+        addSystemParameter("ServiceParameter.Redirect.Login", "Sekmingas prisijungimas", "/index.html", "Nukreipimas i puslapi po sekmingo prisijungimo", "SystemParameter");
+        addSystemParameter("ServiceParameter.Redirect.LoginError", "Klaidingas prisijungimas", "/loginError.html", "Nukreipimas i puslapi po nesekmingo prisijungimo", "SystemParameter");
+        addSystemParameter("ServiceParameter.Redirect.GlobalError", "Globali klaida", "/WEB-INF/other_pages/someError.html", "Nukreipimas i puslapi po globalios klaidos", "SystemParameter");
+        addSystemParameter("ServiceParameter.Mail.Address", "Gmail el.pastas", "labanorai@gmail.com", "SystemParameter");
+        addSystemParameter("ServiceParameter.Mail.Password", "Gmail el.pasto slaptazodis", "LabanoroDraugas", "SystemParameter");
+        addSystemParameter("ServiceParameter.Mail.Smtp.host", "Smtp hostas", "smtp.gmail.com", "SystemParameter");
+        addSystemParameter("ServiceParameter.Mail.Smtp.port", "Smtp portas", "587", "SystemParameter");
+        addSystemParameter("ServiceParameter.Mail.Smtp.auth", "Smtp autentifikacija", "true", "Ar reikalinga autentifikacija prisijungimui", "SystemParameter");
+        addSystemParameter("ServiceParameter.Mail.Smtp.starttls.enable", "Smtp TLS", "true", "Ar TLS turi buti ijungtas", "SystemParameter");
     }
 
     /**
@@ -409,8 +406,8 @@ public class DatabaseManager {
 
         return newReservation;
     }
-    
-     /**
+
+    /**
      * Creates new system parameter and flushes it to database. Returns system
      * parameter entity if created sucessfully
      */
@@ -597,7 +594,7 @@ public class DatabaseManager {
 
         return pathParts[pathParts.length - 1];
     }
-    
+
     public Systemparameter getSystemParameter(String internalName) {
         return (Systemparameter) getEntity("Systemparameter", "Internalname", internalName);
     }
