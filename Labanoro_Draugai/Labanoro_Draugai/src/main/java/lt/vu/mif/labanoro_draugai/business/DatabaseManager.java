@@ -624,11 +624,27 @@ public class DatabaseManager {
     public Systemparameter getSystemParameter(String internalName) {
         return (Systemparameter) getEntity("Systemparameter", "Internalname", internalName);
     }
-
+    
     /**
      * Returns true if specified entity exists with specified parameter
      */
     public boolean entityExists(String className, String findBy, String parameter) {
+        Object entity = getEntity(className, findBy, parameter);
+        return entity != null ? true : false;
+    }
+    
+    /**
+     * Returns true if specified entity exists with specified parameter
+     */
+    public boolean entityExists(String className, String findBy, int parameter) {
+        Object entity = getEntity(className, findBy, parameter);
+        return entity != null ? true : false;
+    }
+    
+    /**
+     * Returns true if specified entity exists with specified parameter
+     */
+    public boolean entityExists(String className, String findBy, Object parameter) {
         Object entity = getEntity(className, findBy, parameter);
         return entity != null ? true : false;
     }
@@ -637,6 +653,22 @@ public class DatabaseManager {
      * Returns entity if specified entity exists with specified parameter
      */
     public Object getEntity(String className, String findBy, String parameter) {
+        List entityList = getEntityList(className, findBy, parameter);
+        return entityList == null ? null : entityList.get(0);
+    }
+    
+    /**
+     * Returns entity if specified entity exists with specified parameter
+     */
+    public Object getEntity(String className, String findBy, int parameter) {
+        List entityList = getEntityList(className, findBy, parameter);
+        return entityList == null ? null : entityList.get(0);
+    }
+    
+    /**
+     * Returns entity if specified entity exists with specified parameter
+     */
+    public Object getEntity(String className, String findBy, Object parameter) {
         List entityList = getEntityList(className, findBy, parameter);
         return entityList == null ? null : entityList.get(0);
     }
@@ -652,7 +684,33 @@ public class DatabaseManager {
 
         return entities.isEmpty() ? null : entities;
     }
+    
+     /**
+     * Returns entity if specified entity exists with specified parameter
+     */
+    public List getEntityList(String className, String findBy, int parameter) {
+        className = className.toLowerCase();
+        findBy = findBy.toLowerCase();
+        Query query = em.createNamedQuery(capitalize(className) + ".findBy" + capitalize(findBy)).setParameter(findBy, parameter);
+        List entities = query.getResultList();
 
+        return entities.isEmpty() ? null : entities;
+    }
+    
+    /**
+     * Returns entity if specified entity exists with specified parameter
+     */
+    public List getEntityList(String className, String findBy, Object parameter) {
+        className = className.toLowerCase();
+        findBy = findBy.toLowerCase();
+        
+        Query query = em.createQuery("SELECT r FROM " + capitalize(className) + " r WHERE r." + findBy + " = :parameter");
+        query.setParameter("parameter", parameter);
+        List entities = query.getResultList();
+
+        return entities.isEmpty() ? null : entities;
+    }
+     
     /**
      * Returns all entities of selected class name.
      */
@@ -662,7 +720,7 @@ public class DatabaseManager {
 
         return query.getResultList();
     }
-
+    
     /**
      * Persists and flushes entity to database. Returns true if operation was
      * successful, false otherwise. Before using this method check if newEntity
