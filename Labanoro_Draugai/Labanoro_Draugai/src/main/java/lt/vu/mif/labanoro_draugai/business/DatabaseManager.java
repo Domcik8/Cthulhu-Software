@@ -168,6 +168,7 @@ public class DatabaseManager {
      * Fills database with basic system parameters
      */
     private void fillBasicSystemParameters() {
+        addSystemParameter("ServiceParameter.General.ContextPath", "Pagrindinis kelias", "http://localhost:8080/Labanoro_Draugai", "Pagrindines puslapio URL'as", "SystemParameter");
         addSystemParameter("ServiceParameter.RequiredRecommendations", "Reikalingų rekomendacijų skaičius", "2", "SystemParameter");
         addSystemParameter("ServiceParameter.MaxRecommendations", "Maksimalus rekomendacijų užklausų skaičius", "5", "SystemParameter");
         addSystemParameter("ServiceParameter.StripeTestSecretKey", "Stripe testinis slaptas raktas", "sk_test_6K4uBYlsGNPy5H161DtWjZcm", "SystemParameter");
