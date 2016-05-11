@@ -5,15 +5,27 @@
  */
 package lt.vu.mif.labanoro_draugai.reservation;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.House;
+import lt.vu.mif.labanoro_draugai.entities.Houseimage;
+import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.entities.Service;
 
 /**
@@ -27,12 +39,69 @@ public class ReservationConfirmationManager implements Serializable{
     private House house;
     private Date dateFrom;
     private Date dateTo;
-    String[] services;
+    List<String> selectedServices;
+    private Person user;
+    private int totalPrice;
+    @Inject
+    DatabaseManager dbm;
     
+    //neveikia redirectas
     @PostConstruct
     public void init(){
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) (ec.getRequest());
+        if(request==null || request.getUserPrincipal()==null || request.getUserPrincipal().getName() == null) try {
+            ec.redirect("/Labanoro_Draugai/login.html");
+            return;
+        } catch (IOException ex) {
+            Logger.getLogger(ReservationConfirmationManager.class.getName()).log(Level.SEVERE, null, ex);
+            user = new Person();
+            return;
+        }
+        user = (Person)dbm.getEntity("Person", "Email", request.getUserPrincipal().getName());
     }
 
+    public int calculateTotalPrice(){
+        if(house == null )return 0;
+        totalPrice = 0;
+        totalPrice+= periodPrice(house.getWeekprice());
+        if(selectedServices == null) return totalPrice;
+        for(String str:selectedServices){
+            Service service = (Service)dbm.getEntity("Service", "Title", str);
+            if(service == null) continue;
+            totalPrice+=periodPrice(service.getWeekprice());
+        }
+        return totalPrice;
+    }
+    
+    public List<String> houseImageNames(){
+        if(house ==null || house.getHouseimageList() == null || house.getHouseimageList().isEmpty()) return null;
+        List<String> result = new ArrayList<>();
+        for(Houseimage img : house.getHouseimageList()){
+            result.add(img.getInternalname());
+        }
+         return result;
+    }
+    
+    public int periodPrice(int weekPrice){
+        int dayCount = getDaysBetweenDates(dateFrom, dateTo).size()+1;
+        return weekPrice * (dayCount/7);
+    }
+    
+    private List<Date> getDaysBetweenDates(Date startdate, Date enddate){
+        List<Date> dates = new ArrayList<>();
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(startdate);
+        
+        while (!calendar.getTime().after(enddate))
+        {
+            Date result = calendar.getTime();
+            dates.add(result);
+            calendar.add(Calendar.DATE, 1);
+        }
+        return dates;
+    }
+    
     public House getHouse() {
         if (house == null) {
             house =  (House) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("house");
@@ -68,19 +137,28 @@ public class ReservationConfirmationManager implements Serializable{
         this.dateTo = dateTo;
     }
 
-    public String[] getServices() {
-        if (services == null) {
-            services =  (String[]) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("serviceList");
-        }
-        
-        return services;
+    public Person getUser() {
+        return user;
     }
 
-    public void setServices(String[] services) {
-        this.services = services;
+    public void setUser(Person user) {
+        this.user = user;
     }
 
+    public List<String> getSelectedServices() {
+        return selectedServices;
+    }
 
-    
+    public void setSelectedServices(List<String> selectedServices) {
+        this.selectedServices = selectedServices;
+    }
+
+    public int getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(int totalPrice) {      
+        this.totalPrice = totalPrice;
+    }
     
 }

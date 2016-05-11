@@ -326,10 +326,9 @@ public class SummerhouseManager implements Serializable{
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("house", selectedHouse);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("dateFrom", selectedDateFrom);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("dateTo", selectedDateTo);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("serviceList", selectedHouseSelectedServices);
         
         
-        return "reservationConfirmation.html";
+        return "reservationConfirmation?faces-redirect=true";
     }
 
     public void setSelectedFilters(String[] selectedFilters) {

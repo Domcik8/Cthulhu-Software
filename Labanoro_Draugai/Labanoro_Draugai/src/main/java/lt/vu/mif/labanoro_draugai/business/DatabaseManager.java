@@ -63,7 +63,7 @@ public class DatabaseManager {
 
         editPeople();
         editHouses();
-
+        editServices();
         return "DataBase has been filled and have been houses edited";
     }
 
@@ -145,6 +145,9 @@ public class DatabaseManager {
     private void fillBasicServices() {
         addService("New red lamborghini", "ServiceReg-1", "HouseReg-1", "Service.Vehicle.Car");
         addService("New blue bike", "ServiceReg-2", "HouseReg-1", "Service.Vehicle.Bike");
+                for (int i = 2; i <= 20; i++) {
+            addService("coolSerice"+i,"ServiceReg-" + i, "HouseReg-"+i,"Service.Vehicle.Bike");
+        }
     }
 
     /**
@@ -733,6 +736,16 @@ public class DatabaseManager {
             house.setWeekprice(rand.nextInt(800));
             em.persist(house);
         }
+    }
+    
+    public void editServices(){
+        Random rand = new Random();
+        Query query = em.createNamedQuery("Service.findAll");
+        List<Service> services = query.getResultList();
+        for (Service service : services) {
+            service.setWeekprice(rand.nextInt(800));
+            em.persist(service);
+        } 
     }
 
     public void editPeople() {
