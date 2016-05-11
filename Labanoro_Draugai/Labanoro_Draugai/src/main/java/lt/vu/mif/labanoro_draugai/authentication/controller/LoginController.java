@@ -62,12 +62,12 @@ public class LoginController {
     }
 
     // Simple user registration [check by email]
-    public void registerUser(String email) {
-
-        if (!isUser(email)) {
-            db.addPerson(email, null, null, "Person.Candidate");
-        }
-    }
+//    public void registerUser(String email) {
+//
+//        if (!isUser(email)) {
+//            db.addPerson(email, null, null, "Person.Candidate");
+//        }
+//    }
 
     // Facebook user registration [check by email and facebookId] 
     public void registerUser(String email, String facebookId) {
@@ -97,15 +97,15 @@ public class LoginController {
         return null;
     }
 
-    public void registerUser(String email, String firstName, String lastName) {
+//    public void registerUser(String email, String firstName, String lastName) {
+//
+//        db.addPerson(email, firstName, lastName, "Person.Candidate");
+//    }
 
-        db.addPerson(email, firstName, lastName, "Person.Candidate");
-    }
-
-    private void generateHash(String password) {
-
-        String hash = Hashing.sha256().hashString(password, Charsets.UTF_8).toString();
-        String output = MessageFormat.format("{0} hashed to: {1}", password, hash);
-    }
+//    private void generateHash(String password) {
+//
+//        String hash = Hashing.sha256().hashString(password, Charsets.UTF_8).toString();
+//        String output = MessageFormat.format("{0} hashed to: {1}", password, hash);
+//    }
 
 }

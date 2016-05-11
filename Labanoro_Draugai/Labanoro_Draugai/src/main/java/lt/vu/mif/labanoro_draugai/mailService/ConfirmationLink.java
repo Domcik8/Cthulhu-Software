@@ -10,8 +10,6 @@ import com.google.common.hash.Hashing;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 /**
  *
@@ -30,6 +28,6 @@ public class ConfirmationLink {
 
         String keyHash = Hashing.sha256().hashString(key, Charsets.UTF_8).toString();
 
-        return key;
+        return keyHash;
     }
 }

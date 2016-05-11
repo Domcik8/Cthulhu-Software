@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import javax.annotation.PostConstruct;
+import javax.ejb.Schedule;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -17,6 +18,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.Person;
+import lt.vu.mif.labanoro_draugai.entities.Reservation;
 
 /**
  *
@@ -32,17 +34,43 @@ public class priorityGroupManager {
     
     @PersistenceContext
     EntityManager em;
- 
-    public void countPriorities() {
+   
+    //@Schedule(minute="5", hour="*")
+    public void priorityService() {
         List<Person> people = dbm.getAllEntities("Person");
         for (Person person : people) {
-            countPriority(person);
+            person.setPriority(666);
         }
+    }
+    /*
+   Every weekday at 20:15: minute=”15″, hour=”20″, dayOfWeek=”Mon-Fri”
+Every friday at midnight: dayOfWeek=”Fri”
+Every five minutes: minute=”5″, hour=”*”
+Every twenty seconds starting at second 10: second=”10/20″, minute = “*”, hour = “*”*/
+ 
+    public void countPriorities() {List<Person> people = dbm.getAllEntities("Person");
+        if(people != null)
+            for (Person person : people) {
+                countPriority(person);
+            }
     }
     
     private void countPriority(Person person) {
-        Random random = new Random();
+        List<Reservation> reservations = dbm.getEntityList("Reservation", "PersonID", person);
+        /*String dateFrom = dbm.getSystemParameter("TEST", "Date");
+        String dateTo = dbm.getSystemParameter("TEST", "Date");
         
+        if(reservations != null)
+            for(Reservation reservation : reservations) {
+                
+                //System.out.println(reservation.getId());
+                if(reservation.getStartdate() >  && reservation.getStartdate() < ) {
+                    
+                }
+            }*/
+                
+        
+        Random random = new Random();
         person.setPriority(random.nextInt(7));
         em.persist(person);
     }
