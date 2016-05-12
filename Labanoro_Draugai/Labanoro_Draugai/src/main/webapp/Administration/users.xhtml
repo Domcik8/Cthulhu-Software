@@ -22,95 +22,96 @@ and open the template in the editor.
     </h:head>
     <h:body>
         <!-- Navigation panel-->
-    <ui:include src="/WEB-INF/other_pages/navigation.xhtml" />
-    <!-- End of Navigation panel -->
+        <ui:include src="/WEB-INF/other_pages/navigation.xhtml" />
+        <!-- End of Navigation panel -->
     
-    <div>
-        <h:form>
-            <p:dataTable id="mainTable" var="user" value="#{adminUserManager.users}" widgetVar="usersTable"
-                 emptyMessage="Vartotojų nerasta" filteredValue="#{adminUserManager.filteredUsers}" paginator="true"
-                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                 rowsPerPageTemplate="10,50,100" rows="10" currentPageReportTemplate="{currentPage} iš {totalPages}">
- 
-                <f:facet name="header">
-                    <p:outputPanel style="margin-top: 4px">
-                        <h:outputText value="Ieškoti visuose stulpeliuose:" />
-                        <p:inputText id="globalFilter" onkeyup="PF('usersTable').filter()" style="width:150px"/>
-                    </p:outputPanel>
-                </f:facet>
+    <div class="container">
+        <div>
+            <h:form>
+                <p:dataTable id="mainTable" var="user" value="#{adminUserManager.users}" widgetVar="usersTable"
+                     emptyMessage="Vartotojų nerasta" filteredValue="#{adminUserManager.filteredUsers}" paginator="true"
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                     rowsPerPageTemplate="10,50,100" rows="10" currentPageReportTemplate="{currentPage} iš {totalPages}">
 
-                <p:column filterBy="#{user.email}" headerText="El. paštas" filterMatchMode="contains">
-                    <h:outputText value="#{user.email}" />
-                </p:column>
-                
-                <p:column filterBy="#{adminUserManager.getType(user)}" headerText="Grupė" filterMatchMode="contains">
-                    <h:outputText value="#{adminUserManager.getType(user)}" />
-                </p:column>
-                
-                <p:column filterBy="#{user.priority}" headerText="Prioritetas" filterMatchMode="contains">
-                    <h:outputText value="#{user.priority}" />
-                </p:column>
-                
-                <p:column filterBy="#{user.points}" headerText="Taškai" filterMatchMode="lte">
-                    <f:facet name="filter">
-                        <p:spinner onchange="PF('usersTable').filter()" styleClass="year-spinner">
-                            <f:converter converterId="javax.faces.Integer" />
-                        </p:spinner>
+                    <f:facet name="header">
+                        <p:outputPanel style="margin-top: 4px">
+                            <h:outputText value="Ieškoti visuose stulpeliuose:" />
+                            <p:inputText id="globalFilter" onkeyup="PF('usersTable').filter()" style="width:150px"/>
+                        </p:outputPanel>
                     </f:facet>
-                    <h:outputText value="#{user.points}" />
-                    <p:commandButton image="ui-icon-plusthick" action="#{adminUserManager.setUserEmail(user.getEmail())}" oncomplete="PF('addPointsDialog').show();" update="dialogOutsideForm"/>
-                </p:column>
-                
-                <p:column filterBy="#{user.firstname} #{user.lastname}" headerText="Vardas, pavardė" filterMatchMode="contains">
-                    <h:outputText value="#{user.firstname} #{user.lastname}" />
-                </p:column>
-                
-                <p:column filterBy="#{user.address}" headerText="Adresas" filterMatchMode="contains">
-                    <h:outputText value="#{user.address}" />
-                </p:column>
-                
-                <p:column filterBy="#{user.membershipdue}" headerText="Narys iki" filterMatchMode="contains">
-                    <f:facet name="filter">
-                        <p:calendar id="popup" value="#{adminUserManager.calendar}" pattern="yyyy-MM-dd" mindate="#{adminUserManager.getCurrentDate()}" readonly="true" style="width: 100%"/>
-                    </f:facet>
-                    <h:outputText value="#{user.membershipdue}">
-                        <f:convertDateTime pattern="yyyy-MM-dd" />
-                    </h:outputText>
-                </p:column>
-                
-                <p:column>
-                    <h:commandButton action="#{adminUserManager.removeUser()}" value="Pašalinti">
-                        <f:param name="userId" value="#{user.id}"/>
-                    </h:commandButton>
-                </p:column>
-            </p:dataTable>
-        </h:form>
-    </div>
-    <div>
-        <h:form id="dialogOutsideForm">
-        <p:dialog id="firstDialog" header="Taškų pridėjimas" widgetVar="addPointsDialog" modal="true" height="200" width="400">
-            <h:form id="dialogInsideForm">   
-                <p:messages id="msgs" />
-                <h:panelGrid id="panel" columns="3" >
-                    <p:outputLabel for="userName" value="Vartotojas:" />
-                    <p:outputLabel id="userName" value="#{adminUserManager.userEmail}" />
-                    <h:inputHidden value="#{adminUserManager.userEmail}" />
-                    <p:outputLabel for="addedPoints" value="Taškų skaičius: " />
-                    <p:inputText id="addedPoints" value="#{adminUserManager.addedPoints}" required="true" requiredMessage="Taškų skaičius: Įveskite natūralujį skaičių.">
-                        <f:validateDoubleRange minimum="1"/>
-                    </p:inputText>
-                    <p:message for="addedPoints" style="color:red" />
-                    <h:inputHidden/>
-                </h:panelGrid>
-                <p:commandButton value="Skirti" action="#{adminUserManager.addPoints}" update="msgs"/>
+
+                    <p:column filterBy="#{user.email}" headerText="El. paštas" filterMatchMode="contains">
+                        <h:outputText value="#{user.email}" />
+                    </p:column>
+
+                    <p:column filterBy="#{adminUserManager.getType(user)}" headerText="Grupė" filterMatchMode="contains">
+                        <h:outputText value="#{adminUserManager.getType(user)}" />
+                    </p:column>
+
+                    <p:column filterBy="#{user.priority}" headerText="Prioritetas" filterMatchMode="contains">
+                        <h:outputText value="#{user.priority}" />
+                    </p:column>
+
+                    <p:column filterBy="#{user.points}" headerText="Taškai" filterMatchMode="lte">
+                        <f:facet name="filter">
+                            <p:spinner onchange="PF('usersTable').filter()" styleClass="year-spinner">
+                                <f:converter converterId="javax.faces.Integer" />
+                            </p:spinner>
+                        </f:facet>
+                        <h:outputText value="#{user.points}" />
+                        <p:commandButton image="ui-icon-plusthick" action="#{adminUserManager.setUserEmail(user.getEmail())}" oncomplete="PF('addPointsDialog').show();" update="dialogOutsideForm"/>
+                    </p:column>
+
+                    <p:column filterBy="#{user.firstname} #{user.lastname}" headerText="Vardas, pavardė" filterMatchMode="contains">
+                        <h:outputText value="#{user.firstname} #{user.lastname}" />
+                    </p:column>
+
+                    <p:column filterBy="#{user.address}" headerText="Adresas" filterMatchMode="contains">
+                        <h:outputText value="#{user.address}" />
+                    </p:column>
+
+                    <p:column filterBy="#{user.membershipdue}" headerText="Narys iki" filterMatchMode="contains">
+                        <f:facet name="filter">
+                            <p:calendar id="popup" value="#{adminUserManager.calendar}" pattern="yyyy-MM-dd" mindate="#{adminUserManager.getCurrentDate()}" readonly="true" style="width: 100%"/>
+                        </f:facet>
+                        <h:outputText value="#{user.membershipdue}">
+                            <f:convertDateTime pattern="yyyy-MM-dd" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column>
+                        <h:commandButton action="#{adminUserManager.removeUser()}" value="Pašalinti">
+                            <f:param name="userId" value="#{user.id}"/>
+                        </h:commandButton>
+                    </p:column>
+                </p:dataTable>
             </h:form>
-        </p:dialog>
-        </h:form>
+        </div>
+        <div>
+            <h:form id="dialogOutsideForm">
+            <p:dialog id="firstDialog" header="Taškų pridėjimas" widgetVar="addPointsDialog" modal="true" height="200" width="400">
+                <h:form id="dialogInsideForm">   
+                    <p:messages id="msgs" />
+                    <h:panelGrid id="panel" columns="3" >
+                        <p:outputLabel for="userName" value="Vartotojas:" />
+                        <p:outputLabel id="userName" value="#{adminUserManager.userEmail}" />
+                        <h:inputHidden value="#{adminUserManager.userEmail}" />
+                        <p:outputLabel for="addedPoints" value="Taškų skaičius: " />
+                        <p:inputText id="addedPoints" value="#{adminUserManager.addedPoints}" required="true" requiredMessage="Taškų skaičius: Įveskite natūralujį skaičių.">
+                            <f:validateDoubleRange minimum="1"/>
+                        </p:inputText>
+                        <p:message for="addedPoints" style="color:red" />
+                        <h:inputHidden/>
+                    </h:panelGrid>
+                    <p:commandButton value="Skirti" action="#{adminUserManager.addPoints}" update="msgs"/>
+                </h:form>
+            </p:dialog>
+            </h:form>
+        </div>  
     </div>
         
-        
-        <!-- scripts -->
-        <h:outputScript library="js" name="custom.js" />
-        <!-- end of scripts -->
+    <!-- scripts -->
+    <h:outputScript library="js" name="custom.js" />
+    <!-- end of scripts -->
     </h:body>
 </html>

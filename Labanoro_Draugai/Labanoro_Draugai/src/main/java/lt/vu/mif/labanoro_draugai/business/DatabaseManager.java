@@ -826,8 +826,7 @@ public class DatabaseManager {
      * @param typeClass
      */
     public List<Type> retrieveTypes(String typeClass) {
-        Query query = em.createQuery("SELECT t FROM Type t WHERE t.internalname LIKE :typeClass").setParameter("typeClass", typeClass + ".%");
-
+        Query query = em.createQuery("SELECT t FROM Type t WHERE (t.internalname LIKE :typeClassLike) OR (t.internalname = :typeClass)").setParameter("typeClassLike", typeClass + ".%").setParameter("typeClass", typeClass);
         return query.getResultList();
     }
 
@@ -889,6 +888,22 @@ public class DatabaseManager {
             Query q = em.createQuery("UPDATE Person p SET p.points = :points "
                     + "WHERE p.id = :id");
             q.setParameter("points", p.getPoints());
+            q.setParameter("id", p.getId());
+            em.joinTransaction();
+            int updated = q.executeUpdate();
+            em.flush();
+            return true;
+        }
+        catch (Exception ex) {
+            return false;
+        }
+    }
+    
+    public boolean setPaymentApprovalDate(Payment p) {
+        try {
+            Query q = em.createQuery("UPDATE Payment p SET p.approveddate = :approvedate "
+                    + "WHERE p.id = :id");
+            q.setParameter("approvedate", new Date());
             q.setParameter("id", p.getId());
             em.joinTransaction();
             int updated = q.executeUpdate();

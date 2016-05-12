@@ -3,14 +3,12 @@ package lt.vu.mif.labanoro_draugai.administration;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.faces.application.FacesMessage;
-//import javax.faces.bean.ViewScoped;
 import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -18,14 +16,11 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
-import javax.persistence.Query;
 import javax.persistence.SynchronizationType;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.House;
-import lt.vu.mif.labanoro_draugai.entities.Houseimage;
 import lt.vu.mif.labanoro_draugai.entities.Type;
 import org.primefaces.model.UploadedFile;
-import org.apache.commons.fileupload.FileUpload;
 import org.apache.commons.io.IOUtils;
 import org.primefaces.event.FileUploadEvent;
 
@@ -94,34 +89,6 @@ public class EditableHouse implements Serializable {
         }
     }
     
-    /*private boolean updateHouse(House h) {
-        try {
-            Query q = em.createQuery("UPDATE House h SET h.title = :title, h.typeid = :typeid, "
-                    + "h.description = :description, h.housereg = :housereg, h.address = :address, "
-                    + "h.isactive = :isactive, h.seasonstartdate = :startdt, h.seasonenddate = :enddt, "
-                    + "h.weekprice = :price, h.numberofplaces = :places "
-                    + "WHERE h.id = :id");
-            q.setParameter("title", h.getTitle());
-            q.setParameter("typeid", h.getTypeid());
-            q.setParameter("description", h.getDescription());
-            q.setParameter("housereg", h.getHousereg());
-            q.setParameter("address", h.getAddress());
-            q.setParameter("isactive", h.getIsactive());
-            q.setParameter("startdt", h.getSeasonstartdate());
-            q.setParameter("enddt", h.getSeasonenddate());
-            q.setParameter("price", h.getWeekprice());
-            q.setParameter("places", h.getNumberofplaces());
-            q.setParameter("id", h.getId());
-            em.joinTransaction();
-            int updated = q.executeUpdate();
-            em.flush();
-            return true;
-        }
-        catch (Exception ex) {
-            return false;
-        }
-    }*/
-    
     private boolean insertHouse(House h) {
         try {
             em.joinTransaction();
@@ -169,33 +136,6 @@ public class EditableHouse implements Serializable {
             return ""; //error page
         }
     }
-    
-    /*private boolean setIsDeletedTrue(House h) {
-        try {
-            Query q = em.createQuery("UPDATE House h SET h.isdeleted = :isdeleted "
-                    + "WHERE h.id = :id");
-            q.setParameter("isdeleted", true);
-            q.setParameter("id", h.getId());
-            em.joinTransaction();
-            int updated = q.executeUpdate();
-            em.flush();
-            return true;
-        }
-        catch (Exception ex) {
-            return false;
-        }
-    }*/
-    
-    /*public String firstImageName() {
-        if(house == null || house.getHouseimageList() == null || house.getHouseimageList().isEmpty()) return null;
-        Predicate condition = new Predicate() {
-            public boolean evaluate(Object sample) {
-                 return ((Houseimage)sample).getSequence().equals(1);
-            }
-         };
-         Houseimage result = (Houseimage)CollectionUtils.select(house.getHouseimageList(), condition ).iterator().next();
-         return result.getInternalname();
-    }*/
     
     //======================= GETTERS SETTERS ===========================
     
