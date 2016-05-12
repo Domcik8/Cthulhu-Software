@@ -839,4 +839,64 @@ public class DatabaseManager {
         c[0] = Character.toUpperCase(c[0]);
         return new String(c);
     }
+    
+    public boolean updateHouse(House h) {
+        try {
+            Query q = em.createQuery("UPDATE House h SET h.title = :title, h.typeid = :typeid, "
+                    + "h.description = :description, h.housereg = :housereg, h.address = :address, "
+                    + "h.isactive = :isactive, h.seasonstartdate = :startdt, h.seasonenddate = :enddt, "
+                    + "h.weekprice = :price, h.numberofplaces = :places "
+                    + "WHERE h.id = :id");
+            q.setParameter("title", h.getTitle());
+            q.setParameter("typeid", h.getTypeid());
+            q.setParameter("description", h.getDescription());
+            q.setParameter("housereg", h.getHousereg());
+            q.setParameter("address", h.getAddress());
+            q.setParameter("isactive", h.getIsactive());
+            q.setParameter("startdt", h.getSeasonstartdate());
+            q.setParameter("enddt", h.getSeasonenddate());
+            q.setParameter("price", h.getWeekprice());
+            q.setParameter("places", h.getNumberofplaces());
+            q.setParameter("id", h.getId());
+            em.joinTransaction();
+            int updated = q.executeUpdate();
+            em.flush();
+            return true;
+        }
+        catch (Exception ex) {
+            return false;
+        }
+    }
+    
+    public boolean setHouseIsDeletedTrue(House h) {
+        try {
+            Query q = em.createQuery("UPDATE House h SET h.isdeleted = :isdeleted "
+                    + "WHERE h.id = :id");
+            q.setParameter("isdeleted", true);
+            q.setParameter("id", h.getId());
+            em.joinTransaction();
+            int updated = q.executeUpdate();
+            em.flush();
+            return true;
+        }
+        catch (Exception ex) {
+            return false;
+        }
+    }
+    
+    public boolean updatePersonPoints(Person p) {
+        try {
+            Query q = em.createQuery("UPDATE Person p SET p.points = :points "
+                    + "WHERE p.id = :id");
+            q.setParameter("points", p.getPoints());
+            q.setParameter("id", p.getId());
+            em.joinTransaction();
+            int updated = q.executeUpdate();
+            em.flush();
+            return true;
+        }
+        catch (Exception ex) {
+            return false;
+        }
+    }
 }

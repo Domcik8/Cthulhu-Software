@@ -27,7 +27,7 @@ and open the template in the editor.
     
     <div>
         <h:form>
-            <p:dataTable var="user" value="#{adminUserManager.users}" widgetVar="usersTable"
+            <p:dataTable id="mainTable" var="user" value="#{adminUserManager.users}" widgetVar="usersTable"
                  emptyMessage="Vartotojų nerasta" filteredValue="#{adminUserManager.filteredUsers}" paginator="true"
                  paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                  rowsPerPageTemplate="10,50,100" rows="10" currentPageReportTemplate="{currentPage} iš {totalPages}">
@@ -38,16 +38,12 @@ and open the template in the editor.
                         <p:inputText id="globalFilter" onkeyup="PF('usersTable').filter()" style="width:150px"/>
                     </p:outputPanel>
                 </f:facet>
- 
-                <p:column filterBy="#{user.personalid}" headerText="ID" filterMatchMode="contains">
-                    <h:outputText value="#{user.personalid}" />
-                </p:column>
 
                 <p:column filterBy="#{user.email}" headerText="El. paštas" filterMatchMode="contains">
                     <h:outputText value="#{user.email}" />
                 </p:column>
                 
-                <p:column filterBy="#{adminUserManager.getType(user)}" headerText="Tipas" filterMatchMode="contains">
+                <p:column filterBy="#{adminUserManager.getType(user)}" headerText="Grupė" filterMatchMode="contains">
                     <h:outputText value="#{adminUserManager.getType(user)}" />
                 </p:column>
                 
@@ -62,6 +58,7 @@ and open the template in the editor.
                         </p:spinner>
                     </f:facet>
                     <h:outputText value="#{user.points}" />
+                    <p:commandButton image="ui-icon-plusthick" action="#{adminUserManager.setUserEmail(user.getEmail())}" oncomplete="PF('addPointsDialog').show();" update="dialogOutsideForm"/>
                 </p:column>
                 
                 <p:column filterBy="#{user.firstname} #{user.lastname}" headerText="Vardas, pavardė" filterMatchMode="contains">
@@ -74,7 +71,7 @@ and open the template in the editor.
                 
                 <p:column filterBy="#{user.membershipdue}" headerText="Narys iki" filterMatchMode="contains">
                     <f:facet name="filter">
-                        <p:calendar id="popup" value="#{adminUserManager.calendar}" pattern="yyyy-MM-dd" mindate="#{adminUserManager.getCurrentDate()}" readonly="true"/>
+                        <p:calendar id="popup" value="#{adminUserManager.calendar}" pattern="yyyy-MM-dd" mindate="#{adminUserManager.getCurrentDate()}" readonly="true" style="width: 100%"/>
                     </f:facet>
                     <h:outputText value="#{user.membershipdue}">
                         <f:convertDateTime pattern="yyyy-MM-dd" />
@@ -87,6 +84,27 @@ and open the template in the editor.
                     </h:commandButton>
                 </p:column>
             </p:dataTable>
+        </h:form>
+    </div>
+    <div>
+        <h:form id="dialogOutsideForm">
+        <p:dialog id="firstDialog" header="Taškų pridėjimas" widgetVar="addPointsDialog" modal="true" height="200" width="400">
+            <h:form id="dialogInsideForm">   
+                <p:messages id="msgs" />
+                <h:panelGrid id="panel" columns="3" >
+                    <p:outputLabel for="userName" value="Vartotojas:" />
+                    <p:outputLabel id="userName" value="#{adminUserManager.userEmail}" />
+                    <h:inputHidden value="#{adminUserManager.userEmail}" />
+                    <p:outputLabel for="addedPoints" value="Taškų skaičius: " />
+                    <p:inputText id="addedPoints" value="#{adminUserManager.addedPoints}" required="true" requiredMessage="Taškų skaičius: Įveskite natūralujį skaičių.">
+                        <f:validateDoubleRange minimum="1"/>
+                    </p:inputText>
+                    <p:message for="addedPoints" style="color:red" />
+                    <h:inputHidden/>
+                </h:panelGrid>
+                <p:commandButton value="Skirti" action="#{adminUserManager.addPoints}" update="msgs"/>
+            </h:form>
+        </p:dialog>
         </h:form>
     </div>
         

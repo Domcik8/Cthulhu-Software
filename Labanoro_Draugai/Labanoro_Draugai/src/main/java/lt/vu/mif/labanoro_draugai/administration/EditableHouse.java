@@ -83,6 +83,8 @@ public class EditableHouse implements Serializable {
             int id = Integer.parseInt(houseId);
             houses = em.createNamedQuery("House.findById").setParameter("id",  id).getResultList();
             house = houses.get(0);
+            
+            //house = (House) dbm.getEntity("House", "Id", houseId);
         }
         catch (Exception ex) {
             house = new House();
@@ -92,7 +94,7 @@ public class EditableHouse implements Serializable {
         }
     }
     
-    private boolean updateHouse(House h) {
+    /*private boolean updateHouse(House h) {
         try {
             Query q = em.createQuery("UPDATE House h SET h.title = :title, h.typeid = :typeid, "
                     + "h.description = :description, h.housereg = :housereg, h.address = :address, "
@@ -118,7 +120,7 @@ public class EditableHouse implements Serializable {
         catch (Exception ex) {
             return false;
         }
-    }
+    }*/
     
     private boolean insertHouse(House h) {
         try {
@@ -134,7 +136,7 @@ public class EditableHouse implements Serializable {
         boolean savingSuccess = true;
         
         if (house.getId() != null)
-            savingSuccess = updateHouse(house);
+            savingSuccess = dbm.updateHouse(house);
         else
             savingSuccess = insertHouse(house);
 
@@ -156,7 +158,7 @@ public class EditableHouse implements Serializable {
     public String deleteHouse() {
         try {
             em.joinTransaction();
-            boolean savingSuccess = setIsDeletedTrue(house);
+            boolean savingSuccess = dbm.setHouseIsDeletedTrue(house);
             
             //if (!savingSuccess)
                 //return error page
@@ -168,7 +170,7 @@ public class EditableHouse implements Serializable {
         }
     }
     
-    private boolean setIsDeletedTrue(House h) {
+    /*private boolean setIsDeletedTrue(House h) {
         try {
             Query q = em.createQuery("UPDATE House h SET h.isdeleted = :isdeleted "
                     + "WHERE h.id = :id");
@@ -182,7 +184,7 @@ public class EditableHouse implements Serializable {
         catch (Exception ex) {
             return false;
         }
-    }
+    }*/
     
     /*public String firstImageName() {
         if(house == null || house.getHouseimageList() == null || house.getHouseimageList().isEmpty()) return null;
@@ -267,38 +269,31 @@ public class EditableHouse implements Serializable {
     
     private void initTypes() {
         houseTypes = new LinkedHashMap<String, String>();
-        List<Type> allTypes = em.createNamedQuery("Type.findAll").getResultList();
+        //List<Type> allTypes = em.createNamedQuery("Type.findAll").getResultList();
+        List<Type> allTypes = dbm.retrieveTypes("House");
         
         if (house.getId() != null) {
             for (Type t : allTypes) {
-                if (t.getInternalname().startsWith("House")) {
-                    if (house.getTypeid() != null && t.getId() == house.getTypeid().getId())
-                        houseTypes.put(t.getId().toString(), t.getTitle());
-                }
+                if (house.getTypeid() != null && t.getId() == house.getTypeid().getId())
+                    houseTypes.put(t.getId().toString(), t.getTitle());
             }
+            
             for (Type t : allTypes) {
-                if (t.getInternalname().startsWith("House")) {
-                    if (house.getTypeid() != null && t.getId() != house.getTypeid().getId())
-                        houseTypes.put(t.getId().toString(), t.getTitle());
-                }
+                if (house.getTypeid() != null && t.getId() != house.getTypeid().getId())
+                    houseTypes.put(t.getId().toString(), t.getTitle());
             }
         }
         else {
             for (Type t : allTypes) {
-                if (t.getInternalname().startsWith("House")) {
-                    houseTypes.put(t.getId().toString(), t.getTitle());
-                }
+                houseTypes.put(t.getId().toString(), t.getTitle());
             }
         }
-    }
-    
-    public String getType() {
-        return /*house.getTypeid().getTitle() + */"aaa";
     }
     
     public void changeHouseType() {
         List<Type> newTypes = em.createNamedQuery("Type.findById").setParameter("id", Integer.parseInt(houseType)).getResultList();
         Type newType = newTypes.get(0);
+        //Type newType = (Type) dbm.getEntity("Type", "Id", houseType);
         house.setTypeid(newType);
     }
     

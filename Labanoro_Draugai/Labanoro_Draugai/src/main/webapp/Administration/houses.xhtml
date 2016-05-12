@@ -31,36 +31,30 @@ and open the template in the editor.
         
         <!-- Summerhouse list -->
         <div class="container .col-md-8">
-            <p:dataScroller value="#{adminHouseManager.getHouses()}" var="house" chunkSize="15" style="border:thin">
-                <h:panelGrid columns="2" style="width:100%" columnClasses="logo,detail">
-                    <span class="glyphicon glyphicon-bed" style="width: 30%"/>
-                    <p:outputPanel>
-                        <h:form>
-                            <h:panelGrid columns="2" >
-                                <h:outputLabel class="title-text" value="#{house.title}"/>
-                                <h:outputText/>
-                                <h:outputLabel class="small-text" value="#{house.description}"/>
-                                <h:outputText/>
-                                <h:outputLabel for="houseId" value="Namelio reg. nr."/>
-                                <h:outputText id="houseId" value="#{house.housereg}"/>
-                                <h:outputLabel for="weekPrice" value="Sav. kaina (EUR):"/>
-                                <h:outputText id="weekPrice" value="#{house.weekprice}"/>
-                                <h:outputLabel for="numberOfPlaces" value="Vietų sk.:"/>
-                                <h:outputText id="numberOfPlaces" value="#{house.numberofplaces}"/>
-                                <h:outputLabel for="address" value="Adresas:"/>
-                                <h:outputText id="address" value="#{house.address}"/>
-                                <h:outputLabel for="startDate" value="Pradžios data:"/>
-                                <h:outputText id="startDate" value="#{house.seasonstartdate}">
+            <p:dataScroller id="houseDataScroller" value="#{adminHouseManager.houses}" var="house" chunkSize="10" style="border:thin" >
+                <f:facet name="header">Vasarnamiai</f:facet>
+                <h:panelGrid columns="2" style="width: 100%" columnClasses="ui-grid-col-4,ui-grid-col-8" >
+                    <p:graphicImage id="img" url="/images/#{adminHouseManager.firstImageName(house)}" alt="#{adminHouseManager.firstImageName(house)}" style="width: 100%;padding-right: 10px"/>
+                        <p:outputPanel>
+                            <h:form>
+                                <h:panelGrid columns="1" style="width: 100%" columnClasses="forty-percent top-alignment, sixty-percent top-alignment" >
+                                <h:outputText class="title-text" value="#{house.title}"/>
+                                <h:outputLabel class="small-text" value="#{house.description}" rendered="#{house.description != null and !(empty house.description)}"/>
+                                <h:outputText class="small-text" value="Namelio reg. nr.: #{house.housereg}"/>
+                                <h:outputText class="small-text" value="Adresas: #{house.address}"/>
+                                <h:outputText class="small-text" value="Vietų sk.: #{house.numberofplaces}"/>
+                                <h:outputText class="small-text" value="Pradžios data: #{house.seasonstartdate}">
                                     <f:convertDateTime pattern="yyyy-MM-dd" />
                                 </h:outputText>
-                                <h:outputLabel for="endDate" value="Pabaigos data:"/>
-                                <h:outputText id="endDate" value="#{house.seasonenddate}">
+                                <h:outputText class="small-text" value="Pabaigos data: #{house.seasonenddate}">
                                     <f:convertDateTime pattern="yyyy-MM-dd" />
                                 </h:outputText>
-                                <h:outputLabel for="type" value="Tipas:"/>
-                                <h:outputText id="type" value="#{house.getTypeid().getTitle()}"/>
-                                <h:outputLabel for="isActive" value="Aktyvus:"/>
-                                <h:selectBooleanCheckbox id="isActive" value="#{house.isactive}" disabled="true"/>
+                                <h:outputText class="small-text" value="Tipas: #{house.getTypeid().getTitle()}"/>
+                                <h:panelGrid columns="2">
+                                    <h:outputText class="small-text" value="Aktyvus:"/>
+                                    <p:selectBooleanCheckbox value="#{house.isactive}" disabled="true"/>
+                                </h:panelGrid>
+                                <h:outputText class="price-text" style="width: 100%" value="Sav. kaina: #{house.weekprice}"/>
                                 <h:commandButton action="#{adminHouseManager.setEditableHouse()}" value="Modifikuoti">
                                     <f:param name="houseId" value="#{house.id}"/>
                                 </h:commandButton>
