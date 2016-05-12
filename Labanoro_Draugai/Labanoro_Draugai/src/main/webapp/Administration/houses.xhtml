@@ -20,17 +20,17 @@ and open the template in the editor.
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"   integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw="   crossorigin="anonymous"></script> 
     </h:head>
-    <h:body>
+    <h:body style="background-color: white">
         <!-- Navigation panel-->
         <ui:include src="/WEB-INF/other_pages/navigation.xhtml" />
         <!-- End of Navigation panel -->
         
-        <h:form>
-            <h:commandButton action="house" value="Pridėti namelį"/>
-        </h:form>
-        
         <!-- Summerhouse list -->
         <div class="container .col-md-8">
+            <h:form>
+                <h:commandButton action="house" value="Pridėti namelį"/>
+            </h:form>
+            
             <p:dataScroller id="houseDataScroller" value="#{adminHouseManager.houses}" var="house" chunkSize="10" style="border:thin" >
                 <f:facet name="header">Vasarnamiai</f:facet>
                 <h:panelGrid columns="2" style="width: 100%" columnClasses="ui-grid-col-4,ui-grid-col-8" >
@@ -69,7 +69,6 @@ and open the template in the editor.
         
         <!-- scripts -->
         <h:outputScript library="js" name="custom.js" />
-        <h:outputScript library="js" name="administration.js" />
         <!-- end of scripts -->
     </h:body>
 </html>

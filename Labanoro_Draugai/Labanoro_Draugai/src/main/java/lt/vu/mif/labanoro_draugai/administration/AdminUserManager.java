@@ -7,15 +7,12 @@ package lt.vu.mif.labanoro_draugai.administration;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
-import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -27,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 import org.primefaces.context.RequestContext;
+import org.omnifaces.cdi.ViewScoped;
 
 /**
  *
@@ -34,7 +32,7 @@ import org.primefaces.context.RequestContext;
  */
 @Named
 @Stateful
-@ConversationScoped
+@ViewScoped
 public class AdminUserManager implements Serializable {
     
     private List<Person> users;
@@ -157,11 +155,6 @@ public class AdminUserManager implements Serializable {
             }
         }
         return "users";
-    }
-    
-    public String selectUser(String eml) {
-        userEmail = eml;
-        return "";
     }
     
     public void addPoints() throws IOException {

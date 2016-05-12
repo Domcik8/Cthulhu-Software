@@ -21,12 +21,18 @@ and open the template in the editor.
         <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"   integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw="   crossorigin="anonymous"></script> 
     </h:head>
     <h:body>
-        <div>
+        <!-- Navigation panel-->
+        <ui:include src="/WEB-INF/other_pages/navigation.xhtml" />
+        <!-- End of Navigation panel -->
+        
+        <div class="container" style="background-color: white">
             <h:form>
                 <p:dataTable var="payment" value="#{adminPaymentManager.payments}" widgetVar="paymentsTable"
                      emptyMessage="Mokėjimų nerasta" filteredValue="#{adminPaymentManager.filteredPayments}" paginator="true"
                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                     rowsPerPageTemplate="10,50,100" rows="10" currentPageReportTemplate="{currentPage} iš {totalPages}">
+                     rowsPerPageTemplate="10,50,100" rows="10" currentPageReportTemplate="{currentPage} iš {totalPages}" 
+                     selection="#{adminPaymentManager.selectedPayments}" rowKey="#{payment.id}" style="margin-bottom:0"
+                     rowStyleClass="#{payment.approveddate == null ? 'new-payment' : null}" sortMode="multiple">
 
                     <f:facet name="header">
                         <p:outputPanel style="margin-top: 4px">
@@ -35,11 +41,14 @@ and open the template in the editor.
                         </p:outputPanel>
                     </f:facet>
 
-                    <p:column filterBy="#{payment.paymentdate}" headerText="Mok. data" filterMatchMode="contains">
-                        <f:facet name="filter">
-                            <p:calendar id="popup" value="#{adminPaymentManager.calendar}" pattern="yyyy-MM-dd" mindate="#{adminPaymentManager.getCurrentDate()}" readonly="true"/>
-                        </f:facet>
+                    <p:column headerText="Mok. data" sortBy="#{payment.paymentdate}">
                         <h:outputText value="#{payment.paymentdate}">
+                            <f:convertDateTime pattern="yyyy-MM-dd" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Patvirt. data" sortBy="#{payment.approveddate}">
+                        <h:outputText value="#{payment.approveddate}">
                             <f:convertDateTime pattern="yyyy-MM-dd" />
                         </h:outputText>
                     </p:column>
@@ -52,21 +61,17 @@ and open the template in the editor.
                         <h:outputText value="#{payment.paymentreg}" />
                     </p:column>
 
-                    <p:column filterBy="#{adminPaymentManager.getType(payment)}" headerText="Tipas" filterMatchMode="contains">
-                        <h:outputText value="#{adminPaymentManager.getType(payment)}" />
-                    </p:column>
-
                     <p:column filterBy="#{payment.paidwithmoney}" headerText="Mokėta pinigais" filterMatchMode="contains">
                         <h:outputText value="#{payment.paidwithmoney}" />
                     </p:column>
 
-                    <!--payment.checked-->
-                    <p:column headerText="Patvirtinti">
-                        <h:selectBooleanCheckbox id="approved"/> 
-                    </p:column>
-
+                    <p:column selectionMode="multiple" style="width:40px; text-align:center;" rendered="#{payment.approveddate == null}"/>
+                    
+                    <f:facet name="footer">
+                        <p:commandButton action="#{adminPaymentManager.approveChecked}" value="Patvirtinti pažymėtus"/>
+                    </f:facet>
                 </p:dataTable>
-                <h:commandButton action="#{adminPaymentManager.removeChecked}" value="Patvirtinti pažymėtus"/>
+                
             </h:form>
         </div>
          <!-- scripts -->
