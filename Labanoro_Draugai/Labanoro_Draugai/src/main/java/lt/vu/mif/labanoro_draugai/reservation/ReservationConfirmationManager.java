@@ -7,12 +7,14 @@ package lt.vu.mif.labanoro_draugai.reservation;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -27,6 +29,8 @@ import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Houseimage;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.entities.Service;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  *
@@ -60,7 +64,38 @@ public class ReservationConfirmationManager implements Serializable{
         }
         user = (Person)dbm.getEntity("Person", "Email", request.getUserPrincipal().getName());
     }
-
+    
+    public String createReservationJSON(){
+        if(dateTo==null || dateFrom == null) return "";
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.element("type", "houseReservation");
+        jsonObject.element("reservationReg", generateReservationReg());
+        jsonObject.element("houseReg", house.getHousereg());
+        jsonObject.element("reservationTypeInternalName",  "Reservation");
+        JSONArray arr = new JSONArray();
+        if(selectedServices!=null){ 
+            for(String str:selectedServices){
+                arr.add(str);
+            }
+        }
+        jsonObject.element("services", arr);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        jsonObject.element("dateFrom", sdf.format(dateFrom));
+        jsonObject.element("dateTo", sdf.format(dateTo));
+        return jsonObject.toString();
+    }
+    
+    public String reserveSummerhouse(){
+        //validation
+        dbm.addReservation(generateReservationReg(), house.getHousereg(), "Reservation", user.getEmail(), selectedServices, dateFrom, dateTo);
+        return "/Labanoro_Draugai/index.html";
+    }
+    
+    private String generateReservationReg(){
+        Random rand = new Random();
+        return "ReservationReg-"+System.currentTimeMillis() % 1000+rand.nextInt(10000);
+    }
+    
     public int calculateTotalPrice(){
         if(house == null )return 0;
         totalPrice = 0;

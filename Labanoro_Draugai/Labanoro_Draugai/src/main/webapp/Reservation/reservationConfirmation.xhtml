@@ -46,13 +46,14 @@ and open the template in the editor.
                     <p:selectManyCheckbox id="selectedHouseServices" value="#{reservationConfirmationManager.selectedServices}" layout="pageDirection" columns="3">
                         <p:ajax update="totalPrice myScript" />
                         <f:selectItems value="#{reservationConfirmationManager.house.serviceList}" var="service" 
-                                       itemLabel="#{service.title} #{reservationConfirmationManager.periodPrice(service.weekprice)}t" itemValue="#{service.title}" />
+                                       itemLabel="#{service.title} #{reservationConfirmationManager.periodPrice(service.weekprice)}t" itemValue="#{service.servicereg}" />
                     </p:selectManyCheckbox>
                 </h:form>
                 <h:outputLabel id="totalPrice" value="Visa kaina: #{reservationConfirmationManager.calculateTotalPrice()}t"/>  
                 <h:panelGroup id="myScript">
                     <ui:include src="/WEB-INF/other_pages/stripeForm.xhtml" >
                         <ui:param name="price" value="#{reservationConfirmationManager.totalPrice}" />
+                        <ui:param name="order" value="#{reservationConfirmationManager.createReservationJSON()}" />
                     </ui:include> 
                 </h:panelGroup>
                      

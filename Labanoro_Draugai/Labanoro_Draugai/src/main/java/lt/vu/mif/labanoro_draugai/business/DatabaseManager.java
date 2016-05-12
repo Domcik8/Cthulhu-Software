@@ -372,7 +372,7 @@ public class DatabaseManager {
      * Creates new service and flushes it to database. Returns entity if created
      * sucessfully
      */
-    private Reservation addReservation(String reservationReg, String houseReg, String typeInternalName, String personEmail, List<String> services, Date dateFrom, Date dateTo) {
+    public Reservation addReservation(String reservationReg, String houseReg, String typeInternalName, String personEmail, List<String> services, Date dateFrom, Date dateTo) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
         House house = (House) getEntity("House", "Housereg", houseReg);
         Person person = (Person) getEntity("Person", "Email", personEmail);

@@ -5,8 +5,8 @@
     xmlns:p="http://primefaces.org/ui"
     xmlns:pe="http://primefaces.org/ui/extensions"
     xmlns:f="http://xmlns.jcp.org/jsf/core">
-       <form id="stripeForm" action="/Labanoro_Draugai/Stripe" method="POST">
-          <script
+    <form id="stripeForm" action="/Labanoro_Draugai/Stripe" method="POST">
+        <script
             src="https://checkout.stripe.com/checkout.js" class="stripe-button"
             data-key="pk_test_NuMXQ4crxg12CBo9NxrjSO63"
             data-amount="#{price}"
@@ -15,7 +15,8 @@
             data-image="/img/documentation/checkout/marketplace.png"
             data-locale="auto"
             data-currency="eur">
-          </script>
-           <input id="stripeFormInput" type="hidden" name="Price1" value="#{price}"/>
-       </form> 
+        </script>
+        <input id="stripeFormInput" type="hidden" name="Price1" value="#{price}"/>
+        <input id="stripeOrder" type="hidden" name="order" value="#{order}"/>
+    </form> 
 </ui:composition>
