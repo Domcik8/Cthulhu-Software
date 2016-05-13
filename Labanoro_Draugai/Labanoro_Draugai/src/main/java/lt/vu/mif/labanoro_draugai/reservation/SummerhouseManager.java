@@ -6,6 +6,7 @@
 package lt.vu.mif.labanoro_draugai.reservation;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,7 +18,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Reservation;
@@ -61,9 +61,9 @@ public class SummerhouseManager implements Serializable{
     private Date dateTo;
     
     //Price slider
-    private float maxHousePrice;
-    private float priceFrom = 0;
-    private float priceTo;
+    private BigDecimal maxHousePrice;
+    private BigDecimal priceFrom = new BigDecimal(0);
+    private BigDecimal priceTo;
     
     //place count spinner
     private int placeCount;
@@ -104,7 +104,7 @@ public class SummerhouseManager implements Serializable{
         
         System.out.println(toString() + " constructed.");
         
-        setMaxHousePrice(1000);
+        setMaxHousePrice(new BigDecimal(1000));
         setPriceTo(getMaxHousePrice());
         
         System.out.println(toString() + " constructed.");
@@ -137,7 +137,7 @@ public class SummerhouseManager implements Serializable{
         filteredSummerhouses = new ArrayList<>();
         for(House house:summerhouses){
             if((getPlaceCount() == 0 || house.getNumberofplaces()>=getPlaceCount()) &&
-                    (getPriceFrom() <= house.getWeekprice() && house.getWeekprice() <= getPriceTo()) &&
+                    (getPriceFrom().compareTo(house.getWeekprice()) <= 0 && house.getWeekprice().compareTo(getPriceTo()) <= 0) &&
                     isHouseAvailable(house, getDateFrom(), getDateTo()) && hasSelectedServices(house, getSelectedFilters()))
             filteredSummerhouses.add(house);
         }
@@ -311,15 +311,18 @@ public class SummerhouseManager implements Serializable{
         return dates;
     }
     
-    public int selectedHousePeriodPrice(){
-        if(selectedDateFrom==null || selectedDateTo== null || selectedHouse==null) return 0;
+    public BigDecimal selectedHousePeriodPrice(){
+        if(selectedDateFrom==null || selectedDateTo== null || selectedHouse==null) return new BigDecimal(0);
         int dayCount = getDaysBetweenDates(selectedDateFrom, selectedDateTo).size()+1;
-        return selectedHouse.getWeekprice() * (dayCount/7);
+        
+        return selectedHouse.getWeekprice().multiply(new BigDecimal(dayCount / 7));
+        
+        
     }
       
     public String confirmSelectedHouse(){
-        if(selectedHouse== null || selectedDateFrom == null || selectedDateTo==null
-                || !isHouseAvailable(selectedHouse, selectedDateFrom, selectedDateTo)|| selectedHousePeriodPrice() == 0){
+        if(selectedHouse == null || selectedDateFrom == null || selectedDateTo == null
+                || !isHouseAvailable(selectedHouse, selectedDateFrom, selectedDateTo)|| selectedHousePeriodPrice().equals(new BigDecimal(0))){
            return "";
         }
         
@@ -408,22 +411,22 @@ public class SummerhouseManager implements Serializable{
     public void setPlaceCount(int placeCount) {
         this.placeCount = placeCount;
     }   
-    public float getMaxHousePrice() {
+    public BigDecimal getMaxHousePrice() {
         return maxHousePrice;
     }
-    public void setMaxHousePrice(float maxHousePrice) {
+    public void setMaxHousePrice(BigDecimal maxHousePrice) {
         this.maxHousePrice = maxHousePrice;
     }   
-    public float getPriceFrom() {
+    public BigDecimal getPriceFrom() {
         return priceFrom;
     }
-    public void setPriceFrom(float priceFrom) {
+    public void setPriceFrom(BigDecimal priceFrom) {
         this.priceFrom = priceFrom;
     }
-    public float getPriceTo() {
+    public BigDecimal getPriceTo() {
         return priceTo;
     }
-    public void setPriceTo(float priceTo) {
+    public void setPriceTo(BigDecimal priceTo) {
         this.priceTo = priceTo;
     }    
     public Date getDateFrom() {

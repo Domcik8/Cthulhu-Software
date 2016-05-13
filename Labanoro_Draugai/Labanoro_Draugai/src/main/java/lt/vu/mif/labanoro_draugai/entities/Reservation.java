@@ -20,6 +20,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -68,6 +69,9 @@ public class Reservation implements Serializable {
     @JoinColumn(name = "HOUSEID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private House houseid;
+    @JoinColumn(name = "PAYMENTID", referencedColumnName = "ID")
+    @OneToOne(optional = false)
+    private Payment paymentid;
     @JoinColumn(name = "PERSONID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Person personid;
@@ -144,6 +148,14 @@ public class Reservation implements Serializable {
 
     public void setHouseid(House houseid) {
         this.houseid = houseid;
+    }
+
+    public Payment getPaymentid() {
+        return paymentid;
+    }
+
+    public void setPaymentid(Payment paymentid) {
+        this.paymentid = paymentid;
     }
 
     public Person getPersonid() {

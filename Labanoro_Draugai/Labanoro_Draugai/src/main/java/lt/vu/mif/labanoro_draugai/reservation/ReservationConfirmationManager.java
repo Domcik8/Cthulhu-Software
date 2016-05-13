@@ -7,6 +7,7 @@ package lt.vu.mif.labanoro_draugai.reservation;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,7 +46,7 @@ public class ReservationConfirmationManager implements Serializable{
     private Date dateTo;
     List<String> selectedServices;
     private Person user;
-    private int totalPrice;
+    private BigDecimal totalPrice;
     @Inject
     DatabaseManager dbm;
     
@@ -96,21 +97,21 @@ public class ReservationConfirmationManager implements Serializable{
         return "ReservationReg-"+System.currentTimeMillis() % 1000+rand.nextInt(10000);
     }
     
-    public int calculateTotalPrice(){
-        if(house == null )return 0;
-        totalPrice = 0;
-        totalPrice+= periodPrice(house.getWeekprice());
+    public BigDecimal calculateTotalPrice(){
+        if(house == null )return new BigDecimal(0);
+        totalPrice = new BigDecimal(0);
+        totalPrice.add(periodPrice(house.getWeekprice()));
         if(selectedServices == null) return totalPrice;
         for(String str:selectedServices){
             Service service = (Service)dbm.getEntity("Service", "Title", str);
             if(service == null) continue;
-            totalPrice+=periodPrice(service.getWeekprice());
+            totalPrice.add(periodPrice(service.getWeekprice()));
         }
         return totalPrice;
     }
     
     public List<String> houseImageNames(){
-        if(house ==null || house.getHouseimageList() == null || house.getHouseimageList().isEmpty()) return null;
+        if(house == null || house.getHouseimageList() == null || house.getHouseimageList().isEmpty()) return null;
         List<String> result = new ArrayList<>();
         for(Houseimage img : house.getHouseimageList()){
             result.add(img.getInternalname());
@@ -118,9 +119,9 @@ public class ReservationConfirmationManager implements Serializable{
          return result;
     }
     
-    public int periodPrice(int weekPrice){
+    public BigDecimal periodPrice(BigDecimal weekPrice){
         int dayCount = getDaysBetweenDates(dateFrom, dateTo).size()+1;
-        return weekPrice * (dayCount/7);
+        return weekPrice.multiply(new BigDecimal(dayCount / 7));
     }
     
     private List<Date> getDaysBetweenDates(Date startdate, Date enddate){
@@ -188,11 +189,11 @@ public class ReservationConfirmationManager implements Serializable{
         this.selectedServices = selectedServices;
     }
 
-    public int getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(int totalPrice) {      
+    public void setTotalPrice(BigDecimal totalPrice) {      
         this.totalPrice = totalPrice;
     }
     

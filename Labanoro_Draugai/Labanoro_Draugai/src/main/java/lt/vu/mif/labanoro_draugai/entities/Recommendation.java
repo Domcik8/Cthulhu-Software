@@ -31,7 +31,6 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Recommendation.findAll", query = "SELECT r FROM Recommendation r"),
     @NamedQuery(name = "Recommendation.findById", query = "SELECT r FROM Recommendation r WHERE r.id = :id"),
     @NamedQuery(name = "Recommendation.findByRecommendationdate", query = "SELECT r FROM Recommendation r WHERE r.recommendationdate = :recommendationdate"),
-    @NamedQuery(name = "Recommendation.findByIsdeleted", query = "SELECT r FROM Recommendation r WHERE r.isdeleted = :isdeleted"),
     @NamedQuery(name = "Recommendation.findByOptlockversion", query = "SELECT r FROM Recommendation r WHERE r.optlockversion = :optlockversion")})
 public class Recommendation implements Serializable {
 
@@ -44,8 +43,6 @@ public class Recommendation implements Serializable {
     @Column(name = "RECOMMENDATIONDATE")
     @Temporal(TemporalType.DATE)
     private Date recommendationdate;
-    @Column(name = "ISDELETED")
-    private Boolean isdeleted;
     @Column(name = "OPTLOCKVERSION")
     private Integer optlockversion;
     @JoinColumn(name = "RECOMMENDERID", referencedColumnName = "ID")
@@ -79,14 +76,6 @@ public class Recommendation implements Serializable {
 
     public void setRecommendationdate(Date recommendationdate) {
         this.recommendationdate = recommendationdate;
-    }
-
-    public Boolean getIsdeleted() {
-        return isdeleted;
-    }
-
-    public void setIsdeleted(Boolean isdeleted) {
-        this.isdeleted = isdeleted;
     }
 
     public Integer getOptlockversion() {

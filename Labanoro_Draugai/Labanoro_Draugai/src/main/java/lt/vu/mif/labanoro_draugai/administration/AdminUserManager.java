@@ -7,6 +7,7 @@ package lt.vu.mif.labanoro_draugai.administration;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -159,7 +160,7 @@ public class AdminUserManager implements Serializable {
     
     public void addPoints() throws IOException {
         Person u = (Person) dbm.getEntity("Person", "Email", userEmail);
-        u.setPoints(u.getPoints() + addedPoints);
+        u.setPoints(u.getPoints().add(new BigDecimal(addedPoints)));
         if (dbm.updatePersonPoints(u)) {
             userEmail = "";
             addedPoints = 0;

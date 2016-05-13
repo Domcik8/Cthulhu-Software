@@ -6,6 +6,7 @@
 package lt.vu.mif.labanoro_draugai.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -78,8 +79,9 @@ public class House implements Serializable {
     @Column(name = "SEASONENDDATE")
     @Temporal(TemporalType.DATE)
     private Date seasonenddate;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "WEEKPRICE")
-    private Integer weekprice;
+    private BigDecimal weekprice;
     @Column(name = "NUMBEROFPLACES")
     private Integer numberofplaces;
     @Column(name = "ISDELETED")
@@ -175,11 +177,11 @@ public class House implements Serializable {
         this.seasonenddate = seasonenddate;
     }
 
-    public Integer getWeekprice() {
+    public BigDecimal getWeekprice() {
         return weekprice;
     }
 
-    public void setWeekprice(Integer weekprice) {
+    public void setWeekprice(BigDecimal weekprice) {
         this.weekprice = weekprice;
     }
 

@@ -6,6 +6,7 @@
 package lt.vu.mif.labanoro_draugai.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -34,7 +35,6 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Payment.findByPaymentreg", query = "SELECT p FROM Payment p WHERE p.paymentreg = :paymentreg"),
     @NamedQuery(name = "Payment.findByPaymentprice", query = "SELECT p FROM Payment p WHERE p.paymentprice = :paymentprice"),
     @NamedQuery(name = "Payment.findByPaymentdate", query = "SELECT p FROM Payment p WHERE p.paymentdate = :paymentdate"),
-    @NamedQuery(name = "Payment.findByPaidwithmoney", query = "SELECT p FROM Payment p WHERE p.paidwithmoney = :paidwithmoney"),
     @NamedQuery(name = "Payment.findByApproveddate", query = "SELECT p FROM Payment p WHERE p.approveddate = :approveddate"),
     @NamedQuery(name = "Payment.findByIsdeleted", query = "SELECT p FROM Payment p WHERE p.isdeleted = :isdeleted"),
     @NamedQuery(name = "Payment.findByOptlockversion", query = "SELECT p FROM Payment p WHERE p.optlockversion = :optlockversion")})
@@ -49,13 +49,12 @@ public class Payment implements Serializable {
     @Size(max = 255)
     @Column(name = "PAYMENTREG")
     private String paymentreg;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "PAYMENTPRICE")
-    private Integer paymentprice;
+    private BigDecimal paymentprice;
     @Column(name = "PAYMENTDATE")
     @Temporal(TemporalType.DATE)
     private Date paymentdate;
-    @Column(name = "PAIDWITHMONEY")
-    private Integer paidwithmoney;
     @Column(name = "APPROVEDDATE")
     @Temporal(TemporalType.DATE)
     private Date approveddate;
@@ -93,11 +92,11 @@ public class Payment implements Serializable {
         this.paymentreg = paymentreg;
     }
 
-    public Integer getPaymentprice() {
+    public BigDecimal getPaymentprice() {
         return paymentprice;
     }
 
-    public void setPaymentprice(Integer paymentprice) {
+    public void setPaymentprice(BigDecimal paymentprice) {
         this.paymentprice = paymentprice;
     }
 
@@ -107,14 +106,6 @@ public class Payment implements Serializable {
 
     public void setPaymentdate(Date paymentdate) {
         this.paymentdate = paymentdate;
-    }
-
-    public Integer getPaidwithmoney() {
-        return paidwithmoney;
-    }
-
-    public void setPaidwithmoney(Integer paidwithmoney) {
-        this.paidwithmoney = paidwithmoney;
     }
 
     public Date getApproveddate() {

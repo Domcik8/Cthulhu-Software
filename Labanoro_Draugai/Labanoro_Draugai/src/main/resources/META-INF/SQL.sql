@@ -37,7 +37,7 @@ CREATE TABLE Person
     Password            VARCHAR(255),
     TypeID              INTEGER         NOT NULL,
     Priority            INTEGER,
-    Points              DECIMAL,
+    Points              DECIMAL(10,2),
     FacebookID          VARCHAR(255),
     FacebookPassword    VARCHAR(255),
     FirstName           VARCHAR(255),
@@ -46,6 +46,8 @@ CREATE TABLE Person
     Address             VARCHAR(255),
     PersonalID          VARCHAR(255)                UNIQUE,
     MembershipDue       DATE,
+    RecommendationsReceived INTEGER,
+    RecommendationsToSend   INTEGER,
     EmailConfirmation   VARCHAR(255)                UNIQUE,
     UniqueKey           VARCHAR(255)                UNIQUE,
     IsDeleted           BOOLEAN,
@@ -61,12 +63,12 @@ CREATE TABLE Recommendation
     RecommendedID       INTEGER         NOT NULL,
     RecommenderID       INTEGER         NOT NULL,
     RecommendationDate  DATE,
-    IsDeleted           BOOLEAN,
-    OptLockVersion     INTEGER,
+    OptLockVersion      INTEGER,
     FOREIGN KEY (TypeID) REFERENCES Type (ID),
     FOREIGN KEY (RecommendedID) REFERENCES Person (ID),
     FOREIGN KEY (RecommenderID) REFERENCES Person (ID),
-    PRIMARY KEY (ID)
+    PRIMARY KEY (ID),
+    CONSTRAINT uq_yourtablename UNIQUE(RecommendedID, RecommenderID)
 );
 
 CREATE TABLE Payment
@@ -75,9 +77,8 @@ CREATE TABLE Payment
     TypeID              INTEGER         NOT NULL,
     PaymentReg          VARCHAR(255)                    UNIQUE,
     PersonID            INTEGER         NOT NULL,
-    PaymentPrice        DECIMAL,
+    PaymentPrice        Decimal(19,4),
     PaymentDate         DATE,
-    PaidWithMoney       INTEGER,
     ApprovedDate        DATE,
     IsDeleted           BOOLEAN,
     OptLockVersion      INTEGER,
@@ -90,13 +91,13 @@ CREATE TABLE Service
 (
     ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
     Title           VARCHAR(255),
-    Description         VARCHAR(255),
+    Description     VARCHAR(255),
     TypeID          INTEGER        NOT NULL,
     ServiceReg      VARCHAR(255)   NOT NULL      UNIQUE,
     IsActive        BOOLEAN,
     SeasonStartDate DATE,
     SeasonEndDate   DATE,
-    WeekPrice       Decimal,
+    WeekPrice       Decimal(19,4),
     NumberOfPlaces  INTEGER,
     IsDeleted       BOOLEAN,
     OptLockVersion  INTEGER,
@@ -115,7 +116,7 @@ CREATE TABLE House
     IsActive        BOOLEAN,
     SeasonStartDate DATE,
     SeasonEndDate   DATE,
-    WeekPrice       Decimal,
+    WeekPrice       Decimal(19,4),
     NumberOfPlaces  INTEGER,
     IsDeleted       BOOLEAN,
     OptLockVersion  INTEGER,
@@ -127,9 +128,10 @@ CREATE TABLE Reservation
 (
     ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
     TypeID              INTEGER         NOT NULL,
-    ReservationReg      VARCHAR(255)               UNIQUE,
+    ReservationReg      VARCHAR(255)                UNIQUE,
     HouseID             INTEGER         NOT NULL,
     PersonID            INTEGER         NOT NULL,
+    PaymentID           INTEGER         NOT NULL,
     StartDate           DATE,
     EndDate             DATE,
     IsDeleted           BOOLEAN,
@@ -137,6 +139,7 @@ CREATE TABLE Reservation
     FOREIGN KEY (TypeID) REFERENCES Type (ID),
     FOREIGN KEY (HouseID) REFERENCES House (ID),
     FOREIGN KEY (PersonID) REFERENCES Person (ID),
+    FOREIGN KEY (PaymentID) REFERENCES Payment (ID),
     PRIMARY KEY (ID)
 );
 
