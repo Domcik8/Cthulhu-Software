@@ -5,24 +5,27 @@
  */
 package lt.vu.mif.labanoro_draugai.administration;
 
+import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
-import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.Person;
+import org.primefaces.context.RequestContext;
+import org.omnifaces.cdi.ViewScoped;
 
 /**
  *
@@ -30,13 +33,17 @@ import lt.vu.mif.labanoro_draugai.entities.Person;
  */
 @Named
 @Stateful
-@ConversationScoped
+@ViewScoped
 public class AdminUserManager implements Serializable {
     
     private List<Person> users;
     private List<Person> filteredUsers;
-    private Person user;
     private Date calendar;
+    
+    //Dialog:
+    private Person user;
+    private String userEmail;
+    private int addedPoints;
     
     @PersistenceContext
     EntityManager em;
@@ -151,6 +158,31 @@ public class AdminUserManager implements Serializable {
         return "users";
     }
     
+    public void addPoints() throws IOException {
+        Person u = (Person) dbm.getEntity("Person", "Email", userEmail);
+        u.setPoints(u.getPoints().add(new BigDecimal(addedPoints)));
+        if (dbm.updatePersonPoints(u)) {
+            userEmail = "";
+            addedPoints = 0;
+            
+            //Close the dialog:
+            RequestContext requestContext = RequestContext.getCurrentInstance();  
+            requestContext.execute("PF('addPointsDialog').hide();");
+            
+            //Reload the page:
+            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+            ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+        }
+    }
+    
+    /*public void openDialog(Person u) {
+        user = u;
+        userEmail = u.getEmail();
+        
+        RequestContext requestContext = RequestContext.getCurrentInstance();  
+        requestContext.execute("PF('addPointsDialog').show();");
+    }*/
+    
     public Date getCalendar() {
         return calendar;
     }
@@ -165,6 +197,30 @@ public class AdminUserManager implements Serializable {
     
     public String getType(Person user) {
         return user.getTypeid().getTitle();
+    }
+    
+    public Person getUser() {
+        return user;
+    }
+    
+    public void setUser(Person u) {
+        user = u;
+    }
+    
+    public void setUserEmail(String eml) {
+        userEmail = eml;
+    }
+    
+    public String getUserEmail() {
+        return userEmail;
+    }
+    
+    public int getAddedPoints() {
+        return addedPoints;
+    }
+    
+    public void setAddedPoints(int ap) {
+        addedPoints = ap;
     }
     
      /*public House getHouse() {

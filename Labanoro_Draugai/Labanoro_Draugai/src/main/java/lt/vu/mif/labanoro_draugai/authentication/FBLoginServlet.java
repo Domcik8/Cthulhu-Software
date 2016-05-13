@@ -34,6 +34,8 @@ public class FBLoginServlet extends HttpServlet {
     private FBGraph fbGraph;
     @Inject
     private LoginController loginController;
+    @Inject
+    private DatabaseManager dbm;
 
     public FBLoginServlet() {
     }
@@ -122,18 +124,16 @@ public class FBLoginServlet extends HttpServlet {
 
     private void setAppId() {
 
-        // get AppId from settings and return it;
-        this.appId = "198659840500311";
+        this.appId = dbm.getSystemParameter("ServiceParameter.Facebook.AppId").getValue();
     }
 
     private void setRedirectUrl() {
 
-        this.redirectUrl = "http://localhost:8080/Labanoro_Draugai";
+        this.redirectUrl = dbm.getSystemParameter("ServiceParameter.Facebook.Redirect").getValue();
     }
 
     private String getAppSecret() {
 
-        // get app secret from settings and return it;  
-        return "97d6fc7c788463e2de89f1571385cc75";
+        return dbm.getSystemParameter("ServiceParameter.Facebook.AppSecret").getValue();
     }
 }

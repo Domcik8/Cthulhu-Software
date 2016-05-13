@@ -159,15 +159,7 @@ and open the template in the editor.
                                         <p:ajax event="dateSelect" update="selectedDateFrom,periodPrice" />
                                     </p:calendar>
                                     
-                                    <br/>
-                                    
-                                    <p:accordionPanel id="selectedHouseServiceAccordion" multiple="true" style="width: 90%" activeIndex="null">
-                                        <p:tab id="optionalServices" title="Papildomos paslaugos">
-                                            <p:selectManyCheckbox id="selectedHouseServices" value="#{summerhouseManager.selectedHouseSelectedServices}" layout="pageDirection" columns="3">
-                                                <f:selectItems value="#{summerhouseManager.selectedHouseAvailableServices}" var="filter" itemLabel="#{filter}" itemValue="#{filter}" />
-                                            </p:selectManyCheckbox> 
-                                        </p:tab>
-                                    </p:accordionPanel>
+                                   
                                     <h:outputLabel id="periodPrice" value="Kaina: #{summerhouseManager.selectedHousePeriodPrice()}t" />
                                     <p:commandLink id="confirmOrder" action="#{summerhouseManager.confirmSelectedHouse()}" class="btn btn-success" 
                                         style="position: relative;left: 40%; bottom: -35%;" value="Užsakyti">

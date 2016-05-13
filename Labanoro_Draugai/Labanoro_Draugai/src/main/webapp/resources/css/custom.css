@@ -120,3 +120,7 @@ body {
 .pe-dynaform-cell.select .ui-selectonemenu .ui-selectonemenu-label {  
     width: 130px !important;  
 }
+
+.new-payment {
+    background: #F75D59  !important ;
+}

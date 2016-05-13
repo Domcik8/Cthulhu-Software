@@ -2,12 +2,13 @@ package lt.vu.mif.labanoro_draugai.authentication;
 
 import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.HttpSession;
+import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 
-//import lt.vu.mif.labanoro_draugai.administration.settings
-@ManagedBean(name = "loginPageCode")
+@Named("loginPageCode")
 @SessionScoped
 public class LoginPageCode implements Serializable {
 
@@ -15,7 +16,10 @@ public class LoginPageCode implements Serializable {
 
     private String appId = null;
     private String redirectUrl = null;
-
+    
+    @Inject
+    private DatabaseManager dbm;
+    
     public String getFacebookUrlAuth() {
 
         setAppId();
@@ -37,12 +41,12 @@ public class LoginPageCode implements Serializable {
     }
 
     private void setAppId() {
-        // change to call for db settings
-        this.appId = "198659840500311";
+        
+        this.appId = dbm.getSystemParameter("ServiceParameter.Facebook.AppId").getValue();
     }
 
     private void setRedirectUrl() {
-        // change to call for db settings
-        this.redirectUrl = "http://localhost:8080/Labanoro_Draugai";
+        
+        this.redirectUrl = dbm.getSystemParameter("ServiceParameter.Facebook.Redirect").getValue();
     }
 }

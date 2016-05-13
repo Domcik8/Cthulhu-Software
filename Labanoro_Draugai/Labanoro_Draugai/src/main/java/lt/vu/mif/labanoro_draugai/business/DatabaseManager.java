@@ -60,13 +60,12 @@ public class DatabaseManager {
         fillBasicPayments();
         fillBasicReservations();
         fillBasicSystemParameters();
-        //fillBasicHouseImages();
+        fillBasicHouseImages();
         fillBasicRecommendations();
-        
 
         editPeople();
         editHouses();
-
+        editServices();
         return "DataBase has been filled and have been houses edited";
     }
 
@@ -148,6 +147,9 @@ public class DatabaseManager {
     private void fillBasicServices() {
         addService("New red lamborghini", "ServiceReg-1", "HouseReg-1", "Service.Vehicle.Car");
         addService("New blue bike", "ServiceReg-2", "HouseReg-1", "Service.Vehicle.Bike");
+                for (int i = 2; i <= 20; i++) {
+            addService("coolSerice"+i,"ServiceReg-" + i, "HouseReg-"+i,"Service.Vehicle.Bike");
+        }
     }
 
     /**
@@ -159,7 +161,7 @@ public class DatabaseManager {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             services.add("ServiceReg-1");
             services.add("ServiceReg-2");
-
+            
             addReservation("ReservationReg-1", "HouseReg-1", "Reservation", "doli@test.com", null, format.parse("2016-06-06"), format.parse("2016-06-12"));
             addReservation("ReservationReg-2", "HouseReg-1", "Reservation", "doli@test.com", services, format.parse("2016-06-27"), format.parse("2016-07-10"));
         } catch (ParseException ex) {
@@ -196,6 +198,19 @@ public class DatabaseManager {
         addSystemParameter("SystemParameter.Mail.Smtp.port", "Smtp portas", "587", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Smtp.auth", "Smtp autentifikacija", "true", "Ar reikalinga autentifikacija prisijungimui", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Smtp.starttls.enable", "Smtp TLS", "true", "Ar TLS turi buti ijungtas", "SystemParameter");
+        
+        addSystemParameter("ServiceParameter.General.ContextPath", "Pagrindinis kelias", "http://localhost:8080/Labanoro_Draugai", "Pagrindines puslapio URL'as", "SystemParameter");
+        
+        addSystemParameter("ServiceParameter.Redirect.Login", "Sekmingas prisijungimas", "/index.html", "Nukreipimas i puslapi po sekmingo prisijungimo", "SystemParameter");
+        addSystemParameter("ServiceParameter.Redirect.LoginError", "Klaidingas prisijungimas", "/loginError.html", "Nukreipimas i puslapi po nesekmingo prisijungimo", "SystemParameter");
+        addSystemParameter("ServiceParameter.Redirect.GlobalError", "Globali klaida", "/WEB-INF/other_pages/someError.html", "Nukreipimas i puslapi po globalios klaidos", "SystemParameter");
+        
+        addSystemParameter("ServiceParameter.Mail.Address", "Gmail el.pastas", "labanorai@gmail.com", "SystemParameter");
+        addSystemParameter("ServiceParameter.Mail.Password", "Gmail el.pasto slaptazodis", "LabanoroDraugas", "SystemParameter");
+        addSystemParameter("ServiceParameter.Mail.Smtp.host", "Smtp hostas", "smtp.gmail.com", "SystemParameter");
+        addSystemParameter("ServiceParameter.Mail.Smtp.port", "Smtp portas", "587", "SystemParameter");
+        addSystemParameter("ServiceParameter.Mail.Smtp.auth", "Smtp autentifikacija", "true", "Ar reikalinga autentifikacija prisijungimui", "SystemParameter");
+        addSystemParameter("ServiceParameter.Mail.Smtp.starttls.enable", "Smtp TLS", "true", "Ar TLS turi buti ijungtas", "SystemParameter");
     }
 
     /**
@@ -336,11 +351,6 @@ public class DatabaseManager {
         }
         return newHouse;
     }
-
-    public Object updateEntity(Object obj) {
-        return em.merge(obj);
-    }
-
     /**
      * Creates new service and flushes it to database. Returns entity if created
      * sucessfully
@@ -384,7 +394,7 @@ public class DatabaseManager {
      * Creates new service and flushes it to database. Returns entity if created
      * sucessfully
      */
-    private Reservation addReservation(String reservationReg, String houseReg, String typeInternalName, String personEmail, List<String> services, Date dateFrom, Date dateTo) {
+    public Reservation addReservation(String reservationReg, String houseReg, String typeInternalName, String personEmail, List<String> services, Date dateFrom, Date dateTo) {
         return addReservation(reservationReg, houseReg, "DefaultPayment", typeInternalName, personEmail, services, dateFrom, dateTo);
     }
 
@@ -392,7 +402,7 @@ public class DatabaseManager {
      * Creates new service and flushes it to database. Returns entity if created
      * sucessfully
      */
-    private Reservation addReservation(String reservationReg, String houseReg, String paymentReg, String typeInternalName, String personEmail, List<String> services, Date dateFrom, Date dateTo) {
+    public Reservation addReservation(String reservationReg, String houseReg, String paymentReg, String typeInternalName, String personEmail, List<String> services, Date dateFrom, Date dateTo) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
         House house = (House) getEntity("House", "Housereg", houseReg);
         Person person = (Person) getEntity("Person", "Email", personEmail);
@@ -501,7 +511,7 @@ public class DatabaseManager {
      * Creates new house image and flushes it to database. Returns house image
      * entity if created sucessfully
      */
-    private Houseimage addHouseImage(String internalName, String path, int sequence, String houseReg, String typeInternalName) {
+    public Houseimage addHouseImage(String internalName, String path, int sequence, String houseReg, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
         House house = (House) getEntity("House", "Housereg", houseReg);
 
@@ -601,7 +611,7 @@ public class DatabaseManager {
      * Creates new payment and flushes it to database. Returns
      * payment entity if created sucessfully
      */
-    private Payment addPayment(String paymentReg, String payerEmail, BigDecimal paymentPrice, Date paymentDate, String typeInternalName) {
+    public Payment addPayment(String paymentReg, String payerEmail, BigDecimal paymentPrice, Date paymentDate, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
         Person payer = (Person) getEntity("Person", "Email", payerEmail);
 
@@ -635,6 +645,10 @@ public class DatabaseManager {
         }
 
         return newPayment;
+    }
+    
+    public Object updateEntity(Object obj) {
+        return em.merge(obj);
     }
 
     public Boolean recommendationExists(String recommenderEmail, String recommendedEmail) {
@@ -873,6 +887,16 @@ public class DatabaseManager {
             em.persist(house);
         }
     }
+    
+    public void editServices(){
+        Random rand = new Random();
+        Query query = em.createNamedQuery("Service.findAll");
+        List<Service> services = query.getResultList();
+        for (Service service : services) {
+            service.setWeekprice(new BigDecimal(rand.nextInt(800)));
+            em.persist(service);
+        } 
+    }
 
     public void editPeople() {
         Random rand = new Random();
@@ -893,8 +917,7 @@ public class DatabaseManager {
      * @param typeClass
      */
     public List<Type> retrieveTypes(String typeClass) {
-        Query query = em.createQuery("SELECT t FROM Type t WHERE t.internalname LIKE :typeClass").setParameter("typeClass", typeClass + ".%");
-
+        Query query = em.createQuery("SELECT t FROM Type t WHERE (t.internalname LIKE :typeClassLike) OR (t.internalname = :typeClass)").setParameter("typeClassLike", typeClass + ".%").setParameter("typeClass", typeClass);
         return query.getResultList();
     }
 
@@ -905,5 +928,81 @@ public class DatabaseManager {
         char c[] = string.toCharArray();
         c[0] = Character.toUpperCase(c[0]);
         return new String(c);
+    }
+    
+    public boolean updateHouse(House h) {
+        try {
+            Query q = em.createQuery("UPDATE House h SET h.title = :title, h.typeid = :typeid, "
+                    + "h.description = :description, h.housereg = :housereg, h.address = :address, "
+                    + "h.isactive = :isactive, h.seasonstartdate = :startdt, h.seasonenddate = :enddt, "
+                    + "h.weekprice = :price, h.numberofplaces = :places "
+                    + "WHERE h.id = :id");
+            q.setParameter("title", h.getTitle());
+            q.setParameter("typeid", h.getTypeid());
+            q.setParameter("description", h.getDescription());
+            q.setParameter("housereg", h.getHousereg());
+            q.setParameter("address", h.getAddress());
+            q.setParameter("isactive", h.getIsactive());
+            q.setParameter("startdt", h.getSeasonstartdate());
+            q.setParameter("enddt", h.getSeasonenddate());
+            q.setParameter("price", h.getWeekprice());
+            q.setParameter("places", h.getNumberofplaces());
+            q.setParameter("id", h.getId());
+            em.joinTransaction();
+            int updated = q.executeUpdate();
+            em.flush();
+            return true;
+        }
+        catch (Exception ex) {
+            return false;
+        }
+    }
+    
+    public boolean setHouseIsDeletedTrue(House h) {
+        try {
+            Query q = em.createQuery("UPDATE House h SET h.isdeleted = :isdeleted "
+                    + "WHERE h.id = :id");
+            q.setParameter("isdeleted", true);
+            q.setParameter("id", h.getId());
+            em.joinTransaction();
+            int updated = q.executeUpdate();
+            em.flush();
+            return true;
+        }
+        catch (Exception ex) {
+            return false;
+        }
+    }
+    
+    public boolean updatePersonPoints(Person p) {
+        try {
+            Query q = em.createQuery("UPDATE Person p SET p.points = :points "
+                    + "WHERE p.id = :id");
+            q.setParameter("points", p.getPoints());
+            q.setParameter("id", p.getId());
+            em.joinTransaction();
+            int updated = q.executeUpdate();
+            em.flush();
+            return true;
+        }
+        catch (Exception ex) {
+            return false;
+        }
+    }
+    
+    public boolean setPaymentApprovalDate(Payment p) {
+        try {
+            Query q = em.createQuery("UPDATE Payment p SET p.approveddate = :approvedate "
+                    + "WHERE p.id = :id");
+            q.setParameter("approvedate", new Date());
+            q.setParameter("id", p.getId());
+            em.joinTransaction();
+            int updated = q.executeUpdate();
+            em.flush();
+            return true;
+        }
+        catch (Exception ex) {
+            return false;
+        }
     }
 }

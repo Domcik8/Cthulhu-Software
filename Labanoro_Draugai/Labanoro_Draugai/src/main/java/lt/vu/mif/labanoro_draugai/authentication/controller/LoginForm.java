@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 
 /**
  *
@@ -25,7 +26,10 @@ public class LoginForm {
     private String password;
 
     @Inject
-    LoginController controller;
+    private LoginController controller;
+    
+    @Inject 
+    private DatabaseManager dbm;
 
     public LoginForm() {
     }
@@ -58,7 +62,8 @@ public class LoginForm {
 
                     if (request.getUserPrincipal().getName().equals(this.username)) {
                         System.out.println("Internal login worked");
-                        return "/index?faces-redirect=true";
+                        System.out.println(dbm.getSystemParameter("ServiceParameter.Redirect.Login").getValue());
+                        return (dbm.getSystemParameter("ServiceParameter.Redirect.Login").getValue() + "?faces-redirect=true");
                     }
                 }
             }
@@ -66,10 +71,10 @@ public class LoginForm {
         } catch (ServletException e) {
             System.out.println("Failed to log in user!");
             context.addMessage(null, new FacesMessage("Login failed."));
-            return "/loginError.html?faces-redirect=true";
+            return (dbm.getSystemParameter("ServiceParameter.Redirect.LoginError").getValue() + "?faces-redirect=true");
         }
 
-        return "/loginError.html?faces-redirect=true";
+        return (dbm.getSystemParameter("ServiceParameter.Redirect.LoginError").getValue() + "?faces-redirect=true");
     }
 
     public String logout() {
@@ -77,13 +82,13 @@ public class LoginForm {
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
 
-        String destination = "/index?faces-redirect=true";
+        String destination = (dbm.getSystemParameter("ServiceParameter.Redirect.Login").getValue() + "?faces-redirect=true");
         try {
             request.logout();
             System.out.println("Logout worked");
         } catch (ServletException e) {
             System.out.println("Failed to logout user!");
-            destination = "/loginError.html?faces-redirect=true";
+            destination = (dbm.getSystemParameter("ServiceParameter.Redirect.LoginError").getValue() + "?faces-redirect=true");
         }
 
         return destination;
