@@ -5,6 +5,7 @@ import com.google.common.hash.Hashing;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -56,10 +57,12 @@ public class DatabaseManager {
         fillBasicPeople();
         fillBasicHouses();
         fillBasicServices();
+        fillBasicPayments();
         fillBasicReservations();
         fillBasicSystemParameters();
-        fillBasicHouseImages();
+        //fillBasicHouseImages();
         fillBasicRecommendations();
+        
 
         editPeople();
         editHouses();
@@ -93,24 +96,24 @@ public class DatabaseManager {
         addType("FormElement.Textarea", "Didelis teksto laukas");
         addType("FormElement.Number", "Skaičius");
         addType("Form.Person", "Forma");
+        addType("Payment", "Mokėjimas");
+        addType("Payment.Money", "Mokėjimas pinigais");
+        addType("Payment.Points", "Mokėjimas taškais");
     }
 
     /**
      * Fills database with basic people
      */
     public void fillBasicPeople() {
-
-        Person person = null;
-        String passwordHash = null;
-
-        person = addPerson("doli@test.com", "admin", "Dominik", "Lisovski", "Person.Administrator");
-        person = addPerson("erba@test.com", "admin", "Ernest", "Barkovski", "Person.Administrator");
-        person = addPerson("erja@test.com", "admin", "Ernest", "Jascanin", "Person.Administrator");
-        person = addPerson("kauz@test.com", "admin", "Karolis", "Uždanavičius", "Person.Administrator");
-        person = addPerson("paru@test.com", "admin", "Paulius", "Rudzinskas", "Person.Administrator");
-        person = addPerson("admin", "admin", "admin", "admin", "Person.Administrator");
-        person = addPerson("can", "admin", "can", "can", "Person.Candidate");
-        person = addPerson("user", "admin", "user", "user", "Person.User");
+        addPerson("System@Labanorai.com", "admin", "System", "System", "Person.Administrator");
+        addPerson("doli@test.com", "admin", "Dominik", "Lisovski", "Person.Administrator");
+        addPerson("erba@test.com", "admin", "Ernest", "Barkovski", "Person.Administrator");
+        addPerson("erja@test.com", "admin", "Ernest", "Jascanin", "Person.Administrator");
+        addPerson("kauz@test.com", "admin", "Karolis", "Uždanavičius", "Person.Administrator");
+        addPerson("paru@test.com", "admin", "Paulius", "Rudzinskas", "Person.Administrator");
+        addPerson("admin", "admin", "admin", "admin", "Person.Administrator");
+        addPerson("can", "admin", "can", "can", "Person.Candidate");
+        addPerson("user", "admin", "user", "user", "Person.User");
     }
 
     /**
@@ -168,31 +171,38 @@ public class DatabaseManager {
      * Fills database with basic system parameters
      */
     private void fillBasicSystemParameters() {
-        addSystemParameter("ServiceParameter.RequiredRecommendations", "Reikalingų rekomendacijų skaičius", "2", "SystemParameter");
-        addSystemParameter("ServiceParameter.MaxRecommendations", "Maksimalus rekomendacijų užklausų skaičius", "5", "SystemParameter");
-        addSystemParameter("ServiceParameter.StripeTestSecretKey", "Stripe testinis slaptas raktas", "sk_test_6K4uBYlsGNPy5H161DtWjZcm", "SystemParameter");
-        addSystemParameter("ServiceParameter.StripeTestPublishableKey", "Stripe testinis viešas raktas", "pk_test_tK93j3DH8bSqL4VHi65SnJ9e ", "SystemParameter");
-        addSystemParameter("ServiceParameter.StripeLiveSecretKey", "Stripe tikras slaptas raktas", "sk_live_zzW2TvQpbW5HLntoGzHC6o3r ", "SystemParameter");
-        addSystemParameter("ServiceParameter.StripeLivePublishableKey", "Stripe tikras viešas raktas", "pk_live_qW95KiaHrQokdCXpL6WCaZl2", "SystemParameter");
-        addSystemParameter("ServiceParameter.TermsAndConditions", "Nuostatos ir sąlygos", "Naudodamiesi mūsų sistema jūs sutinkate, kad \"Labanoro draugai\" nėra atsakingi už sistmos nesklandumus ar kitus žalingus incidentus.", "SystemParameter");
-        addSystemParameter("ServiceParameter.Facebook.AppId", "FB aplikacijos kodas", "\"198659840500311\"", "Facebook uzregistruotos aplikacijos kodas ", "SystemParameter");
-        addSystemParameter("ServiceParameter.Facebook.AppSecret", "FB aplikacijos slaptas kodas", "\"97d6fc7c788463e2de89f1571385cc75\"", "Kodas skirtas autentifikuotis uzregistuotoje Facebook aplikacije", "SystemParameter");
-        addSystemParameter("ServiceParameter.Facebook.Redirect", "FB autentifikacija", "\"http://localhost:8080/Labanoro_Draugai\"", "Nukreipimas i puslapi facebook autentifikacijos metu", "SystemParameter");
-        addSystemParameter("ServiceParameter.Redirect.Login", "Sekmingas prisijungimas", "/index.html", "Nukreipimas i puslapi po sekmingo prisijungimo", "SystemParameter");
-        addSystemParameter("ServiceParameter.Redirect.LoginError", "Klaidingas prisijungimas", "/loginError.html", "Nukreipimas i puslapi po nesekmingo prisijungimo", "SystemParameter");
-        addSystemParameter("ServiceParameter.Redirect.GlobalError", "Globali klaida", "/WEB-INF/other_pages/someError.html", "Nukreipimas i puslapi po globalios klaidos", "SystemParameter");
-        addSystemParameter("ServiceParameter.Mail.Address", "Gmail el.pastas", "labanorai@gmail.com", "SystemParameter");
-        addSystemParameter("ServiceParameter.Mail.Password", "Gmail el.pasto slaptazodis", "LabanoroDraugas", "SystemParameter");
-        addSystemParameter("ServiceParameter.Mail.Smtp.host", "Smtp hostas", "smtp.gmail.com", "SystemParameter");
-        addSystemParameter("ServiceParameter.Mail.Smtp.port", "Smtp portas", "587", "SystemParameter");
-        addSystemParameter("ServiceParameter.Mail.Smtp.auth", "Smtp autentifikacija", "true", "Ar reikalinga autentifikacija prisijungimui", "SystemParameter");
-        addSystemParameter("ServiceParameter.Mail.Smtp.starttls.enable", "Smtp TLS", "true", "Ar TLS turi buti ijungtas", "SystemParameter");
+        addSystemParameter("SystemParameter.RequiredRecommendations", "Reikalingų rekomendacijų skaičius", "2", "SystemParameter");
+        addSystemParameter("SystemParameter.MaxRecommendations", "Maksimalus rekomendacijų užklausų skaičius", "5", "SystemParameter");
+        //addSystemParameter("SystemParameter.priorityGroup", "Maksimalus rekomendacijų užklausų skaičius", "5", "SystemParameter");
+        
+        addSystemParameter("SystemParameter.StripeTestSecretKey", "Stripe testinis slaptas raktas", "sk_test_6K4uBYlsGNPy5H161DtWjZcm", "SystemParameter");
+        addSystemParameter("SystemParameter.StripeTestPublishableKey", "Stripe testinis viešas raktas", "pk_test_tK93j3DH8bSqL4VHi65SnJ9e ", "SystemParameter");
+        addSystemParameter("SystemParameter.StripeLiveSecretKey", "Stripe tikras slaptas raktas", "sk_live_zzW2TvQpbW5HLntoGzHC6o3r ", "SystemParameter");
+        addSystemParameter("SystemParameter.StripeLivePublishableKey", "Stripe tikras viešas raktas", "pk_live_qW95KiaHrQokdCXpL6WCaZl2", "SystemParameter");
+        
+        addSystemParameter("SystemParameter.TermsAndConditions", "Nuostatos ir sąlygos", "Naudodamiesi mūsų sistema jūs sutinkate, kad \"Labanoro draugai\" nėra atsakingi už sistmos nesklandumus ar kitus žalingus incidentus.", "SystemParameter");
+        
+        addSystemParameter("SystemParameter.Facebook.AppId", "FB aplikacijos kodas", "\"198659840500311\"", "Facebook uzregistruotos aplikacijos kodas ", "SystemParameter");
+        addSystemParameter("SystemParameter.Facebook.AppSecret", "FB aplikacijos slaptas kodas", "\"97d6fc7c788463e2de89f1571385cc75\"", "Kodas skirtas autentifikuotis uzregistuotoje Facebook aplikacije", "SystemParameter");
+        addSystemParameter("SystemParameter.Facebook.Redirect", "FB autentifikacija", "\"http://localhost:8080/Labanoro_Draugai\"", "Nukreipimas i puslapi facebook autentifikacijos metu", "SystemParameter");
+       
+        addSystemParameter("SystemParameter.Redirect.Login", "Sekmingas prisijungimas", "/index.html", "Nukreipimas i puslapi po sekmingo prisijungimo", "SystemParameter");
+        addSystemParameter("SystemParameter.Redirect.LoginError", "Klaidingas prisijungimas", "/loginError.html", "Nukreipimas i puslapi po nesekmingo prisijungimo", "SystemParameter");
+        addSystemParameter("SystemParameter.Redirect.GlobalError", "Globali klaida", "/WEB-INF/other_pages/someError.html", "Nukreipimas i puslapi po globalios klaidos", "SystemParameter");
+        
+        addSystemParameter("SystemParameter.Mail.Address", "Gmail el.pastas", "labanorai@gmail.com", "SystemParameter");
+        addSystemParameter("SystemParameter.Mail.Password", "Gmail el.pasto slaptazodis", "LabanoroDraugas", "SystemParameter");
+        addSystemParameter("SystemParameter.Mail.Smtp.host", "Smtp hostas", "smtp.gmail.com", "SystemParameter");
+        addSystemParameter("SystemParameter.Mail.Smtp.port", "Smtp portas", "587", "SystemParameter");
+        addSystemParameter("SystemParameter.Mail.Smtp.auth", "Smtp autentifikacija", "true", "Ar reikalinga autentifikacija prisijungimui", "SystemParameter");
+        addSystemParameter("SystemParameter.Mail.Smtp.starttls.enable", "Smtp TLS", "true", "Ar TLS turi buti ijungtas", "SystemParameter");
     }
 
     /**
      * Fills database with basic recommendations
      */
     private void fillBasicRecommendations() {
+        addRecommendation("doli@test.com", "erba@test.com", "Recommendation");
         addRecommendation("doli@test.com", "erba@test.com", "Recommendation");
     }
     
@@ -219,7 +229,13 @@ public class DatabaseManager {
         addHouseImage("Picture.HouseReg-1_2", "Images/House/House-2_2.JPG", 2, "HouseReg-1", "Picture.House");
         addHouseImage("Picture.HouseReg-1_3", "Images/House/House-2_3.JPG", 3, "HouseReg-1", "Picture.House");
         addHouseImage("Picture.HouseReg-2_2", "Images/House/House-1_2.JPG", 2, "HouseReg-2", "Picture.House");
-
+    }
+    
+    /**
+     * Fills database with basic payments
+     */
+    private void fillBasicPayments() {
+        addPayment("DefaultPayment", "System@Labanorai.com", BigDecimal.ZERO, null, "Payment.Points");
     }
 
     /**
@@ -283,7 +299,7 @@ public class DatabaseManager {
         }
 
         if (persistAndFlush(newPerson)) {
-            System.out.println(String.format("Person '%s' created successfully", firstName + ":" + lastName));
+            System.out.println(String.format("Person '%s' created successfully", firstName + " " + lastName));
         } else {
             return null;
         }
@@ -332,7 +348,7 @@ public class DatabaseManager {
     private Service addService(String title, String serviceReg, String houseReg, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
         House house = (House) getEntity("House", "Housereg", houseReg);
-
+        
         if (type == null) {
             System.out.println(String.format("There is no type '%s'", typeInternalName));
             return null;
@@ -363,15 +379,24 @@ public class DatabaseManager {
 
         return newService;
     }
-
+    
     /**
      * Creates new service and flushes it to database. Returns entity if created
      * sucessfully
      */
     private Reservation addReservation(String reservationReg, String houseReg, String typeInternalName, String personEmail, List<String> services, Date dateFrom, Date dateTo) {
+        return addReservation(reservationReg, houseReg, "DefaultPayment", typeInternalName, personEmail, services, dateFrom, dateTo);
+    }
+
+    /**
+     * Creates new service and flushes it to database. Returns entity if created
+     * sucessfully
+     */
+    private Reservation addReservation(String reservationReg, String houseReg, String paymentReg, String typeInternalName, String personEmail, List<String> services, Date dateFrom, Date dateTo) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
         House house = (House) getEntity("House", "Housereg", houseReg);
         Person person = (Person) getEntity("Person", "Email", personEmail);
+        Payment payment = (Payment) getEntity("Payment", "Paymentreg", paymentReg);
 
         Reservation newReservation = new Reservation();
         newReservation.setReservationreg(reservationReg);
@@ -381,6 +406,7 @@ public class DatabaseManager {
         newReservation.setStartdate(dateFrom);
         newReservation.setEnddate(dateTo);
         newReservation.setServiceList(new ArrayList<Service>());
+        newReservation.setPaymentid(payment);
 
         if (type == null) {
             System.out.println(String.format("There is no type '%s'", typeInternalName));
@@ -396,7 +422,12 @@ public class DatabaseManager {
             System.out.println(String.format("Person with email '%s' does not exist", personEmail));
             return null;
         }
-
+        
+        if (payment == null) {
+            System.out.println(String.format("Payment with registration '%s' does not exist", paymentReg));
+            return null;
+        }
+    
         if (services != null) {
             for (String serviceReg : services) {
                 Service service = (Service) getEntity("Service", "Servicereg", serviceReg);
@@ -429,7 +460,8 @@ public class DatabaseManager {
      */
     private Systemparameter addSystemParameter(String internalName, String title, String value, String description, String typeInternalName) {
         Systemparameter newSystemParameter = addSystemParameter(internalName, title, value, typeInternalName);
-        newSystemParameter.setDescription(description);
+        if (newSystemParameter != null)
+            newSystemParameter.setDescription(description);
         return newSystemParameter;
     }
 
@@ -546,6 +578,15 @@ public class DatabaseManager {
             System.out.println(String.format("Person with email '%s' does not exist", recommendedEmail));
             return null;
         }
+        
+        Query query = em.createQuery("SELECT r FROM Recommendation r WHERE r.recommendedid = :recommendedID AND r.recommenderid = :recommenderID");
+        query.setParameter("recommendedID", recommended);
+        query.setParameter("recommenderID", recommender);
+        
+        if (!query.getResultList().isEmpty()) {
+            System.out.println(String.format("Recommendation from '%s' to '%s' already exists", recommenderEmail, recommendedEmail));
+            return null;
+        } 
 
         if (persistAndFlush(newRecommendation)) {
             System.out.println(String.format("Recommendation from '%s' to '%s' created successfully", recommenderEmail, recommendedEmail));
@@ -554,6 +595,46 @@ public class DatabaseManager {
         }
 
         return newRecommendation;
+    }
+    
+    /**
+     * Creates new payment and flushes it to database. Returns
+     * payment entity if created sucessfully
+     */
+    private Payment addPayment(String paymentReg, String payerEmail, BigDecimal paymentPrice, Date paymentDate, String typeInternalName) {
+        Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
+        Person payer = (Person) getEntity("Person", "Email", payerEmail);
+
+        Payment newPayment = new Payment();
+
+        newPayment.setPaymentreg(paymentReg);
+        newPayment.setPersonid(payer);
+        newPayment.setPaymentprice(paymentPrice);
+        newPayment.setPaymentdate(new Date());
+        newPayment.setTypeid(type);
+        
+        if (type == null) {
+            System.out.println(String.format("There is no type '%s'", typeInternalName));
+            return null;
+        }
+
+        if (payer == null) {
+            System.out.println(String.format("Person with email '%s' does not exist", payerEmail));
+            return null;
+        }
+        
+        if (entityExists("Payment", "paymentReg", paymentReg)) {
+            System.out.println(String.format("Payment with registration'%s' already exists", paymentReg));
+            return null;
+        }
+
+        if (persistAndFlush(newPayment)) {
+            System.out.println(String.format("Payment '%s' created successfully", paymentReg));
+        } else {
+            return null;
+        }
+
+        return newPayment;
     }
 
     public Boolean recommendationExists(String recommenderEmail, String recommendedEmail) {
@@ -788,7 +869,7 @@ public class DatabaseManager {
             //house.setSeasonenddate(new Date(2017,04,11));
             house.setIsdeleted(false);
             house.setNumberofplaces(rand.nextInt(30));
-            house.setWeekprice(rand.nextInt(800));
+            house.setWeekprice(new BigDecimal(rand.nextInt(1000)));
             em.persist(house);
         }
     }
@@ -799,7 +880,7 @@ public class DatabaseManager {
         List<Person> people = query.getResultList();
         for (Person person : people) {
             person.setPriority(rand.nextInt(7));
-            person.setPoints(rand.nextInt(1000));
+            person.setPoints(new BigDecimal(rand.nextInt(1000)));
             person.setAddress(person.getFirstname() + rand.nextInt(1000));
             person.setMembershipdue(new Date(2017, 01, 01));
             em.persist(person);

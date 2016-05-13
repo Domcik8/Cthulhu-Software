@@ -39,7 +39,7 @@ public class confirmServlet extends HttpServlet {
     private void doProcess(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException, IOException {
 
         String confirmKey = request.getParameter("key");
-        String redirect = dbm.getSystemParameter("ServiceParameter.Redirect.Login").getValue();
+        String redirect = dbm.getSystemParameter("SystemParameter.Redirect.Login").getValue();
 
         try {
             Person person = (Person) dbm.getEntity("Person", "Emailconfirmation", confirmKey);

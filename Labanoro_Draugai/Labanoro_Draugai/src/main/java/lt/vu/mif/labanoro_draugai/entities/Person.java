@@ -6,6 +6,7 @@
 package lt.vu.mif.labanoro_draugai.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -47,6 +48,8 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Person.findByAddress", query = "SELECT p FROM Person p WHERE p.address = :address"),
     @NamedQuery(name = "Person.findByPersonalid", query = "SELECT p FROM Person p WHERE p.personalid = :personalid"),
     @NamedQuery(name = "Person.findByMembershipdue", query = "SELECT p FROM Person p WHERE p.membershipdue = :membershipdue"),
+    @NamedQuery(name = "Person.findByRecommendationsreceived", query = "SELECT p FROM Person p WHERE p.recommendationsreceived = :recommendationsreceived"),
+    @NamedQuery(name = "Person.findByRecommendationstosend", query = "SELECT p FROM Person p WHERE p.recommendationstosend = :recommendationstosend"),
     @NamedQuery(name = "Person.findByEmailconfirmation", query = "SELECT p FROM Person p WHERE p.emailconfirmation = :emailconfirmation"),
     @NamedQuery(name = "Person.findByUniquekey", query = "SELECT p FROM Person p WHERE p.uniquekey = :uniquekey"),
     @NamedQuery(name = "Person.findByIsdeleted", query = "SELECT p FROM Person p WHERE p.isdeleted = :isdeleted"),
@@ -68,8 +71,9 @@ public class Person implements Serializable {
     private String password;
     @Column(name = "PRIORITY")
     private Integer priority;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "POINTS")
-    private Integer points;
+    private BigDecimal points;
     @Size(max = 255)
     @Column(name = "FACEBOOKID")
     private String facebookid;
@@ -94,6 +98,10 @@ public class Person implements Serializable {
     @Column(name = "MEMBERSHIPDUE")
     @Temporal(TemporalType.DATE)
     private Date membershipdue;
+    @Column(name = "RECOMMENDATIONSRECEIVED")
+    private Integer recommendationsreceived;
+    @Column(name = "RECOMMENDATIONSTOSEND")
+    private Integer recommendationstosend;
     @Size(max = 255)
     @Column(name = "EMAILCONFIRMATION")
     private String emailconfirmation;
@@ -157,11 +165,11 @@ public class Person implements Serializable {
         this.priority = priority;
     }
 
-    public Integer getPoints() {
+    public BigDecimal getPoints() {
         return points;
     }
 
-    public void setPoints(Integer points) {
+    public void setPoints(BigDecimal points) {
         this.points = points;
     }
 
@@ -227,6 +235,22 @@ public class Person implements Serializable {
 
     public void setMembershipdue(Date membershipdue) {
         this.membershipdue = membershipdue;
+    }
+
+    public Integer getRecommendationsreceived() {
+        return recommendationsreceived;
+    }
+
+    public void setRecommendationsreceived(Integer recommendationsreceived) {
+        this.recommendationsreceived = recommendationsreceived;
+    }
+
+    public Integer getRecommendationstosend() {
+        return recommendationstosend;
+    }
+
+    public void setRecommendationstosend(Integer recommendationstosend) {
+        this.recommendationstosend = recommendationstosend;
     }
 
     public String getEmailconfirmation() {

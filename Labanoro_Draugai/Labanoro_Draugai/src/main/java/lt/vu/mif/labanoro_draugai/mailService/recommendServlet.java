@@ -48,8 +48,8 @@ public class recommendServlet extends HttpServlet {
             String userKey = request.getParameter("user");
 
             try {
-                minimumRecommendations = Integer.parseInt(dbm.getSystemParameter("ServiceParameter.RequiredRecommendations").getValue());
-                maximumRecommendations = Integer.parseInt(dbm.getSystemParameter("ServiceParameter.MaxRecommendations").getValue());
+                minimumRecommendations = Integer.parseInt(dbm.getSystemParameter("SystemParameter.RequiredRecommendations").getValue());
+                maximumRecommendations = Integer.parseInt(dbm.getSystemParameter("SystemParameter.MaxRecommendations").getValue());
             } catch (NumberFormatException exc) {
             }
 

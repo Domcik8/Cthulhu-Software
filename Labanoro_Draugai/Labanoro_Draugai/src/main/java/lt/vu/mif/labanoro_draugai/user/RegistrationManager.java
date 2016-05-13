@@ -6,6 +6,7 @@
 package lt.vu.mif.labanoro_draugai.user;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -55,7 +56,7 @@ public class RegistrationManager implements Serializable{
         List<Formattribute> attributes = (List<Formattribute>)dbm.getAllEntities("Formattribute");
         if(attributes == null) return;
         
-        termsAndConditions = ((Systemparameter)dbm.getEntity("Systemparameter", "Internalname", "ServiceParameter.TermsAndConditions")).getTitle();
+        termsAndConditions = ((Systemparameter)dbm.getEntity("Systemparameter", "Internalname", "SystemParameter.TermsAndConditions")).getTitle();
         
         for(Formattribute attribute:attributes){
             DynaFormRow row = displayModel.createRegularRow();
@@ -75,7 +76,7 @@ public class RegistrationManager implements Serializable{
             jsonObject.element(control.getKey(), control.getData());
         }
         Person person = dbm.addPerson(email, password, firstName, lastName, "Person.Candidate");
-        person.setPoints(0);
+        person.setPoints(new BigDecimal(0));
         person.setPriority(0);
         Personregistrationform regInfo = new Personregistrationform();
         regInfo.setFormvalue(jsonObject.toString());

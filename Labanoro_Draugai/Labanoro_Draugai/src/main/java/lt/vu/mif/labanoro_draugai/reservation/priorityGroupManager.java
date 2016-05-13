@@ -5,17 +5,14 @@
  */
 package lt.vu.mif.labanoro_draugai.reservation;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import javax.annotation.PostConstruct;
 import javax.ejb.Schedule;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.entities.Reservation;
@@ -35,12 +32,15 @@ public class priorityGroupManager {
     @PersistenceContext
     EntityManager em;
    
-    //@Schedule(minute="5", hour="*")
+    //@Schedule(second="20, 40, 60", minute="*", hour="*")
     public void priorityService() {
+        System.out.println("Kuku");
+        
         List<Person> people = dbm.getAllEntities("Person");
         for (Person person : people) {
             person.setPriority(666);
         }
+        System.out.println("Kuku2");
     }
     /*
    Every weekday at 20:15: minute=”15″, hour=”20″, dayOfWeek=”Mon-Fri”
