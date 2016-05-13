@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Vartotoju sarasas</title>
+        <h:outputStylesheet library="css" name="custom.css"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"/>
+    </h:head>
+    <h:body>
+
+        <ui:include src="/WEB-INF/other_pages/navigation.xhtml" />
+
+        <div class="container">
+            <div class="row"> 
+                <div>
+                    <h:form >
+                        <p:dataTable var="person" value="#{profileListView.persons}" widgetVar="paramsTable"
+                                     emptyMessage="" filteredValue="" paginator="false"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="10,50,100" rows="10" currentPageReportTemplate="{currentPage} iš {totalPages}">
+
+                            <p:column headerText="Vardas pavarde" >
+                                <h:outputText value="#{person.firstname} #{person.lastname}" />
+                            </p:column>
+
+                            <p:column  headerText="El.pastas" >
+                                <h:outputText value="#{person.email}" />
+                            </p:column>
+
+                            <p:column headerText="Profilis" >
+                                <h:commandButton action="#{profileListView.viewProfile()}" value="Perziureti">
+                                    <f:param name="personEmail" value="#{person.email}"/>
+                                </h:commandButton>
+                            </p:column>
+
+                            <p:column  headerText="Rekomendacija" >
+                                <h:commandButton action="#{profileListView.askRecommendation()}" value="Paprasyti">
+                                    <f:param name="personEmail" value="#{person.email}"/>
+                                </h:commandButton>
+                            </p:column>
+
+                        </p:dataTable>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+
+        <h:outputScript library="js" name="custom.js" />
+        <script>setActiveNavTab("profiles")</script>
+    </h:body>
+</html>

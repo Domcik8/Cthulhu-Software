@@ -76,7 +76,7 @@ public class recommendServlet extends HttpServlet {
                 }
 
                 // add one more recommendation
-                Recommendation recommend = dbm.addRecommendation(recommenderEmail, personEmail, userKey);
+                Recommendation recommend = dbm.addRecommendation(recommenderEmail, personEmail, "Recommendation");
                 if (recommend != null) {
                     dbm.updateEntity(recommend);
                 }
