@@ -147,8 +147,8 @@ public class DatabaseManager {
     private void fillBasicServices() {
         addService("New red lamborghini", "ServiceReg-1", "HouseReg-1", "Service.Vehicle.Car");
         addService("New blue bike", "ServiceReg-2", "HouseReg-1", "Service.Vehicle.Bike");
-                for (int i = 2; i <= 20; i++) {
-            addService("coolSerice"+i,"ServiceReg-" + i, "HouseReg-"+i,"Service.Vehicle.Bike");
+        for (int i = 2; i <= 20; i++) {
+            addService("coolSerice" + i, "ServiceReg-" + i, "HouseReg-" + i, "Service.Vehicle.Bike");
         }
     }
 
@@ -161,7 +161,7 @@ public class DatabaseManager {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             services.add("ServiceReg-1");
             services.add("ServiceReg-2");
-            
+
             addReservation("ReservationReg-1", "HouseReg-1", "Reservation", "doli@test.com", null, format.parse("2016-06-06"), format.parse("2016-06-12"));
             addReservation("ReservationReg-2", "HouseReg-1", "Reservation", "doli@test.com", services, format.parse("2016-06-27"), format.parse("2016-07-10"));
         } catch (ParseException ex) {
@@ -176,35 +176,35 @@ public class DatabaseManager {
         addSystemParameter("SystemParameter.RequiredRecommendations", "Reikalingų rekomendacijų skaičius", "2", "SystemParameter");
         addSystemParameter("SystemParameter.MaxRecommendations", "Maksimalus rekomendacijų užklausų skaičius", "5", "SystemParameter");
         //addSystemParameter("SystemParameter.priorityGroup", "Maksimalus rekomendacijų užklausų skaičius", "5", "SystemParameter");
-        
+
         addSystemParameter("SystemParameter.StripeTestSecretKey", "Stripe testinis slaptas raktas", "sk_test_6K4uBYlsGNPy5H161DtWjZcm", "SystemParameter");
         addSystemParameter("SystemParameter.StripeTestPublishableKey", "Stripe testinis viešas raktas", "pk_test_tK93j3DH8bSqL4VHi65SnJ9e ", "SystemParameter");
         addSystemParameter("SystemParameter.StripeLiveSecretKey", "Stripe tikras slaptas raktas", "sk_live_zzW2TvQpbW5HLntoGzHC6o3r ", "SystemParameter");
         addSystemParameter("SystemParameter.StripeLivePublishableKey", "Stripe tikras viešas raktas", "pk_live_qW95KiaHrQokdCXpL6WCaZl2", "SystemParameter");
-        
+
         addSystemParameter("SystemParameter.TermsAndConditions", "Nuostatos ir sąlygos", "Naudodamiesi mūsų sistema jūs sutinkate, kad \"Labanoro draugai\" nėra atsakingi už sistmos nesklandumus ar kitus žalingus incidentus.", "SystemParameter");
-        
+
         addSystemParameter("SystemParameter.Facebook.AppId", "FB aplikacijos kodas", "\"198659840500311\"", "Facebook uzregistruotos aplikacijos kodas ", "SystemParameter");
         addSystemParameter("SystemParameter.Facebook.AppSecret", "FB aplikacijos slaptas kodas", "\"97d6fc7c788463e2de89f1571385cc75\"", "Kodas skirtas autentifikuotis uzregistuotoje Facebook aplikacije", "SystemParameter");
         addSystemParameter("SystemParameter.Facebook.Redirect", "FB autentifikacija", "\"http://localhost:8080/Labanoro_Draugai\"", "Nukreipimas i puslapi facebook autentifikacijos metu", "SystemParameter");
-       
+
         addSystemParameter("SystemParameter.Redirect.Login", "Sekmingas prisijungimas", "/index.html", "Nukreipimas i puslapi po sekmingo prisijungimo", "SystemParameter");
         addSystemParameter("SystemParameter.Redirect.LoginError", "Klaidingas prisijungimas", "/loginError.html", "Nukreipimas i puslapi po nesekmingo prisijungimo", "SystemParameter");
         addSystemParameter("SystemParameter.Redirect.GlobalError", "Globali klaida", "/WEB-INF/other_pages/someError.html", "Nukreipimas i puslapi po globalios klaidos", "SystemParameter");
-        
+
         addSystemParameter("SystemParameter.Mail.Address", "Gmail el.pastas", "labanorai@gmail.com", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Password", "Gmail el.pasto slaptazodis", "LabanoroDraugas", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Smtp.host", "Smtp hostas", "smtp.gmail.com", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Smtp.port", "Smtp portas", "587", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Smtp.auth", "Smtp autentifikacija", "true", "Ar reikalinga autentifikacija prisijungimui", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Smtp.starttls.enable", "Smtp TLS", "true", "Ar TLS turi buti ijungtas", "SystemParameter");
-        
+
         addSystemParameter("ServiceParameter.General.ContextPath", "Pagrindinis kelias", "http://localhost:8080/Labanoro_Draugai", "Pagrindines puslapio URL'as", "SystemParameter");
-        
+
         addSystemParameter("ServiceParameter.Redirect.Login", "Sekmingas prisijungimas", "/index.html", "Nukreipimas i puslapi po sekmingo prisijungimo", "SystemParameter");
         addSystemParameter("ServiceParameter.Redirect.LoginError", "Klaidingas prisijungimas", "/loginError.html", "Nukreipimas i puslapi po nesekmingo prisijungimo", "SystemParameter");
         addSystemParameter("ServiceParameter.Redirect.GlobalError", "Globali klaida", "/WEB-INF/other_pages/someError.html", "Nukreipimas i puslapi po globalios klaidos", "SystemParameter");
-        
+
         addSystemParameter("ServiceParameter.Mail.Address", "Gmail el.pastas", "labanorai@gmail.com", "SystemParameter");
         addSystemParameter("ServiceParameter.Mail.Password", "Gmail el.pasto slaptazodis", "LabanoroDraugas", "SystemParameter");
         addSystemParameter("ServiceParameter.Mail.Smtp.host", "Smtp hostas", "smtp.gmail.com", "SystemParameter");
@@ -230,7 +230,7 @@ public class DatabaseManager {
         addRecommendation("admin", "kauz@test.com", "Recommendation");
         addRecommendation("admin", "paru@test.com", "Recommendation");
         addRecommendation("admin", "can", "Recommendation");
-        addRecommendation("admin", "user", "Recommendation");     
+        addRecommendation("admin", "user", "Recommendation");
         addRecommendation("can", "doli@test.com", "Recommendation");
         addRecommendation("can", "erba@test.com", "Recommendation");
     }
@@ -247,7 +247,7 @@ public class DatabaseManager {
         addHouseImage("Picture.HouseReg-1_3", "Images/House/House-2_3.JPG", 3, "HouseReg-1", "Picture.House");
         addHouseImage("Picture.HouseReg-2_2", "Images/House/House-1_2.JPG", 2, "HouseReg-2", "Picture.House");
     }
-    
+
     /**
      * Fills database with basic payments
      */
@@ -353,6 +353,7 @@ public class DatabaseManager {
         }
         return newHouse;
     }
+
     /**
      * Creates new service and flushes it to database. Returns entity if created
      * sucessfully
@@ -360,7 +361,7 @@ public class DatabaseManager {
     private Service addService(String title, String serviceReg, String houseReg, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
         House house = (House) getEntity("House", "Housereg", houseReg);
-        
+
         if (type == null) {
             System.out.println(String.format("There is no type '%s'", typeInternalName));
             return null;
@@ -391,7 +392,7 @@ public class DatabaseManager {
 
         return newService;
     }
-    
+
     /**
      * Creates new service and flushes it to database. Returns entity if created
      * sucessfully
@@ -434,12 +435,12 @@ public class DatabaseManager {
             System.out.println(String.format("Person with email '%s' does not exist", personEmail));
             return null;
         }
-        
+
         if (payment == null) {
             System.out.println(String.format("Payment with registration '%s' does not exist", paymentReg));
             return null;
         }
-    
+
         if (services != null) {
             for (String serviceReg : services) {
                 Service service = (Service) getEntity("Service", "Servicereg", serviceReg);
@@ -472,8 +473,9 @@ public class DatabaseManager {
      */
     private Systemparameter addSystemParameter(String internalName, String title, String value, String description, String typeInternalName) {
         Systemparameter newSystemParameter = addSystemParameter(internalName, title, value, typeInternalName);
-        if (newSystemParameter != null)
+        if (newSystemParameter != null) {
             newSystemParameter.setDescription(description);
+        }
         return newSystemParameter;
     }
 
@@ -598,15 +600,15 @@ public class DatabaseManager {
             System.out.println(String.format("Person with email '%s' does not exist", recommendedEmail));
             return null;
         }
-        
+
         Query query = em.createQuery("SELECT r FROM Recommendation r WHERE r.recommendedid = :recommendedID AND r.recommenderid = :recommenderID");
         query.setParameter("recommendedID", recommended);
         query.setParameter("recommenderID", recommender);
-        
+
         if (!query.getResultList().isEmpty()) {
             System.out.println(String.format("Recommendation from '%s' to '%s' already exists", recommenderEmail, recommendedEmail));
             return null;
-        } 
+        }
 
         if (persistAndFlush(newRecommendation)) {
             System.out.println(String.format("Recommendation from '%s' to '%s' created successfully", recommenderEmail, recommendedEmail));
@@ -616,10 +618,10 @@ public class DatabaseManager {
 
         return newRecommendation;
     }
-    
+
     /**
-     * Creates new payment and flushes it to database. Returns
-     * payment entity if created sucessfully
+     * Creates new payment and flushes it to database. Returns payment entity if
+     * created sucessfully
      */
     public Payment addPayment(String paymentReg, String payerEmail, BigDecimal paymentPrice, Date paymentDate, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
@@ -632,7 +634,7 @@ public class DatabaseManager {
         newPayment.setPaymentprice(paymentPrice);
         newPayment.setPaymentdate(new Date());
         newPayment.setTypeid(type);
-        
+
         if (type == null) {
             System.out.println(String.format("There is no type '%s'", typeInternalName));
             return null;
@@ -642,7 +644,7 @@ public class DatabaseManager {
             System.out.println(String.format("Person with email '%s' does not exist", payerEmail));
             return null;
         }
-        
+
         if (entityExists("Payment", "paymentReg", paymentReg)) {
             System.out.println(String.format("Payment with registration'%s' already exists", paymentReg));
             return null;
@@ -656,7 +658,7 @@ public class DatabaseManager {
 
         return newPayment;
     }
-    
+
     public Object updateEntity(Object obj) {
         return em.merge(obj);
     }
@@ -665,7 +667,7 @@ public class DatabaseManager {
 
         Person recommender = (Person) getEntity("Person", "Email", recommenderEmail);
         Person recommended = (Person) getEntity("Person", "Email", recommendedEmail);
-        
+
         Recommendation recommendation = null;
 //        if (recommender.getReservationList().contains(tx))
         return false;
@@ -729,7 +731,7 @@ public class DatabaseManager {
     public Systemparameter getSystemParameter(String internalName) {
         return (Systemparameter) getEntity("Systemparameter", "Internalname", internalName);
     }
-    
+
     /**
      * Returns true if specified entity exists with specified parameter
      */
@@ -737,7 +739,7 @@ public class DatabaseManager {
         Object entity = getEntity(className, findBy, parameter);
         return entity != null ? true : false;
     }
-    
+
     /**
      * Returns true if specified entity exists with specified parameter
      */
@@ -745,7 +747,7 @@ public class DatabaseManager {
         Object entity = getEntity(className, findBy, parameter);
         return entity != null ? true : false;
     }
-    
+
     /**
      * Returns true if specified entity exists with specified parameter
      */
@@ -761,7 +763,7 @@ public class DatabaseManager {
         List entityList = getEntityList(className, findBy, parameter);
         return entityList == null ? null : entityList.get(0);
     }
-    
+
     /**
      * Returns entity if specified entity exists with specified parameter
      */
@@ -769,7 +771,7 @@ public class DatabaseManager {
         List entityList = getEntityList(className, findBy, parameter);
         return entityList == null ? null : entityList.get(0);
     }
-    
+
     /**
      * Returns entity if specified entity exists with specified parameter
      */
@@ -789,8 +791,8 @@ public class DatabaseManager {
 
         return entities.isEmpty() ? null : entities;
     }
-    
-     /**
+
+    /**
      * Returns entity if specified entity exists with specified parameter
      */
     public List getEntityList(String className, String findBy, int parameter) {
@@ -801,21 +803,21 @@ public class DatabaseManager {
 
         return entities.isEmpty() ? null : entities;
     }
-    
+
     /**
      * Returns entity if specified entity exists with specified parameter
      */
     public List getEntityList(String className, String findBy, Object parameter) {
         className = className.toLowerCase();
         findBy = findBy.toLowerCase();
-        
+
         Query query = em.createQuery("SELECT r FROM " + capitalize(className) + " r WHERE r." + findBy + " = :parameter");
         query.setParameter("parameter", parameter);
         List entities = query.getResultList();
 
         return entities.isEmpty() ? null : entities;
     }
-     
+
     /**
      * Returns all entities of selected class name.
      */
@@ -825,7 +827,7 @@ public class DatabaseManager {
 
         return query.getResultList();
     }
-    
+
     /**
      * Persists and flushes entity to database. Returns true if operation was
      * successful, false otherwise. Before using this method check if newEntity
@@ -897,15 +899,15 @@ public class DatabaseManager {
             em.persist(house);
         }
     }
-    
-    public void editServices(){
+
+    public void editServices() {
         Random rand = new Random();
         Query query = em.createNamedQuery("Service.findAll");
         List<Service> services = query.getResultList();
         for (Service service : services) {
             service.setWeekprice(new BigDecimal(rand.nextInt(800)));
             em.persist(service);
-        } 
+        }
     }
 
     public void editPeople() {
@@ -939,7 +941,7 @@ public class DatabaseManager {
         c[0] = Character.toUpperCase(c[0]);
         return new String(c);
     }
-    
+
     public boolean updateHouse(House h) {
         try {
             Query q = em.createQuery("UPDATE House h SET h.title = :title, h.typeid = :typeid, "
@@ -962,12 +964,11 @@ public class DatabaseManager {
             int updated = q.executeUpdate();
             em.flush();
             return true;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             return false;
         }
     }
-    
+
     public boolean setHouseIsDeletedTrue(House h) {
         try {
             Query q = em.createQuery("UPDATE House h SET h.isdeleted = :isdeleted "
@@ -978,12 +979,11 @@ public class DatabaseManager {
             int updated = q.executeUpdate();
             em.flush();
             return true;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             return false;
         }
     }
-    
+
     public boolean updatePersonPoints(Person p) {
         try {
             Query q = em.createQuery("UPDATE Person p SET p.points = :points "
@@ -994,12 +994,11 @@ public class DatabaseManager {
             int updated = q.executeUpdate();
             em.flush();
             return true;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             return false;
         }
     }
-    
+
     public boolean setPaymentApprovalDate(Payment p) {
         try {
             Query q = em.createQuery("UPDATE Payment p SET p.approveddate = :approvedate "
@@ -1010,8 +1009,7 @@ public class DatabaseManager {
             int updated = q.executeUpdate();
             em.flush();
             return true;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             return false;
         }
     }
