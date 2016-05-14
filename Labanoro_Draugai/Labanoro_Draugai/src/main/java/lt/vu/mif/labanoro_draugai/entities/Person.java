@@ -96,7 +96,7 @@ public class Person implements Serializable {
     @Column(name = "PERSONALID")
     private String personalid;
     @Column(name = "MEMBERSHIPDUE")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date membershipdue;
     @Column(name = "RECOMMENDATIONSRECEIVED")
     private Integer recommendationsreceived;

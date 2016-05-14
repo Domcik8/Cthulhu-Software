@@ -74,10 +74,10 @@ public class House implements Serializable {
     @Column(name = "ISACTIVE")
     private Boolean isactive;
     @Column(name = "SEASONSTARTDATE")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date seasonstartdate;
     @Column(name = "SEASONENDDATE")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date seasonenddate;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "WEEKPRICE")

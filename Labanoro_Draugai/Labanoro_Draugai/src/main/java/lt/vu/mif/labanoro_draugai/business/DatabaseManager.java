@@ -217,8 +217,13 @@ public class DatabaseManager {
      * Fills database with basic recommendations
      */
     private void fillBasicRecommendations() {
+        addRecommendation("doli@test.com", "erba@test.com", new Date(), "Recommendation");
         addRecommendation("doli@test.com", "erba@test.com", "Recommendation");
-        addRecommendation("doli@test.com", "erba@test.com", "Recommendation");
+        
+       
+    }
+    
+    private void fillBasicRecommendations1() {
         addRecommendation("admin", "doli@test.com", "Recommendation");
         addRecommendation("admin", "erba@test.com", "Recommendation");
         addRecommendation("admin", "erja@test.com", "Recommendation");
@@ -554,12 +559,20 @@ public class DatabaseManager {
 
         return newHouseimage;
     }
-
+    
     /**
      * Creates new recommendation and flushes it to database. Returns
      * recommendation entity if created sucessfully
      */
     public Recommendation addRecommendation(String recommenderEmail, String recommendedEmail, String typeInternalName) {
+        return addRecommendation(recommenderEmail, recommendedEmail, null, typeInternalName);
+    }
+
+    /**
+     * Creates new recommendation and flushes it to database. Returns
+     * recommendation entity if created sucessfully
+     */
+    public Recommendation addRecommendation(String recommenderEmail, String recommendedEmail, Date date, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
         Person recommender = (Person) getEntity("Person", "Email", recommenderEmail);
         Person recommended = (Person) getEntity("Person", "Email", recommendedEmail);
@@ -569,7 +582,7 @@ public class DatabaseManager {
         newRecommendation.setTypeid(type);
         newRecommendation.setRecommendedid(recommended);
         newRecommendation.setRecommenderid(recommender);
-        newRecommendation.setRecommendationdate(new Date());
+        newRecommendation.setRecommendationdate(date);
 
         if (type == null) {
             System.out.println(String.format("There is no type '%s'", typeInternalName));

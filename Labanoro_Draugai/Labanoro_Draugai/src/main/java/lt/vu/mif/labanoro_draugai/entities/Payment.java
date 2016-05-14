@@ -8,7 +8,9 @@ package lt.vu.mif.labanoro_draugai.entities;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,6 +20,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -53,10 +56,10 @@ public class Payment implements Serializable {
     @Column(name = "PAYMENTPRICE")
     private BigDecimal paymentprice;
     @Column(name = "PAYMENTDATE")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date paymentdate;
     @Column(name = "APPROVEDDATE")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date approveddate;
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
@@ -68,6 +71,8 @@ public class Payment implements Serializable {
     @JoinColumn(name = "TYPEID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Type typeid;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "paymentid")
+    private List<Reservation> reservationList;
 
     public Payment() {
     }
@@ -146,6 +151,14 @@ public class Payment implements Serializable {
 
     public void setTypeid(Type typeid) {
         this.typeid = typeid;
+    }
+
+    public List<Reservation> getReservationList() {
+        return reservationList;
+    }
+
+    public void setReservationList(List<Reservation> reservationList) {
+        this.reservationList = reservationList;
     }
 
     @Override

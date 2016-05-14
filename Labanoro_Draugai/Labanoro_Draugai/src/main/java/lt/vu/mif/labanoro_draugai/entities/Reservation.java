@@ -20,7 +20,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -52,10 +51,10 @@ public class Reservation implements Serializable {
     @Column(name = "RESERVATIONREG")
     private String reservationreg;
     @Column(name = "STARTDATE")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date startdate;
     @Column(name = "ENDDATE")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date enddate;
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
@@ -70,7 +69,7 @@ public class Reservation implements Serializable {
     @ManyToOne(optional = false)
     private House houseid;
     @JoinColumn(name = "PAYMENTID", referencedColumnName = "ID")
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     private Payment paymentid;
     @JoinColumn(name = "PERSONID", referencedColumnName = "ID")
     @ManyToOne(optional = false)

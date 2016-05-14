@@ -41,7 +41,7 @@ public class Recommendation implements Serializable {
     @Column(name = "ID")
     private Integer id;
     @Column(name = "RECOMMENDATIONDATE")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date recommendationdate;
     @Column(name = "OPTLOCKVERSION")
     private Integer optlockversion;
