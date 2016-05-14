@@ -104,7 +104,7 @@ public class DatabaseManager {
      * Fills database with basic people
      */
     public void fillBasicPeople() {
-        addPerson("System@Labanorai.com", "admin", "System", "System", "Person.Administrator");
+        addPerson("System", "admin", "System", "System", "Person.Administrator");
         addPerson("doli@test.com", "admin", "Dominik", "Lisovski", "Person.Administrator");
         addPerson("erba@test.com", "admin", "Ernest", "Barkovski", "Person.Administrator");
         addPerson("erja@test.com", "admin", "Ernest", "Jascanin", "Person.Administrator");
@@ -219,9 +219,6 @@ public class DatabaseManager {
     private void fillBasicRecommendations() {
         addRecommendation("doli@test.com", "erba@test.com", "Recommendation");
         addRecommendation("doli@test.com", "erba@test.com", "Recommendation");
-    }
-    
-    public void fillRecommendations1() {
         addRecommendation("admin", "doli@test.com", "Recommendation");
         addRecommendation("admin", "erba@test.com", "Recommendation");
         addRecommendation("admin", "erja@test.com", "Recommendation");
@@ -250,7 +247,7 @@ public class DatabaseManager {
      * Fills database with basic payments
      */
     private void fillBasicPayments() {
-        addPayment("DefaultPayment", "System@Labanorai.com", BigDecimal.ZERO, null, "Payment.Points");
+        addPayment("DefaultPayment", "System", BigDecimal.ZERO, null, "Payment.Points");
     }
 
     /**
