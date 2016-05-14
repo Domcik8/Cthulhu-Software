@@ -48,7 +48,6 @@ public class EmailBean {
     public void sendRegisterConfirmationMessage(Person person) {
 
         String to = person.getEmail();
-        //to = "necrqlt@gmail.com";
         String subject = "\"Labanoro draugai\" klubo registracija";
         sendEmail(to, subject, body.getRegistrationConfirmationMessage(person));
 
@@ -74,11 +73,19 @@ public class EmailBean {
 
         sendEmail(receiver.getEmail(), "recommend newbie test", body.getCandidateRecommendationRequestMessage(receiver, requestor));
     }
+    
+    public void sendCandidateRecommendationRequestMessage(String receiver, String requestor) {
+        
+        Person receiverPerson = (Person) dbm.getEntity("Person", "Email", receiver);
+        Person requestorPerson = (Person) dbm.getEntity("Person", "Email", requestor);
+        
+        if (receiverPerson != null && requestorPerson != null) {
+            sendEmail(receiver, "recommend newbie test", body.getCandidateRecommendationRequestMessage(receiverPerson, requestorPerson));
+        }
+    }
 
     private void sendEmail(String to, String subject, String body) {
 
-//        final String fromEmail = "Labanorai@gmail.com";             // get from administration settings
-//        final String emailPassword = "LabanoroDraugas";             // get from administration settings
         final String fromEmail = dbm.getSystemParameter("ServiceParameter.Mail.Address").getValue();
         final String emailPassword = dbm.getSystemParameter("ServiceParameter.Mail.Password").getValue();
 
