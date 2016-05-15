@@ -88,13 +88,8 @@ public class ReservationConfirmationManager implements Serializable{
     
     public String reserveSummerhouse(){
         //validation
-        dbm.addReservation(generateReservationReg(), house.getHousereg(), "Reservation", user.getEmail(), selectedServices, dateFrom, dateTo);
+        dbm.addReservation(house.getHousereg(),"","Reservation", user.getEmail(), selectedServices, dateFrom, dateTo);
         return "/Labanoro_Draugai/index.html";
-    }
-    
-    private String generateReservationReg(){
-        Random rand = new Random();
-        return "ReservationReg-"+System.currentTimeMillis() % 1000+rand.nextInt(10000);
     }
     
     public BigDecimal calculateTotalPrice(){

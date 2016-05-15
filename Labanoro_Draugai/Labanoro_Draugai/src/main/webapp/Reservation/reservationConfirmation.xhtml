@@ -54,7 +54,8 @@ and open the template in the editor.
                     <ui:include src="/WEB-INF/other_pages/stripeForm.xhtml" >
                         <ui:param name="price" value="#{reservationConfirmationManager.totalPrice}" />
                         <ui:param name="order" value="#{reservationConfirmationManager.createReservationJSON()}" />
-                    </ui:include> 
+                    </ui:include>
+                    <p:commandLink class="btn btn-success" value="Mokėti taškais" action="#{reservationConfirmationManager.}"
                 </h:panelGroup>
                      
             </p:panel>            
