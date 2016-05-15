@@ -55,7 +55,7 @@ and open the template in the editor.
                         <ui:param name="price" value="#{reservationConfirmationManager.totalPrice}" />
                         <ui:param name="order" value="#{reservationConfirmationManager.createReservationJSON()}" />
                     </ui:include>
-                    <p:commandLink class="btn btn-success" value="Mokėti taškais" action="#{reservationConfirmationManager.}"
+                    <p:commandLink class="btn btn-success" value="Mokėti taškais" action="#{reservationConfirmationManager.reserveSummerhouse()}"
                 </h:panelGroup>
                      
             </p:panel>            
