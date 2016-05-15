@@ -25,14 +25,19 @@ and open the template in the editor.
         <ui:include src="/WEB-INF/other_pages/navigation.xhtml" />
         <!-- End of Navigation panel -->
         
-        <div>
-            <h:form>
+        <div class="container">
+            <h:form id="mainForm">
+                <p:growl id="msgs" showDetail="true"/>
                 <p:dataTable var="parameter" value="#{adminSysParamsManager.params}" widgetVar="paramsTable"
                      emptyMessage="Mokėjimų nerasta" filteredValue="#{adminSysParamsManager.filteredParams}" paginator="true"
                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                     rowsPerPageTemplate="10,50,100" rows="10" currentPageReportTemplate="{currentPage} iš {totalPages}">
+                     rowsPerPageTemplate="10,50,100" rows="10" currentPageReportTemplate="{currentPage} iš {totalPages}"
+                     editable="true" editMode="cell">
 
                     <f:facet name="header">
+                        <p:outputPanel style="margin-top: 4px">
+                            <h:outputText value="Dėmesio! Pranešimas!" style="color: red"/>
+                        </p:outputPanel>
                         <p:outputPanel style="margin-top: 4px">
                             <h:outputText value="Ieškoti visuose stulpeliuose:" />
                             <p:inputText id="globalFilter" onkeyup="PF('paramsTable').filter()" style="width:150px"/>
@@ -42,22 +47,36 @@ and open the template in the editor.
                     <p:column filterBy="#{parameter.title}" headerText="Pavadinmas" filterMatchMode="contains">
                         <h:outputText value="#{parameter.title}" />
                     </p:column>
-
-                    <p:column filterBy="#{parameter.value}" headerText="Reikšmė" filterMatchMode="contains">
-                        <h:outputText value="#{parameter.value}" />
+                    
+                    <p:ajax event="cellEdit" listener="#{adminSysParamsManager.onCellEdit}" update=":mainForm" />
+                    
+                    <p:column filterBy="#{parameter.value}" headerText="Reikšmė" filterMatchMode="contains" style="width:50%">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{parameter.value}" /></f:facet>
+                            <f:facet name="input"><p:inputText id="modelInput" value="#{parameter.value}" style="width:96%"/></f:facet>
+                        </p:cellEditor>
                     </p:column>
                     
                     <p:column filterBy="#{parameter.description}" headerText="Aprašymas" filterMatchMode="contains">
                         <h:outputText value="#{parameter.description}" />
                     </p:column>
 
-                    <p:column filterBy="#{adminSysParamsManager.getType(parameter)}" headerText="Tipas" filterMatchMode="contains">
-                        <h:outputText value="#{adminSysParamsManager.getType(parameter)}" />
-                    </p:column>
-
                 </p:dataTable>
-                <h:commandButton action="#{adminSysParamsManager.saveChanges}" value="Išsaugoti pakeitimus"/>
             </h:form>
+            
+            <div>
+                <h:form id="dialogOutsideForm">
+                    <p:dialog id="firstDialog" header="Dėmesio!" widgetVar="confirmDialog" modal="true" height="100" width="300">
+                        <h:form id="dialogInsideForm">
+                            <h:outputText value="Ar tikrai norite pakeisti parametro reikšmę?"/>
+                            <h:panelGrid id="buttonPanel" columns="2" >
+                                <p:commandButton value="Taip" action="#{adminSysParamsManager.saveChanges}"/>
+                                <p:commandButton value="Ne" action="#{adminSysParamsManager.discardChanges}"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+                </h:form>
+            </div>  
         </div>
          <!-- scripts -->
         <h:outputScript library="js" name="custom.js" />
