@@ -160,11 +160,13 @@ and open the template in the editor.
                                     </p:calendar>
                                     
                                    
-                                    <h:outputLabel id="periodPrice" value="Kaina: #{summerhouseManager.selectedHousePeriodPrice()}t" />
+                                   <h:outputLabel id="periodPrice" value="Kaina: #{summerhouseManager.selectedHousePeriodPrice()}t" />
+                                   <br/>
                                     <p:commandLink id="confirmOrder" action="#{summerhouseManager.confirmSelectedHouse()}" class="btn btn-success" 
-                                        style="position: relative;left: 40%; bottom: -35%;" value="Užsakyti">
+                                         style="position: relative;left: 70%; bottom: -35%;" value="Užsakyti">
                                     </p:commandLink>
-                                    
+                                     
+<!--                                    style="position: relative;left: 40%; bottom: -35%;"-->
                                 </p:outputPanel>
                         </p:dialog>
                     </h:form> 
