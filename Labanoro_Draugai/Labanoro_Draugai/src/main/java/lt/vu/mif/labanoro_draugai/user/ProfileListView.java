@@ -67,7 +67,7 @@ public class ProfileListView implements Serializable {
 
         // Call page with "personId" to open
 //        request.sendRedirect(request.getContextPath() + "/index");
-        return (dbm.getSystemParameter("ServiceParameter.General.ContextPath").getValue() + "/user/profile/" + personId);
+        return (dbm.getSystemParameter("SystemParameter.General.ContextPath").getValue() + "/user/profile/" + personId);
     }
 
     public void askRecommendation() {
@@ -89,7 +89,6 @@ public class ProfileListView implements Serializable {
             System.out.println("Rekomendacijos prasymas jau buvo issiustas");
         }
         
-//        return "";
     }
 
     private String getParameter(String key) {
