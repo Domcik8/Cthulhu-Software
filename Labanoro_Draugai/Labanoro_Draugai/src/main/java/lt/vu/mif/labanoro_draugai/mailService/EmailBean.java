@@ -86,14 +86,14 @@ public class EmailBean {
 
     private void sendEmail(String to, String subject, String body) {
 
-        final String fromEmail = dbm.getSystemParameter("ServiceParameter.Mail.Address").getValue();
-        final String emailPassword = dbm.getSystemParameter("ServiceParameter.Mail.Password").getValue();
+        final String fromEmail = dbm.getSystemParameter("SystemParameter.Mail.Address").getValue();
+        final String emailPassword = dbm.getSystemParameter("SystemParameter.Mail.Password").getValue();
 
         Properties properties = System.getProperties();
-        properties.put("mail.smtp.host", dbm.getSystemParameter("ServiceParameter.Mail.Smtp.host").getValue());
-        properties.put("mail.smtp.port", dbm.getSystemParameter("ServiceParameter.Mail.Smtp.port").getValue());
-        properties.put("mail.smtp.auth", dbm.getSystemParameter("ServiceParameter.Mail.Smtp.auth").getValue());
-        properties.put("mail.smtp.starttls.enable", dbm.getSystemParameter("ServiceParameter.Mail.Smtp.starttls.enable").getValue());
+        properties.put("mail.smtp.host", dbm.getSystemParameter("SystemParameter.Mail.Smtp.host").getValue());
+        properties.put("mail.smtp.port", dbm.getSystemParameter("SystemParameter.Mail.Smtp.port").getValue());
+        properties.put("mail.smtp.auth", dbm.getSystemParameter("SystemParameter.Mail.Smtp.auth").getValue());
+        properties.put("mail.smtp.starttls.enable", dbm.getSystemParameter("SystemParameter.Mail.Smtp.starttls.enable").getValue());
 
         Authenticator auth = new Authenticator() {
             public PasswordAuthentication getPasswordAuthentication() {

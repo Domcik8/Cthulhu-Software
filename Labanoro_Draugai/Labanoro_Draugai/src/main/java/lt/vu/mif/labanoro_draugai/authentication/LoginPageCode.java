@@ -42,11 +42,11 @@ public class LoginPageCode implements Serializable {
 
     private void setAppId() {
         
-        this.appId = dbm.getSystemParameter("ServiceParameter.Facebook.AppId").getValue();
+        this.appId = dbm.getSystemParameter("SystemParameter.Facebook.AppId").getValue();
     }
 
     private void setRedirectUrl() {
         
-        this.redirectUrl = dbm.getSystemParameter("ServiceParameter.Facebook.Redirect").getValue();
+        this.redirectUrl = dbm.getSystemParameter("SystemParameter.Facebook.Redirect").getValue();
     }
 }

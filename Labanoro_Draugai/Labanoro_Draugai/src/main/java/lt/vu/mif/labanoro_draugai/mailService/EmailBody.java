@@ -130,16 +130,16 @@ public class EmailBody {
 
     private String getMinimumRecommendationNumber() {
 
-        return dbm.getSystemParameter("ServiceParameter.RequiredRecommendations").getValue();
+        return dbm.getSystemParameter("SystemParameter.RequiredRecommendations").getValue();
     }
 
     private String getMaximumRecommendationNumber() {
 
-        return dbm.getSystemParameter("ServiceParameter.MaxRecommendations").getValue();
+        return dbm.getSystemParameter("SystemParameter.MaxRecommendations").getValue();
     }
 
     private String getContextPath() {
 
-        return dbm.getSystemParameter("ServiceParameter.General.ContextPath").getValue();
+        return dbm.getSystemParameter("SystemParameter.General.ContextPath").getValue();
     }
 }

@@ -6,6 +6,7 @@
 package lt.vu.mif.labanoro_draugai.mailService;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -44,8 +45,9 @@ public class recommendServlet extends HttpServlet {
         if (request.getUserPrincipal() != null) {
 
             String recommenderEmail = request.getUserPrincipal().toString();
-            Person recommender = (Person) dbm.getEntity("Person", "Email", recommenderEmail);
+//            Person recommender = (Person) dbm.getEntity("Person", "Email", recommenderEmail);
             String userKey = request.getParameter("user");
+            Person recommendedPerson = (Person) dbm.getEntity("Person", "Uniquekey", userKey);
 
             try {
                 minimumRecommendations = Integer.parseInt(dbm.getSystemParameter("SystemParameter.RequiredRecommendations").getValue());
@@ -53,46 +55,73 @@ public class recommendServlet extends HttpServlet {
             } catch (NumberFormatException exc) {
             }
 
-            Person recommendedPerson = (Person) dbm.getEntity("Person", "Uniquekey", userKey);
-
             // If recommendedPerson exists and if recommender != himself
             if (recommendedPerson != null && !(recommendedPerson.getEmail()).equals(recommenderEmail)) {
 
-                String personEmail = recommendedPerson.getEmail();
-                
-                // Get list of persons who recommended this person
-                List<Recommendation> recommendationList = recommendedPerson.getRecommendationList1();
-                
-                // Check if this person has maximum allowed recommendation number
-                if (recommendationList.size() >= maximumRecommendations) {
-                    return;
+                Integer recommendedPersonReceivedRecommendations = recommendedPerson.getRecommendationsreceived();
+
+                if (recommendedPersonReceivedRecommendations >= maximumRecommendations) {
+                    response.sendRedirect(request.getContextPath() + "/index.html");
                 }
-                
-                // Check if recommender hasn't already recommended this person
-                for (Recommendation rec : recommendationList) {
-                    if (rec.getRecommenderid().equals(recommender.getId())) {
-                        return;
+
+                // find recommendation and put activation date
+                Recommendation recommendation = dbm.getRecommendation(recommenderEmail, recommendedPerson.getEmail());
+
+                if (recommendation != null) {
+
+                    // If there is no recommendation date, when it isn't confirmed
+                    if (recommendation.getRecommendationdate() == null) {
+                        recommendation.setRecommendationdate(new Date());
+                        dbm.updateEntity(recommendation);
+                        recommendedPersonReceivedRecommendations += 1;
+                        recommendedPerson.setRecommendationsreceived(recommendedPersonReceivedRecommendations);
+                        dbm.updateEntity(recommendedPerson);
                     }
                 }
 
-                // add one more recommendation
-                Recommendation recommend = dbm.addRecommendation(recommenderEmail, personEmail, "Recommendation");
-                if (recommend != null) {
-                    dbm.updateEntity(recommend);
-                }
+                if (recommendedPerson.getRecommendationsreceived() >= minimumRecommendations) {
 
-                // if enough recommendation reached, change user status from "Candidate" to "User"
-                recommendationList = recommendedPerson.getRecommendationList1();
-                if (recommendationList.size() > minimumRecommendations) {
-                    
                     Type typeid = (Type) dbm.getEntity("Type", "Internalname", "Person.User");
-                    recommendedPerson.setTypeid(typeid);
-                    dbm.updateEntity(recommendedPerson);
-                    return;
+                    if (!recommendedPerson.getTypeid().equals(typeid)) {
+                        recommendedPerson.setTypeid(typeid);
+                        dbm.updateEntity(recommendedPerson);
+                    }
                 }
             }
+
+//                // Get list of persons who recommended this person
+//                List<Recommendation> recommendationList = recommendedPerson.getRecommendationList1();
+//                
+//                // Check if this person has maximum allowed recommendation number
+//                if (recommendationList.size() >= maximumRecommendations) {
+//                    return;
+//                }
+//                
+//                // Check if recommender hasn't already recommended this person
+//                for (Recommendation rec : recommendationList) {
+//                    if (rec.getRecommenderid().equals(recommender.getId())) {
+//                        return;
+//                    }
+//                }
+//
+//                // add one more recommendation
+//                Recommendation recommend = dbm.addRecommendation(recommenderEmail, personEmail, "Recommendation");
+//                if (recommend != null) {
+//                    dbm.updateEntity(recommend);
+//                }
+//
+//                // if enough recommendation reached, change user status from "Candidate" to "User"
+//                recommendationList = recommendedPerson.getRecommendationList1();
+//                if (recommendationList.size() > minimumRecommendations) {
+//                    
+//                    Type typeid = (Type) dbm.getEntity("Type", "Internalname", "Person.User");
+//                    recommendedPerson.setTypeid(typeid);
+//                    dbm.updateEntity(recommendedPerson);
+//                    return;
+//                }
+//            }
         }
-        
+
         response.sendRedirect(request.getContextPath() + "/index.html");
     }
 }

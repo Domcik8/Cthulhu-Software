@@ -77,11 +77,11 @@ public class FBLoginServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Auth error caught: " + request.getContextPath());
-            response.sendRedirect(request.getContextPath() + "/loginError.html");
+            response.sendRedirect(request.getContextPath() + dbm.getSystemParameter("SystemParameter.Redirect.LoginError").getValue());
             return;
         }
 
-        response.sendRedirect(request.getContextPath() + "/index.html");
+        response.sendRedirect(request.getContextPath() + dbm.getSystemParameter("SystemParameter.Redirect.Login").getValue());
 
 //        } else {
 //            System.err.println("CSRF protection validation");
@@ -124,16 +124,16 @@ public class FBLoginServlet extends HttpServlet {
 
     private void setAppId() {
 
-        this.appId = dbm.getSystemParameter("ServiceParameter.Facebook.AppId").getValue();
+        this.appId = dbm.getSystemParameter("SystemParameter.Facebook.AppId").getValue();
     }
 
     private void setRedirectUrl() {
 
-        this.redirectUrl = dbm.getSystemParameter("ServiceParameter.Facebook.Redirect").getValue();
+        this.redirectUrl = dbm.getSystemParameter("SystemParameter.Facebook.Redirect").getValue();
     }
 
     private String getAppSecret() {
 
-        return dbm.getSystemParameter("ServiceParameter.Facebook.AppSecret").getValue();
+        return dbm.getSystemParameter("SystemParameter.Facebook.AppSecret").getValue();
     }
 }
