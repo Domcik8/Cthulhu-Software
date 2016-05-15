@@ -27,6 +27,7 @@ and open the template in the editor.
         <div class="container">
             <h1>Užsakymo patvirtinimas</h1>
             <p:panel>
+                
                 <ui:include src="/WEB-INF/other_pages/houseData.xhtml">
                     <ui:param name="house" value="#{reservationConfirmationManager.house}" />
                     <ui:param name="houseImages" value="#{reservationConfirmationManager.houseImageNames()}"/>
@@ -54,9 +55,10 @@ and open the template in the editor.
                     <ui:include src="/WEB-INF/other_pages/stripeForm.xhtml" >
                         <ui:param name="price" value="#{reservationConfirmationManager.totalPrice}" />
                         <ui:param name="order" value="#{reservationConfirmationManager.createReservationJSON()}" />
-                    </ui:include> 
+                    </ui:include>
+                    <p:commandLink class="btn btn-success" value="Mokėti taškais" action="#{reservationConfirmationManager.reserveSummerhouse()}"
                 </h:panelGroup>
-                     
+                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />    
             </p:panel>            
         </div>
 

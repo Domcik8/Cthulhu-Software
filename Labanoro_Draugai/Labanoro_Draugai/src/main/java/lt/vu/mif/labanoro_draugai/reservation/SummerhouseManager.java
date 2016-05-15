@@ -311,18 +311,18 @@ public class SummerhouseManager implements Serializable{
         return dates;
     }
     
-    public BigDecimal selectedHousePeriodPrice(){
-        if(selectedDateFrom==null || selectedDateTo== null || selectedHouse==null) return new BigDecimal(0);
+    public double selectedHousePeriodPrice(){
+        if(selectedDateFrom==null || selectedDateTo== null || selectedHouse==null) return 0;
         int dayCount = getDaysBetweenDates(selectedDateFrom, selectedDateTo).size()+1;
         
-        return selectedHouse.getWeekprice().multiply(new BigDecimal(dayCount / 7));
+        return selectedHouse.getWeekprice().doubleValue()*(dayCount / 7);
         
         
     }
       
     public String confirmSelectedHouse(){
         if(selectedHouse == null || selectedDateFrom == null || selectedDateTo == null
-                || !isHouseAvailable(selectedHouse, selectedDateFrom, selectedDateTo)|| selectedHousePeriodPrice().equals(new BigDecimal(0))){
+                || !isHouseAvailable(selectedHouse, selectedDateFrom, selectedDateTo)|| selectedHousePeriodPrice() == 0){
            return "";
         }
         

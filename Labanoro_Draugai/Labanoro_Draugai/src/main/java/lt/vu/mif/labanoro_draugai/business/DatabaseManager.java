@@ -404,8 +404,8 @@ public class DatabaseManager {
      * Creates new service and flushes it to database. Returns entity if created
      * sucessfully
      */
-    public Reservation addReservation(String reservationReg, String houseReg, String typeInternalName, String personEmail, List<String> services, Date dateFrom, Date dateTo) {
-        return addReservation(reservationReg, houseReg, "DefaultPayment", typeInternalName, personEmail, services, dateFrom, dateTo);
+    public Reservation addReservation(String houseReg, String paymentReg, String typeInternalName, String personEmail, List<String> services, Date dateFrom, Date dateTo) {
+        return addReservation( generateReg("ReservationReg"), houseReg, paymentReg, typeInternalName, personEmail, services, dateFrom, dateTo);
     }
 
     /**

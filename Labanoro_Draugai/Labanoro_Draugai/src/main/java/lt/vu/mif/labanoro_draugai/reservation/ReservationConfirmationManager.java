@@ -19,6 +19,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
@@ -28,7 +29,9 @@ import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Houseimage;
+import lt.vu.mif.labanoro_draugai.entities.Payment;
 import lt.vu.mif.labanoro_draugai.entities.Person;
+import lt.vu.mif.labanoro_draugai.entities.Reservation;
 import lt.vu.mif.labanoro_draugai.entities.Service;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -87,14 +90,23 @@ public class ReservationConfirmationManager implements Serializable{
     }
     
     public String reserveSummerhouse(){
-        //validation
-        dbm.addReservation(generateReservationReg(), house.getHousereg(), "Reservation", user.getEmail(), selectedServices, dateFrom, dateTo);
+        if(user.getPoints().compareTo(totalPrice) == -1){
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Nepavyko!", "Jūsų sąskaitoje yra nepakankamai taškų."));
+            return null;
+        }
+        
+        Payment pay = dbm.addPayment(user.getEmail(), totalPrice, new Date(), "Payment.Points", "Currency.Points");
+        
+        user.setPoints(user.getPoints().subtract(totalPrice));
+        if(!dbm.updatePersonPoints(user)){
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Nepavyko!", "Nepavyko sumokėti už rezervciją, bandykite dar kartą."));
+            return null;
+        }
+
+        Reservation reservation = dbm.addReservation(house.getHousereg(),pay.getPaymentreg(),"Reservation", user.getEmail(), selectedServices, dateFrom, dateTo);
+        pay.setReservationid(reservation);
+        dbm.updateEntity(pay);
         return "/Labanoro_Draugai/index.html";
-    }
-    
-    private String generateReservationReg(){
-        Random rand = new Random();
-        return "ReservationReg-"+System.currentTimeMillis() % 1000+rand.nextInt(10000);
     }
     
     public BigDecimal calculateTotalPrice(){
