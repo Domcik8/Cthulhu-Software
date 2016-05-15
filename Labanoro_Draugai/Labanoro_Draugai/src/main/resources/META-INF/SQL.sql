@@ -1,11 +1,12 @@
 --Following scripts drop all tables.
+
+ALTER table payment drop CONSTRAINT   SQL160515114857780;
+ALTER table payment drop CONSTRAINT   PaymentReservationID;
+
 drop view  GroupView;
 drop table PersonRegistrationForm;
 drop table FormAttribute;
-drop table ServiceImage;
 drop table HouseImage;
-drop table ServicePictures;
-drop table HousePictures;
 drop table SystemParameter;
 drop table MultiselectReservationToService;
 drop table MultiselectHouseToService;
@@ -15,9 +16,7 @@ drop table Service;
 drop table Payment;
 drop table Person;
 drop table House;
-drop table Role;
 drop table Type;
-drop table ObjectTable;
 
 CREATE TABLE Type
 (
@@ -75,13 +74,13 @@ CREATE TABLE Payment
 (
     ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
     TypeID              INTEGER         NOT NULL,
+    CurrencyTypeID      INTEGER         NOT NULL,
     PaymentReg          VARCHAR(255)    NOT NULL    UNIQUE,
     PersonID            INTEGER         NOT NULL,
     PaymentPrice        Decimal(19,4),
     ReservationID       INTEGER,
     PaymentDate         TIMESTAMP,
     ApprovedDate        TIMESTAMP,
-    CurrencyTypeID      INTEGER         NOT NULL,
     IsDeleted           BOOLEAN,
     OptLockVersion      INTEGER,
     FOREIGN KEY (TypeID) REFERENCES Type (ID),
@@ -146,7 +145,7 @@ CREATE TABLE Reservation
     PRIMARY KEY (ID)
 );
 
-ALTER TABLE Payment ADD FOREIGN KEY (ReservationID) REFERENCES Reservation (ID);
+ALTER TABLE Payment ADD CONSTRAINT PaymentReservationID FOREIGN KEY (ReservationID) REFERENCES Reservation (ID);
 
 CREATE TABLE MultiselectReservationToService
 (
