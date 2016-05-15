@@ -173,6 +173,9 @@ public class DatabaseManager {
      * Fills database with basic system parameters
      */
     private void fillBasicSystemParameters() {
+
+        addSystemParameter("SystemParameter.General.ContextPath", "Pagrindinis kelias", "http://localhost:8080/Labanoro_Draugai", "Pagrindines puslapio URL'as", "SystemParameter");
+
         addSystemParameter("SystemParameter.RequiredRecommendations", "Reikalingų rekomendacijų skaičius", "2", "SystemParameter");
         addSystemParameter("SystemParameter.MaxRecommendations", "Maksimalus rekomendacijų užklausų skaičius", "5", "SystemParameter");
         //addSystemParameter("SystemParameter.priorityGroup", "Maksimalus rekomendacijų užklausų skaičius", "5", "SystemParameter");
@@ -199,18 +202,6 @@ public class DatabaseManager {
         addSystemParameter("SystemParameter.Mail.Smtp.auth", "Smtp autentifikacija", "true", "Ar reikalinga autentifikacija prisijungimui", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Smtp.starttls.enable", "Smtp TLS", "true", "Ar TLS turi buti ijungtas", "SystemParameter");
 
-        addSystemParameter("ServiceParameter.General.ContextPath", "Pagrindinis kelias", "http://localhost:8080/Labanoro_Draugai", "Pagrindines puslapio URL'as", "SystemParameter");
-
-        addSystemParameter("ServiceParameter.Redirect.Login", "Sekmingas prisijungimas", "/index.html", "Nukreipimas i puslapi po sekmingo prisijungimo", "SystemParameter");
-        addSystemParameter("ServiceParameter.Redirect.LoginError", "Klaidingas prisijungimas", "/loginError.html", "Nukreipimas i puslapi po nesekmingo prisijungimo", "SystemParameter");
-        addSystemParameter("ServiceParameter.Redirect.GlobalError", "Globali klaida", "/WEB-INF/other_pages/someError.html", "Nukreipimas i puslapi po globalios klaidos", "SystemParameter");
-
-        addSystemParameter("ServiceParameter.Mail.Address", "Gmail el.pastas", "labanorai@gmail.com", "SystemParameter");
-        addSystemParameter("ServiceParameter.Mail.Password", "Gmail el.pasto slaptazodis", "LabanoroDraugas", "SystemParameter");
-        addSystemParameter("ServiceParameter.Mail.Smtp.host", "Smtp hostas", "smtp.gmail.com", "SystemParameter");
-        addSystemParameter("ServiceParameter.Mail.Smtp.port", "Smtp portas", "587", "SystemParameter");
-        addSystemParameter("ServiceParameter.Mail.Smtp.auth", "Smtp autentifikacija", "true", "Ar reikalinga autentifikacija prisijungimui", "SystemParameter");
-        addSystemParameter("ServiceParameter.Mail.Smtp.starttls.enable", "Smtp TLS", "true", "Ar TLS turi buti ijungtas", "SystemParameter");
     }
 
     /**
@@ -219,11 +210,9 @@ public class DatabaseManager {
     private void fillBasicRecommendations() {
         addRecommendation("doli@test.com", "erba@test.com", new Date(), "Recommendation");
         addRecommendation("doli@test.com", "erba@test.com", "Recommendation");
-        
-       
     }
-    
-    private void fillBasicRecommendations1() {
+
+    public void fillBasicRecommendations1() {
         addRecommendation("admin", "doli@test.com", "Recommendation");
         addRecommendation("admin", "erba@test.com", "Recommendation");
         addRecommendation("admin", "erja@test.com", "Recommendation");
@@ -561,7 +550,7 @@ public class DatabaseManager {
 
         return newHouseimage;
     }
-    
+
     /**
      * Creates new recommendation and flushes it to database. Returns
      * recommendation entity if created sucessfully
@@ -617,6 +606,25 @@ public class DatabaseManager {
         }
 
         return newRecommendation;
+    }
+
+    public Recommendation getRecommendation(String recommenderEmail, String recommendedEmail) {
+
+        Recommendation recommendation = null;
+
+        Person recommender = (Person) getEntity("Person", "Email", recommenderEmail);
+        Person recommended = (Person) getEntity("Person", "Email", recommendedEmail);
+
+        Query query = em.createQuery("SELECT r FROM Recommendation r WHERE r.recommendedid = :recommendedID AND r.recommenderid = :recommenderID");
+        query.setParameter("recommendedID", recommended);
+        query.setParameter("recommenderID", recommender);
+
+        if (!query.getResultList().isEmpty()) {
+            System.out.println(String.format("Recommendation from '%s' to '%s' already exists, returning result", recommenderEmail, recommendedEmail));
+            return (Recommendation) query.getResultList().get(0);
+        }
+
+        return recommendation;
     }
 
     /**
