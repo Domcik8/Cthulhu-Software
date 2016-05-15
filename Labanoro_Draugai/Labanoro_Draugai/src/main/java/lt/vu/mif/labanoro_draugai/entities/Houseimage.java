@@ -23,7 +23,7 @@ import javax.validation.constraints.Size;
 
 /**
  *
- * @author Dominik Lisovski
+ * @author Karolis
  */
 @Entity
 @Table(name = "HOUSEIMAGE")

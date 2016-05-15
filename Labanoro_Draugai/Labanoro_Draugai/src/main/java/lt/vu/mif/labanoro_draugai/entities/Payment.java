@@ -24,11 +24,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
  *
- * @author Dominik Lisovski
+ * @author Karolis
  */
 @Entity
 @Table(name = "PAYMENT")
@@ -49,7 +50,9 @@ public class Payment implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
-    @Size(max = 255)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
     @Column(name = "PAYMENTREG")
     private String paymentreg;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -68,6 +71,12 @@ public class Payment implements Serializable {
     @JoinColumn(name = "PERSONID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Person personid;
+    @JoinColumn(name = "RESERVATIONID", referencedColumnName = "ID")
+    @ManyToOne
+    private Reservation reservationid;
+    @JoinColumn(name = "CURRENCYTYPEID", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private Type currencytypeid;
     @JoinColumn(name = "TYPEID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Type typeid;
@@ -79,6 +88,11 @@ public class Payment implements Serializable {
 
     public Payment(Integer id) {
         this.id = id;
+    }
+
+    public Payment(Integer id, String paymentreg) {
+        this.id = id;
+        this.paymentreg = paymentreg;
     }
 
     public Integer getId() {
@@ -143,6 +157,22 @@ public class Payment implements Serializable {
 
     public void setPersonid(Person personid) {
         this.personid = personid;
+    }
+
+    public Reservation getReservationid() {
+        return reservationid;
+    }
+
+    public void setReservationid(Reservation reservationid) {
+        this.reservationid = reservationid;
+    }
+
+    public Type getCurrencytypeid() {
+        return currencytypeid;
+    }
+
+    public void setCurrencytypeid(Type currencytypeid) {
+        this.currencytypeid = currencytypeid;
     }
 
     public Type getTypeid() {

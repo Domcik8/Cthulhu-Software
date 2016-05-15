@@ -70,7 +70,7 @@ public class ReservationConfirmationManager implements Serializable{
         if(dateTo==null || dateFrom == null) return "";
         JSONObject jsonObject = new JSONObject();
         jsonObject.element("type", "houseReservation");
-        jsonObject.element("reservationReg", generateReservationReg());
+        jsonObject.element("reservationReg", dbm.generateReg("ReservationReg"));
         jsonObject.element("houseReg", house.getHousereg());
         jsonObject.element("reservationTypeInternalName",  "Reservation");
         JSONArray arr = new JSONArray();

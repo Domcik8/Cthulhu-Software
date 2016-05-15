@@ -75,14 +75,17 @@ CREATE TABLE Payment
 (
     ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
     TypeID              INTEGER         NOT NULL,
-    PaymentReg          VARCHAR(255)                    UNIQUE,
+    PaymentReg          VARCHAR(255)    NOT NULL    UNIQUE,
     PersonID            INTEGER         NOT NULL,
     PaymentPrice        Decimal(19,4),
+    ReservationID       INTEGER,
     PaymentDate         TIMESTAMP,
     ApprovedDate        TIMESTAMP,
+    CurrencyTypeID      INTEGER         NOT NULL,
     IsDeleted           BOOLEAN,
     OptLockVersion      INTEGER,
     FOREIGN KEY (TypeID) REFERENCES Type (ID),
+    FOREIGN KEY (CurrencyTypeID) REFERENCES Type (ID),
     FOREIGN KEY (PersonID) REFERENCES Person (ID),
     PRIMARY KEY (ID)
 );
@@ -142,6 +145,8 @@ CREATE TABLE Reservation
     FOREIGN KEY (PaymentID) REFERENCES Payment (ID),
     PRIMARY KEY (ID)
 );
+
+ALTER TABLE Payment ADD FOREIGN KEY (ReservationID) REFERENCES Reservation (ID);
 
 CREATE TABLE MultiselectReservationToService
 (

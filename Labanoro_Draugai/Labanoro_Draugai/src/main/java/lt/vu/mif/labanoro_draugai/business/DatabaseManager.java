@@ -96,8 +96,11 @@ public class DatabaseManager {
         addType("FormElement.Number", "Skaičius");
         addType("Form.Person", "Forma");
         addType("Payment", "Mokėjimas");
-        addType("Payment.Money", "Mokėjimas pinigais");
-        addType("Payment.Points", "Mokėjimas taškais");
+        addType("Payment.Reservation", "Rezervacija");
+        addType("Payment.Points", "Taškų pirkimas");
+        addType("Currency", "Valiuta");
+        addType("Currency.Points", "Taškai");
+        addType("Currency.Euro", "Eurai");
     }
 
     /**
@@ -252,7 +255,7 @@ public class DatabaseManager {
      * Fills database with basic payments
      */
     private void fillBasicPayments() {
-        addPayment("DefaultPayment", "System", BigDecimal.ZERO, null, "Payment.Points");
+        addPayment("DefaultPayment", "System", BigDecimal.ZERO, null, "Payment.Points", "Currency.Points");
     }
 
     /**
@@ -327,6 +330,13 @@ public class DatabaseManager {
      * Creates new house and flushes it to database. Returns person entity if
      * created sucessfully
      */
+    public House addHouse(String title, String address, String typeInternalName) {
+        return addHouse(title, address, generateReg("HouseReg"), typeInternalName);
+    }
+    /**
+     * Creates new house and flushes it to database. Returns person entity if
+     * created sucessfully
+     */
     public House addHouse(String title, String address, String houseReg, String typeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
 
@@ -354,6 +364,14 @@ public class DatabaseManager {
         return newHouse;
     }
 
+     /**
+     * Creates new service and flushes it to database. Returns entity if created
+     * sucessfully
+     */
+    private Service addService(String title, String houseReg, String typeInternalName) {
+        return addService(title, generateReg("ServiceReg"), houseReg, typeInternalName);
+    }
+    
     /**
      * Creates new service and flushes it to database. Returns entity if created
      * sucessfully
@@ -618,13 +636,20 @@ public class DatabaseManager {
 
         return newRecommendation;
     }
-
     /**
      * Creates new payment and flushes it to database. Returns payment entity if
      * created sucessfully
      */
-    public Payment addPayment(String paymentReg, String payerEmail, BigDecimal paymentPrice, Date paymentDate, String typeInternalName) {
+    public Payment addPayment(String payerEmail, BigDecimal paymentPrice, Date paymentDate, String typeInternalName,String currencyTypeInternalName) {
+        return addPayment(generateReg("PaymentReg"), payerEmail, paymentPrice, paymentDate, typeInternalName, currencyTypeInternalName);
+    }
+    /**
+     * Creates new payment and flushes it to database. Returns payment entity if
+     * created sucessfully
+     */
+    public Payment addPayment(String paymentReg, String payerEmail, BigDecimal paymentPrice, Date paymentDate, String typeInternalName,String currencyTypeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
+        Type currnecyType = (Type) getEntity("Type", "Internalname", currencyTypeInternalName);
         Person payer = (Person) getEntity("Person", "Email", payerEmail);
 
         Payment newPayment = new Payment();
@@ -634,9 +659,15 @@ public class DatabaseManager {
         newPayment.setPaymentprice(paymentPrice);
         newPayment.setPaymentdate(new Date());
         newPayment.setTypeid(type);
+        newPayment.setCurrencytypeid(currnecyType);
 
         if (type == null) {
             System.out.println(String.format("There is no type '%s'", typeInternalName));
+            return null;
+        }
+        
+        if (currnecyType == null) {
+            System.out.println(String.format("There is no currnecy type '%s'", currencyTypeInternalName));
             return null;
         }
 
@@ -1012,5 +1043,10 @@ public class DatabaseManager {
         } catch (Exception ex) {
             return false;
         }
+    }
+    
+    public String generateReg(String desiredReg){
+        Random rand = new Random();
+        return desiredReg+"-"+System.currentTimeMillis() % 1000+rand.nextInt(10000);
     }
 }

@@ -20,6 +20,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,7 +28,7 @@ import javax.validation.constraints.Size;
 
 /**
  *
- * @author Dominik Lisovski
+ * @author Karolis
  */
 @Entity
 @Table(name = "RESERVATION")
@@ -65,6 +66,8 @@ public class Reservation implements Serializable {
         @JoinColumn(name = "CHILDID", referencedColumnName = "ID")})
     @ManyToMany
     private List<Service> serviceList;
+    @OneToMany(mappedBy = "reservationid")
+    private List<Payment> paymentList;
     @JoinColumn(name = "HOUSEID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private House houseid;
@@ -139,6 +142,14 @@ public class Reservation implements Serializable {
 
     public void setServiceList(List<Service> serviceList) {
         this.serviceList = serviceList;
+    }
+
+    public List<Payment> getPaymentList() {
+        return paymentList;
+    }
+
+    public void setPaymentList(List<Payment> paymentList) {
+        this.paymentList = paymentList;
     }
 
     public House getHouseid() {

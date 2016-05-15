@@ -23,7 +23,7 @@ import javax.persistence.TemporalType;
 
 /**
  *
- * @author Dominik Lisovski
+ * @author Karolis
  */
 @Entity
 @Table(name = "RECOMMENDATION")

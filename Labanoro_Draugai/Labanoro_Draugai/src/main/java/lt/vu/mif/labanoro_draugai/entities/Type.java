@@ -22,7 +22,7 @@ import javax.validation.constraints.Size;
 
 /**
  *
- * @author Dominik Lisovski
+ * @author Karolis
  */
 @Entity
 @Table(name = "TYPE")
@@ -55,8 +55,10 @@ public class Type implements Serializable {
     private Boolean isdeleted;
     @Column(name = "OPTLOCKVERSION")
     private Integer optlockversion;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "currencytypeid")
     private List<Payment> paymentList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
+    private List<Payment> paymentList1;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
     private List<Person> personList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "typeid")
@@ -137,6 +139,14 @@ public class Type implements Serializable {
 
     public void setPaymentList(List<Payment> paymentList) {
         this.paymentList = paymentList;
+    }
+
+    public List<Payment> getPaymentList1() {
+        return paymentList1;
+    }
+
+    public void setPaymentList1(List<Payment> paymentList1) {
+        this.paymentList1 = paymentList1;
     }
 
     public List<Person> getPersonList() {
