@@ -54,6 +54,7 @@ public class ReservationConfirmationManager implements Serializable{
     //neveikia redirectas
     @PostConstruct
     public void init(){
+        totalPrice = -1;
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletRequest request = (HttpServletRequest) (ec.getRequest());
         if(request==null || request.getUserPrincipal()==null || request.getUserPrincipal().getName() == null) try {
@@ -70,6 +71,21 @@ public class ReservationConfirmationManager implements Serializable{
     
     public void onLoad(){
         System.out.println(toString() + "loaded.");
+    }
+    
+    public List<Service> serviceList(){
+        List<Service> services = new ArrayList<>();
+        if(getSelectedServices()!=null && getHouse().getServiceList()!=null){
+            for(String serviceReg:selectedServices){
+                for(Service service:house.getServiceList()){
+                    if(service.getServicereg().equals(serviceReg)){
+                        services.add(service);
+                        break;
+                    }
+                }
+            }
+        }
+        return services;
     }
     
     public String createReservationJSON(){
@@ -201,6 +217,9 @@ public class ReservationConfirmationManager implements Serializable{
     }
 
     public List<String> getSelectedServices() {
+        if (selectedServices == null) {
+            selectedServices =  (List<String>) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("selectedServices");
+        }
         return selectedServices;
     }
 
@@ -209,6 +228,9 @@ public class ReservationConfirmationManager implements Serializable{
     }
 
     public double getTotalPrice() {
+        if (totalPrice == -1) {
+            totalPrice =  (Double) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("price");
+        }
         return totalPrice;
     }
 

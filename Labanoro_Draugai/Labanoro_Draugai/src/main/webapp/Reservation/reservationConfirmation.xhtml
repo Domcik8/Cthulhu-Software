@@ -42,9 +42,13 @@ and open the template in the editor.
                     <f:convertDateTime pattern="yyyy-MM-dd"/> 
                 </h:outputText>
                 <p>User: #{reservationConfirmationManager.user.email}</p>
-                <p>Papildomos paslaugos:</p>    
-
-                    <h:outputLabel id="totalPrice" value="Visa kaina: #{reservationConfirmationManager.calculateTotalPrice()}t"/>  
+                <p:dataList value="#{reservationConfirmationManager.serviceList()}" var="service" type="ordered">
+                    <f:facet name="header">
+                        Papildomos paslaugos:
+                    </f:facet>
+                    #{service.title} #{reservationConfirmationManager.periodPrice(service.weekprice)}t
+                </p:dataList>
+                <h:outputLabel id="totalPrice" value="Visa kaina: #{reservationConfirmationManager.totalPrice}t"/>  
                     <h:panelGroup id="myScript">
                         <ui:include src="/WEB-INF/other_pages/stripeForm.xhtml" >
                             <ui:param name="price" value="#{reservationConfirmationManager.totalPriceInCents}" />

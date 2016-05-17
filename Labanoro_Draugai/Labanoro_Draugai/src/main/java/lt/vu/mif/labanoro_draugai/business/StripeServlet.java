@@ -65,7 +65,7 @@ public class StripeServlet extends HttpServlet {
                 JSONObject json = (JSONObject) parser.parse(request.getParameter("order"));
                 switch((String)json.get("type")){
                     case "houseReservation":
-                        payment = dbm.addPayment(username,BigDecimal.valueOf(Double.parseDouble(request.getParameter("Price1"))), new Date(), "Payment.Reservation","Currency.Euro");
+                        payment = dbm.addPayment(username,BigDecimal.valueOf(Double.parseDouble(request.getParameter("Price1"))/100), new Date(), "Payment.Reservation","Currency.Euro");
                         reservation = createHouseReservation(username,json,payment.getPaymentreg());
                         payment.setReservationid(reservation);
                         dbm.updateEntity(payment);

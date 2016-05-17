@@ -54,7 +54,7 @@ public class SummerhouseManager implements Serializable{
     private Date selectedDateTo;
     private String selectedHouseReservedDays;
     private List<Service> selectedHouseAvailableServices;
-    private String[] selectedHouseSelectedServices;
+    private List<String> selectedHouseSelectedServices;
     
     //Datepicker
     private Date dateFrom = getNextMonday();
@@ -345,6 +345,8 @@ public class SummerhouseManager implements Serializable{
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("house", selectedHouse);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("dateFrom", selectedDateFrom);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("dateTo", selectedDateTo);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("selectedServices", selectedHouseSelectedServices);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("price", selectedHousePeriodPrice());
         
         
         return "reservationConfirmation?faces-redirect=true";
@@ -463,10 +465,10 @@ public class SummerhouseManager implements Serializable{
     public void setSelectedHouseAvailableServices(List<Service> selectedHouseAvailableServices) {
         this.selectedHouseAvailableServices = selectedHouseAvailableServices;
     }
-    public String[] getSelectedHouseSelectedServices() {
+    public List<String> getSelectedHouseSelectedServices() {
         return selectedHouseSelectedServices;
     }
-    public void setSelectedHouseSelectedServices(String[] selectedHouseSelectedServices) {
+    public void setSelectedHouseSelectedServices(List<String> selectedHouseSelectedServices) {
         this.selectedHouseSelectedServices = selectedHouseSelectedServices;
     }   
     public void setSelectedHouseReservedDays(String selectedHouseReservedDays) {
