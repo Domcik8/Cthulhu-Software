@@ -53,7 +53,7 @@ public class SummerhouseManager implements Serializable{
     private Date selectedDateFrom;
     private Date selectedDateTo;
     private String selectedHouseReservedDays;
-    private List<String> selectedHouseAvailableServices;
+    private List<Service> selectedHouseAvailableServices;
     private String[] selectedHouseSelectedServices;
     
     //Datepicker
@@ -315,10 +315,25 @@ public class SummerhouseManager implements Serializable{
     public double selectedHousePeriodPrice(){
         if(selectedDateFrom==null || selectedDateTo== null || selectedHouse==null) return 0;
         int dayCount = getDaysBetweenDates(selectedDateFrom, selectedDateTo).size()+1;
+        double price = selectedHouse.getWeekprice().doubleValue()*(dayCount / 7);
+        if(selectedHouseSelectedServices!=null && selectedHouseAvailableServices!=null){
+            for(String serviceReg:selectedHouseSelectedServices){
+                for(Service service:selectedHouseAvailableServices){
+                    if(service.getServicereg().equals(serviceReg)){
+                        price+=servicePeriodPrice(service);
+                        break;
+                    }
+                }
+            }
+        }
+        return price;  
+    }
+    
+    public double servicePeriodPrice(Service service){
+        if(selectedDateFrom==null || selectedDateTo== null || selectedHouse==null||service == null) return 0;
+        int dayCount = getDaysBetweenDates(selectedDateFrom, selectedDateTo).size()+1;
         
-        return selectedHouse.getWeekprice().doubleValue()*(dayCount / 7);
-        
-        
+        return service.getWeekprice().doubleValue()*(dayCount / 7);  
     }
       
     public String confirmSelectedHouse(){
@@ -348,7 +363,7 @@ public class SummerhouseManager implements Serializable{
         selectedHouseAvailableServices = new ArrayList<>();
         if(selectedHouse!= null){
             for(Service service:selectedHouse.getServiceList()){
-                selectedHouseAvailableServices.add(service.getTitle());
+                selectedHouseAvailableServices.add(service);
             }
         }
         this.selectedHouse = selectedHouse;
@@ -442,10 +457,10 @@ public class SummerhouseManager implements Serializable{
     public void setDateTo(Date dateTo) {
         this.dateTo = dateTo;
     }  
-    public List<String> getSelectedHouseAvailableServices() {
+    public List<Service> getSelectedHouseAvailableServices() {
         return selectedHouseAvailableServices;
     }
-    public void setSelectedHouseAvailableServices(List<String> selectedHouseAvailableServices) {
+    public void setSelectedHouseAvailableServices(List<Service> selectedHouseAvailableServices) {
         this.selectedHouseAvailableServices = selectedHouseAvailableServices;
     }
     public String[] getSelectedHouseSelectedServices() {

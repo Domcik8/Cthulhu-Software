@@ -122,7 +122,7 @@ and open the template in the editor.
                     <h:form id="houseDialogForm" >
                         <h:inputHidden id="reservedDays" value="#{summerhouseManager.selectedHouseReservedDays}" />    
                         <p:dialog id="houseDetail" header="#{summerhouseManager.selectedHouse.title}"
-                                  width="300" height="350" focus="confirmOrder"
+                                  width="400" height="450" focus="confirmOrder"
                                   modal="true" showEffect="clip" widgetVar="houseDialog"
                                   resizable="false" draggable="false" responsive="true"
                                   closeOnEscape="true" fitViewport="true" position="center"
@@ -130,7 +130,7 @@ and open the template in the editor.
                             <p:ajax event="close" listener="#{summerhouseManager.handleDialogClose}" />
                             <p:outputPanel >
                                 <p:galleria id="houseGalleria" value="#{summerhouseManager.HouseImageNames(summerhouseManager.selectedHouse)}" var="image" 
-                                            style="width: 100%" panelHeight="150" panelWidth="250"
+                                            style="width: 100%" panelHeight="200" panelWidth="350"
                                             showFilmstrip="true" autoPlay="false" showCaption="false">
                                     <p:graphicImage url="/images/#{image}" alt="#{image}" style="width: 100%"/>
                                 </p:galleria>
@@ -148,7 +148,7 @@ and open the template in the editor.
                                                 value="#{summerhouseManager.selectedDateFrom}" 
                                                 mindate="#{summerhouseManager.selectedHouseMinDate()}" 
                                                 maxdate="#{summerhouseManager.selectedHouseMaxDate()}"  >
-                                        <p:ajax event="dateSelect" listener="#{summerhouseManager.onDateSelect}" update="selectedDateTo,periodPrice" />
+                                        <p:ajax event="dateSelect" listener="#{summerhouseManager.onDateSelect}" update="selectedDateTo,periodPrice,selectedHouseServices" />
                                     </p:calendar>
                                     <p:outputLabel for="selectedDateTo" value=" iki: " />
                                     <p:calendar id="selectedDateTo" pattern="yyyy-MM-dd" size="10"
@@ -156,14 +156,21 @@ and open the template in the editor.
                                                 value="#{summerhouseManager.selectedDateTo}" 
                                                 mindate="#{summerhouseManager.selectedDateFrom}"
                                                 maxdate="#{summerhouseManager.selectedHouseMaxDateTo()}" >
-                                        <p:ajax event="dateSelect" update="selectedDateFrom,periodPrice" />
+                                        <p:ajax event="dateSelect" update="selectedDateFrom,periodPrice,selectedHouseServices" />
                                     </p:calendar>
+                                    <br/>
                                     
-                                   
-                                   <h:outputLabel id="periodPrice" value="Kaina: #{summerhouseManager.selectedHousePeriodPrice()}t" />
-                                   <br/>
+                                     <h:outputLabel for="selectedHouseServices" value="Papildomos paslaugos" />
+                                    <p:selectManyCheckbox id="selectedHouseServices" value="#{summerhouseManager.selectedHouseSelectedServices}" layout="pageDirection" columns="3">
+                                        <p:ajax update="periodPrice" />
+                                        <f:selectItems value="#{summerhouseManager.selectedHouseAvailableServices}" var="service" 
+                                                       itemLabel="#{service.title} #{summerhouseManager.servicePeriodPrice(service)}t" itemValue="#{service.servicereg}" />
+                                    </p:selectManyCheckbox>
+                                    <br/>
+                                    <h:outputLabel id="periodPrice" value="Kaina: #{summerhouseManager.selectedHousePeriodPrice()}t" />
+                                    <br/>
                                     <p:commandLink id="confirmOrder" action="#{summerhouseManager.confirmSelectedHouse()}" class="btn btn-success" 
-                                         style="position: relative;left: 70%; bottom: -35%;" value="Užsakyti">
+                                         style="position: relative;left: 80%; bottom: -35%;" value="Užsakyti">
                                     </p:commandLink>
                                      
 <!--                                    style="position: relative;left: 40%; bottom: -35%;"-->
