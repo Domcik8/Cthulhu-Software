@@ -31,6 +31,10 @@ public class recommendServlet extends HttpServlet {
 
     @Inject
     private DatabaseManager dbm;
+
+    @Inject
+    private EmailBean ema;
+
     private Integer minimumRecommendations = 2;
     private Integer maximumRecommendations = 5;
 
@@ -45,7 +49,7 @@ public class recommendServlet extends HttpServlet {
         if (request.getUserPrincipal() != null) {
 
             String recommenderEmail = request.getUserPrincipal().toString();
-//            Person recommender = (Person) dbm.getEntity("Person", "Email", recommenderEmail);
+            Person recommender = (Person) dbm.getEntity("Person", "Email", recommenderEmail);
             String userKey = request.getParameter("user");
             Person recommendedPerson = (Person) dbm.getEntity("Person", "Uniquekey", userKey);
 
@@ -55,21 +59,30 @@ public class recommendServlet extends HttpServlet {
             } catch (NumberFormatException exc) {
             }
 
+            // Candidate is not allowed to recommend someone
+            Type candidateType = (Type) dbm.getEntity("Type", "Internalname", "Person.Candidate");
+
+            if (recommender.getTypeid().equals(candidateType)) {
+                response.sendRedirect(request.getContextPath() + "/index.html");
+                return;
+            }
+
             // If recommendedPerson exists and if recommender != himself
             if (recommendedPerson != null && !(recommendedPerson.getEmail()).equals(recommenderEmail)) {
 
                 Integer recommendedPersonReceivedRecommendations = recommendedPerson.getRecommendationsreceived();
 
+                // If person reached maximum allowed recommendation, recommend process terminated
                 if (recommendedPersonReceivedRecommendations >= maximumRecommendations) {
                     response.sendRedirect(request.getContextPath() + "/index.html");
+                    return;
                 }
 
-                // find recommendation and put activation date
                 Recommendation recommendation = dbm.getRecommendation(recommenderEmail, recommendedPerson.getEmail());
 
                 if (recommendation != null) {
 
-                    // If there is no recommendation date, when it isn't confirmed
+                    // If there is no recommendation date, when it means that recommendation was not confirmed
                     if (recommendation.getRecommendationdate() == null) {
                         recommendation.setRecommendationdate(new Date());
                         dbm.updateEntity(recommendation);
@@ -77,49 +90,29 @@ public class recommendServlet extends HttpServlet {
                         recommendedPerson.setRecommendationsreceived(recommendedPersonReceivedRecommendations);
                         dbm.updateEntity(recommendedPerson);
                     }
-                }
-
-                if (recommendedPerson.getRecommendationsreceived() >= minimumRecommendations) {
-
-                    Type typeid = (Type) dbm.getEntity("Type", "Internalname", "Person.User");
-                    if (!recommendedPerson.getTypeid().equals(typeid)) {
-                        recommendedPerson.setTypeid(typeid);
+                } else {
+                    // If there was no recommendation, create one with confirm date
+                    recommendation = dbm.addRecommendation(recommenderEmail, recommendedPerson.getEmail(), new Date(), "Recommendation");
+                    if (recommendation != null) {
+                        recommendedPersonReceivedRecommendations += 1;
+                        recommendedPerson.setRecommendationsreceived(recommendedPersonReceivedRecommendations);
                         dbm.updateEntity(recommendedPerson);
                     }
                 }
-            }
 
-//                // Get list of persons who recommended this person
-//                List<Recommendation> recommendationList = recommendedPerson.getRecommendationList1();
-//                
-//                // Check if this person has maximum allowed recommendation number
-//                if (recommendationList.size() >= maximumRecommendations) {
-//                    return;
-//                }
-//                
-//                // Check if recommender hasn't already recommended this person
-//                for (Recommendation rec : recommendationList) {
-//                    if (rec.getRecommenderid().equals(recommender.getId())) {
-//                        return;
-//                    }
-//                }
-//
-//                // add one more recommendation
-//                Recommendation recommend = dbm.addRecommendation(recommenderEmail, personEmail, "Recommendation");
-//                if (recommend != null) {
-//                    dbm.updateEntity(recommend);
-//                }
-//
-//                // if enough recommendation reached, change user status from "Candidate" to "User"
-//                recommendationList = recommendedPerson.getRecommendationList1();
-//                if (recommendationList.size() > minimumRecommendations) {
-//                    
-//                    Type typeid = (Type) dbm.getEntity("Type", "Internalname", "Person.User");
-//                    recommendedPerson.setTypeid(typeid);
-//                    dbm.updateEntity(recommendedPerson);
-//                    return;
-//                }
-//            }
+                // Check if candidate have reached necessary number of recommendation to become a member
+                if (recommendedPerson.getRecommendationsreceived() >= minimumRecommendations) {
+
+                    Type memberType = (Type) dbm.getEntity("Type", "Internalname", "Person.User");
+
+                    if (memberType != null) {
+                        recommendedPerson.setTypeid(memberType);
+                        dbm.updateEntity(recommendedPerson);
+                        ema.sendCandidateApprovalMessage(recommendedPerson);
+                    }
+                }
+
+            }
         }
 
         response.sendRedirect(request.getContextPath() + "/index.html");

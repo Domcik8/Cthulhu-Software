@@ -39,10 +39,11 @@ public class EmailBean {
         Person person = (Person) dbm.getEntity("Person", "Email", "necrqlt@gmail.com");
         Person requestor = (Person) dbm.getEntity("Person", "Email", request.getUserPrincipal().getName());
 //        sendRegisterConfirmationMessage(person);
-//        sendCandidateRecommendationRequestMessage(person, requestor);
-        sendEmailConfirmationMessage(person);
+        sendCandidateRecommendationRequestMessage(person, requestor);
+//        sendEmailConfirmationMessage(person);
 //        sendCandidateApprovalMessage(person);
 //        sendAccountDeactivationMessage(person);
+//        sendCandidateInventationMessage(person);
     }
 
     public void sendRegisterConfirmationMessage(Person person) {
@@ -82,6 +83,10 @@ public class EmailBean {
         if (receiverPerson != null && requestorPerson != null) {
             sendEmail(receiver, "recommend newbie test", body.getCandidateRecommendationRequestMessage(receiverPerson, requestorPerson));
         }
+    }
+    
+    public void sendCandidateInventationMessage(Person receiver) {
+//        sendEmail(receiver.getEmail(), "recommend newbie test", body.getCandidateInventationMessage(receiver));
     }
 
     private void sendEmail(String to, String subject, String body) {

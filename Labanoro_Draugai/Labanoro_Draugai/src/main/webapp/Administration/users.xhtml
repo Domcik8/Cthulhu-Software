@@ -89,23 +89,23 @@ and open the template in the editor.
         </div>
         <div>
             <h:form id="dialogOutsideForm">
-            <p:dialog id="firstDialog" header="Taškų pridėjimas" widgetVar="addPointsDialog" modal="true" height="200" width="400">
-                <h:form id="dialogInsideForm">   
-                    <p:messages id="msgs" />
-                    <h:panelGrid id="panel" columns="3" >
-                        <p:outputLabel for="userName" value="Vartotojas:" />
-                        <p:outputLabel id="userName" value="#{adminUserManager.userEmail}" />
-                        <h:inputHidden value="#{adminUserManager.userEmail}" />
-                        <p:outputLabel for="addedPoints" value="Taškų skaičius: " />
-                        <p:inputText id="addedPoints" value="#{adminUserManager.addedPoints}" required="true" requiredMessage="Taškų skaičius: Įveskite natūralujį skaičių.">
-                            <f:validateDoubleRange minimum="1"/>
-                        </p:inputText>
-                        <p:message for="addedPoints" style="color:red" />
-                        <h:inputHidden/>
-                    </h:panelGrid>
-                    <p:commandButton value="Skirti" action="#{adminUserManager.addPoints}" update="msgs"/>
-                </h:form>
-            </p:dialog>
+                <p:dialog id="firstDialog" header="Taškų pridėjimas" widgetVar="addPointsDialog" modal="true" height="200" width="400">
+                    <h:form id="dialogInsideForm">   
+                        <p:messages id="msgs" />
+                        <h:panelGrid id="panel" columns="3" >
+                            <p:outputLabel for="userName" value="Vartotojas:" />
+                            <p:outputLabel id="userName" value="#{adminUserManager.userEmail}" />
+                            <h:inputHidden value="#{adminUserManager.userEmail}" />
+                            <p:outputLabel for="addedPoints" value="Taškų skaičius: " />
+                            <p:inputText id="addedPoints" value="#{adminUserManager.addedPoints}" required="true" requiredMessage="Taškų skaičius: Įveskite natūralujį skaičių.">
+                                <f:validateDoubleRange minimum="1"/>
+                            </p:inputText>
+                            <p:message for="addedPoints" style="color:red" />
+                            <h:inputHidden/>
+                        </h:panelGrid>
+                        <p:commandButton value="Skirti" action="#{adminUserManager.addPoints}" update="msgs"/>
+                    </h:form>
+                </p:dialog>
             </h:form>
         </div>  
     </div>

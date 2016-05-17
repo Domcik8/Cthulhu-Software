@@ -1037,6 +1037,10 @@ public class DatabaseManager {
         } catch (Exception ex) {
             return false;
         }
+        /*Person p2 = (Person) getEntity("Person", "id", p.getId());
+        p2.setPoints(p2.getPoints());
+        updateEntity(p2);
+        return true;*/
     }
 
     public boolean setPaymentApprovalDate(Payment p) {

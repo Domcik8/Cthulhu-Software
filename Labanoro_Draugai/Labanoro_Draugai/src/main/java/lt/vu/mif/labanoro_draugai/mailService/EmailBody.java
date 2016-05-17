@@ -104,6 +104,20 @@ public class EmailBody {
 
         return message;
     }
+    
+//    public String getCandidateInventationMessage(Person receiver, Person recommender) {
+//
+//        String message = "Sveiki, " + receiver.getFirstname();
+//        message += "<br/> Neseniai uzsiregistravo naujas klubo narys " + recommender.getFirstname() + " " + recommender.getLastname();
+//        message += "<br/> Jeigu norite suteikti sitam kandidatui savo rekomendacija, prasom pereiti zemiau esancia nuoroda";
+//        message += "<br/>" + getContextPath() + "/recommend?user=" + requestor.getUniquekey();
+//
+//        message += "<br/><br/> Pagarbiai,";
+//        message += "<br/> \"Labanoro draugai\" administracija";
+//
+//        return message;
+//    }
+    
 
     private void validateEmailConfirmationKey(Person person) {
 

@@ -61,10 +61,6 @@ and open the template in the editor.
                         <h:outputText value="#{payment.paymentreg}" />
                     </p:column>
 
-                    <p:column filterBy="#{payment.paidwithmoney}" headerText="Mokėta pinigais" filterMatchMode="contains">
-                        <h:outputText value="#{payment.paidwithmoney}" />
-                    </p:column>
-
                     <p:column selectionMode="multiple" style="width:40px; text-align:center;" rendered="#{payment.approveddate == null}"/>
                     
                     <f:facet name="footer">

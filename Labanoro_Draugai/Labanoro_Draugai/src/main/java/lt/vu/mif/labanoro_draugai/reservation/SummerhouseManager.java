@@ -53,8 +53,8 @@ public class SummerhouseManager implements Serializable{
     private Date selectedDateFrom;
     private Date selectedDateTo;
     private String selectedHouseReservedDays;
-    private List<String> selectedHouseAvailableServices;
-    private String[] selectedHouseSelectedServices;
+    private List<Service> selectedHouseAvailableServices;
+    private List<String> selectedHouseSelectedServices;
     
     //Datepicker
     private Date dateFrom = getNextMonday();
@@ -160,11 +160,12 @@ public class SummerhouseManager implements Serializable{
     }
     
     private boolean isHouseAvailable(House house,Date dateFrom,Date dateTo){
+        house = (House)dbm.getEntity("House", "Housereg", house.getHousereg());
         if(house.getReservationList()== null || dateFrom == null || dateTo == null) return true;
         if(house.getSeasonstartdate()!=null && house.getSeasonenddate()!=null && !(dateTo.before(house.getSeasonstartdate()) || dateFrom.after(house.getSeasonenddate())))
                     return false;
         for(Reservation reservation : house.getReservationList()){
-            if(!(dateTo.before(reservation.getStartdate()) || dateFrom.after(reservation.getEnddate())))
+            if((dateFrom.equals(reservation.getStartdate())||dateTo.equals(reservation.getEnddate()))||!(dateTo.before(reservation.getStartdate()) || dateFrom.after(reservation.getEnddate())))
                     return false;
         }
         return true;
@@ -262,7 +263,7 @@ public class SummerhouseManager implements Serializable{
     
     public Date selectedHouseMaxDateTo(){
         Date maxDate = selectedHouseMaxDate();
-        if(selectedHouse == null || selectedHouse.getReservationList() == null) return maxDate;
+        if(selectedHouse == null || selectedDateFrom==null || selectedHouse.getReservationList() == null) return maxDate;
         for(Reservation reservation:selectedHouse.getReservationList()){
             if(reservation.getStartdate().before(maxDate) && reservation.getStartdate().after(selectedDateFrom)) maxDate = reservation.getStartdate();
         }
@@ -314,10 +315,25 @@ public class SummerhouseManager implements Serializable{
     public double selectedHousePeriodPrice(){
         if(selectedDateFrom==null || selectedDateTo== null || selectedHouse==null) return 0;
         int dayCount = getDaysBetweenDates(selectedDateFrom, selectedDateTo).size()+1;
+        double price = selectedHouse.getWeekprice().doubleValue()*(dayCount / 7);
+        if(selectedHouseSelectedServices!=null && selectedHouseAvailableServices!=null){
+            for(String serviceReg:selectedHouseSelectedServices){
+                for(Service service:selectedHouseAvailableServices){
+                    if(service.getServicereg().equals(serviceReg)){
+                        price+=servicePeriodPrice(service);
+                        break;
+                    }
+                }
+            }
+        }
+        return price;  
+    }
+    
+    public double servicePeriodPrice(Service service){
+        if(selectedDateFrom==null || selectedDateTo== null || selectedHouse==null||service == null) return 0;
+        int dayCount = getDaysBetweenDates(selectedDateFrom, selectedDateTo).size()+1;
         
-        return selectedHouse.getWeekprice().doubleValue()*(dayCount / 7);
-        
-        
+        return service.getWeekprice().doubleValue()*(dayCount / 7);  
     }
       
     public String confirmSelectedHouse(){
@@ -329,6 +345,8 @@ public class SummerhouseManager implements Serializable{
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("house", selectedHouse);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("dateFrom", selectedDateFrom);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("dateTo", selectedDateTo);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("selectedServices", selectedHouseSelectedServices);
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("price", selectedHousePeriodPrice());
         
         
         return "reservationConfirmation?faces-redirect=true";
@@ -347,7 +365,7 @@ public class SummerhouseManager implements Serializable{
         selectedHouseAvailableServices = new ArrayList<>();
         if(selectedHouse!= null){
             for(Service service:selectedHouse.getServiceList()){
-                selectedHouseAvailableServices.add(service.getTitle());
+                selectedHouseAvailableServices.add(service);
             }
         }
         this.selectedHouse = selectedHouse;
@@ -363,7 +381,7 @@ public class SummerhouseManager implements Serializable{
     public Date getSelectedDateFrom() {
         if(selectedDateFrom == null){
             if(isFiltered) selectedDateFrom = getDateFrom();
-            else selectedDateFrom = getNextMonday();
+//            else selectedDateFrom = getNextMonday();
         }
         return selectedDateFrom;
     }
@@ -441,16 +459,16 @@ public class SummerhouseManager implements Serializable{
     public void setDateTo(Date dateTo) {
         this.dateTo = dateTo;
     }  
-    public List<String> getSelectedHouseAvailableServices() {
+    public List<Service> getSelectedHouseAvailableServices() {
         return selectedHouseAvailableServices;
     }
-    public void setSelectedHouseAvailableServices(List<String> selectedHouseAvailableServices) {
+    public void setSelectedHouseAvailableServices(List<Service> selectedHouseAvailableServices) {
         this.selectedHouseAvailableServices = selectedHouseAvailableServices;
     }
-    public String[] getSelectedHouseSelectedServices() {
+    public List<String> getSelectedHouseSelectedServices() {
         return selectedHouseSelectedServices;
     }
-    public void setSelectedHouseSelectedServices(String[] selectedHouseSelectedServices) {
+    public void setSelectedHouseSelectedServices(List<String> selectedHouseSelectedServices) {
         this.selectedHouseSelectedServices = selectedHouseSelectedServices;
     }   
     public void setSelectedHouseReservedDays(String selectedHouseReservedDays) {
