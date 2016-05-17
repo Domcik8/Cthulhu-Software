@@ -263,7 +263,7 @@ public class SummerhouseManager implements Serializable{
     
     public Date selectedHouseMaxDateTo(){
         Date maxDate = selectedHouseMaxDate();
-        if(selectedHouse == null || selectedHouse.getReservationList() == null) return maxDate;
+        if(selectedHouse == null || selectedDateFrom==null || selectedHouse.getReservationList() == null) return maxDate;
         for(Reservation reservation:selectedHouse.getReservationList()){
             if(reservation.getStartdate().before(maxDate) && reservation.getStartdate().after(selectedDateFrom)) maxDate = reservation.getStartdate();
         }
