@@ -1,7 +1,5 @@
 package lt.vu.mif.labanoro_draugai.Atsiskaitymui.chamberOfSecrets;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
@@ -15,15 +13,13 @@ import javax.persistence.PersistenceContextType;
 import javax.persistence.SynchronizationType;
 import javax.transaction.TransactionSynchronizationRegistry;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
-import lt.vu.mif.labanoro_draugai.entities.House;
-import lt.vu.mif.labanoro_draugai.entities.Service;
 import lt.vu.mif.labanoro_draugai.entities.Type;
 
 /**
  * Created not by donat not on 2016-04-13.
  */
 @Stateless
-public class ServiceService {
+public class TypeService {
     @PersistenceContext(type = PersistenceContextType.TRANSACTION,
                         synchronization = SynchronizationType.UNSYNCHRONIZED)
     private EntityManager em;
@@ -31,36 +27,21 @@ public class ServiceService {
     @Inject 
     DatabaseManager dbm;
 
-    public Service create(House house, Service service) {
-        String typeInternalName = "Service.Vehicle.Bike";
-        String title = service.getTitle();
-        String serviceReg = service.getServicereg();
+    public Type create(Type type) {
+        System.out.println(this + ": gavau EntityManager = " + em.getDelegate());
+        String title = type.getTitle();
+        String internalName = "2Atsiskaitymas." +  title;
         
-        Type type = (Type) dbm.getEntity("Type", "Internalname", typeInternalName);
+        Type newType = new Type();
+        newType.setInternalname(internalName);
+        newType.setTitle(title);
 
-        if (type == null) {
-            System.out.println(String.format("There is no type '%s'", typeInternalName));
-            return null;
+        if (dbm.entityExists("Type", "Internalname", internalName)) {
+            return (Type) dbm.getEntity("Type", "internalname", internalName);
         }
 
-        Service newService = new Service();
-        newService.setTitle(title);
-        newService.setServicereg(serviceReg);
-        newService.setTypeid(type);
-
-        
-        /*if (dbm.entityExists("Service", "Servicereg", serviceReg)) {
-            System.out.println(String.format("Service with registration '%s' already exists", serviceReg));
-            return null;
-        }*/
-
-        em.persist(newService);
-
-        if (house.getServiceList() == null)
-            house.setServiceList(new ArrayList<Service>());
-        house.getServiceList().add(newService);
-
-        return newService;
+        em.persist(newType);
+        return newType;
     }
     
     @Resource

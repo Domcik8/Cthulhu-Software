@@ -3,12 +3,16 @@ package lt.vu.mif.labanoro_draugai.Atsiskaitymui.requestScope;
 import javax.ejb.Stateful;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.*;
 import java.io.Serializable;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
+import javax.ejb.AfterBegin;
+import javax.ejb.AfterCompletion;
+import javax.transaction.TransactionSynchronizationRegistry;
 import lt.vu.mif.labanoro_draugai.Atsiskaitymui.chamberOfSecrets.*;
 import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Service;
@@ -18,75 +22,60 @@ import lt.vu.mif.labanoro_draugai.entities.Type;
  * Created not by donat not on 2016-04-13.
  */
 @Named
-@RequestScoped
 @Stateful
+@RequestScoped
 public class houseOfNewTypeController implements Serializable {
 
-    private static final String PAGE_INDEX          = "chamberOfSecrets?faces-redirect=true";
-    private static final String PAGE_CONFIRM        = "confirm?faces-redirect=true";
+    private static final String PAGE_INDEX = "chambertOfAtsiskaitymas?faces-redirect=true";
 
-    @PersistenceContext(type = PersistenceContextType.EXTENDED, synchronization = SynchronizationType.UNSYNCHRONIZED)
+    @PersistenceContext
     private EntityManager em;
-
+    
     @Inject
-    private Conversation conversation;
+    private TypeService typeService;
     
     @Inject
     private HouseService houseService;
     
-    @Inject
-    private ServiceService serviceService;
-
     private Type type = new Type();
     private House house = new House();
-    private Service service = new Service();
-
-    public Conversation getConversation() {
-        return conversation;
+    
+    public Type getType() {
+        return type;
     }
 
     public House getHouse() {
         return house;
     }
 
-    public Service getService() {
-        return service;
-    }
-
     public String createHouse() {
-        if (!conversation.isTransient()) {
-            conversation.end();
-            return PAGE_INDEX;
-        }
-
-        conversation.begin();
-        house = houseService.create(house);
-
-        return PAGE_CONFIRM;
-    }
-
-    public String ok() {
-        try {
-            conversation.end();
-            em.joinTransaction();
-            em.flush();
-            return PAGE_INDEX;
-        } catch (OptimisticLockException ole) {
-            // Kažkas kitas buvo greitesnis...
-            return null;
-        } catch (PersistenceException pe) {
-            // Kitokios bėdos su DB
-            FacesContext.getCurrentInstance().addMessage(
-                    null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Oi ai ajajai.", "Finita la commedia")
-            );
-            return null;
-        }
-    }
-
-    public String cancel() {
-        if (!conversation.isTransient()) {
-            conversation.end();
-        }
+        em.isOpen(); 
+        System.out.println(this + ": gavau EntityManager = " + em.getDelegate());
+        type = typeService.create(type);
+        house = houseService.create(house, type);
         return PAGE_INDEX;
+    }
+    
+    @Resource
+    private TransactionSynchronizationRegistry tx;
+    
+    @PostConstruct
+    private void gimiau() {
+        System.out.println(this + " gimiau.");
+    }
+    
+    @PreDestroy
+    private void tuojMirsiu() {
+        System.out.println(this + " tuoj mirsiu.");
+    }
+
+    @AfterBegin
+    private void afterBeginTransaction() {
+        System.out.println(this + " Transakcija: " + tx.getTransactionKey());
+    }
+
+    @AfterCompletion
+    private void afterTransactionCompletion(boolean commited) {
+        System.out.println(this + " Transakcija pasibaigė commited: " + commited);
     }
 }

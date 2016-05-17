@@ -19,13 +19,15 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Karolis
+ * @author Dominik Lisovski
  */
 @Entity
 @Table(name = "FORMATTRIBUTE")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Formattribute.findAll", query = "SELECT f FROM Formattribute f"),
     @NamedQuery(name = "Formattribute.findById", query = "SELECT f FROM Formattribute f WHERE f.id = :id"),

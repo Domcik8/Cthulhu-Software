@@ -26,13 +26,16 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author Karolis
+ * @author Dominik Lisovski
  */
 @Entity
 @Table(name = "PAYMENT")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Payment.findAll", query = "SELECT p FROM Payment p"),
     @NamedQuery(name = "Payment.findById", query = "SELECT p FROM Payment p WHERE p.id = :id"),
@@ -183,6 +186,7 @@ public class Payment implements Serializable {
         this.typeid = typeid;
     }
 
+    @XmlTransient
     public List<Reservation> getReservationList() {
         return reservationList;
     }

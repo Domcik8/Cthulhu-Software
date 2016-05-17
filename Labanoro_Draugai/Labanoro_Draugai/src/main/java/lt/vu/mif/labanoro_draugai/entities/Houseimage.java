@@ -20,13 +20,15 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Karolis
+ * @author Dominik Lisovski
  */
 @Entity
 @Table(name = "HOUSEIMAGE")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Houseimage.findAll", query = "SELECT h FROM Houseimage h"),
     @NamedQuery(name = "Houseimage.findById", query = "SELECT h FROM Houseimage h WHERE h.id = :id"),

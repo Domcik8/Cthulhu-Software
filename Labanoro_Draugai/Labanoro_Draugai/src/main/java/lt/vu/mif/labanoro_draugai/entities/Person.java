@@ -25,14 +25,18 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author Karolis
+ * @author Dominik Lisovski
  */
 @Entity
 @Table(name = "PERSON")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Person.findAll", query = "SELECT p FROM Person p"),
     @NamedQuery(name = "Person.findById", query = "SELECT p FROM Person p WHERE p.id = :id"),
@@ -98,8 +102,10 @@ public class Person implements Serializable {
     @Column(name = "MEMBERSHIPDUE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date membershipdue;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "RECOMMENDATIONSRECEIVED")
-    private Integer recommendationsreceived;
+    private int recommendationsreceived;
     @Column(name = "RECOMMENDATIONSTOSEND")
     private Integer recommendationstosend;
     @Size(max = 255)
@@ -131,6 +137,11 @@ public class Person implements Serializable {
 
     public Person(Integer id) {
         this.id = id;
+    }
+
+    public Person(Integer id, int recommendationsreceived) {
+        this.id = id;
+        this.recommendationsreceived = recommendationsreceived;
     }
 
     public Integer getId() {
@@ -237,11 +248,11 @@ public class Person implements Serializable {
         this.membershipdue = membershipdue;
     }
 
-    public Integer getRecommendationsreceived() {
+    public int getRecommendationsreceived() {
         return recommendationsreceived;
     }
 
-    public void setRecommendationsreceived(Integer recommendationsreceived) {
+    public void setRecommendationsreceived(int recommendationsreceived) {
         this.recommendationsreceived = recommendationsreceived;
     }
 
@@ -285,6 +296,7 @@ public class Person implements Serializable {
         this.optlockversion = optlockversion;
     }
 
+    @XmlTransient
     public List<Payment> getPaymentList() {
         return paymentList;
     }
@@ -301,6 +313,7 @@ public class Person implements Serializable {
         this.typeid = typeid;
     }
 
+    @XmlTransient
     public List<Reservation> getReservationList() {
         return reservationList;
     }
@@ -317,6 +330,7 @@ public class Person implements Serializable {
         this.personregistrationform = personregistrationform;
     }
 
+    @XmlTransient
     public List<Recommendation> getRecommendationList() {
         return recommendationList;
     }
@@ -325,6 +339,7 @@ public class Person implements Serializable {
         this.recommendationList = recommendationList;
     }
 
+    @XmlTransient
     public List<Recommendation> getRecommendationList1() {
         return recommendationList1;
     }

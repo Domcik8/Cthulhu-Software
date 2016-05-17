@@ -60,7 +60,7 @@ public class DatabaseManager {
         fillBasicPayments();
         fillBasicReservations();
         fillBasicSystemParameters();
-        fillBasicHouseImages();
+        //fillBasicHouseImages();
         fillBasicRecommendations();
 
         editPeople();
@@ -165,8 +165,8 @@ public class DatabaseManager {
             services.add("ServiceReg-1");
             services.add("ServiceReg-2");
 
-            addReservation("ReservationReg-1", "HouseReg-1", "Reservation", "doli@test.com", null, format.parse("2016-06-06"), format.parse("2016-06-12"));
-            addReservation("ReservationReg-2", "HouseReg-1", "Reservation", "doli@test.com", services, format.parse("2016-06-27"), format.parse("2016-07-10"));
+            addReservation("HouseReg-1", "DefaultPayment", "Reservation", "doli@test.com", null, format.parse("2016-06-06"), format.parse("2016-06-12"));
+            addReservation("HouseReg-1", "DefaultPayment", "Reservation", "doli@test.com", services, format.parse("2016-06-27"), format.parse("2016-07-10"));
         } catch (ParseException ex) {
             Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -405,7 +405,7 @@ public class DatabaseManager {
      * sucessfully
      */
     public Reservation addReservation(String houseReg, String paymentReg, String typeInternalName, String personEmail, List<String> services, Date dateFrom, Date dateTo) {
-        return addReservation( generateReg("ReservationReg"), houseReg, paymentReg, typeInternalName, personEmail, services, dateFrom, dateTo);
+        return addReservation(generateReg("ReservationReg"), houseReg, paymentReg, typeInternalName, personEmail, services, dateFrom, dateTo);
     }
 
     /**

@@ -12,26 +12,22 @@
         <h:form>
             <h:panelGrid id="grid" columns="3">
                 
-                <p:outputLabel for="type" value="House Type"/>
-                <p:inputText id="type" value="#{houseOfNewTypeController.type.title}"/>
-                <p:message for="type"/>
-                
                 <p:outputLabel for="houseReg" value="House registration"/>
-                <p:inputText id="houseReg" value="#{houseOfNewTypeController.house.housereg}"/>
+                <p:inputText id="houseReg" value="#{houseWithServices.house.housereg}"/>
                 <p:message for="houseReg"/>
                 
                 <p:outputLabel for="houseTitle" value="House title"/>
-                <p:inputText id="houseTitle" value="#{houseOfNewTypeController.house.title}"/>
+                <p:inputText id="houseTitle" value="#{houseWithServices.house.title}"/>
                 <p:message for="houseTitle"/>
                 
                 <p:outputLabel for="houseDescription" value="House descripton"/>
-                <p:inputText id="houseDescription" value="#{houseOfNewTypeController.house.description}"/>
+                <p:inputText id="houseDescription" value="#{houseWithServices.house.description}"/>
                 <p:message for="houseDescription"/>
                 
             </h:panelGrid>
 
             <p:commandButton value="Create a house" 
-                             action="#{houseOfNewTypeController.createHouse()}"
+                             action="#{houseWithServices.createHouse()}"
                              update="grid"
                              />
             <p:messages globalOnly="true"/>

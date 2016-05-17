@@ -25,13 +25,16 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author Karolis
+ * @author Dominik Lisovski
  */
 @Entity
 @Table(name = "RESERVATION")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Reservation.findAll", query = "SELECT r FROM Reservation r"),
     @NamedQuery(name = "Reservation.findById", query = "SELECT r FROM Reservation r WHERE r.id = :id"),
@@ -136,6 +139,7 @@ public class Reservation implements Serializable {
         this.optlockversion = optlockversion;
     }
 
+    @XmlTransient
     public List<Service> getServiceList() {
         return serviceList;
     }
@@ -144,6 +148,7 @@ public class Reservation implements Serializable {
         this.serviceList = serviceList;
     }
 
+    @XmlTransient
     public List<Payment> getPaymentList() {
         return paymentList;
     }
