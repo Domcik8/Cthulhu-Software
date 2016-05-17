@@ -160,11 +160,12 @@ public class SummerhouseManager implements Serializable{
     }
     
     private boolean isHouseAvailable(House house,Date dateFrom,Date dateTo){
+        house = (House)dbm.getEntity("House", "Housereg", house.getHousereg());
         if(house.getReservationList()== null || dateFrom == null || dateTo == null) return true;
         if(house.getSeasonstartdate()!=null && house.getSeasonenddate()!=null && !(dateTo.before(house.getSeasonstartdate()) || dateFrom.after(house.getSeasonenddate())))
                     return false;
         for(Reservation reservation : house.getReservationList()){
-            if(!(dateTo.before(reservation.getStartdate()) || dateFrom.after(reservation.getEnddate())))
+            if((dateFrom.equals(reservation.getStartdate())||dateTo.equals(reservation.getEnddate()))||!(dateTo.before(reservation.getStartdate()) || dateFrom.after(reservation.getEnddate())))
                     return false;
         }
         return true;
@@ -363,7 +364,7 @@ public class SummerhouseManager implements Serializable{
     public Date getSelectedDateFrom() {
         if(selectedDateFrom == null){
             if(isFiltered) selectedDateFrom = getDateFrom();
-            else selectedDateFrom = getNextMonday();
+//            else selectedDateFrom = getNextMonday();
         }
         return selectedDateFrom;
     }

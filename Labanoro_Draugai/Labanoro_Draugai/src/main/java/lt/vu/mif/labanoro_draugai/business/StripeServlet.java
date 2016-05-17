@@ -107,7 +107,7 @@ public class StripeServlet extends HttpServlet {
             services.add((String)arr.get(i));
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return dbm.addReservation(paymentReg,(String) json.get("reservationReg"), (String) json.get("houseReg"), (String) json.get("reservationTypeInternalName"), 
+        return dbm.addReservation((String) json.get("houseReg"), paymentReg, (String) json.get("reservationTypeInternalName"), 
                 username, services, sdf.parse((String) json.get("dateFrom")), sdf.parse((String) json.get("dateTo")));
     }
     
