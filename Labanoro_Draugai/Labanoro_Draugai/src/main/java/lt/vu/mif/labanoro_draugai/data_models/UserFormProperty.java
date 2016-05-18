@@ -34,7 +34,14 @@ public class UserFormProperty implements Serializable{
         this.required = required;
         this.selectItems = selectItems;
     } 
-  
+    
+    public UserFormProperty(String name, boolean required, List<SelectItem> selectItems, Object value) {  
+        this.name = name;  
+        this.value = value;  
+        this.required = required;
+        this.selectItems = selectItems;
+    } 
+    
     public String getName() {  
         return name;  
     }  

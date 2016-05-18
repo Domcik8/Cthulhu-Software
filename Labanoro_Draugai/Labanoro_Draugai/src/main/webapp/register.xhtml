@@ -50,7 +50,7 @@ and open the template in the editor.
                     </p:commandLink>
                     <p:selectBooleanCheckbox id="terms" value="#{registrationManager.isAgreeingToTerms}" required="true"/>
                     <br/>
-                    <p:commandButton value="Patvirtinti" action="#{registrationManager.submitRegistration()}"
+                    <p:commandButton value="Patvirtinti" class="btn" action="#{registrationManager.submitRegistration()}"
                                              process="registrationForm" update="registrationForm"  /> 
                 </h:form>
             </p:panel>

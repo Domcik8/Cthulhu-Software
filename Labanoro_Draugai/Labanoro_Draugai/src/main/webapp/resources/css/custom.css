@@ -124,3 +124,12 @@ body {
 .new-payment {
     background: #F75D59  !important ;
 }
+
+.ui-panelgrid td, .ui-panelgrid tr
+{
+    border-style: none !important
+}
+
+.ui-input-invalid {
+    border-color: red; 
+}

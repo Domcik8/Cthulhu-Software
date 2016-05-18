@@ -7,7 +7,9 @@ package lt.vu.mif.labanoro_draugai.user;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.model.SelectItem;
@@ -22,12 +24,13 @@ import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.entities.Type;
 import lt.vu.mif.labanoro_draugai.entities.Personregistrationform;
 import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
-import net.sf.json.JSONObject;
+
 import org.primefaces.extensions.model.dynaform.DynaFormControl;
 import org.primefaces.extensions.model.dynaform.DynaFormLabel;
 import org.primefaces.extensions.model.dynaform.DynaFormModel;
 import org.primefaces.extensions.model.dynaform.DynaFormRow;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -73,7 +76,13 @@ public class RegistrationManager implements Serializable{
         if(!emailValidator.isValid(email)) return null;
         JSONObject jsonObject = new JSONObject();
         for(DynaFormControl control:displayModel.getControls()){
-            jsonObject.element(control.getKey(), control.getData());
+            UserFormProperty ufp = (UserFormProperty)control.getData();
+            if(ufp.getValue() instanceof Date){
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                jsonObject.put(ufp.getName(), sdf.format(ufp.getValue()));
+            }else{
+                jsonObject.put(ufp.getName(), ufp.getValue());    
+            } 
         }
         Person person = dbm.addPerson(email, password, firstName, lastName, "Person.Candidate");
         person.setPoints(new BigDecimal(0));

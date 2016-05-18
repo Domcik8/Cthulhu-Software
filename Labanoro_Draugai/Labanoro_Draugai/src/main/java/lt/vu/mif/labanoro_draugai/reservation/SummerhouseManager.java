@@ -102,8 +102,6 @@ public class SummerhouseManager implements Serializable{
         availableOrderings.put("Brangiausi", Ordering.Expensive);
         
         
-        System.out.println(toString() + " constructed.");
-        
         setMaxHousePrice(new BigDecimal(1000));
         setPriceTo(getMaxHousePrice());
         
