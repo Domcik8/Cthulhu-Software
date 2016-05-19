@@ -73,6 +73,7 @@ public class RegistrationManager implements Serializable {
         facebookId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("facebookId");
 
         if (referral != null) {
+//            email = 
             System.out.print("Opened with referral: referral=" + referral);
         }
 
@@ -222,5 +223,9 @@ public class RegistrationManager implements Serializable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getFacebookId() {
+        return facebookId;
     }
 }
