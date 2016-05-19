@@ -190,9 +190,9 @@ public class DatabaseManager {
 
         addSystemParameter("SystemParameter.TermsAndConditions", "Nuostatos ir sąlygos", "Naudodamiesi mūsų sistema jūs sutinkate, kad \"Labanoro draugai\" nėra atsakingi už sistmos nesklandumus ar kitus žalingus incidentus.", "SystemParameter");
 
-        addSystemParameter("SystemParameter.Facebook.AppId", "FB aplikacijos kodas", "\"198659840500311\"", "Facebook uzregistruotos aplikacijos kodas ", "SystemParameter");
-        addSystemParameter("SystemParameter.Facebook.AppSecret", "FB aplikacijos slaptas kodas", "\"97d6fc7c788463e2de89f1571385cc75\"", "Kodas skirtas autentifikuotis uzregistuotoje Facebook aplikacije", "SystemParameter");
-        addSystemParameter("SystemParameter.Facebook.Redirect", "FB autentifikacija", "\"http://localhost:8080/Labanoro_Draugai\"", "Nukreipimas i puslapi facebook autentifikacijos metu", "SystemParameter");
+        addSystemParameter("SystemParameter.Facebook.AppId", "FB aplikacijos kodas", "198659840500311", "Facebook uzregistruotos aplikacijos kodas ", "SystemParameter");
+        addSystemParameter("SystemParameter.Facebook.AppSecret", "FB aplikacijos slaptas kodas", "97d6fc7c788463e2de89f1571385cc75", "Kodas skirtas autentifikuotis uzregistuotoje Facebook aplikacije", "SystemParameter");
+        addSystemParameter("SystemParameter.Facebook.Redirect", "FB autentifikacija", "http://localhost:8080/Labanoro_Draugai", "Nukreipimas i puslapi facebook autentifikacijos metu", "SystemParameter");
 
         addSystemParameter("SystemParameter.Redirect.Login", "Sekmingas prisijungimas", "/index.html", "Nukreipimas i puslapi po sekmingo prisijungimo", "SystemParameter");
         addSystemParameter("SystemParameter.Redirect.LoginError", "Klaidingas prisijungimas", "/loginError.html", "Nukreipimas i puslapi po nesekmingo prisijungimo", "SystemParameter");
