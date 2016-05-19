@@ -25,10 +25,14 @@ and open the template in the editor.
             
             <h1>Paskyros valdymas</h1>
             <p:panel>
-                <!--<h2>Statusas</h2>-->
+                <h2>Statusas</h2>
                 <p:outputLabel value="Vartotojo statusas: #{profileView.user.typeid.title}"/>
+                <br/>
+                <p:outputLabel value="Narystė galioja iki: #{profileView.formattedMembershipEndDate()}" rendered="#{profileView.renderNotForCandidate()}"/>
+                <br/>
+                <p:commandButton id="inviteButton" value="Siūsti pakvietimą į klubą" onclick="PF('inviteWidget').show()" rendered="#{profileView.renderNotForCandidate()}"/>
                <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
-                <!--IDET PO TESTAVIMO rendere = "profileView.renderRecommendtionInfo()"-->
+                <!--IDET PO TESTAVIMO rendered = "profileView.renderRecommendtionInfo()"-->
                 <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
                 <p:panelGrid columns="1">    
                     <p:outputLabel value="Turimos rekomendacijos: #{profileView.user.recommendationsreceived}"/>
@@ -160,6 +164,20 @@ and open the template in the editor.
                     <p:commandButton value="Siūsti" styleClass="ui-confirmdialog-yes" 
                                      icon="ui-icon-check" action="#{profileView.askForRecommendation()}" oncomplete="if(args &amp;&amp; !args.validationFailed) PF('askRecommendationWidget').hide()"/>
                     <p:commandButton value="Atšaukti" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('askRecommendationWidget').hide()"/>
+                </h:form>
+            </p:dialog>
+            
+            <p:dialog id="inviteDialog" header="Draugo pakvietimas." widgetVar="inviteWidget" closeOnEscape="true" resizable="false" draggable="false" responsive="true"
+                fitViewport="true" position="center"  modal="true">
+                <h:form>
+                    <p:outputLabel value="Įveskite draugo elektroninį paštą:" for="invitedFriendEmail"/>
+                    <p:inputText id="invitedFriendEmail" value="#{profileView.friendEmail}" required="true">
+                        <f:validator validatorId="simpleEmailValidator" />
+                    </p:inputText>
+                    <br/>
+                    <p:commandButton value="Siūsti" styleClass="ui-confirmdialog-yes" 
+                                     icon="ui-icon-check" action="#{profileView.inviteFriend()}" oncomplete="if(args &amp;&amp; !args.validationFailed) PF('inviteWidget').hide()"/>
+                    <p:commandButton value="Atšaukti" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('inviteWidget').hide()"/>
                 </h:form>
             </p:dialog>
         </div>

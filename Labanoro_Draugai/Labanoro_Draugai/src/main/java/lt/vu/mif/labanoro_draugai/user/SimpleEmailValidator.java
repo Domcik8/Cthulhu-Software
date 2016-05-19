@@ -14,13 +14,14 @@ import javax.faces.validator.ValidatorException;
 import javax.inject.Inject;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.Person;
+import org.apache.commons.validator.routines.EmailValidator;
 
 /**
  *
  * @author Karolis
  */
-@FacesValidator("emailValidator")
-public class MyEmailValidator implements Validator {
+@FacesValidator("simpleEmailValidator")
+public class SimpleEmailValidator implements Validator {
     @Inject
     DatabaseManager dbm;
     
@@ -31,9 +32,8 @@ public class MyEmailValidator implements Validator {
         if (email == null) {
             return; // Just ignore and let required="true" do its job.
         }
-        
-        Person reciever = (Person)dbm.getEntity("Person", "Email", email);
-        if(reciever == null)
-            throw new ValidatorException(new FacesMessage("Klubo nario su tokiu elektroniniu paštu nėra."));
+        EmailValidator emailValidator = EmailValidator.getInstance();
+        if(!emailValidator.isValid(email)) 
+            throw new ValidatorException(new FacesMessage("Netinkmas elektroninis paštas."));
     }
 }

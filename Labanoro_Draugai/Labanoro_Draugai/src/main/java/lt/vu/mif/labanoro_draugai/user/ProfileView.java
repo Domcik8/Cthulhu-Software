@@ -9,7 +9,6 @@ import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 import java.io.IOException;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
@@ -34,11 +32,9 @@ import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import lt.vu.mif.labanoro_draugai.entities.Type;
 import lt.vu.mif.labanoro_draugai.mailService.EmailBean;
 import lt.vu.mif.labanoro_draugai.reservation.ReservationConfirmationManager;
-import org.apache.commons.validator.routines.EmailValidator;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.omnifaces.cdi.ViewScoped;
-import org.primefaces.context.RequestContext;
 import org.primefaces.extensions.model.dynaform.DynaFormControl;
 import org.primefaces.extensions.model.dynaform.DynaFormLabel;
 import org.primefaces.extensions.model.dynaform.DynaFormModel;
@@ -126,6 +122,11 @@ public class ProfileView implements Serializable{
         System.out.println(toString() + " constructed.");
     }
     
+    public String formattedMembershipEndDate(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(user.getMembershipdue());
+    }
+    
     //Recommendation
     public int recommendationsTillMember(){
         Systemparameter par = (Systemparameter) dbm.getEntity("Systemparameter", "internalName", "SystemParameter.RequiredRecommendations");
@@ -145,7 +146,19 @@ public class ProfileView implements Serializable{
         emailBean.sendCandidateRecommendationRequestMessage(reciever, user);
     }
     
+    public void inviteFriend(){
+        System.out.println("Invitation not yet implemented.");
+    }
+    
+    //renderers
     public String renderRecommendtionInfo(){
+        if(!user.getTypeid().getInternalname().equals("Person.Candidate")){
+            return "false";
+        }
+        return "true";
+    }
+    
+        public String renderNotForCandidate(){
         if(!user.getTypeid().getInternalname().equals("Person.Candidate")){
             return "true";
         }

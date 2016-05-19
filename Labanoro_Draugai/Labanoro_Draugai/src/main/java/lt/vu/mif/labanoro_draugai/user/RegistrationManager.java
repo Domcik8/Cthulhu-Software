@@ -24,6 +24,7 @@ import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.entities.Type;
 import lt.vu.mif.labanoro_draugai.entities.Personregistrationform;
 import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
+import lt.vu.mif.labanoro_draugai.mailService.EmailBean;
 
 import org.primefaces.extensions.model.dynaform.DynaFormControl;
 import org.primefaces.extensions.model.dynaform.DynaFormLabel;
@@ -52,6 +53,9 @@ public class RegistrationManager implements Serializable{
     
     @Inject
     DatabaseManager dbm;
+    
+    @Inject
+    EmailBean emailBean;
     
     @PostConstruct
     public void init(){
@@ -99,6 +103,7 @@ public class RegistrationManager implements Serializable{
 //        persistList.add(regInfo);
         if(!dbm.persistAndFlush(regInfo)) return null;
         dbm.updateEntity(person);
+        emailBean.sendEmailConfirmationMessage(person);
         return "/login?faces-redirect=true";
     }
     

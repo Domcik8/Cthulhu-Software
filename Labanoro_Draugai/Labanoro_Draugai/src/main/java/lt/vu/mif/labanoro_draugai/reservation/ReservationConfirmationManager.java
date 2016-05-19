@@ -123,6 +123,7 @@ public class ReservationConfirmationManager implements Serializable{
 
         Reservation reservation = dbm.addReservation(house.getHousereg(),pay.getPaymentreg(),"Reservation", user.getEmail(), selectedServices, dateFrom, dateTo);
         pay.setReservationid(reservation);
+        pay.setApproveddate(new Date());
         dbm.updateEntity(pay);
         return "/index";
     }
