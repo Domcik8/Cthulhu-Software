@@ -31,7 +31,8 @@ and open the template in the editor.
                 <p:dataTable id="mainTable" var="user" value="#{adminUserManager.users}" widgetVar="usersTable"
                      emptyMessage="Vartotojų nerasta" filteredValue="#{adminUserManager.filteredUsers}" paginator="true"
                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                     rowsPerPageTemplate="10,50,100" rows="10" currentPageReportTemplate="{currentPage} iš {totalPages}">
+                     rowsPerPageTemplate="10,50,100" rows="10" currentPageReportTemplate="{currentPage} iš {totalPages}"
+                     sortMode="multiple">
 
                     <f:facet name="header">
                         <p:outputPanel style="margin-top: 4px">
@@ -48,16 +49,11 @@ and open the template in the editor.
                         <h:outputText value="#{adminUserManager.getType(user)}" />
                     </p:column>
 
-                    <p:column filterBy="#{user.priority}" headerText="Prioritetas" filterMatchMode="contains">
+                    <p:column headerText="Prioritetas" sortBy="#{user.priority}">
                         <h:outputText value="#{user.priority}" />
                     </p:column>
 
-                    <p:column filterBy="#{user.points}" headerText="Taškai" filterMatchMode="lte">
-                        <f:facet name="filter">
-                            <p:spinner onchange="PF('usersTable').filter()" styleClass="year-spinner">
-                                <f:converter converterId="javax.faces.Integer" />
-                            </p:spinner>
-                        </f:facet>
+                    <p:column headerText="Taškai" sortBy="#{user.priority}">
                         <h:outputText value="#{user.points}" />
                         <p:commandButton image="ui-icon-plusthick" action="#{adminUserManager.setUserEmail(user.getEmail())}" oncomplete="PF('addPointsDialog').show();" update="dialogOutsideForm"/>
                     </p:column>
@@ -70,10 +66,7 @@ and open the template in the editor.
                         <h:outputText value="#{user.address}" />
                     </p:column>
 
-                    <p:column filterBy="#{user.membershipdue}" headerText="Narys iki" filterMatchMode="contains">
-                        <f:facet name="filter">
-                            <p:calendar id="popup" value="#{adminUserManager.calendar}" pattern="yyyy-MM-dd" mindate="#{adminUserManager.getCurrentDate()}" readonly="true" style="width: 100%"/>
-                        </f:facet>
+                    <p:column headerText="Narys iki" sortBy="#{user.priority}">
                         <h:outputText value="#{user.membershipdue}">
                             <f:convertDateTime pattern="yyyy-MM-dd" />
                         </h:outputText>
@@ -112,6 +105,7 @@ and open the template in the editor.
         
     <!-- scripts -->
     <h:outputScript library="js" name="custom.js" />
+    <script>setActiveNavTab("admin")</script>
     <!-- end of scripts -->
     </h:body>
 </html>

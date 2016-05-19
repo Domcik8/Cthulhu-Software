@@ -29,7 +29,7 @@ and open the template in the editor.
             });
         </script>
     </h:head>
-    <h:body style="background-color: white">
+    <h:body>
         <!-- Navigation panel-->
         <ui:include src="/WEB-INF/other_pages/navigation.xhtml" />
         <!-- End of Navigation panel -->
@@ -91,7 +91,8 @@ and open the template in the editor.
                     <p:outputLabel for="isActive" value="Aktyvus:"/>
                     <h:selectBooleanCheckbox id="isActive" value="#{editableHouse.isActive}"/> 
                     <h:inputHidden/>
-                    
+                </h:panelGrid>
+                <h:panelGrid columns="3">
                     <p:commandButton action="#{editableHouse.saveHouse}" value="Išsaugoti" process="@form"/>
                     <p:commandButton action="#{editableHouse.declineChanges}" value="Atmesti" process="@this"/>
                     <p:commandButton action="#{editableHouse.deleteHouse}" value="Panaikinti" process="@this"/>
@@ -105,13 +106,14 @@ and open the template in the editor.
             
             <h:form enctype="multipart/form-data">
                 <p:growl id="messages" showDetail="true" />
-                <p:fileUpload value="#{editableHouse.file}" mode="simple" skinSimple="true"/>
-                <p:commandButton value="Submit" ajax="true" actionListener="#{editableHouse.upload}" />
+                <p:fileUpload value="#{editableHouse.file}" mode="simple" skinSimple="true"/> <br/>
+                <p:commandButton value="Įkelti" ajax="false" actionListener="#{editableHouse.upload}" />
             </h:form>
         </div>
         
         <!-- scripts -->
         <h:outputScript library="js" name="custom.js" />
+        <script>setActiveNavTab("admin")</script>
         <!-- end of scripts -->
     </h:body>
 </html>
