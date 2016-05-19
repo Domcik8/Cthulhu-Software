@@ -78,7 +78,7 @@ public class FBLoginServlet extends HttpServlet {
                         System.out.println("User with such email already exists " + email);
                     }
                 } else {
-                    response.sendRedirect(request.getContextPath() + dbm.getSystemParameter("SystemParameter.Redirect.Register").getValue() + "?facebookId=" + facebookId);
+                    response.sendRedirect(request.getContextPath() + dbm.getSystemParameter("SystemParameter.Redirect.Register").getValue() + "?accessToken=" + accessToken);
                     return;
                 }
             } else {
