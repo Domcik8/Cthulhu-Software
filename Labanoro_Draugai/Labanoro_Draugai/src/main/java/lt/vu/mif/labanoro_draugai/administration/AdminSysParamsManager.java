@@ -38,6 +38,8 @@ public class AdminSysParamsManager implements Serializable {
     private List<Systemparameter> params;
     private List<Systemparameter> filteredParams;
     private Systemparameter editedParameter;
+    private String oldValue;
+    private String newValue;
     
     @PersistenceContext
     EntityManager em;
@@ -83,8 +85,8 @@ public class AdminSysParamsManager implements Serializable {
     }
     
     public void onCellEdit(CellEditEvent event) {
-        String oldValue = (String) event.getOldValue();
-        String newValue = (String) event.getNewValue();
+        oldValue = (String) event.getOldValue();
+        newValue = (String) event.getNewValue();
         
         FacesContext context = FacesContext.getCurrentInstance();
         editedParameter = context.getApplication().evaluateExpressionGet(context, "#{parameter}", Systemparameter.class);
@@ -132,5 +134,13 @@ public class AdminSysParamsManager implements Serializable {
     
     public void setEditedParameter(Systemparameter param) {
         editedParameter = param;
+    }
+    
+    public String getNewValue() {
+        return newValue;
+    }
+    
+    public String getOldValue() {
+        return oldValue;
     }
 }

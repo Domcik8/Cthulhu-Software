@@ -36,7 +36,7 @@ and open the template in the editor.
 
                     <f:facet name="header">
                         <p:outputPanel style="margin-top: 4px">
-                            <h:outputText value="Dėmesio! Pranešimas!" style="color: red"/>
+                            <h:outputText value="Dėmesio! Šioje skiltyje yra pateikti svarbiausi sistemos duomenys! Juos modifikuoti rekomenduojama tik esant būtinybei!" style="color: red"/>
                         </p:outputPanel>
                         <p:outputPanel style="margin-top: 4px">
                             <h:outputText value="Ieškoti visuose stulpeliuose:" />
@@ -48,7 +48,7 @@ and open the template in the editor.
                         <h:outputText value="#{parameter.title}" />
                     </p:column>
                     
-                    <p:ajax event="cellEdit" listener="#{adminSysParamsManager.onCellEdit}" update=":mainForm" />
+                    <p:ajax event="cellEdit" listener="#{adminSysParamsManager.onCellEdit}" update=":dialogOutsideForm" />
                     
                     <p:column filterBy="#{parameter.value}" headerText="Reikšmė" filterMatchMode="contains" style="width:50%">
                         <p:cellEditor>
@@ -66,9 +66,15 @@ and open the template in the editor.
             
             <div>
                 <h:form id="dialogOutsideForm">
-                    <p:dialog id="firstDialog" header="Dėmesio!" widgetVar="confirmDialog" modal="true" height="100" width="300">
+                    <p:dialog id="firstDialog" header="Dėmesio!" widgetVar="confirmDialog" modal="true" minHeight="100" minWidth="300">
                         <h:form id="dialogInsideForm">
                             <h:outputText value="Ar tikrai norite pakeisti parametro reikšmę?"/>
+                            <h:panelGrid id="paramsPanel" columns="2" >
+                                <h:outputLabel value="Sena reikšmė:"/>
+                                <h:outputText value="#{adminSysParamsManager.oldValue}"/>
+                                <h:outputLabel value="Nauja reikšmė:"/>
+                                <h:outputText value="#{adminSysParamsManager.newValue}"/>
+                            </h:panelGrid>
                             <h:panelGrid id="buttonPanel" columns="2" >
                                 <p:commandButton value="Taip" action="#{adminSysParamsManager.saveChanges}"/>
                                 <p:commandButton value="Ne" action="#{adminSysParamsManager.discardChanges}"/>
@@ -80,6 +86,7 @@ and open the template in the editor.
         </div>
          <!-- scripts -->
         <h:outputScript library="js" name="custom.js" />
+        <script>setActiveNavTab("admin")</script>
         <!-- end of scripts -->
     </h:body>
 </html>

@@ -1,6 +1,7 @@
 package lt.vu.mif.labanoro_draugai.administration;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -8,8 +9,11 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.faces.application.FacesMessage;
-import javax.faces.view.ViewScoped;
+import javax.faces.context.ExternalContext;
+import org.omnifaces.cdi.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -17,20 +21,22 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.SynchronizationType;
+import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.House;
+import lt.vu.mif.labanoro_draugai.entities.Houseimage;
 import lt.vu.mif.labanoro_draugai.entities.Type;
 import org.primefaces.model.UploadedFile;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.persistence.config.CacheUsage;
+import org.eclipse.persistence.config.QueryHints;
 import org.primefaces.event.FileUploadEvent;
 
 /**
  *
  * @author ErnestB
  */
-/*@Named
-@Stateful
-@ViewScoped*/
 @Named
 @ViewScoped
 @Stateful
@@ -44,7 +50,7 @@ public class EditableHouse implements Serializable {
     private Map<String, String> houseTypes;
     private String houseType;
     
-    @PersistenceContext(type=PersistenceContextType.EXTENDED, synchronization=SynchronizationType.UNSYNCHRONIZED)
+    @PersistenceContext(type=PersistenceContextType.TRANSACTION, synchronization=SynchronizationType.UNSYNCHRONIZED)
     private EntityManager em;
 
     @Inject
@@ -196,11 +202,11 @@ public class EditableHouse implements Serializable {
             
         }
         
-        /*List<Houseimage> result = house.getHouseimageList();
+        List<Houseimage> result = dbm.getEntityList("Houseimage", "Houseid", house);
          
         for (Houseimage img : result) {
             imgs.add(img.getInternalname());
-        }*/
+        }
          
         return imgs;
     }
@@ -247,19 +253,52 @@ public class EditableHouse implements Serializable {
         this.file = file;
     }
     
-    public void upload(FileUploadEvent event) {
+    public void upload() throws IOException {
         if(file != null) {
-            FacesMessage message = new FacesMessage("Succesful", file.getFileName() + " is uploaded.");
-            FacesContext.getCurrentInstance().addMessage(null, message);
+            //FacesMessage message = new FacesMessage("Succesful", file.getFileName() + " is uploaded.");
+            //FacesContext.getCurrentInstance().addMessage(null, message);
+            byte[] blobFile = file.getContents();
+            insertHouseImage(blobFile);
         }
     }
     
-    public void handleFileUpload(FileUploadEvent event) throws IOException {
-        UploadedFile file = event.getFile();
-        System.out.println(file.getFileName());
+    public boolean insertHouseImage(Serializable image) throws IOException {
+        try {
+            Houseimage img = new Houseimage();
+            img.setImage(image);
+            img.setTypeid((Type)dbm.getEntity("Type", "Id", 15));
+            img.setHouseid(house);
+            int sequence = getLastImageSequence(house);
+            String internalName = "Picture." + house.getHousereg() + "_" + sequence;
+            img.setInternalname(internalName);
+            img.setSequence(sequence);
+            img.setMimetype("JPG");
 
-        byte[] foto = IOUtils.toByteArray(file.getInputstream());
-        System.out.println(foto);
-     //application code
+            em.joinTransaction();
+            dbm.persistAndFlush(img);
+
+            return true;
+        }
+        catch (Exception ex) {
+            return false;
+        }
+        finally {
+            //Reload the page:
+            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+            ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI() + "?houseId=" + house.getId());
+        }
+    }
+    
+    private int getLastImageSequence(House h) {
+        int count = 0;
+        List<Houseimage> imgs = h.getHouseimageList();
+        
+        for (Houseimage img : imgs) {
+            if (img.getSequence() > count) {
+                count = img.getSequence();
+            }
+        }
+        
+        return (count+1);
     }
 }
