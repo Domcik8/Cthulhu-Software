@@ -20,8 +20,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 
 import lt.vu.mif.labanoro_draugai.authentication.controller.LoginController;
-import lt.vu.mif.labanoro_draugai.business.DatabaseManager;              //for database operation (user registration)
-// import lt.vu.mif.labanoro_draugai.administration.settings    -- for settings import
+import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 
 @WebServlet(urlPatterns = {"/login"})
 public class FBLoginServlet extends HttpServlet {
@@ -60,13 +59,15 @@ public class FBLoginServlet extends HttpServlet {
 
         String facebookId = (String) fbGraph.getIdEmail(accessToken).get("id");
         String email = fbGraph.getEmail(accessToken);
+        String firstname = fbGraph.getFirstName(accessToken);
+        String lastname = fbGraph.getLastName(accessToken);
         String sessionID = httpSession.getId();
 
 //        if (state.equals(sessionID)) {
         try {
 
             if (request.getUserPrincipal() == null) {
-                if (loginController.login(email, facebookId)) {
+                if (loginController.login(email, facebookId, firstname, lastname)) {
                     String password = loginController.getRegisteredUserP(email, facebookId);
                     request.login(email, password);
                     System.out.println("User logged");
