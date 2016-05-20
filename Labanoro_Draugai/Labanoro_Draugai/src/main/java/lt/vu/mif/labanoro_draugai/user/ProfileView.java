@@ -137,7 +137,7 @@ public class ProfileView implements Serializable{
     public int remainingRecommendationRequests(){
         Systemparameter par = (Systemparameter) dbm.getEntity("Systemparameter", "internalName", "SystemParameter.MaxRecommendations");
         int totalrecomendations = Integer.parseInt(par.getValue());
-        return user==null? totalrecomendations:totalrecomendations - user.getRecommendationstosend();
+        return user==null || user.getRecommendationstosend() == null ? totalrecomendations:totalrecomendations - user.getRecommendationstosend();
     }
     
     public void askForRecommendation(){

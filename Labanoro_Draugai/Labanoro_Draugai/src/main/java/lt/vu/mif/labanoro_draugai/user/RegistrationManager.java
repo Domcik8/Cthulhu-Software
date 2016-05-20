@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -48,6 +49,7 @@ public class RegistrationManager implements Serializable{
     private String firstName;
     private String lastName;
     private String termsAndConditions;
+    private String referral;
     @AssertTrue
     private boolean isAgreeingToTerms;
     
@@ -59,11 +61,13 @@ public class RegistrationManager implements Serializable{
     
     @PostConstruct
     public void init(){
+        referral = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("referral");
+        if(referral!=null)System.out.print("Opened with referral: referral="+referral);
         displayModel = new DynaFormModel();
         List<Formattribute> attributes = (List<Formattribute>)dbm.getAllEntities("Formattribute");
         if(attributes == null) return;
         
-        termsAndConditions = ((Systemparameter)dbm.getEntity("Systemparameter", "Internalname", "SystemParameter.TermsAndConditions")).getTitle();
+        termsAndConditions = ((Systemparameter)dbm.getEntity("Systemparameter", "Internalname", "SystemParameter.TermsAndConditions")).getValue();
         
         for(Formattribute attribute:attributes){
             DynaFormRow row = displayModel.createRegularRow();
@@ -72,6 +76,7 @@ public class RegistrationManager implements Serializable{
                     attribute.getTypeid().getInternalname());
              label.setForControl(control);
         }
+        System.out.println(toString() + " constructed.");
     } 
     
     public String submitRegistration(){
@@ -91,6 +96,8 @@ public class RegistrationManager implements Serializable{
         Person person = dbm.addPerson(email, password, firstName, lastName, "Person.Candidate");
         person.setPoints(new BigDecimal(0));
         person.setPriority(0);
+        person.setMembershipdue(new Date());
+        person.setRecommendationstosend(0);
         Personregistrationform regInfo = new Personregistrationform();
         regInfo.setFormvalue(jsonObject.toString());
         regInfo.setInternalname(email);
@@ -98,9 +105,13 @@ public class RegistrationManager implements Serializable{
         regInfo.setPersonid(person);
         regInfo.setTypeid((Type)dbm.getEntity("Type", "internalname", "Form.Person"));
         person.setPersonregistrationform(regInfo);
-//        List persistList = new ArrayList<>();
-//        persistList.add(person);
-//        persistList.add(regInfo);
+        if(referral!=null){
+            Person referringUser = (Person) dbm.getEntity("Person", "UniqueKey", referral);
+            if(referringUser != null){
+                dbm.addRecommendation(referringUser.getEmail(), person.getEmail(), new Date(), "Recommendation");
+                person.setRecommendationsreceived(person.getRecommendationsreceived()+1);
+            }
+        }
         if(!dbm.persistAndFlush(regInfo)) return null;
         dbm.updateEntity(person);
         emailBean.sendEmailConfirmationMessage(person);
