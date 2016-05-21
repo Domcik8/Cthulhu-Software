@@ -986,8 +986,8 @@ public class DatabaseManager {
         try {
             Query q = em.createQuery("UPDATE House h SET h.title = :title, h.typeid = :typeid, "
                     + "h.description = :description, h.housereg = :housereg, h.address = :address, "
-                    + "h.isactive = :isactive, h.seasonstartdate = :startdt, h.seasonenddate = :enddt, "
-                    + "h.weekprice = :price, h.numberofplaces = :places "
+                    + "h.seasonstartdate = :startdt, h.seasonenddate = :enddt, "
+                    + "h.isactive = :isactive, h.weekprice = :price, h.numberofplaces = :places "
                     + "WHERE h.id = :id");
             q.setParameter("title", h.getTitle());
             q.setParameter("typeid", h.getTypeid());

@@ -28,87 +28,137 @@ and open the template in the editor.
                     buttonImageOnly: true*/})
             });
         </script>
+        <style>
+            div[id="imagesForm:imagesTable"] thead {
+                display:none;
+            }
+        </style>
     </h:head>
     <h:body>
         <!-- Navigation panel-->
         <ui:include src="/WEB-INF/other_pages/navigation.xhtml" />
         <!-- End of Navigation panel -->
         
-        <div class="container .col-md-8">
-            <h:form>
-                <p:messages id="messages" autoUpdate="true" closable="true" />
-            </h:form>
+        <div class="container .col-md-8" style="background: white">
+            <h1>Namelio informacijos keitimas</h1>
+            <h2>Pagrindinė informacija</h2>
+            <div>
+                <h:form>
+                    <p:messages id="messages" autoUpdate="true" closable="true" />
+                </h:form>
             
-            <h:form>
-                <h:panelGrid id="grid" columns="3">
-                    <h:inputHidden value="#{editableHouse.house.id}" />
-                    <h:inputHidden/>
-                    <h:inputHidden/>
-                    
-                    <p:outputLabel for="title" value="Pavadinimas:"/>
-                    <p:inputText id="title" value="#{editableHouse.house.title}" required="true" requiredMessage="Įveskite namelio pavadinimą! Maks. ilgis 255 simboliai.">
-                        <f:validateLength minimum="1" maximum="255"/>
-                    </p:inputText>
-                    <p:message for="title" style="color:red" />
-                    
-                    <p:outputLabel for="description" value="Aprašymas:"/>
-                    <p:inputText id="description" value="#{editableHouse.house.description}"/>
-                    <h:message for="description" style="color:red" />
-                    
-                    <p:outputLabel for="houseId" value="Namelio reg. nr."/>
-                    <p:inputText id="houseId" value="#{editableHouse.house.housereg}" required="true" requiredMessage="Įveskite namelio registracijos numerį! Maks. ilgis 255 simboliai.">
-                        <f:validateLength minimum="1" maximum="255"/>
-                    </p:inputText>
-                    <p:message for="houseId" style="color:red" />
-                    
-                    <p:outputLabel for="weekPrice" value="Sav. kaina (EUR):"/>
-                    <p:inputText id="weekPrice" value="#{editableHouse.house.weekprice}"/>
-                    <h:message for="weekPrice" style="color:red" />
-                    
-                    <p:outputLabel for="numberOfPlaces" value="Vietų sk.:"/>
-                    <p:inputText id="numberOfPlaces" value="#{editableHouse.house.numberofplaces}"/>
-                    <h:message for="numberOfPlaces" style="color:red" />
-                    
-                    <p:outputLabel for="address" value="Adresas:"/>
-                    <p:inputText id="address" value="#{editableHouse.house.address}"/>
-                    <h:message for="address" style="color:red" />
-                    
-                    <p:outputLabel for="startDate" value="Pradžios data:"/>
-                    <p:calendar id="startDate" pattern="yyyy-MM-dd" value="#{editableHouse.house.seasonstartdate}" readonly="#{facesContext.renderResponse}"/>
-                    <h:message for="startDate" style="color:red" />
-                    
-                    <p:outputLabel for="endDate" value="Pabaigos data:"/>
-                    <p:calendar id="endDate" pattern="yyyy-MM-dd" value="#{editableHouse.house.seasonenddate}" readonly="#{facesContext.renderResponse}"/>
-                    <h:message for="endDate" style="color:red" />
-                    
-                    <p:outputLabel for="type" value="Tipas:"/>
-                    <h:selectOneMenu id="type" value="#{editableHouse.houseType}" label="#{editableHouse.houseType}" style="width:200px">
-                        <f:selectItems value="#{editableHouse.houseTypes.entrySet()}" var="typ" itemValue="#{typ.key}" itemLabel="#{typ.value}" />
-                        <f:ajax listener="#{editableHouse.changeHouseType}" />
-                    </h:selectOneMenu>
-                    <h:message for="type" style="color:red" />
-                    
-                    <p:outputLabel for="isActive" value="Aktyvus:"/>
-                    <h:selectBooleanCheckbox id="isActive" value="#{editableHouse.isActive}"/> 
-                    <h:inputHidden/>
-                </h:panelGrid>
-                <h:panelGrid columns="3">
-                    <p:commandButton action="#{editableHouse.saveHouse}" value="Išsaugoti" process="@form"/>
-                    <p:commandButton action="#{editableHouse.declineChanges}" value="Atmesti" process="@this"/>
-                    <p:commandButton action="#{editableHouse.deleteHouse}" value="Panaikinti" process="@this"/>
-                </h:panelGrid>
-                <h:panelGrid id="grid2" columns="1">
-                    <ui:repeat value="#{editableHouse.images}" var="image">
-                        <p:graphicImage id="img" url="/images/#{image}" alt="#{image}" style="width: 200px;padding-right: 10px"/>
-                    </ui:repeat>
-                </h:panelGrid>
-            </h:form>
+                <h:form>
+                    <h:panelGrid id="grid" columns="3">
+                        <h:inputHidden value="#{editableHouse.house.id}" />
+                        <h:inputHidden/>
+                        <h:inputHidden/>
+
+                        <p:outputLabel for="title" value="Pavadinimas:"/>
+                        <p:inputText id="title" value="#{editableHouse.house.title}" required="true" requiredMessage="Įveskite namelio pavadinimą! Maks. ilgis 255 simboliai.">
+                            <f:validateLength minimum="1" maximum="255"/>
+                        </p:inputText>
+                        <p:message for="title" style="color:red" />
+
+                        <p:outputLabel for="description" value="Aprašymas:"/>
+                        <p:inputText id="description" value="#{editableHouse.house.description}"/>
+                        <h:message for="description" style="color:red" />
+
+                        <p:outputLabel for="houseId" value="Namelio reg. nr."/>
+                        <p:inputText id="houseId" value="#{editableHouse.house.housereg}" required="true" requiredMessage="Įveskite namelio registracijos numerį! Maks. ilgis 255 simboliai.">
+                            <f:validateLength minimum="1" maximum="255"/>
+                        </p:inputText>
+                        <p:message for="houseId" style="color:red" />
+
+                        <p:outputLabel for="weekPrice" value="Sav. kaina (EUR):"/>
+                        <p:inputText id="weekPrice" value="#{editableHouse.house.weekprice}"/>
+                        <h:message for="weekPrice" style="color:red" />
+
+                        <p:outputLabel for="numberOfPlaces" value="Vietų sk.:"/>
+                        <p:inputText id="numberOfPlaces" value="#{editableHouse.house.numberofplaces}"/>
+                        <h:message for="numberOfPlaces" style="color:red" />
+
+                        <p:outputLabel for="address" value="Adresas:"/>
+                        <p:inputText id="address" value="#{editableHouse.house.address}"/>
+                        <h:message for="address" style="color:red" />
+
+                        <p:outputLabel for="startDate" value="Pradžios data:"/>
+                        <p:calendar id="startDate" pattern="yyyy-MM-dd" value="#{editableHouse.house.seasonstartdate}" readonly="#{facesContext.renderResponse}"/>
+                        <h:message for="startDate" style="color:red" />
+
+                        <p:outputLabel for="endDate" value="Pabaigos data:"/>
+                        <p:calendar id="endDate" pattern="yyyy-MM-dd" value="#{editableHouse.house.seasonenddate}" readonly="#{facesContext.renderResponse}"/>
+                        <h:message for="endDate" style="color:red" />
+
+                        <p:outputLabel for="type" value="Tipas:"/>
+                        <h:selectOneMenu id="type" value="#{editableHouse.houseType}" label="#{editableHouse.houseType}" style="width:200px">
+                            <f:selectItems value="#{editableHouse.houseTypes.entrySet()}" var="typ" itemValue="#{typ.key}" itemLabel="#{typ.value}" />
+                            <f:ajax listener="#{editableHouse.changeHouseType}" />
+                        </h:selectOneMenu>
+                        <h:message for="type" style="color:red" />
+
+                        <p:outputLabel for="isActive" value="Aktyvus:"/>
+                        <h:selectBooleanCheckbox id="isActive" value="#{editableHouse.isActive}"/> 
+                        <h:inputHidden/>
+                    </h:panelGrid>
+                    <h:panelGrid columns="3">
+                        <p:commandButton action="#{editableHouse.saveHouse}" value="Išsaugoti" process="@form"/>
+                        <p:commandButton action="#{editableHouse.declineChanges}" value="Atmesti" process="@this"/>
+                        <p:commandButton action="#{editableHouse.deleteHouse}" value="Panaikinti" process="@this"/>
+                    </h:panelGrid>
+                </h:form>
+            </div>
             
-            <h:form enctype="multipart/form-data">
-                <p:growl id="messages" showDetail="true" />
-                <p:fileUpload value="#{editableHouse.file}" mode="simple" skinSimple="true"/> <br/>
-                <p:commandButton value="Įkelti" ajax="false" actionListener="#{editableHouse.upload}" />
-            </h:form>
+            <h2>Nuotraukos</h2>
+            <div>
+                <h:form id="imagesForm">
+                    <p:dataTable id="imagesTable" var="image" value="#{editableHouse.images}" widgetVar="imagesTable" emptyMessage="Nuotraukų nerasta" tableStyle="width:auto">                        
+                        <p:column>
+                            <h:graphicImage id="img" url="/images/#{image}" alt="#{image}" style="width: 200px;padding-right: 10px"/>
+                        </p:column>
+
+                        <p:column>    
+                            <p:commandButton value="Padidinti" actionListener="#{editableHouse.setImageForDialog(image)}" oncomplete="PF('imageDialog').show();" update=":imageDialogOutsideForm"/>
+                        </p:column>
+                        
+                        <p:column>    
+                            <p:commandButton value="Ištrinti" actionListener="#{editableHouse.setImageForDialog(image)}" oncomplete="PF('deletionDialog').show();" update=":deletionDialogOutsideForm"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </div>
+            
+            <h2>Nuotraukos pridėjimas</h2>
+            <div>
+                <h:form enctype="multipart/form-data">
+                    <p:fileUpload value="#{editableHouse.file}" mode="simple" skinSimple="true"/> <br/>
+                    <p:commandButton value="Įkelti" ajax="false" actionListener="#{editableHouse.upload}" />
+                </h:form>
+            </div>
+        
+            <div>
+                <h:form id="imageDialogOutsideForm">
+                    <p:dialog id="firstDialog" widgetVar="imageDialog" modal="true" resizable="false">
+                        <f:facet name="header">
+                            <h:outputText id="imageDialogHeader" value="#{editableHouse.image}"/>
+                        </f:facet>
+                        <p:graphicImage id="img2" url="/images/#{editableHouse.image}" alt="#{editableHouse.image}" style="width: 800px; height: 500px;padding-right: 10px" cache="false"/>
+                    </p:dialog>
+                </h:form>
+            </div> 
+            
+            <div>
+                <h:form id="deletionDialogOutsideForm">
+                    <p:dialog id="secondDialog" header="Dėmesio" widgetVar="deletionDialog" modal="true" height="200" width="400">
+                        <h:form id="dialogInsideForm">
+                            <h:outputText value="Ar tikrai norite ištrinti šią nuotrauką?"/>
+                            <h:panelGrid id="panel" columns="2" >  
+                                <p:commandButton value="Taip" action="#{editableHouse.removeImage}"/>
+                                <p:commandButton value="Ne" action="#{editableHouse.dontRemoveImage}"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+                </h:form>
+            </div> 
         </div>
         
         <!-- scripts -->
