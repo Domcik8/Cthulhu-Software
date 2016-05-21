@@ -7,6 +7,7 @@ import java.security.SecureRandom;
 import java.text.MessageFormat;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import lt.vu.mif.labanoro_draugai.authentication.FBGraph;
 
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.Person;
@@ -20,16 +21,16 @@ public class LoginController {
 
     @Inject
     private DatabaseManager db;
-
+    
     public LoginController() {
     }
 
-    public Boolean login(String email, String facebookId) {
+    public Boolean login(String email, String facebookId, String firstName, String lastName) {
 
         if (isFbUser(email, facebookId)) {
             return true;
         } else {
-            registerUser(email, facebookId);
+            registerUser(email, facebookId, firstName, lastName);
 
             if (isFbUser(email, facebookId)) {
                 return true;
@@ -61,16 +62,8 @@ public class LoginController {
         return false;
     }
 
-    // Simple user registration [check by email]
-//    public void registerUser(String email) {
-//
-//        if (!isUser(email)) {
-//            db.addPerson(email, null, null, "Person.Candidate");
-//        }
-//    }
-
     // Facebook user registration [check by email and facebookId] 
-    public void registerUser(String email, String facebookId) {
+    public void registerUser(String email, String facebookId, String firstName, String lastName) {
 
         if (!isUser(email)) {
             Person person = db.addPerson(email, null, null, "Person.Candidate");
@@ -85,6 +78,8 @@ public class LoginController {
             person.setFacebookid(facebookId);
             person.setFacebookpassword(password);
             person.setPassword(passwordHash);
+            person.setFirstname(firstName);
+            person.setLastname(lastName);
         }
     }
 
@@ -96,16 +91,5 @@ public class LoginController {
         }
         return null;
     }
-
-//    public void registerUser(String email, String firstName, String lastName) {
-//
-//        db.addPerson(email, firstName, lastName, "Person.Candidate");
-//    }
-
-//    private void generateHash(String password) {
-//
-//        String hash = Hashing.sha256().hashString(password, Charsets.UTF_8).toString();
-//        String output = MessageFormat.format("{0} hashed to: {1}", password, hash);
-//    }
 
 }

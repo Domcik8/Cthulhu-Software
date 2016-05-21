@@ -1,7 +1,5 @@
 package lt.vu.mif.labanoro_draugai.mailService;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
@@ -29,7 +27,7 @@ public class EmailBody {
         validateUniqueKey(receiver);
 
         String message = "Sveiki, " + receiver.getFirstname();
-        message += "<br/> Sveikiname uzsiregistravus <b>Labanoro draugai</b> klube";
+        message += "<br/><br/> Sveikiname uzsiregistravus <b>Labanoro draugai</b> klube";
 
         message += "<br/> Noredami patvirtinti savo registracija paspauskite zemiau esancia nuoroda";
         message += "<br/> " + getContextPath() + "/confirm?key=" + receiver.getEmailconfirmation();
@@ -53,7 +51,7 @@ public class EmailBody {
         String message = "Sveiki, " + receiver.getFirstname();
 
         if (receiver.getEmailconfirmation().equals("validated")) {
-            message += "<br/> Jusu el.pastas jau yra patvirtintas";
+            message += "<br/><br/> Jusu el.pastas jau yra patvirtintas";
         } else {
             message += "<br/> Noredami patvirtinti savo el pasta, paspauskite zemiau esancia nuoroda <br/>";
             message += "<br/> " + getContextPath() + "/confirm?key=" + receiver.getEmailconfirmation();
@@ -68,7 +66,7 @@ public class EmailBody {
     public String getCandidateApprovalMessage(Person receiver) {
 
         String message = "Sveiki, " + receiver.getFirstname();
-        message += "<br/> Sveikiname tapus pilnaverciu klubo nariu!";
+        message += "<br/><br/> Sveikiname tapus pilnaverciu klubo nariu!";
         message += "<br/> Jus surinkote pakankamai rekomendaciju, todel jums buvo suteiktas <b>Nuolatinio</b> vartotojo statusas";
         message += "<br/> Sumokejus metini narystes mokesti, jums bus suteikta atlikti rezervavimus isskirtinemis salygomis pasirinktu laikotarpiu";
 
@@ -95,7 +93,7 @@ public class EmailBody {
         validateUniqueKey(requestor);
 
         String message = "Sveiki, " + receiver.getFirstname();
-        message += "<br/> Neseniai uzsiregistravo naujas klubo narys " + requestor.getFirstname() + " " + requestor.getLastname();
+        message += "<br/> Neseniai uzsiregistravo naujas klubo narys <b>" + requestor.getFirstname() + " " + requestor.getLastname() + "</b>";
         message += "<br/> Jeigu norite suteikti sitam kandidatui savo rekomendacija, prasom pereiti zemiau esancia nuoroda";
         message += "<br/>" + getContextPath() + "/recommend?user=" + requestor.getUniquekey();
 
@@ -104,20 +102,25 @@ public class EmailBody {
 
         return message;
     }
-    
-//    public String getCandidateInventationMessage(Person receiver, Person recommender) {
-//
-//        String message = "Sveiki, " + receiver.getFirstname();
-//        message += "<br/> Neseniai uzsiregistravo naujas klubo narys " + recommender.getFirstname() + " " + recommender.getLastname();
-//        message += "<br/> Jeigu norite suteikti sitam kandidatui savo rekomendacija, prasom pereiti zemiau esancia nuoroda";
-//        message += "<br/>" + getContextPath() + "/recommend?user=" + requestor.getUniquekey();
-//
-//        message += "<br/><br/> Pagarbiai,";
-//        message += "<br/> \"Labanoro draugai\" administracija";
-//
-//        return message;
-//    }
-    
+
+    public String getCandidateInvitationMessage(String receiver, Person requestor) {
+
+        validateUniqueKey(requestor);
+
+        String message = "Sveiki, ";
+        message += "<br/><br/> Kvieciame prisijungti prie \"Labanoro draugai\" klubo";
+        message += "<br/> Jus rekomendavo <b>" + requestor.getFirstname() + " " + requestor.getLastname() + "</b>";
+        message += "<br/> Noredami prisijungti, pereikite zemiau esancia nuoroda ir uzpildykite registracijos anketa.";
+
+        message += "<br/><br/>" + getContextPath() + "/register.html?referral=" + requestor.getUniquekey();
+
+        message += "<br/><br/> Jeigu nepazistate sito zmogaus, ignorokite sita laiska.";
+
+        message += "<br/><br/> Pagarbiai,";
+        message += "<br/> \"Labanoro draugai\" administracija";
+
+        return message;
+    }
 
     private void validateEmailConfirmationKey(Person person) {
 

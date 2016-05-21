@@ -29,6 +29,8 @@ and open the template in the editor.
             <p:panel>
                 <h:form id="registrationForm" >
                     <h2>Prisijungimo informacija</h2>
+                    <input name="dummyinput" id="dummyinput" type="text" style="display: none"/> 
+                    <input name="dummypassword" type="password" id="dummypassword" style="display: none"/>
                     <h:panelGrid columns="2" border="0" columnClasses="align-right,align-left">
                         <p:outputLabel id="emailLabel" for="email" value="Elektroninio pašto adresas "/>
                         <p:inputText id="email" value="#{registrationManager.email}" required="true"/>
@@ -56,7 +58,7 @@ and open the template in the editor.
             </p:panel>
             <h:form id="termsForm">
                 <p:dialog id="termsDialog" header="Taisyklės"
-                                  width="300" height="350"
+                                  width="300"
                                   modal="true" widgetVar="termsWidget"
                                   resizable="false" draggable="false" responsive="true"
                                   closeOnEscape="true" fitViewport="true" position="center">

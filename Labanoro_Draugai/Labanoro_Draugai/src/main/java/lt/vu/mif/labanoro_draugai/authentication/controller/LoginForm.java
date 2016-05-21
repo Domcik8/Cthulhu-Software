@@ -5,7 +5,9 @@
  */
 package lt.vu.mif.labanoro_draugai.authentication.controller;
 
+import javax.ejb.Stateful;
 import javax.ejb.Stateless;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -19,7 +21,9 @@ import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
  * @author Ernest J
  */
 @Named("auth")
-@Stateless
+//@Stateless
+@Stateful
+@RequestScoped
 public class LoginForm {
 
     private String username;

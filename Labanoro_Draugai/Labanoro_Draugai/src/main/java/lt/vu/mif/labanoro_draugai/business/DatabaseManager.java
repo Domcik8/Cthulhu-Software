@@ -176,7 +176,8 @@ public class DatabaseManager {
      * Fills database with basic system parameters
      */
     private void fillBasicSystemParameters() {
-
+        addSystemParameter("SystemParameter.ExchangeRate.Euro", "Taškų kursas lyginant su euru", "10", "SystemParameter");
+        
         addSystemParameter("SystemParameter.General.ContextPath", "Pagrindinis kelias", "http://localhost:8080/Labanoro_Draugai", "Pagrindines puslapio URL'as", "SystemParameter");
 
         addSystemParameter("SystemParameter.RequiredRecommendations", "Reikalingų rekomendacijų skaičius", "2", "SystemParameter");

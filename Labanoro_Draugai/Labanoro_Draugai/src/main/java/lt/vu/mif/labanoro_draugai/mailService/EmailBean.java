@@ -3,20 +3,15 @@ package lt.vu.mif.labanoro_draugai.mailService;
 import java.util.Date;
 import java.util.Properties;
 import javax.ejb.Stateless;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import javax.mail.*;
 import javax.mail.internet.*;
-import javax.naming.NamingException;
-import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 
 //import lt.vu.mif.labanoro_draugai.administration.settings;
-import lt.vu.mif.labanoro_draugai.mailService.EmailBody;
-
 /**
  *
  * @author Ernest J
@@ -33,17 +28,16 @@ public class EmailBean {
 
     public void testMethod() {
 
-        FacesContext context = FacesContext.getCurrentInstance();
-        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-
-        Person person = (Person) dbm.getEntity("Person", "Email", "necrqlt@gmail.com");
-        Person requestor = (Person) dbm.getEntity("Person", "Email", request.getUserPrincipal().getName());
+//        FacesContext context = FacesContext.getCurrentInstance();
+//        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+//        Person person = (Person) dbm.getEntity("Person", "Email", "user");
+//        Person requestor = (Person) dbm.getEntity("Person", "Email", request.getUserPrincipal().getName());
 //        sendRegisterConfirmationMessage(person);
-        sendCandidateRecommendationRequestMessage(person, requestor);
+//        sendCandidateRecommendationRequestMessage(person, requestor);
 //        sendEmailConfirmationMessage(person);
 //        sendCandidateApprovalMessage(person);
 //        sendAccountDeactivationMessage(person);
-//        sendCandidateInventationMessage(person);
+//        sendCandidateInvitationMessage("necrqlt@gmail.com", person);
     }
 
     public void sendRegisterConfirmationMessage(Person person) {
@@ -74,19 +68,19 @@ public class EmailBean {
 
         sendEmail(receiver.getEmail(), "recommend newbie test", body.getCandidateRecommendationRequestMessage(receiver, requestor));
     }
-    
+
     public void sendCandidateRecommendationRequestMessage(String receiver, String requestor) {
-        
+
         Person receiverPerson = (Person) dbm.getEntity("Person", "Email", receiver);
         Person requestorPerson = (Person) dbm.getEntity("Person", "Email", requestor);
-        
+
         if (receiverPerson != null && requestorPerson != null) {
             sendEmail(receiver, "recommend newbie test", body.getCandidateRecommendationRequestMessage(receiverPerson, requestorPerson));
         }
     }
-    
-    public void sendCandidateInventationMessage(Person receiver) {
-//        sendEmail(receiver.getEmail(), "recommend newbie test", body.getCandidateInventationMessage(receiver));
+
+    public void sendCandidateInvitationMessage(String receiver, Person requestor) {
+        sendEmail(receiver, "Kvietimas prisijungti prie \"Labanoro draugai\" klubo", body.getCandidateInvitationMessage(receiver, requestor));
     }
 
     private void sendEmail(String to, String subject, String body) {

@@ -7,11 +7,7 @@ package lt.vu.mif.labanoro_draugai.mailService;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

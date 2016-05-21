@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Mano vasarnamių rezervacijos</title>
+        <h:outputStylesheet library="css" name="custom.css"/>
+        <h:outputScript library="js" name="custom.js" />
+        <script src="https://code.jquery.com/jquery-2.2.2.min.js"   integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI="   crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous"/>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"   integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw="   crossorigin="anonymous"></script> 
+    </h:head>
+    <h:body>
+        <!-- Navigation panel-->
+        <ui:include src="/WEB-INF/other_pages/navigation.xhtml" />
+        
+        <div class="container">
+            <h1>Mano namelių rezervacijos</h1>
+            <h:form id="reservationForm">
+                <p:dataTable id="reservationTable" var="reservation" value="#{myReservationsView.reservations}" widgetVar="reservationsTable"
+                    emptyMessage="Rezervacijų nerasta." filteredValue="#{myReservationsView.filteredReservations}" rows="15"                        
+                    paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                    rowsPerPageTemplate="15,30,50" paginator="true">
+ 
+<!--                    <f:facet name="header">
+                        <p:outputPanel>
+                            <h:outputText value="Bendra paieška:" />
+                            <p:inputText id="globalFilter" onkeyup="PF('reservationsTable').filter()" style="width:150px" placeholder="Įveskite raktažodį"/>
+                        </p:outputPanel>
+                    </f:facet>-->
+                    
+                    <p:column filterBy="#{reservation.houseid.title}" headerText="Pavadinimas" filterMatchMode="contains">
+                        <h:outputText value="#{reservation.houseid.title}" />
+                    </p:column>
+                    <p:column filterBy="#{reservation.paymentid.paymentprice.doubleValue()}" headerText="Kaina" filterMatchMode="contains">
+                        <h:outputText value="#{myReservationsView.reservationPointPrice(reservation)}t" style="float: right"/>
+                    </p:column>
+                    <p:column filterBy="#{reservation.startdate}" headerText="Pradžios data" filterMatchMode="contains" filterFunction="#{myReservationsView.filterFromDate}" >
+                        <f:facet name="filter">
+                            <p:calendar pattern="yyyy-MM-dd" locale="lt" readonlyInput="true" size="10">
+                                <p:ajax event="dateSelect" oncomplete="PF('reservationsTable').filter()"/>
+                            </p:calendar>    
+                        </f:facet>
+                        <h:outputText value="#{reservation.startdate}">
+                            <f:convertDateTime pattern="yyyy-MM-dd"/> 
+                        </h:outputText>
+                    </p:column>
+                    <p:column filterBy="#{reservation.enddate}" headerText="Pabaigos data" filterMatchMode="contains" filterFunction="#{myReservationsView.filterToDate}">
+                        <f:facet name="filter">
+                            <p:calendar pattern="yyyy-MM-dd" locale="lt" readonlyInput="true" size="10">
+                                <p:ajax event="dateSelect" oncomplete="PF('reservationsTable').filter()"/>
+                            </p:calendar> 
+                        </f:facet>
+                        <h:outputText value="#{reservation.enddate}">
+                            <f:convertDateTime pattern="yyyy-MM-dd"/> 
+                        </h:outputText>
+                    </p:column>
+                    <p:column>
+                        <p:commandButton value="Atšaukti rezervaciją" onclick="PF('cancelReservationWidget').show()">
+                            <f:setPropertyActionListener value="#{reservation}" target="#{myReservationsView.selectedReservation}" />
+                        </p:commandButton>
+                            
+                    </p:column>
+                </p:dataTable>
+            </h:form>    
+        </div>
+        
+        <p:dialog id="cancelReservationDialog" header="Atšaukti rezervaciją?" widgetVar="cancelReservationWidget" closeOnEscape="true" resizable="false" draggable="false" responsive="true"
+            fitViewport="true" position="center"  modal="true">
+            <h:form>
+                <p:commandButton value="Taip" styleClass="ui-confirmdialog-yes" 
+                                 icon="ui-icon-check" action="#{myReservationsView.cancelReservation()}" oncomplete="PF('cancelReservationWidget').hide()" update=":reservationForm:reservationTable"/>
+                <p:commandButton value="Ne" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('cancelReservationWidget').hide()"/>
+            </h:form>
+        </p:dialog>
+        
+        
+        <!-- scripts -->
+        <h:outputScript library="js" name="custom.js" />
+        <script>setActiveNavTab("myReservations")</script>
+        <!-- end of scripts -->
+    </h:body>
+</html>
