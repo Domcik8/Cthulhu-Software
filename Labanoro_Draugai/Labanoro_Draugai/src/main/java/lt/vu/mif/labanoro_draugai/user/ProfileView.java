@@ -158,7 +158,7 @@ public class ProfileView implements Serializable {
     }
 
     public void inviteFriend() {
-        System.out.println("Invitation not yet implemented.");
+        emailBean.sendCandidateInvitationMessage(friendEmail, user);
     }
 
     //renderers

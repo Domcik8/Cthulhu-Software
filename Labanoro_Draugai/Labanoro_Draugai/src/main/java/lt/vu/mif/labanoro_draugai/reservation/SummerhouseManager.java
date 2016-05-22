@@ -281,7 +281,6 @@ public class SummerhouseManager implements Serializable{
         SimpleDateFormat formatter;
         formatter = new SimpleDateFormat("M-d-yyyy");
         StringBuilder builder = new StringBuilder();
-        
         for(Reservation reservation:selectedHouse.getReservationList()){
             dates = getDaysBetweenDates(reservation.getStartdate(), reservation.getEnddate());
             for(Date date:dates){

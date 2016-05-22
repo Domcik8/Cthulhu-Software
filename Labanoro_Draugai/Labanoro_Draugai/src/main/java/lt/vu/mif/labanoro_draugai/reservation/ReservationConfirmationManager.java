@@ -136,16 +136,13 @@ public class ReservationConfirmationManager implements Serializable{
         Payment pay = dbm.addPayment(user.getEmail(), BigDecimal.valueOf(totalPrice), new Date(), "Payment.Reservation", "Currency.Points");
         
         user.setPoints(user.getPoints().subtract(BigDecimal.valueOf(totalPriceInPoints)));
-        if(!dbm.updatePersonPoints(user)){
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Nepavyko!", "Nepavyko sumokėti už rezervciją, bandykite dar kartą."));
-            return null;
-        }
 
         Reservation reservation = dbm.addReservation(house.getHousereg(),pay.getPaymentreg(),"Reservation", user.getEmail(), selectedServices, dateFrom, dateTo);
         pay.setReservationid(reservation);
         pay.setApproveddate(new Date());
         dbm.updateEntity(pay);
-        
+        dbm.updateEntity(user);
+        dbm.updateEntity(house);
         Systemparameter param = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Redirect.MyReservations");
         if (param == null) {
             System.out.println("Truksta \"SystemParameter.Redirect.MyReservations\" parametro");

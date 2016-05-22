@@ -71,6 +71,7 @@ public class StripeServlet extends HttpServlet {
                         payment.setReservationid(reservation);
                         dbm.updateEntity(payment);
                         dbm.updateEntity(dbm.getEntity("Person", "Email", username));
+                        dbm.updateEntity(dbm.getEntity("House", "Housereg",(String) json.get("houseReg")));
                         break;
                 }
 
