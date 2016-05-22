@@ -66,7 +66,7 @@ and open the template in the editor.
                         </h:outputText>
                     </p:column>
                     <p:column>
-                        <p:commandButton value="Atšaukti rezervaciją" onclick="PF('cancelReservationWidget').show()">
+                        <p:commandButton value="Atšaukti rezervaciją" onclick="PF('cancelReservationWidget').show()" rendered="#{myReservationsView.canBeCanceled(reservation)}">
                             <f:setPropertyActionListener value="#{reservation}" target="#{myReservationsView.selectedReservation}" />
                         </p:commandButton>
                             

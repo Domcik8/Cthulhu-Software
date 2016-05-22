@@ -7,7 +7,9 @@ package lt.vu.mif.labanoro_draugai.reservation;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -60,10 +62,21 @@ public class MyReservationsView implements Serializable{
     }
     
     public void cancelReservation(){
-        if(selectedReservation!=null && selectedReservation.getIsdeleted()) return;
+        if(selectedReservation!=null && selectedReservation.getIsdeleted() && canBeCanceled(selectedReservation)) return;
         selectedReservation.setIsdeleted(Boolean.TRUE);
+        user.setPoints(user.getPoints().add(BigDecimal.valueOf(reservationPointPrice(selectedReservation))));
+        dbm.updatePersonPoints(user);
         dbm.updateEntity(selectedReservation);
         selectedReservation=null;
+    }
+    
+    public boolean canBeCanceled(Reservation reservation){
+        Systemparameter cancelParam = (Systemparameter)dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Reservation.MinDaysBeforeCancel");
+        if(cancelParam == null) return false;
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, Integer.parseInt(cancelParam.getValue()));
+        if(reservation.getStartdate().before(calendar.getTime())) return false;
+        return true;
     }
     
     public double reservationPointPrice(Reservation reservation){
