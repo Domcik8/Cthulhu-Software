@@ -177,6 +177,7 @@ public class DatabaseManager {
      */
     private void fillBasicSystemParameters() {
         addSystemParameter("SystemParameter.ExchangeRate.Euro", "Taškų kursas lyginant su euru", "10", "SystemParameter");
+        addSystemParameter("SystemParameter.Currency.Euro", "Euro valiutos simbolis", "€", "SystemParameter");
         
         addSystemParameter("SystemParameter.General.ContextPath", "Pagrindinis kelias", "http://localhost:8080/Labanoro_Draugai", "Pagrindines puslapio URL'as", "SystemParameter");
 
@@ -201,9 +202,13 @@ public class DatabaseManager {
         addSystemParameter("SystemParameter.Facebook.Redirect", "FB autentifikacija", "http://localhost:8080/Labanoro_Draugai", "Nukreipimas i puslapi facebook autentifikacijos metu", "SystemParameter");
 
         addSystemParameter("SystemParameter.Redirect.Login", "Sekmingas prisijungimas", "/index.html", "Nukreipimas i puslapi po sekmingo prisijungimo", "SystemParameter");
+        addSystemParameter("SystemParameter.Redirect.Register", "Registracijos forma", "/register.html", "Nukreipimas i paskyros sukurimo bei kandidato anketos pildymo puslapi", "SystemParameter");
         addSystemParameter("SystemParameter.Redirect.LoginError", "Klaidingas prisijungimas", "/loginError.html", "Nukreipimas i puslapi po nesekmingo prisijungimo", "SystemParameter");
         addSystemParameter("SystemParameter.Redirect.GlobalError", "Globali klaida", "/WEB-INF/other_pages/someError.html", "Nukreipimas i puslapi po globalios klaidos", "SystemParameter");
-
+        addSystemParameter("SystemParameter.Redirect.MyReservations", "Sėkminga rezervacija", "/Reservation/myReservations.html", "Nukreipimas i puslapi po sėkmingos rezervacijos", "SystemParameter");
+        
+        addSystemParameter("SystemParameter.Reservation.MinDaysBeforeCancel", "Minimalus skaičius dienų, kai dar galima atšaukti rezervaciją.", "7", "", "SystemParameter");
+        
         addSystemParameter("SystemParameter.Mail.Address", "Gmail el.pastas", "labanorai@gmail.com", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Password", "Gmail el.pasto slaptazodis", "LabanoroDraugas", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Smtp.host", "Smtp hostas", "smtp.gmail.com", "SystemParameter");
@@ -433,6 +438,7 @@ public class DatabaseManager {
         newReservation.setEnddate(dateTo);
         newReservation.setServiceList(new ArrayList<Service>());
         newReservation.setPaymentid(payment);
+        newReservation.setIsdeleted(Boolean.FALSE);
 
         if (type == null) {
             System.out.println(String.format("There is no type '%s'", typeInternalName));
@@ -1018,8 +1024,8 @@ public class DatabaseManager {
         try {
             Query q = em.createQuery("UPDATE House h SET h.title = :title, h.typeid = :typeid, "
                     + "h.description = :description, h.housereg = :housereg, h.address = :address, "
-                    + "h.isactive = :isactive, h.seasonstartdate = :startdt, h.seasonenddate = :enddt, "
-                    + "h.weekprice = :price, h.numberofplaces = :places "
+                    + "h.seasonstartdate = :startdt, h.seasonenddate = :enddt, "
+                    + "h.isactive = :isactive, h.weekprice = :price, h.numberofplaces = :places "
                     + "WHERE h.id = :id");
             q.setParameter("title", h.getTitle());
             q.setParameter("typeid", h.getTypeid());

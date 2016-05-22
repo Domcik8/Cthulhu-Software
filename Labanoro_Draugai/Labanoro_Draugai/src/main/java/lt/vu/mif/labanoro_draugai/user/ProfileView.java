@@ -46,27 +46,27 @@ import org.primefaces.extensions.model.dynaform.DynaFormRow;
  */
 @Named
 @ViewScoped
-public class ProfileView implements Serializable{
-    
-    Person user;
+public class ProfileView implements Serializable {
+
+    private Person user;
     private DynaFormModel displayModel;
-    
+
     private String oldPass;
     private String newPass;
     private String newPassConfirm;
     private String friendEmail;
-    
+
     @Inject
     DatabaseManager dbm;
-    
+
     @Inject
     EmailBean emailBean;
-    
+
     @PostConstruct
     public void init() {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletRequest request = (HttpServletRequest) (ec.getRequest());
-        if(request==null || request.getUserPrincipal()==null || request.getUserPrincipal().getName() == null){ 
+        if (request == null || request.getUserPrincipal() == null || request.getUserPrincipal().getName() == null && request.getUserPrincipal().getName().isEmpty()) {
             try {
                 ec.redirect("/Labanoro_Draugai/login.html");
                 return;
@@ -75,163 +75,178 @@ public class ProfileView implements Serializable{
                 return;
             }
         }
-        user = (Person)dbm.getEntity("Person", "Email", request.getUserPrincipal().getName());
-        
+        user = (Person) dbm.getEntity("Person", "Email", request.getUserPrincipal().getName());
+
         displayModel = new DynaFormModel();
-        List<Formattribute> attributes = (List<Formattribute>)dbm.getAllEntities("Formattribute");
-        if(attributes == null) return;
-        
+        List<Formattribute> attributes = (List<Formattribute>) dbm.getAllEntities("Formattribute");
+        if (attributes == null) {
+            return;
+        }
+
         Personregistrationform regForm = user.getPersonregistrationform();
-        
+
         JSONParser parser = new JSONParser();
         JSONObject json;
-        if(regForm != null && regForm.getFormvalue()!= null){
+        if (regForm != null && regForm.getFormvalue() != null) {
             try {
                 json = (JSONObject) parser.parse(regForm.getFormvalue());
             } catch (org.json.simple.parser.ParseException ex) {
                 Logger.getLogger(ProfileView.class.getName()).log(Level.SEVERE, null, ex);
                 return;
             }
-        }else{
+        } else {
             json = new JSONObject();
         }
-        for(Formattribute attribute:attributes){
+        for (Formattribute attribute : attributes) {
             DynaFormRow row = displayModel.createRegularRow();
             DynaFormLabel label = row.addLabel(attribute.getName());
-            Object controlValue= null;
-            if(attribute.getTypeid().getInternalname().equals("FormElement.Calendar")){
+            Object controlValue = null;
+            if (attribute.getTypeid().getInternalname().equals("FormElement.Calendar")) {
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    String unparsedDate = (String)json.get(attribute.getName());
-                    if(unparsedDate!=null && !unparsedDate.isEmpty())controlValue = sdf.parse((String)json.get(attribute.getName()));
+                    String unparsedDate = (String) json.get(attribute.getName());
+                    if (unparsedDate != null && !unparsedDate.isEmpty()) {
+                        controlValue = sdf.parse((String) json.get(attribute.getName()));
+                    }
                 } catch (ParseException ex) {
                     Logger.getLogger(ProfileView.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }else{
+            } else {
                 controlValue = json.get(attribute.getName());
             }
-            
+
             DynaFormControl control = row.addControl(
-                new UserFormProperty(
-                    attribute.getName(),attribute.getIsrequired(),
-                    parseSelectValues(attribute.getListitems()),controlValue
-                ),attribute.getTypeid().getInternalname()
-             );
-             label.setForControl(control);
+                    new UserFormProperty(
+                            attribute.getName(), attribute.getIsrequired(),
+                            parseSelectValues(attribute.getListitems()), controlValue
+                    ), attribute.getTypeid().getInternalname()
+            );
+            label.setForControl(control);
         }
         System.out.println(toString() + " constructed.");
     }
-    
-    public String formattedMembershipEndDate(){
+
+    public String formattedMembershipEndDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(user.getMembershipdue());
     }
-    
+
     //Recommendation
-    public int recommendationsTillMember(){
+    public int recommendationsTillMember() {
         Systemparameter par = (Systemparameter) dbm.getEntity("Systemparameter", "internalName", "SystemParameter.RequiredRecommendations");
         int totalrecomendations = Integer.parseInt(par.getValue());
-        return user==null? totalrecomendations:totalrecomendations - user.getRecommendationsreceived();
+        return user == null ? totalrecomendations : totalrecomendations - user.getRecommendationsreceived();
     }
-    
-    public int remainingRecommendationRequests(){
+
+    public int remainingRecommendationRequests() {
         Systemparameter par = (Systemparameter) dbm.getEntity("Systemparameter", "internalName", "SystemParameter.MaxRecommendations");
         int totalrecomendations = Integer.parseInt(par.getValue());
-        return user==null || user.getRecommendationstosend() == null ? totalrecomendations:totalrecomendations - user.getRecommendationstosend();
+        return user == null || user.getRecommendationstosend() == null ? totalrecomendations : totalrecomendations - user.getRecommendationstosend();
     }
-    
-    public void askForRecommendation(){
-        if(user == null || remainingRecommendationRequests() <= 0) {
+
+    public void askForRecommendation() {
+        if (user == null || remainingRecommendationRequests() <= 0) {
             return;
         }
-        Person reciever = (Person)dbm.getEntity("Person", "Email", friendEmail);
-        if(reciever == null) return;
+        Person reciever = (Person) dbm.getEntity("Person", "Email", friendEmail);
+        if (reciever == null) {
+            return;
+        }
         emailBean.sendCandidateRecommendationRequestMessage(reciever, user);
-        user.setRecommendationstosend(user.getRecommendationstosend()+1);
+        user.setRecommendationstosend(user.getRecommendationstosend() + 1);
         dbm.updateEntity(user);
     }
-    
-    public void inviteFriend(){
-        System.out.println("Invitation not yet implemented.");
+
+    public void inviteFriend() {
+        emailBean.sendCandidateInvitationMessage(friendEmail, user);
     }
-    
+
     //renderers
-    public String renderRecommendtionInfo(){
-        if(!user.getTypeid().getInternalname().equals("Person.Candidate")){
+    public String renderRecommendtionInfo() {
+        if (!user.getTypeid().getInternalname().equals("Person.Candidate")) {
             return "false";
         }
         return "true";
     }
-    
-        public String renderNotForCandidate(){
-        if(!user.getTypeid().getInternalname().equals("Person.Candidate")){
+
+    public String renderNotForCandidate() {
+        if (!user.getTypeid().getInternalname().equals("Person.Candidate")) {
             return "true";
         }
         return "false";
     }
-    
+
     //Save form updates
-    public void saveChanges(){
+    public void saveChanges() {
 //        if(!password.equals(passwordConfirm)) return null;
 //        EmailValidator emailValidator = EmailValidator.getInstance();
 //        if(!emailValidator.isValid(email)) return null;
         JSONObject jsonObject = new JSONObject();
-        for(DynaFormControl control:displayModel.getControls()){
-            UserFormProperty ufp = (UserFormProperty)control.getData();
-            if(ufp.getValue() instanceof Date){
+        for (DynaFormControl control : displayModel.getControls()) {
+            UserFormProperty ufp = (UserFormProperty) control.getData();
+            if (ufp.getValue() instanceof Date) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 jsonObject.put(ufp.getName(), sdf.format(ufp.getValue()));
-            }else{
-                jsonObject.put(ufp.getName(), ufp.getValue());    
-            } 
+            } else {
+                jsonObject.put(ufp.getName(), ufp.getValue());
+            }
         }
-        
+
         Personregistrationform regInfo = user.getPersonregistrationform();
-        if(regInfo == null){
+        if (regInfo == null) {
             regInfo = new Personregistrationform();
             regInfo.setInternalname(user.getEmail());
             regInfo.setIsdeleted(false);
             regInfo.setPersonid(user);
-            regInfo.setTypeid((Type)dbm.getEntity("Type", "internalname", "Form.Person"));
+            regInfo.setTypeid((Type) dbm.getEntity("Type", "internalname", "Form.Person"));
             user.setPersonregistrationform(regInfo);
-            if(!dbm.persistAndFlush(regInfo)) return ;
+            if (!dbm.persistAndFlush(regInfo)) {
+                return;
+            }
             dbm.updateEntity(user);
         }
-        regInfo.setFormvalue(jsonObject.toString());      
+        regInfo.setFormvalue(jsonObject.toString());
         dbm.updateEntity(regInfo);
     }
-    
-    public void updateUser(){
+
+    public void updateUser() {
         dbm.updateEntity(user);
     }
-    
-    public void updatePassword(){
+
+    public void updatePassword() {
         user.setPassword(Hashing.sha256().hashString(newPass, Charsets.UTF_8).toString());
         dbm.updateEntity(user);
     }
-    
+
     //Email
-    public String isEmailNotConfirmed(){
-        if(user.getEmailconfirmation() == null) return "true";
-        if(user.getEmailconfirmation().equals("validated")) return "false";
+    public String isEmailNotConfirmed() {
+        if (user.getEmailconfirmation() == null) {
+            return "true";
+        }
+        if (user.getEmailconfirmation().equals("validated")) {
+            return "false";
+        }
         return "true";
     }
-    
-    public void sendEmailConfirmation(){
+
+    public void sendEmailConfirmation() {
         emailBean.sendEmailConfirmationMessage(user);
     }
+
     //Util
-    private List<SelectItem> parseSelectValues(String selectionValues){
-        if(selectionValues == null || selectionValues.isEmpty()) return null;
+    private List<SelectItem> parseSelectValues(String selectionValues) {
+        if (selectionValues == null || selectionValues.isEmpty()) {
+            return null;
+        }
         List<SelectItem> result = new ArrayList<>();
         String[] values = selectionValues.split(",");
-        for(String str:values){
+        for (String str : values) {
             System.out.println(str.trim());
             result.add(new SelectItem(str.trim()));
         }
         return result;
     }
-    
+
     //Getters
     public DynaFormModel getDisplayModel() {
         return displayModel;
@@ -239,7 +254,7 @@ public class ProfileView implements Serializable{
 
     public Person getUser() {
         return user;
-    }  
+    }
 
     public String getNewPass() {
         return newPass;

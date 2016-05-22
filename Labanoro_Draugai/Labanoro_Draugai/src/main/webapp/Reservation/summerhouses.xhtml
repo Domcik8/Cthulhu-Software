@@ -43,7 +43,7 @@ and open the template in the editor.
                                 
                                 <!--Price slider-->
                                 <p:outputLabel for="displayRange" value="Kaina:" /><br/>
-                                <h:outputText id="displayRange" value="Nuo #{summerhouseManager.priceFrom}€ iki #{summerhouseManager.priceTo}€" />
+                                <h:outputText id="displayRange" value="Nuo #{summerhouseManager.priceFrom}#{summerhouseManager.currency} iki #{summerhouseManager.priceTo}#{summerhouseManager.currency} " />
                                 <p:slider id="priceSlider" 
                                           for="priceFrom,priceTo" 
                                           display="displayRange" 
@@ -98,7 +98,9 @@ and open the template in the editor.
                                     Vasarnamiai
                             </f:facet>
                             <h:panelGrid columns="2" style="width: 100%" columnClasses="ui-grid-col-4,ui-grid-col-8" >
-                                <p:graphicImage id="img" url="/images/#{summerhouseManager.firstImageName(house)}" alt="#{summerhouseManager.firstImageName(house)}" style="width: 100%;padding-right: 10px"/>
+                                <p:commandLink onclick="disableScrolling(),PF('houseDialog').show()" update=":houseDialogForm:houseDetail,:houseDialogForm:houseGalleria,:houseDialogForm:reservedDays" >    
+                                    <p:graphicImage id="img" url="/images/#{summerhouseManager.firstImageName(house)}" alt="#{summerhouseManager.firstImageName(house)}" style="width: 100%;padding-right: 10px"/>
+                                </p:commandLink>
                                 <p:outputPanel>
 
                                     <p:commandLink oncomplete="disableScrolling(),PF('houseDialog').show()" update=":houseDialogForm:houseDetail,:houseDialogForm:houseGalleria,:houseDialogForm:reservedDays" >
@@ -110,7 +112,7 @@ and open the template in the editor.
                                         <h:outputText class="small-text" value="Adresas: #{house.address}"/>
                                         <h:outputText class="small-text" value="Vietos: #{house.numberofplaces}"/>
                                     </h:panelGrid>
-                                    <h:outputText class="price-text" style="width: 100%" value="#{house.weekprice}t"/>
+                                    <h:outputText class="price-text" style="width: 100%" value="#{house.weekprice.doubleValue()}#{summerhouseManager.currency} "/>
 
                                 </p:outputPanel>
                             </h:panelGrid>
@@ -138,7 +140,7 @@ and open the template in the editor.
                                     <h:outputText class="small-text" value="Aprašas: #{summerhouseManager.selectedHouse.description}"/>
                                     <h:outputText class="small-text" value="Adresas: #{summerhouseManager.selectedHouse.address}"/>
                                     <h:outputText class="small-text" value="Vietos: #{summerhouseManager.selectedHouse.numberofplaces}"/>
-                                    <h:outputText class="small-text" value="Savaitės kaina: #{summerhouseManager.selectedHouse.weekprice}t"/>
+                                    <h:outputText class="small-text" value="Savaitės kaina: #{summerhouseManager.selectedHouse.weekprice.doubleValue()}#{summerhouseManager.currency}"/>
                                 </h:panelGrid>
                                 
                                 
@@ -164,10 +166,10 @@ and open the template in the editor.
                                     <p:selectManyCheckbox id="selectedHouseServices" value="#{summerhouseManager.selectedHouseSelectedServices}" layout="pageDirection" columns="3">
                                         <p:ajax update="periodPrice" />
                                         <f:selectItems value="#{summerhouseManager.selectedHouseAvailableServices}" var="service" 
-                                                       itemLabel="#{service.title} #{summerhouseManager.servicePeriodPrice(service)}t" itemValue="#{service.servicereg}" />
+                                                       itemLabel="#{service.title} #{summerhouseManager.servicePeriodPrice(service)}#{summerhouseManager.currency} " itemValue="#{service.servicereg}" />
                                     </p:selectManyCheckbox>
                                     <br/>
-                                    <h:outputLabel id="periodPrice" value="Kaina: #{summerhouseManager.selectedHousePeriodPrice()}t" />
+                                    <h:outputLabel id="periodPrice" value="Kaina: #{summerhouseManager.selectedHousePeriodPrice()}#{summerhouseManager.currency} " />
                                     <br/>
                                     <p:commandLink id="confirmOrder" action="#{summerhouseManager.confirmSelectedHouse()}" class="btn btn-success" 
                                          style="position: relative;left: 80%; bottom: -35%;" value="Užsakyti">
