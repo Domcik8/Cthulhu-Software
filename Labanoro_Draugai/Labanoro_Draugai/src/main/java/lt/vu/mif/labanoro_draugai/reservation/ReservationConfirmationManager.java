@@ -31,6 +31,7 @@ import lt.vu.mif.labanoro_draugai.entities.Payment;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.entities.Reservation;
 import lt.vu.mif.labanoro_draugai.entities.Service;
+import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -48,6 +49,9 @@ public class ReservationConfirmationManager implements Serializable{
     List<String> selectedServices;
     private Person user;
     private double totalPrice;
+    private double totalPriceInPoints; 
+    private double exchangeRate;
+    private String currency;
     @Inject
     DatabaseManager dbm;
     
@@ -66,6 +70,22 @@ public class ReservationConfirmationManager implements Serializable{
             return;
         }
         user = (Person)dbm.getEntity("Person", "Email", request.getUserPrincipal().getName());
+        
+        Systemparameter param = (Systemparameter)dbm.getEntity("SystemParameter", "internalName", "SystemParameter.ExchangeRate.Euro");
+        if(param == null){
+            System.out.println("Truksta \"SystemParameter.ExchangeRate.Euro\" parametro");
+            exchangeRate = -1;
+            currency = "?";
+            return;
+        }
+        exchangeRate = Double.parseDouble(param.getValue());
+        param = (Systemparameter)dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Currency.Euro");
+        if(param == null){
+            System.out.println("Truksta \"SystemParameter.Currency.Euro\" parametro");
+            currency = "?";
+            return;
+        }
+        currency = param.getValue();
         System.out.println(toString() + "created.");
     }
     
@@ -107,15 +127,15 @@ public class ReservationConfirmationManager implements Serializable{
         return jsonObject.toString();
     }
     
-    public String reserveSummerhouse(){
-        if(user.getPoints().doubleValue()<totalPrice){
+    public String reserveSummerhouse(){       
+        if(user.getPoints().doubleValue()<totalPriceInPoints){
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Nepavyko!", "Jūsų sąskaitoje yra nepakankamai taškų."));
             return null;
         }
         
-        Payment pay = dbm.addPayment(user.getEmail(), BigDecimal.valueOf(totalPrice), new Date(), "Payment.Points", "Currency.Points");
+        Payment pay = dbm.addPayment(user.getEmail(), BigDecimal.valueOf(totalPrice), new Date(), "Payment.Reservation", "Currency.Points");
         
-        user.setPoints(user.getPoints().subtract(BigDecimal.valueOf(totalPrice)));
+        user.setPoints(user.getPoints().subtract(BigDecimal.valueOf(totalPriceInPoints)));
         if(!dbm.updatePersonPoints(user)){
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Nepavyko!", "Nepavyko sumokėti už rezervciją, bandykite dar kartą."));
             return null;
@@ -125,7 +145,14 @@ public class ReservationConfirmationManager implements Serializable{
         pay.setReservationid(reservation);
         pay.setApproveddate(new Date());
         dbm.updateEntity(pay);
-        return "/index";
+        
+        Systemparameter param = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Redirect.MyReservations");
+        if (param == null) {
+            System.out.println("Truksta \"SystemParameter.Redirect.MyReservations\" parametro");
+            return "/index";
+        }
+        
+        return param.getValue();
     }
     
     public double calculateTotalPrice(){
@@ -139,6 +166,7 @@ public class ReservationConfirmationManager implements Serializable{
             if(service == null) continue;
             totalPrice+=periodPrice(service.getWeekprice());
         }
+        totalPriceInPoints = totalPrice*exchangeRate;
         return totalPrice;
     }
     
@@ -238,5 +266,13 @@ public class ReservationConfirmationManager implements Serializable{
     public void setTotalPrice(double totalPrice) {      
         this.totalPrice = totalPrice;
     }
-    
+
+    public double getTotalPriceInPoints() {
+        return totalPriceInPoints;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+ 
 }

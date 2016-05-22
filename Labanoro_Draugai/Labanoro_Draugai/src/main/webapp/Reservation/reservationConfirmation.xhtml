@@ -27,11 +27,18 @@ and open the template in the editor.
         <div class="container">
             <h1>Užsakymo patvirtinimas</h1>
             <p:panel>
+                <h2>#{reservationConfirmationManager.house.title}</h2>
+                <p:galleria id="houseGalleria" value="#{reservationConfirmationManager.houseImageNames()}" var="image" 
+                    style="width: 100%" panelHeight="280" panelWidth="500" showFilmstrip="true" autoPlay="false" showCaption="false">
+                    <p:graphicImage url="/images/#{image}" alt="#{image}" style="width: 100%"/>
+                </p:galleria>
+                <h:panelGrid columns="2">
+                    <h:outputText value="Aprašas:"/> <h:outputText value="#{reservationConfirmationManager.house.description}"/>
+                    <h:outputText value="Adresas:"/> <h:outputText value="#{reservationConfirmationManager.house.address}"/>
+                    <h:outputText value="Vietos:"/> <h:outputText value="#{reservationConfirmationManager.house.numberofplaces}"/>
+                    <h:outputText value="Savaitės kaina:"/> <h:outputText value="#{reservationConfirmationManager.house.weekprice}#{reservationConfirmationManager.currency}"/>
+                </h:panelGrid>
                 
-                <ui:include src="/WEB-INF/other_pages/houseData.xhtml">
-                    <ui:param name="house" value="#{reservationConfirmationManager.house}" />
-                    <ui:param name="houseImages" value="#{reservationConfirmationManager.houseImageNames()}"/>
-                </ui:include>
 
                 <h:outputText value="Viešnagė nuo "/>
                 <h:outputText value="#{reservationConfirmationManager.dateFrom}">
@@ -41,14 +48,13 @@ and open the template in the editor.
                 <h:outputText value="#{reservationConfirmationManager.dateTo}">
                     <f:convertDateTime pattern="yyyy-MM-dd"/> 
                 </h:outputText>
-                <p>User: #{reservationConfirmationManager.user.email}</p>
                 <p:dataList value="#{reservationConfirmationManager.serviceList()}" var="service" type="ordered">
                     <f:facet name="header">
                         Papildomos paslaugos:
                     </f:facet>
-                    #{service.title} #{reservationConfirmationManager.periodPrice(service.weekprice)}t
+                    #{service.title} #{reservationConfirmationManager.periodPrice(service.weekprice)}#{reservationConfirmationManager.currency}
                 </p:dataList>
-                <h:outputLabel id="totalPrice" value="Visa kaina: #{reservationConfirmationManager.totalPrice}t"/>  
+                <h:outputLabel id="totalPrice" value="Visa kaina: #{reservationConfirmationManager.totalPrice}#{reservationConfirmationManager.currency}"/>  
                     <h:panelGroup id="myScript">
                         <ui:include src="/WEB-INF/other_pages/stripeForm.xhtml" >
                             <ui:param name="price" value="#{reservationConfirmationManager.totalPriceInCents}" />

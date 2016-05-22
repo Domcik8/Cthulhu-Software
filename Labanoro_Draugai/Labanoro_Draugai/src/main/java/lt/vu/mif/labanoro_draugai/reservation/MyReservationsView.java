@@ -38,6 +38,8 @@ public class MyReservationsView implements Serializable{
     List<Reservation> filteredReservations;
     private Reservation selectedReservation;
     private Person user;
+    private double exchangeRate;
+    private String currency;
     @Inject
     DatabaseManager dbm;
     
@@ -58,6 +60,22 @@ public class MyReservationsView implements Serializable{
         user = (Person)dbm.getEntity("Person", "Email", request.getUserPrincipal().getName());
         
         reservations = user.getReservationList();
+        
+        Systemparameter param = (Systemparameter)dbm.getEntity("SystemParameter", "internalName", "SystemParameter.ExchangeRate.Euro");
+        if(param == null){
+            System.out.println("Truksta \"SystemParameter.ExchangeRate.Euro\" parametro");
+            exchangeRate = -1;
+            currency = "?";
+            return;
+        }
+        exchangeRate = Double.parseDouble(param.getValue());
+        param = (Systemparameter)dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Currency.Euro");
+        if(param == null){
+            System.out.println("Truksta \"SystemParameter.Currency.Euro\" parametro");
+            currency = "?";
+            return;
+        }
+        currency = param.getValue();
         System.out.println(toString() + " constructed.");
     }
     
@@ -71,22 +89,24 @@ public class MyReservationsView implements Serializable{
     }
     
     public boolean canBeCanceled(Reservation reservation){
-        Systemparameter cancelParam = (Systemparameter)dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Reservation.MinDaysBeforeCancel");
+        Systemparameter cancelParam = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Reservation.MinDaysBeforeCancel");
         if(cancelParam == null) return false;
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, Integer.parseInt(cancelParam.getValue()));
         if(reservation.getStartdate().before(calendar.getTime())) return false;
         return true;
     }
+
+    public double getExchangeRate() {
+        return exchangeRate;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
     
     public double reservationPointPrice(Reservation reservation){
-        Systemparameter param = (Systemparameter)dbm.getEntity("SystemParameter", "internalName", "SystemParameter.ExchangeRate.Euro");
-        try{
-        return reservation.getPaymentid().getPaymentprice().round(new MathContext(2)).doubleValue() * Double.parseDouble(param.getValue());
-        }catch(Exception ex){
-            Logger.getLogger(ReservationConfirmationManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return 0;
+        return reservation.getPaymentid().getPaymentprice().doubleValue() * exchangeRate;
     }
     
     public boolean filterFromDate(Object value, Object filter, Locale locale) {

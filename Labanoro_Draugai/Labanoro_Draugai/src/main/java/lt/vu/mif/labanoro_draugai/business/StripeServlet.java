@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Payment;
 import lt.vu.mif.labanoro_draugai.entities.Reservation;
+import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -47,7 +48,7 @@ public class StripeServlet extends HttpServlet {
 
     @Inject
     DatabaseManager dbm;
-    
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         System.out.println("Darau dopost");
@@ -57,35 +58,35 @@ public class StripeServlet extends HttpServlet {
         String username = request.getUserPrincipal().getName();
         Payment payment;
         Reservation reservation;
-        
+
         //ReservationCreation
-        if(request.getParameter("order")!= null || !request.getParameter("order").isEmpty()){          
+        if (request.getParameter("order") != null || !request.getParameter("order").isEmpty()) {
             try {
                 JSONParser parser = new JSONParser();
                 JSONObject json = (JSONObject) parser.parse(request.getParameter("order"));
-                switch((String)json.get("type")){
+                switch ((String) json.get("type")) {
                     case "houseReservation":
-                        payment = dbm.addPayment(username,BigDecimal.valueOf(Double.parseDouble(request.getParameter("Price1"))/100), new Date(), "Payment.Reservation","Currency.Euro");
-                        reservation = createHouseReservation(username,json,payment.getPaymentreg());
+                        payment = dbm.addPayment(username, BigDecimal.valueOf(Double.parseDouble(request.getParameter("Price1")) / 100), new Date(), "Payment.Reservation", "Currency.Euro");
+                        reservation = createHouseReservation(username, json, payment.getPaymentreg());
                         payment.setReservationid(reservation);
                         dbm.updateEntity(payment);
+                        dbm.updateEntity(dbm.getEntity("Person", "Email", username));
                         break;
                 }
-                
+
             } catch (ParseException ex) {
                 Logger.getLogger(StripeServlet.class.getName()).log(Level.SEVERE, null, ex);
             } catch (java.text.ParseException ex) {
                 Logger.getLogger(StripeServlet.class.getName()).log(Level.SEVERE, null, ex);
-            }         
+            }
         }
 
-        
         Stripe.apiKey = "sk_test_GkbxvPwRpIG9T4aIiruw0TWl";
 
 // Create the charge on Stripe's servers - this will charge the user's card
         try {
             Map<String, Object> chargeParams = new HashMap<>();
-            chargeParams.put("amount",request.getParameter("Price1")); // amount in cents, again
+            chargeParams.put("amount", request.getParameter("Price1")); // amount in cents, again
             chargeParams.put("currency", "eur");
             chargeParams.put("source", token);
             chargeParams.put("description", "Example charge");
@@ -97,18 +98,31 @@ public class StripeServlet extends HttpServlet {
         } catch (AuthenticationException | InvalidRequestException | APIConnectionException | APIException ex) {
             Logger.getLogger(StripeServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-        response.sendRedirect("/Labanoro_Draugai/index.html");
+//REDIRECT
+        Systemparameter param = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Redirect.MyReservations");
+        if (param == null) {
+            System.out.println("Truksta \"SystemParameter.Redirect.MyReservations\" parametro");
+            response.sendRedirect("/Labanoro_Draugai/index.html");
+            return;
+        }
+        Systemparameter ContextParam = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.General.ContextPath");
+        if (ContextParam == null) {
+            System.out.println("Truksta \"SystemParameter.General.ContextPath\" parametro");
+            response.sendRedirect("/Labanoro_Draugai/index.html");
+            return;
+        }
+        response.sendRedirect(ContextParam.getValue()+param.getValue());
     }
-    
-    private Reservation createHouseReservation(String username, JSONObject json, String paymentReg) throws java.text.ParseException{
+
+    private Reservation createHouseReservation(String username, JSONObject json, String paymentReg) throws java.text.ParseException {
         List<String> services = new ArrayList();
-        JSONArray arr = (JSONArray)json.get("services");
+        JSONArray arr = (JSONArray) json.get("services");
         for (int i = 0; i < arr.size(); i++) {
-            services.add((String)arr.get(i));
+            services.add((String) arr.get(i));
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return dbm.addReservation((String) json.get("houseReg"), paymentReg, (String) json.get("reservationTypeInternalName"), 
+        return dbm.addReservation((String) json.get("houseReg"), paymentReg, (String) json.get("reservationTypeInternalName"),
                 username, services, sdf.parse((String) json.get("dateFrom")), sdf.parse((String) json.get("dateTo")));
     }
-    
+
 }
