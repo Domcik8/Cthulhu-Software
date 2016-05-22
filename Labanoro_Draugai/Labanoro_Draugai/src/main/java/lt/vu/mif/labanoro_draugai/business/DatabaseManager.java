@@ -197,6 +197,7 @@ public class DatabaseManager {
         addSystemParameter("SystemParameter.Facebook.Redirect", "FB autentifikacija", "http://localhost:8080/Labanoro_Draugai", "Nukreipimas i puslapi facebook autentifikacijos metu", "SystemParameter");
 
         addSystemParameter("SystemParameter.Redirect.Login", "Sekmingas prisijungimas", "/index.html", "Nukreipimas i puslapi po sekmingo prisijungimo", "SystemParameter");
+        addSystemParameter("SystemParameter.Redirect.Register", "Registracijos forma", "/register.html", "Nukreipimas i paskyros sukurimo bei kandidato anketos pildymo puslapi", "SystemParameter");
         addSystemParameter("SystemParameter.Redirect.LoginError", "Klaidingas prisijungimas", "/loginError.html", "Nukreipimas i puslapi po nesekmingo prisijungimo", "SystemParameter");
         addSystemParameter("SystemParameter.Redirect.GlobalError", "Globali klaida", "/WEB-INF/other_pages/someError.html", "Nukreipimas i puslapi po globalios klaidos", "SystemParameter");
         addSystemParameter("SystemParameter.Redirect.MyReservations", "Sėkminga rezervacija", "/Reservation/myReservations.html", "Nukreipimas i puslapi po sėkmingos rezervacijos", "SystemParameter");
