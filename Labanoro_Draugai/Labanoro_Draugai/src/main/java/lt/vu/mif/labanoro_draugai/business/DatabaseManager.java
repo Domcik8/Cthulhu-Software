@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -24,7 +25,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.transaction.TransactionSynchronizationRegistry;
-import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import lt.vu.mif.labanoro_draugai.data_models.AdminUserFormProperty;
 import lt.vu.mif.labanoro_draugai.entities.*;
 import org.apache.commons.io.IOUtils;
@@ -60,7 +60,7 @@ public class DatabaseManager {
         fillBasicPayments();
         fillBasicReservations();
         fillBasicSystemParameters();
-        //fillBasicHouseImages();
+        fillBasicHouseImages();
         fillBasicRecommendations();
 
         editPeople();
@@ -182,8 +182,13 @@ public class DatabaseManager {
 
         addSystemParameter("SystemParameter.RequiredRecommendations", "Reikalingų rekomendacijų skaičius", "2", "SystemParameter");
         addSystemParameter("SystemParameter.MaxRecommendations", "Maksimalus rekomendacijų užklausų skaičius", "5", "SystemParameter");
-        //addSystemParameter("SystemParameter.priorityGroup", "Maksimalus rekomendacijų užklausų skaičius", "5", "SystemParameter");
-
+        
+        addSystemParameter("SystemParameter.priorityGroup.Month", "Prioriteto grupės, perskaičiavimo laikas: menuo", "3,6,9,12", "SystemParameter");
+        addSystemParameter("SystemParameter.priorityGroup.DayOfTheWeek", "Prioriteto grupės, perskaičiavimo laikas: savaitės diena", "6", "SystemParameter");
+        addSystemParameter("SystemParameter.priorityGroup.HourOfTheDay", "Prioriteto grupės, perskaičiavimo laikas: dienos valanda", "22", "SystemParameter");
+        addSystemParameter("SystemParameter.priorityGroup.SeasonLength", "Prioriteto grupės, suskirstimo laikotarpis menesiais", "3", "SystemParameter"); 
+        addSystemParameter("SystemParameter.priorityGroup.Quantity", "Prioriteto grupės, grupių skaičius", "12", "SystemParameter"); 
+        
         addSystemParameter("SystemParameter.StripeTestSecretKey", "Stripe testinis slaptas raktas", "sk_test_6K4uBYlsGNPy5H161DtWjZcm", "SystemParameter");
         addSystemParameter("SystemParameter.StripeTestPublishableKey", "Stripe testinis viešas raktas", "pk_test_tK93j3DH8bSqL4VHi65SnJ9e ", "SystemParameter");
         addSystemParameter("SystemParameter.StripeLiveSecretKey", "Stripe tikras slaptas raktas", "sk_live_zzW2TvQpbW5HLntoGzHC6o3r ", "SystemParameter");
@@ -788,6 +793,14 @@ public class DatabaseManager {
         Object entity = getEntity(className, findBy, parameter);
         return entity != null ? true : false;
     }
+    
+    /**
+     * Returns true if specified entity exists with specified parameter
+     */
+    public boolean entityExists(String className, String findBy, Calendar parameter) {
+        Object entity = getEntity(className, findBy, parameter);
+        return entity != null ? true : false;
+    }
 
     /**
      * Returns true if specified entity exists with specified parameter
@@ -802,7 +815,15 @@ public class DatabaseManager {
      */
     public Object getEntity(String className, String findBy, String parameter) {
         List entityList = getEntityList(className, findBy, parameter);
-        return entityList == null ? null : entityList.get(0);
+        return entityList.isEmpty() ? null : entityList.get(0);
+    }
+    
+    /**
+     * Returns entity if specified entity exists with specified parameter
+     */
+    public Object getEntity(String className, String findBy, Calendar parameter) {
+        List entityList = getEntityList(className, findBy, parameter);
+        return entityList.isEmpty() ? null : entityList.get(0);
     }
 
     /**
@@ -810,7 +831,7 @@ public class DatabaseManager {
      */
     public Object getEntity(String className, String findBy, int parameter) {
         List entityList = getEntityList(className, findBy, parameter);
-        return entityList == null ? null : entityList.get(0);
+        return entityList.isEmpty() ? null : entityList.get(0);
     }
 
     /**
@@ -818,7 +839,7 @@ public class DatabaseManager {
      */
     public Object getEntity(String className, String findBy, Object parameter) {
         List entityList = getEntityList(className, findBy, parameter);
-        return entityList == null ? null : entityList.get(0);
+        return entityList.isEmpty() ? null : entityList.get(0);
     }
 
     /**
@@ -828,9 +849,8 @@ public class DatabaseManager {
         className = className.toLowerCase();
         findBy = findBy.toLowerCase();
         Query query = em.createNamedQuery(capitalize(className) + ".findBy" + capitalize(findBy)).setParameter(findBy, parameter);
-        List entities = query.getResultList();
 
-        return entities.isEmpty() ? null : entities;
+        return query.getResultList();
     }
 
     /**
@@ -840,9 +860,21 @@ public class DatabaseManager {
         className = className.toLowerCase();
         findBy = findBy.toLowerCase();
         Query query = em.createNamedQuery(capitalize(className) + ".findBy" + capitalize(findBy)).setParameter(findBy, parameter);
-        List entities = query.getResultList();
 
-        return entities.isEmpty() ? null : entities;
+        return query.getResultList();
+    }
+    
+    /**
+     * Returns entity if specified entity exists with specified parameter
+     */
+    public List getEntityList(String className, String findBy, Date parameter) {
+        className = className.toLowerCase();
+        findBy = findBy.toLowerCase();
+        
+        Query query = em.createQuery("SELECT e FROM " + capitalize(className) + " e WHERE e." + findBy + " = :parameter");
+        query.setParameter("parameter", parameter);
+
+        return query.getResultList();
     }
 
     /**
@@ -852,11 +884,10 @@ public class DatabaseManager {
         className = className.toLowerCase();
         findBy = findBy.toLowerCase();
 
-        Query query = em.createQuery("SELECT r FROM " + capitalize(className) + " r WHERE r." + findBy + " = :parameter");
+        Query query = em.createQuery("SELECT e FROM " + capitalize(className) + " e WHERE e." + findBy + " = :parameter");
         query.setParameter("parameter", parameter);
-        List entities = query.getResultList();
 
-        return entities.isEmpty() ? null : entities;
+        return query.getResultList();
     }
 
     /**

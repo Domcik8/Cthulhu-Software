@@ -18,10 +18,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Version;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -29,7 +26,6 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "TYPE")
-@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Type.findAll", query = "SELECT t FROM Type t"),
     @NamedQuery(name = "Type.findById", query = "SELECT t FROM Type t WHERE t.id = :id"),
@@ -57,7 +53,6 @@ public class Type implements Serializable {
     private String description;
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
-    @Version
     @Column(name = "OPTLOCKVERSION")
     private Integer optlockversion;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "currencytypeid")
@@ -138,7 +133,6 @@ public class Type implements Serializable {
         this.optlockversion = optlockversion;
     }
 
-    @XmlTransient
     public List<Payment> getPaymentList() {
         return paymentList;
     }
@@ -147,7 +141,6 @@ public class Type implements Serializable {
         this.paymentList = paymentList;
     }
 
-    @XmlTransient
     public List<Payment> getPaymentList1() {
         return paymentList1;
     }
@@ -156,7 +149,6 @@ public class Type implements Serializable {
         this.paymentList1 = paymentList1;
     }
 
-    @XmlTransient
     public List<Person> getPersonList() {
         return personList;
     }
@@ -165,7 +157,6 @@ public class Type implements Serializable {
         this.personList = personList;
     }
 
-    @XmlTransient
     public List<Reservation> getReservationList() {
         return reservationList;
     }
@@ -174,7 +165,6 @@ public class Type implements Serializable {
         this.reservationList = reservationList;
     }
 
-    @XmlTransient
     public List<Formattribute> getFormattributeList() {
         return formattributeList;
     }
@@ -183,7 +173,6 @@ public class Type implements Serializable {
         this.formattributeList = formattributeList;
     }
 
-    @XmlTransient
     public List<Personregistrationform> getPersonregistrationformList() {
         return personregistrationformList;
     }
@@ -192,7 +181,6 @@ public class Type implements Serializable {
         this.personregistrationformList = personregistrationformList;
     }
 
-    @XmlTransient
     public List<Service> getServiceList() {
         return serviceList;
     }
@@ -201,7 +189,6 @@ public class Type implements Serializable {
         this.serviceList = serviceList;
     }
 
-    @XmlTransient
     public List<House> getHouseList() {
         return houseList;
     }
@@ -210,7 +197,6 @@ public class Type implements Serializable {
         this.houseList = houseList;
     }
 
-    @XmlTransient
     public List<Recommendation> getRecommendationList() {
         return recommendationList;
     }
@@ -219,7 +205,6 @@ public class Type implements Serializable {
         this.recommendationList = recommendationList;
     }
 
-    @XmlTransient
     public List<Houseimage> getHouseimageList() {
         return houseimageList;
     }
@@ -228,7 +213,6 @@ public class Type implements Serializable {
         this.houseimageList = houseimageList;
     }
 
-    @XmlTransient
     public List<Systemparameter> getSystemparameterList() {
         return systemparameterList;
     }

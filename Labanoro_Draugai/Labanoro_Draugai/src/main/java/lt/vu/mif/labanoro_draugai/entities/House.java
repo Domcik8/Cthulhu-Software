@@ -28,9 +28,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.persistence.Version;
 
 /**
  *
@@ -38,7 +35,6 @@ import javax.persistence.Version;
  */
 @Entity
 @Table(name = "HOUSE")
-@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "House.findAll", query = "SELECT h FROM House h"),
     @NamedQuery(name = "House.findById", query = "SELECT h FROM House h WHERE h.id = :id"),
@@ -92,7 +88,6 @@ public class House implements Serializable {
     private int numberofplaces;
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
-    @Version
     @Column(name = "OPTLOCKVERSION")
     private Integer optlockversion;
     @JoinTable(name = "MULTISELECTHOUSETOSERVICE", joinColumns = {
@@ -217,7 +212,6 @@ public class House implements Serializable {
         this.optlockversion = optlockversion;
     }
 
-    @XmlTransient
     public List<Service> getServiceList() {
         return serviceList;
     }
@@ -226,7 +220,6 @@ public class House implements Serializable {
         this.serviceList = serviceList;
     }
 
-    @XmlTransient
     public List<Reservation> getReservationList() {
         return reservationList;
     }
@@ -243,7 +236,6 @@ public class House implements Serializable {
         this.typeid = typeid;
     }
 
-    @XmlTransient
     public List<Houseimage> getHouseimageList() {
         return houseimageList;
     }

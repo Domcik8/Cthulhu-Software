@@ -21,7 +21,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -29,7 +28,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "PERSONREGISTRATIONFORM")
-@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Personregistrationform.findAll", query = "SELECT p FROM Personregistrationform p"),
     @NamedQuery(name = "Personregistrationform.findById", query = "SELECT p FROM Personregistrationform p WHERE p.id = :id"),

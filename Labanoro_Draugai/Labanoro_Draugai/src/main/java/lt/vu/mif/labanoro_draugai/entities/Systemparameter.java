@@ -19,7 +19,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -27,7 +26,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "SYSTEMPARAMETER")
-@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Systemparameter.findAll", query = "SELECT s FROM Systemparameter s"),
     @NamedQuery(name = "Systemparameter.findById", query = "SELECT s FROM Systemparameter s WHERE s.id = :id"),

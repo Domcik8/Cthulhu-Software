@@ -27,8 +27,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -36,7 +34,6 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @Table(name = "PERSON")
-@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Person.findAll", query = "SELECT p FROM Person p"),
     @NamedQuery(name = "Person.findById", query = "SELECT p FROM Person p WHERE p.id = :id"),
@@ -296,7 +293,6 @@ public class Person implements Serializable {
         this.optlockversion = optlockversion;
     }
 
-    @XmlTransient
     public List<Payment> getPaymentList() {
         return paymentList;
     }
@@ -313,7 +309,6 @@ public class Person implements Serializable {
         this.typeid = typeid;
     }
 
-    @XmlTransient
     public List<Reservation> getReservationList() {
         return reservationList;
     }
@@ -330,7 +325,6 @@ public class Person implements Serializable {
         this.personregistrationform = personregistrationform;
     }
 
-    @XmlTransient
     public List<Recommendation> getRecommendationList() {
         return recommendationList;
     }
@@ -339,7 +333,6 @@ public class Person implements Serializable {
         this.recommendationList = recommendationList;
     }
 
-    @XmlTransient
     public List<Recommendation> getRecommendationList1() {
         return recommendationList1;
     }
