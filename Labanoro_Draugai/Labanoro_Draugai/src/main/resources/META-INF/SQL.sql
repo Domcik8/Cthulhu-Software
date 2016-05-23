@@ -47,7 +47,7 @@ CREATE TABLE Person
     MembershipDue       TIMESTAMP,
     RecommendationsReceived INTEGER     NOT NULL                DEFAULT 0,
     RecommendationsToSend   INTEGER,
-    EmailConfirmation   VARCHAR(255)                UNIQUE,
+    EmailConfirmation   VARCHAR(255),                
     UniqueKey           VARCHAR(255)                UNIQUE,
     IsDeleted           BOOLEAN,
     OptLockVersion      INTEGER,

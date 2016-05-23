@@ -6,7 +6,6 @@
 package lt.vu.mif.labanoro_draugai.authentication.controller;
 
 import javax.ejb.Stateful;
-import javax.ejb.Stateless;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -31,8 +30,8 @@ public class LoginForm {
 
     @Inject
     private LoginController controller;
-    
-    @Inject 
+
+    @Inject
     private DatabaseManager dbm;
 
     public LoginForm() {
@@ -65,9 +64,8 @@ public class LoginForm {
                     request.login(this.username, this.password);
 
                     if (request.getUserPrincipal().getName().equals(this.username)) {
-                        System.out.println("Internal login worked");
-                        System.out.println(dbm.getSystemParameter("SystemParameter.Redirect.Login").getValue());
-                        return (dbm.getSystemParameter("SystemParameter.Redirect.Login").getValue() + "?faces-redirect=true");
+                        System.out.println("Internal login worked");                     
+                        return (dbm.getSystemParameter("SystemParameter.Redirect.LoginSuccess").getValue() + "?faces-redirect=true");
                     }
                 }
             }
