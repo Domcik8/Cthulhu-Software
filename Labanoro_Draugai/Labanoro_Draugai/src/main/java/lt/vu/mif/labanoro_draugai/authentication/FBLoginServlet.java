@@ -2,6 +2,7 @@ package lt.vu.mif.labanoro_draugai.authentication;
 
 import java.io.IOException;
 import java.util.Map;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -65,12 +66,20 @@ public class FBLoginServlet extends HttpServlet {
 
 //        if (state.equals(sessionID)) {
         try {
-
             if (request.getUserPrincipal() == null) {
-                if (loginController.login(email, facebookId, firstname, lastname)) {
-                    String password = loginController.getRegisteredUserP(email, facebookId);
-                    request.login(email, password);
-                    System.out.println("User logged");
+                if (loginController.isUser(email)) {
+                    if (loginController.isFbUser(email, facebookId)) {
+                        String password = loginController.getRegisteredFbP(email, facebookId);
+                        request.login(email, password);
+                        System.out.println("User logged");
+                        response.sendRedirect(request.getContextPath() + dbm.getSystemParameter("SystemParameter.Redirect.LoginSuccess").getValue());
+                        return;
+                    } else {
+                        System.out.println("User with such email already exists " + email);
+                    }
+                } else {
+                    response.sendRedirect(request.getContextPath() + dbm.getSystemParameter("SystemParameter.Redirect.Register").getValue() + "?facebookId=" + facebookId);
+                    return;
                 }
             } else {
                 System.out.println("User has already logged: " + request.getUserPrincipal().getName());
@@ -82,8 +91,8 @@ public class FBLoginServlet extends HttpServlet {
             return;
         }
 
-        response.sendRedirect(request.getContextPath() + dbm.getSystemParameter("SystemParameter.Redirect.Login").getValue());
-
+        response.sendRedirect(request.getContextPath() + dbm.getSystemParameter("SystemParameter.Redirect.LoginError").getValue());
+        return;
 //        } else {
 //            System.err.println("CSRF protection validation");
 ////             URL doesn't change
