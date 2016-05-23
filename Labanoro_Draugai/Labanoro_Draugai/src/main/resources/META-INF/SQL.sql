@@ -3,6 +3,7 @@
 ALTER table payment drop CONSTRAINT   SQL160515114857780;
 ALTER table payment drop CONSTRAINT   PaymentReservationID;
 
+drop table PaymentLog;
 drop view  GroupView;
 drop table PersonRegistrationForm;
 drop table FormAttribute;
@@ -222,6 +223,23 @@ CREATE TABLE PersonRegistrationForm
     OptLockVersion  INTEGER,
     FOREIGN KEY (TypeID)  REFERENCES Type (ID),
     FOREIGN KEY (PersonID)  REFERENCES Person (ID),
+    PRIMARY KEY (ID)
+);
+
+CREATE TABLE PaymentLog
+(
+    ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+    TypeID          INTEGER         NOT NULL, 
+    PersonID        INTEGER         NOT NULL,
+    PaymentID       INTEGER,
+    PersonEmail     VARCHAR(255)    NOT NULL,
+    PersonType      VARCHAR(255)    NOT NULL,
+    Date            TIMESTAMP       NOT NULL,
+    Method          VARCHAR(255)    NOT NULL,
+    OptLockVersion  INTEGER,
+    FOREIGN KEY (TypeID)  REFERENCES Type (ID),
+    FOREIGN KEY (PersonID)  REFERENCES Person (ID),
+    FOREIGN KEY (PaymentID)  REFERENCES Payment (ID),
     PRIMARY KEY (ID)
 );
 
