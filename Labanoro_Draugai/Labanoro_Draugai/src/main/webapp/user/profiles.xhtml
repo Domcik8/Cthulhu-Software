@@ -25,7 +25,7 @@ and open the template in the editor.
                 <div>
                     <h:form >
                         <p:dataTable var="person" value="#{profileListView.persons}" widgetVar="paramsTable"
-                                     emptyMessage="" filteredValue="" paginator="false"
+                                     emptyMessage="" filteredValue="" paginator="true"
                                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                      rowsPerPageTemplate="10,50,100" rows="10" currentPageReportTemplate="{currentPage} iš {totalPages}">
 
@@ -37,10 +37,16 @@ and open the template in the editor.
                                 <h:outputText value="#{person.email}" />
                             </p:column>
 
+                            <!-- Need to check this id in Type table and take TITLE column value -->
+                            <p:column  headerText="Grupe" >
+                                <h:outputText value="#{person.typeid}" />
+                            </p:column>
+
                             <p:column headerText="Profilis" >
-                                <h:commandButton action="#{profileListView.viewProfile()}" value="Perziureti">
-                                    <f:param name="personEmail" value="#{person.email}"/>
-                                </h:commandButton>
+                                <p:commandButton value="Perziureti" oncomplete="PF('profileWidget').show();" update=":profileReview">
+                                    <!--<f:param name="personEmail" value="#{person.email}"/>-->
+                                    <f:setPropertyActionListener value="#{person}" target="#{profileListView.selectedUser}" />
+                                </p:commandButton>
                             </p:column>
 
                             <p:column  headerText="Rekomendacija" >
@@ -50,9 +56,36 @@ and open the template in the editor.
                             </p:column>
 
                         </p:dataTable>
+
                     </h:form>
                 </div>
             </div>
+        </div>
+
+        <div id="profilesDialogs">
+
+            <p:dialog id="profileReview" header="Vartotojo anketa" widgetVar="profileWidget" modal="true" height="100">
+
+                <h:outputText value="First name:" />
+                <h:outputText value="#{profileListView.selectedUser.firstname}" />
+
+                <h:outputText value="Last name:" />
+                <h:outputText value="#{profileListView.selectedUser.lastname}" />
+
+                <h:outputText value="Email:" />
+                <h:outputText value="#{profileListView.selectedUser.email}" />
+
+<!--                <p:dataGrid id="profilePanel" var="entry" columns="4" value="#{profileListView.registrationForm.entrySet().toArray()}">
+                    <h:outputText value="${entry.key}"/>
+                    <h:outputText value="${entry.value}"/>
+                </p:dataGrid> -->
+                <p:dataGrid id="profilePanel" var="entry" columns="4" value="#{profileListView.registrationForm.entrySet().toArray()}">
+                    <h:outputText value="${entry.key}"/>
+                    <h:outputText value="${entry.value}"/>
+                </p:dataGrid>
+                
+                
+            </p:dialog>        
         </div>
 
         <h:outputScript library="js" name="custom.js" />

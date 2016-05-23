@@ -6,9 +6,15 @@
 package lt.vu.mif.labanoro_draugai.user;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -16,9 +22,15 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
+import lt.vu.mif.labanoro_draugai.entities.Formattribute;
 import lt.vu.mif.labanoro_draugai.entities.Person;
+import lt.vu.mif.labanoro_draugai.entities.Personregistrationform;
 import lt.vu.mif.labanoro_draugai.entities.Recommendation;
 import lt.vu.mif.labanoro_draugai.mailService.EmailBean;
+import net.sf.json.JSONString;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.omnifaces.cdi.ViewScoped;
 
 /**
@@ -30,6 +42,8 @@ import org.omnifaces.cdi.ViewScoped;
 public class ProfileListView implements Serializable {
 
     private List<Person> persons;
+    private Person selectedPerson;
+    private Map<String, String> registrationForm;
 
     @Inject
     private DatabaseManager dbm;
@@ -42,8 +56,15 @@ public class ProfileListView implements Serializable {
 
     @PostConstruct
     public void init() {
+
+        this.registrationForm = new HashMap();
+
         if (persons == null || persons.isEmpty()) {
             this.persons = em.createNamedQuery("Person.findAll").getResultList();
+        }
+        List<Formattribute> attributes = (List<Formattribute>) dbm.getAllEntities("Formattribute");
+        if (attributes == null) {
+            return;
         }
     }
 
@@ -55,19 +76,36 @@ public class ProfileListView implements Serializable {
         this.persons = persons;
     }
 
-    public String viewProfile() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+    public Person getSelectedUser() {
+        return this.selectedPerson;
+    }
 
-        String personEmail = getParameter("personEmail");
+    public void setSelectedUser(Person person) {
+        this.selectedPerson = person;
+        setRegistrationForm(person);
+    }
 
-        Person person = (Person) dbm.getEntity("Person", "Email", personEmail);
+    private void setRegistrationForm(Person person) {
 
-        Integer personId = person.getId();
+        this.registrationForm = new HashMap();
 
-        // Call page with "personId" to open
-//        request.sendRedirect(request.getContextPath() + "/index");
-        return (dbm.getSystemParameter("SystemParameter.General.ContextPath").getValue() + "/user/profile/" + personId);
+        JSONParser parser = new JSONParser();
+
+        if (person != null) {
+            try {
+                Personregistrationform regForm = person.getPersonregistrationform();
+                JSONObject json = (JSONObject) parser.parse(regForm.getFormvalue());
+                this.registrationForm = parseJson(json, this.registrationForm);
+            } catch (ParseException ex) {
+                Logger.getLogger(ProfileListView.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NullPointerException eex) {
+                Logger.getLogger(ProfileListView.class.getName()).log(Level.SEVERE, null, eex);
+            }
+        }
+    }
+
+    public Map<String, String> getRegistrationForm() {
+        return this.registrationForm;
     }
 
     public void askRecommendation() {
@@ -88,7 +126,7 @@ public class ProfileListView implements Serializable {
         } else {
             System.out.println("Rekomendacijos prasymas jau buvo issiustas");
         }
-        
+
     }
 
     private String getParameter(String key) {
@@ -96,6 +134,22 @@ public class ProfileListView implements Serializable {
         Map<String, String> params = context.getExternalContext().getRequestParameterMap();
 
         return params.get(key);
+    }
+
+    private Map<String, String> parseJson(JSONObject json, Map<String, String> collection) {
+
+        Set keys = json.keySet();
+        Iterator<String> a = keys.iterator();
+
+        while (a.hasNext()) {
+            String key = (String) a.next();
+            String value = (String) json.get(key);
+            collection.put(key, value);
+            System.out.print("key: " + key);
+            System.out.println(" value: " + value);
+        }
+
+        return collection;
     }
 
 }
