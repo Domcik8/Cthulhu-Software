@@ -27,20 +27,26 @@ and open the template in the editor.
                     <h:form >
                         <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" /> 
                         <p:dataTable var="person" value="#{profileListView.persons}" widgetVar="paramsTable"
-                                     emptyMessage="" filteredValue="" paginator="true"
+                                      paginator="true" filteredValue="#{profileListView.filteredProfiles}"
                                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                      rowsPerPageTemplate="10,50,100" rows="10" currentPageReportTemplate="{currentPage} iš {totalPages}">
 
-                            <p:column headerText="Vardas pavarde" >
+                            <p:column headerText="Vardas pavarde" filterBy="#{person.firstname}" filterMatchMode="contains">
                                 <h:outputText value="#{person.firstname} #{person.lastname}" />
                             </p:column>
 
-                            <p:column  headerText="El.pastas" >
+                            <p:column  headerText="El.pastas" filterBy="#{person.email}" filterMatchMode="contains" >
                                 <h:outputText value="#{person.email}" />
                             </p:column>
 
                             <!-- Need to check this id in Type table and take TITLE column value -->
-                            <p:column  headerText="Nario statusas">
+                            <p:column  headerText="Nario statusas" filterBy="#{person.typeid.title}" filterMatchMode="exact" >
+                                <f:facet name="filter">
+                                     <h:selectOneMenu onchange="PF('paramsTable').filter()">
+                                        <f:selectItem itemLabel="Pasirinkite" itemValue="#{null}" noSelectionOption="true" />
+                                        <f:selectItems value="#{profileListView.userTypes}" />
+                                    </h:selectOneMenu>
+                                </f:facet>
                                 <h:outputText value="#{person.typeid.title}" style="color: #{person.typeid.title eq 'Kandidatas' ? 'green' : 'black'}"/>
                             </p:column>
                             

@@ -7,6 +7,7 @@ package lt.vu.mif.labanoro_draugai.user;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -49,9 +50,11 @@ import org.omnifaces.cdi.ViewScoped;
 @ViewScoped
 public class ProfileListView implements Serializable {
 
+    private List<Person> filteredProfiles;
     private List<Person> persons;
     private Person selectedPerson;
     private Map<String, String> registrationForm;
+    List<String> userTypes;
     private Person user;
     @Inject
     private DatabaseManager dbm;
@@ -86,6 +89,12 @@ public class ProfileListView implements Serializable {
         List<Formattribute> attributes = (List<Formattribute>) dbm.getAllEntities("Formattribute");
         if (attributes == null) {
             return;
+        }
+
+        userTypes = new ArrayList<>();
+        List<Type> types = dbm.retrieveTypes("Person");
+        for (Type type : types) {
+            if(!type.getInternalname().equals("Person"))userTypes.add(type.getTitle());
         }
     }
 
@@ -243,6 +252,18 @@ public class ProfileListView implements Serializable {
 
     public Person getUser() {
         return user;
+    }
+
+    public List<String> getUserTypes() {
+        return userTypes;
+    }
+
+    public List<Person> getFilteredProfiles() {
+        return filteredProfiles;
+    }
+
+    public void setFilteredProfiles(List<Person> filteredProfiles) {
+        this.filteredProfiles = filteredProfiles;
     }
 
 }
