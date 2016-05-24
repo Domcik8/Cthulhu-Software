@@ -1097,6 +1097,34 @@ public class DatabaseManager {
         }
     }
     
+    public boolean deleteHouseimageByInternalname(String internalName) {
+        try {
+            Query q = em.createQuery("DELETE FROM Houseimage h WHERE h.internalname = :internalName");
+            q.setParameter("internalName", internalName);
+            em.joinTransaction();
+            int deleted = q.executeUpdate();
+            em.flush();
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+    
+    public boolean updateSystemParameterValue(Systemparameter param) {
+        try {
+            Query q = em.createQuery("UPDATE Systemparameter p SET p.value = :value "
+                    + "WHERE p.id = :id");
+            q.setParameter("value", param.getValue());
+            q.setParameter("id", param.getId());
+            em.joinTransaction();
+            int updated = q.executeUpdate();
+            em.flush();
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+    
     public String generateReg(String desiredReg){
         Random rand = new Random();
         return desiredReg+"-"+System.currentTimeMillis() % 1000+rand.nextInt(10000);

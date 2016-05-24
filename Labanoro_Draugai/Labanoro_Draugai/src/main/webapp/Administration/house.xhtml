@@ -103,7 +103,7 @@ and open the template in the editor.
                     <h:panelGrid columns="3">
                         <p:commandButton action="#{editableHouse.saveHouse}" value="Išsaugoti" process="@form"/>
                         <p:commandButton action="#{editableHouse.declineChanges}" value="Atmesti" process="@this"/>
-                        <p:commandButton action="#{editableHouse.deleteHouse}" value="Panaikinti" process="@this"/>
+                        <p:commandButton actionListener="#{editableHouse.deleteHouse}" oncomplete="PF('deletionHouseDialog').show();" value="Panaikinti" process="@this" update=":deletionHouseOutsideForm"/>
                     </h:panelGrid>
                 </h:form>
             </div>
@@ -148,12 +148,26 @@ and open the template in the editor.
             
             <div>
                 <h:form id="deletionDialogOutsideForm">
-                    <p:dialog id="secondDialog" header="Dėmesio" widgetVar="deletionDialog" modal="true" height="200" width="400">
+                    <p:dialog id="secondDialog" header="Dėmesio" widgetVar="deletionDialog" modal="true" height="80" width="300" resizable="false">
                         <h:form id="dialogInsideForm">
                             <h:outputText value="Ar tikrai norite ištrinti šią nuotrauką?"/>
-                            <h:panelGrid id="panel" columns="2" >  
+                            <h:panelGrid id="panel" columns="2">  
                                 <p:commandButton value="Taip" action="#{editableHouse.removeImage}"/>
-                                <p:commandButton value="Ne" action="#{editableHouse.dontRemoveImage}"/>
+                                <p:commandButton value="Ne" action="#{editableHouse.closeDialogs}"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+                </h:form>
+            </div> 
+            
+            <div>
+                <h:form id="deletionHouseOutsideForm">
+                    <p:dialog id="secondDialog" header="Dėmesio" widgetVar="deletionHouseDialog" modal="true" height="80" width="300" resizable="false">
+                        <h:form id="dialogInsideForm">
+                            <h:outputText value="Ar tikrai norite panaikinti šį namelį?"/>
+                            <h:panelGrid id="panel" columns="2">  
+                                <p:commandButton value="Taip" action="#{editableHouse.deleteHouse}"/>
+                                <p:commandButton value="Ne" action="#{editableHouse.closeDialogs}"/>
                             </h:panelGrid>
                         </h:form>
                     </p:dialog>

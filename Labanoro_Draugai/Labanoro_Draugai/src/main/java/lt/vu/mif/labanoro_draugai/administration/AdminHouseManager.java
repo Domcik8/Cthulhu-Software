@@ -62,7 +62,7 @@ public class AdminHouseManager implements Serializable {
                  return ((Houseimage)sample).getSequence().equals(1);
             }
          };
-         Houseimage result = (Houseimage)CollectionUtils.select( house.getHouseimageList(), condition ).iterator().next();
+         Houseimage result = (Houseimage)CollectionUtils.select(house.getHouseimageList(), condition).iterator().next();
          return result.getInternalname();
     }
 }

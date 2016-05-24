@@ -42,6 +42,7 @@ public class AdminUserManager implements Serializable {
     
     //Dialog:
     private Person user;
+    private Person userForDeletion;
     private String userEmail;
     private int addedPoints;
     
@@ -76,9 +77,11 @@ public class AdminUserManager implements Serializable {
         boolean isSuccess = true;
         
         try {
-            String houseId = getParameter("userId");
-            int id = Integer.parseInt(houseId);
+            //String userId = getParameter("userId");
+            //int id = Integer.parseInt(userId);
 
+            int id = userForDeletion.getId();
+            
             List<Person> usersToDelete = em.createNamedQuery("Person.findById").setParameter("id",  id).getResultList();
             Person userToDelete = usersToDelete.get(0);
 
@@ -175,6 +178,12 @@ public class AdminUserManager implements Serializable {
         }
     }
     
+    public void closeDialogs() throws IOException {
+        //Close dialogs:
+        RequestContext requestContext = RequestContext.getCurrentInstance();  
+        requestContext.execute("PF('deletionUserDialog').hide();");
+    }
+    
     /*public void openDialog(Person u) {
         user = u;
         userEmail = u.getEmail();
@@ -207,6 +216,14 @@ public class AdminUserManager implements Serializable {
         user = u;
     }
     
+    public Person getUserForDeletion() {
+        return userForDeletion;
+    }
+    
+    public void setUserForDeletion(Person u) {
+        userForDeletion = u;
+    }
+    
     public void setUserEmail(String eml) {
         userEmail = eml;
     }
@@ -222,31 +239,4 @@ public class AdminUserManager implements Serializable {
     public void setAddedPoints(int ap) {
         addedPoints = ap;
     }
-    
-     /*public House getHouse() {
-        try {
-            String houseId = getParameter("houseId");
-            int id = Integer.parseInt(houseId);
-            houses = em.createNamedQuery("House.findById").setParameter("id",  id).getResultList();
-            house = houses.get(0);
-        }
-        catch (Exception ex) {
-            house = new House();
-        }
-        finally {
-            return house;
-        }
-    }
-     
-     public String saveHouse(House h) {
-        //em.getTransaction().begin();
-        //em.persist(house);
-        //em.getTransaction().commit();
-        //em.flush();
-        //house.setAddress("Vilniussss");
-        //house = getHouse();
-        
-        dbm.editHouse(h);
-        return "houses";
-    }*/
 }

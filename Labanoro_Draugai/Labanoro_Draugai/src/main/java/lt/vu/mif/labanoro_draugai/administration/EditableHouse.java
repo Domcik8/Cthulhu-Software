@@ -202,13 +202,13 @@ public class EditableHouse implements Serializable {
     public List<String> getImagesList() {
         List<String> imgs = new ArrayList<String>();
         
-        try {
+        /*try {
             if(house == null || house.getHouseimageList() == null || house.getHouseimageList().isEmpty()) 
                 return imgs;
         }
         catch (Exception ex) {
             
-        }
+        }*/
         
         List<Houseimage> result = dbm.getEntityList("Houseimage", "Houseid", house);
          
@@ -323,7 +323,7 @@ public class EditableHouse implements Serializable {
     }
     
     public void removeImage() throws IOException {
-        deleteHouseimageByInternalname(image);
+        dbm.deleteHouseimageByInternalname(image);
         //Close the dialog:
         RequestContext requestContext = RequestContext.getCurrentInstance();  
         requestContext.execute("PF('deletionDialog').hide();");
@@ -333,22 +333,12 @@ public class EditableHouse implements Serializable {
         ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI()  + "?houseId=" + house.getId());
     }
     
-    public boolean deleteHouseimageByInternalname(String internalName) {
-        try {
-            Query q = em.createQuery("DELETE FROM Houseimage h WHERE h.internalname = :internalName");
-            q.setParameter("internalName", internalName);
-            em.joinTransaction();
-            int deleted = q.executeUpdate();
-            em.flush();
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
-    }
     
-    public void dontRemoveImage() throws IOException {
-        //Close the dialog:
+    
+    public void closeDialogs() throws IOException {
+        //Close dialogs:
         RequestContext requestContext = RequestContext.getCurrentInstance();  
-         requestContext.execute("PF('deletionDialog').hide();");
+        requestContext.execute("PF('deletionDialog').hide();");
+        requestContext.execute("PF('deletionHouseDialog').hide();");
     }
 }

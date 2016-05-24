@@ -60,7 +60,7 @@ public class AdminSysParamsManager implements Serializable {
     
     public void saveChanges() throws IOException {
         if (editedParameter != null) {
-            if (updateSystemParameterValue(editedParameter)) {
+            if (dbm.updateSystemParameterValue(editedParameter)) {
                 //Close the dialog:
                 RequestContext requestContext = RequestContext.getCurrentInstance();  
                 requestContext.execute("PF('confirmDialog').hide();");
@@ -97,20 +97,7 @@ public class AdminSysParamsManager implements Serializable {
         }
     }
     
-    public boolean updateSystemParameterValue(Systemparameter param) {
-        try {
-            Query q = em.createQuery("UPDATE Systemparameter p SET p.value = :value "
-                    + "WHERE p.id = :id");
-            q.setParameter("value", param.getValue());
-            q.setParameter("id", param.getId());
-            em.joinTransaction();
-            int updated = q.executeUpdate();
-            em.flush();
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
-    }
+    
     
     public List<Systemparameter> getParams() {
         return params;
