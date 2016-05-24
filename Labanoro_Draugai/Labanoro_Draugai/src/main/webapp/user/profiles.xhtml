@@ -19,11 +19,13 @@ and open the template in the editor.
     <h:body>
 
         <ui:include src="/WEB-INF/other_pages/navigation.xhtml" />
-
+        
         <div class="container">
+            <h1>Visų narių sąrašas</h1>
             <div class="row"> 
                 <div>
                     <h:form >
+                        <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" /> 
                         <p:dataTable var="person" value="#{profileListView.persons}" widgetVar="paramsTable"
                                      emptyMessage="" filteredValue="" paginator="true"
                                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -38,25 +40,25 @@ and open the template in the editor.
                             </p:column>
 
                             <!-- Need to check this id in Type table and take TITLE column value -->
-                            <p:column  headerText="Grupe" >
-                                <h:outputText value="#{person.typeid}" />
+                            <p:column  headerText="Nario statusas">
+                                <h:outputText value="#{person.typeid.title}" style="color: #{person.typeid.title eq 'Kandidatas' ? 'green' : 'black'}"/>
                             </p:column>
-
+                            
                             <p:column headerText="Profilis" >
-                                <p:commandButton value="Perziureti" oncomplete="PF('profileWidget').show();" update=":profileReview">
+                                <p:commandButton value="Peržiūrėti anketą" oncomplete="PF('profileWidget').show();" update=":profileReview">
                                     <!--<f:param name="personEmail" value="#{person.email}"/>-->
                                     <f:setPropertyActionListener value="#{person}" target="#{profileListView.selectedUser}" />
                                 </p:commandButton>
                             </p:column>
-
-                            <p:column  headerText="Rekomendacija" >
-                                <h:commandButton action="#{profileListView.askRecommendation()}" value="Paprasyti">
-                                    <f:param name="personEmail" value="#{person.email}"/>
-                                </h:commandButton>
+                            
+                            <p:column  headerText="Rekomendacija" rendered="#{profileListView.isCandidate()}">
+                                <p:commandButton action="#{profileListView.askRecommendation()}" value="Prašyti rekomendacijos" rendered="#{not profileListView.isCandidate(person)}">
+                                    <f:setPropertyActionListener value="#{person}" target="#{profileListView.selectedUser}" />
+                                </p:commandButton>
                             </p:column>
 
                         </p:dataTable>
-
+                        
                     </h:form>
                 </div>
             </div>
@@ -64,30 +66,32 @@ and open the template in the editor.
 
         <div id="profilesDialogs">
 
-            <p:dialog id="profileReview" header="Vartotojo anketa" widgetVar="profileWidget" modal="true" height="100">
-
-                <h:outputText value="First name:" />
-                <h:outputText value="#{profileListView.selectedUser.firstname}" />
-
-                <h:outputText value="Last name:" />
-                <h:outputText value="#{profileListView.selectedUser.lastname}" />
-
-                <h:outputText value="Email:" />
-                <h:outputText value="#{profileListView.selectedUser.email}" />
-
-<!--                <p:dataGrid id="profilePanel" var="entry" columns="4" value="#{profileListView.registrationForm.entrySet().toArray()}">
-                    <h:outputText value="${entry.key}"/>
-                    <h:outputText value="${entry.value}"/>
-                </p:dataGrid> -->
-                <p:dataGrid id="profilePanel" var="entry" columns="4" value="#{profileListView.registrationForm.entrySet().toArray()}">
-                    <h:outputText value="${entry.key}"/>
-                    <h:outputText value="${entry.value}"/>
-                </p:dataGrid>
-                
-                
+            <p:dialog id="profileReview" header="Vartotojo anketa" widgetVar="profileWidget" closeOnEscape="true" 
+                      resizable="false" draggable="true" responsive="true" 
+                fitViewport="true" position="center"  modal="true" width="460px">
+                <h:dataTable id="profilePanel" var="entry" value="#{profileListView.registrationForm.entrySet().toArray()}" 
+                             border="0" columnClasses="forty-percent, sixty-percent" style="width: 80%">
+                       <h:column>
+                           <h:outputText value="#{entry.key}:"/> 
+                       </h:column>
+                       <h:column>
+                           <h:outputText value="#{entry.value}"/>
+                       </h:column>
+                    </h:dataTable>
+                <h:form rendered="#{profileListView.renderRecommendation()}" style="margin-top: 15px" id="giveRecommendationForm">
+                        <h:outputLabel for="recommendButt">Šis vartotojas yra kandidatas, jūs galite jį </h:outputLabel>
+                        <p:commandButton id="recommendButt" action="#{profileListView.giveRecommendation()}" oncomplete="PF('profileWidget').hide();"
+                                         value="Rekomenduoti" update="giveRecommendationForm" style="margin-left:10px "/>
+                </h:form>
             </p:dialog>        
         </div>
 
+        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+ 
+        <p:dialog widgetVar="statusDialog" modal="false" draggable="false" closable="false" resizable="false" showHeader="false">
+            <p:graphicImage name="ajax-loader.gif" library="img"/>
+        </p:dialog>
+        
         <h:outputScript library="js" name="custom.js" />
         <script>setActiveNavTab("profiles")</script>
     </h:body>

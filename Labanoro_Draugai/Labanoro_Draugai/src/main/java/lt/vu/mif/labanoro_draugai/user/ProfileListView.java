@@ -5,9 +5,12 @@
  */
 package lt.vu.mif.labanoro_draugai.user;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,6 +18,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -26,7 +31,10 @@ import lt.vu.mif.labanoro_draugai.entities.Formattribute;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.entities.Personregistrationform;
 import lt.vu.mif.labanoro_draugai.entities.Recommendation;
+import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
+import lt.vu.mif.labanoro_draugai.entities.Type;
 import lt.vu.mif.labanoro_draugai.mailService.EmailBean;
+import lt.vu.mif.labanoro_draugai.reservation.ReservationConfirmationManager;
 import net.sf.json.JSONString;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -44,7 +52,7 @@ public class ProfileListView implements Serializable {
     private List<Person> persons;
     private Person selectedPerson;
     private Map<String, String> registrationForm;
-
+    private Person user;
     @Inject
     private DatabaseManager dbm;
 
@@ -57,7 +65,20 @@ public class ProfileListView implements Serializable {
     @PostConstruct
     public void init() {
 
-        this.registrationForm = new HashMap();
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) (ec.getRequest());
+        if (request == null || request.getUserPrincipal() == null || request.getUserPrincipal().getName() == null && request.getUserPrincipal().getName().isEmpty()) {
+            try {
+                ec.redirect("/Labanoro_Draugai/login.html");
+                return;
+            } catch (IOException ex) {
+                Logger.getLogger(ReservationConfirmationManager.class.getName()).log(Level.SEVERE, null, ex);
+                return;
+            }
+        }
+        user = (Person) dbm.getEntity("Person", "Email", request.getUserPrincipal().getName());
+
+        this.registrationForm = new LinkedHashMap();
 
         if (persons == null || persons.isEmpty()) {
             this.persons = em.createNamedQuery("Person.findAll").getResultList();
@@ -66,6 +87,36 @@ public class ProfileListView implements Serializable {
         if (attributes == null) {
             return;
         }
+    }
+
+    public boolean isCandidate(Person person) {
+        if (person != null && person.getTypeid().getInternalname().equals("Person.Candidate")) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isCandidate() {
+        return isCandidate(user);
+    }
+
+    public boolean renderRecommendation() {
+        if (user == null || selectedPerson == null || isCandidate() || !isCandidate(selectedPerson) || alreadyRecommended()) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean alreadyRecommended() {
+        if (selectedPerson.getRecommendationList1() == null) {
+            return false;
+        }
+        for (Recommendation reco : selectedPerson.getRecommendationList1()) {
+            if (reco.getRecommenderid().getEmail().equals(user.getEmail())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<Person> getPersons() {
@@ -87,15 +138,18 @@ public class ProfileListView implements Serializable {
 
     private void setRegistrationForm(Person person) {
 
-        this.registrationForm = new HashMap();
+        this.registrationForm = new LinkedHashMap();
 
         JSONParser parser = new JSONParser();
 
         if (person != null) {
+            registrationForm.put("Vardas", selectedPerson.getFirstname());
+            registrationForm.put("Pavardė", selectedPerson.getLastname());
+            registrationForm.put("El. paštas", selectedPerson.getEmail());
             try {
                 Personregistrationform regForm = person.getPersonregistrationform();
                 JSONObject json = (JSONObject) parser.parse(regForm.getFormvalue());
-                this.registrationForm = parseJson(json, this.registrationForm);
+                this.registrationForm.putAll(parseJson(json, this.registrationForm));
             } catch (ParseException ex) {
                 Logger.getLogger(ProfileListView.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NullPointerException eex) {
@@ -109,24 +163,59 @@ public class ProfileListView implements Serializable {
     }
 
     public void askRecommendation() {
-
-        FacesContext context = FacesContext.getCurrentInstance();
-        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-
-        String receiverEmail = getParameter("personEmail");
-        String requestorEmail = request.getUserPrincipal().toString();
-
-        // check if requestor have enought recommendationToSend limit
-        // if yes add recommendation and return pop-up information about succesfully send email
-        Recommendation recommendation = (Recommendation) dbm.addRecommendation(receiverEmail, requestorEmail, "Recommendation");
-
-        if (recommendation != null) {
-            email.sendCandidateRecommendationRequestMessage(receiverEmail, requestorEmail);
-            System.out.println("Tokios rekomendacijos nebuvo. Rekomendacija sukurta. Laiskas zmogui issiustas");
-        } else {
-            System.out.println("Rekomendacijos prasymas jau buvo issiustas");
+        if (isCandidate()) {
+            return;
         }
 
+        String receiverEmail = selectedPerson.getEmail();
+        String requestorEmail = user.getEmail();
+        Systemparameter param = (Systemparameter) dbm.getEntity("Systemparameter", "InternalName", "SystemParameter.MaxRecommendations");
+        // check if requestor have enought recommendationToSend limit
+        // if yes add recommendation and return pop-up information about succesfully send email
+        if (param == null || user.getRecommendationstosend() >= Integer.parseInt(param.getValue())) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nepavyko!", "Pasiektas maksimalus rekomendacijų prašymų skaičius."));
+            return;
+        }
+//        Recommendation recommendation = (Recommendation) dbm.addRecommendation(receiverEmail, requestorEmail, "Recommendation");
+
+//        if (recommendation != null) {
+        email.sendCandidateRecommendationRequestMessage(receiverEmail, requestorEmail);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Pavyko!", "Rekomendacijos prašymas sėkmingai išsiūstas."));
+//        } else {
+//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nepavyko!", "Šis vartotojas jau gavo jūsų prašymą."));
+//        }
+    }
+
+    public void giveRecommendation() {
+        if (!renderRecommendation()) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Nepavyko!", "Kandidatas jau turi jūsų rekomandaciją."));
+            return;
+        }
+        String receiverEmail = selectedPerson.getEmail();
+        String requestorEmail = user.getEmail();
+
+        Recommendation recommendation = (Recommendation) dbm.addRecommendation(requestorEmail, receiverEmail, new Date(), "Recommendation");
+        if (recommendation != null) {
+            selectedPerson.setRecommendationsreceived(selectedPerson.getRecommendationsreceived() + 1);
+            selectedPerson.getRecommendationList1().add(recommendation);
+            int minimumRecommendations = Integer.parseInt(dbm.getSystemParameter("SystemParameter.RequiredRecommendations").getValue());
+
+            // Check if candidate have reached necessary number of recommendation to become a member
+            if (selectedPerson.getRecommendationsreceived() >= minimumRecommendations) {
+
+                Type memberType = (Type) dbm.getEntity("Type", "Internalname", "Person.User");
+
+                if (memberType != null) {
+                    selectedPerson.setTypeid(memberType);
+                    email.sendCandidateApprovalMessage(selectedPerson);
+                }
+            }
+
+            dbm.updateEntity(selectedPerson);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Pavyko!", "Kandidatas sėkmingai rekomenduotas."));
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nepavyko!", "Kandidatas jau turi jūsų rekomandaciją."));
+        }
     }
 
     private String getParameter(String key) {
@@ -150,6 +239,10 @@ public class ProfileListView implements Serializable {
         }
 
         return collection;
+    }
+
+    public Person getUser() {
+        return user;
     }
 
 }
