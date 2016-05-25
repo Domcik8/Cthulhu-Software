@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +34,8 @@ import org.omnifaces.cdi.ViewScoped;
  */
 @Named
 @ViewScoped
-public class MyReservationsView implements Serializable{
+public class MyReservationsView implements Serializable {
+
     List<Reservation> reservations;
     List<Reservation> filteredReservations;
     private Reservation selectedReservation;
@@ -42,13 +44,12 @@ public class MyReservationsView implements Serializable{
     private String currency;
     @Inject
     DatabaseManager dbm;
-    
-     
-   @PostConstruct
-    public void init(){
+
+    @PostConstruct
+    public void init() {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletRequest request = (HttpServletRequest) (ec.getRequest());
-        if(request==null || request.getUserPrincipal()==null || request.getUserPrincipal().getName() == null){ 
+        if (request == null || request.getUserPrincipal() == null || request.getUserPrincipal().getName() == null) {
             try {
                 ec.redirect("/Labanoro_Draugai/login.html");
                 return;
@@ -57,20 +58,25 @@ public class MyReservationsView implements Serializable{
                 return;
             }
         }
-        user = (Person)dbm.getEntity("Person", "Email", request.getUserPrincipal().getName());
-        
-        reservations = user.getReservationList();
-        
-        Systemparameter param = (Systemparameter)dbm.getEntity("SystemParameter", "internalName", "SystemParameter.ExchangeRate.Euro");
-        if(param == null){
+        user = (Person) dbm.getEntity("Person", "Email", request.getUserPrincipal().getName());
+
+        reservations = new ArrayList<>();
+        for (Reservation reserv : user.getReservationList()) {
+            if (!reserv.getIsdeleted()) {
+                reservations.add(reserv);
+            }
+        }
+
+        Systemparameter param = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.ExchangeRate.Euro");
+        if (param == null) {
             System.out.println("Truksta \"SystemParameter.ExchangeRate.Euro\" parametro");
             exchangeRate = -1;
             currency = "?";
             return;
         }
         exchangeRate = Double.parseDouble(param.getValue());
-        param = (Systemparameter)dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Currency.Euro");
-        if(param == null){
+        param = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Currency.Euro");
+        if (param == null) {
             System.out.println("Truksta \"SystemParameter.Currency.Euro\" parametro");
             currency = "?";
             return;
@@ -78,22 +84,30 @@ public class MyReservationsView implements Serializable{
         currency = param.getValue();
         System.out.println(toString() + " constructed.");
     }
-    
-    public void cancelReservation(){
-        if(selectedReservation!=null && selectedReservation.getIsdeleted() && canBeCanceled(selectedReservation)) return;
+
+    public void cancelReservation() {
+        if (selectedReservation != null && selectedReservation.getIsdeleted() && canBeCanceled(selectedReservation)) {
+            return;
+        }
         selectedReservation.setIsdeleted(Boolean.TRUE);
         user.setPoints(user.getPoints().add(BigDecimal.valueOf(reservationPointPrice(selectedReservation))));
         dbm.updatePersonPoints(user);
         dbm.updateEntity(selectedReservation);
-        selectedReservation=null;
+        reservations.remove(selectedReservation);
+        filteredReservations.remove(selectedReservation);
+        selectedReservation = null;
     }
-    
-    public boolean canBeCanceled(Reservation reservation){
+
+    public boolean canBeCanceled(Reservation reservation) {
         Systemparameter cancelParam = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Reservation.MinDaysBeforeCancel");
-        if(cancelParam == null) return false;
+        if (cancelParam == null) {
+            return false;
+        }
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, Integer.parseInt(cancelParam.getValue()));
-        if(reservation.getStartdate().before(calendar.getTime())) return false;
+        if (reservation.getStartdate().before(calendar.getTime())) {
+            return false;
+        }
         return true;
     }
 
@@ -104,34 +118,41 @@ public class MyReservationsView implements Serializable{
     public String getCurrency() {
         return currency;
     }
-    
-    public double reservationPointPrice(Reservation reservation){
+
+    public double reservationPointPrice(Reservation reservation) {
         return reservation.getPaymentid().getPaymentprice().doubleValue() * exchangeRate;
     }
-    
+
     public boolean filterFromDate(Object value, Object filter, Locale locale) {
-        if(filter == null) return true;
+        if (filter == null) {
+            return true;
+        }
         Date date = (Date) value;
         Date filterDate = (Date) filter;
         return date.after(filterDate);
     }
-    
+
     public boolean filterToDate(Object value, Object filter, Locale locale) {
-       if(filter == null) return true;
-       Date date = (Date) value;
-       Date filterDate = (Date) filter;
-       return date.before(filterDate);
+        if (filter == null) {
+            return true;
+        }
+        Date date = (Date) value;
+        Date filterDate = (Date) filter;
+        return date.before(filterDate);
     }
-    
+
     public List<Reservation> getFilteredReservations() {
         return filteredReservations;
     }
+
     public void setFilteredReservations(List<Reservation> filteredReservations) {
         this.filteredReservations = filteredReservations;
     }
+
     public List<Reservation> getReservations() {
         return reservations;
     }
+
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
     }

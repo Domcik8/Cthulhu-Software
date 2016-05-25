@@ -133,3 +133,7 @@ body {
 .ui-input-invalid {
     border-color: red; 
 }
+
+.column-margin-md{
+    margin: 20px 0px 20px 20px; 
+}

@@ -72,17 +72,17 @@ and open the template in the editor.
                             
                     </p:column>
                 </p:dataTable>
+                
+                <p:dialog id="cancelReservationDialog" header="Atšaukti rezervaciją?" widgetVar="cancelReservationWidget" closeOnEscape="true" resizable="false" draggable="false" responsive="true"
+                          appendTo="" fitViewport="true" position="center"  modal="true">
+                <p:commandButton value="Taip" styleClass="ui-confirmdialog-yes" 
+                                 icon="ui-icon-check" action="#{myReservationsView.cancelReservation()}" oncomplete="PF('cancelReservationWidget').hide();history.go(0);"/>
+                <p:commandButton value="Ne" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('cancelReservationWidget').hide()"/>
+                </p:dialog>
             </h:form>    
         </div>
         
-        <p:dialog id="cancelReservationDialog" header="Atšaukti rezervaciją?" widgetVar="cancelReservationWidget" closeOnEscape="true" resizable="false" draggable="false" responsive="true"
-            fitViewport="true" position="center"  modal="true">
-            <h:form>
-                <p:commandButton value="Taip" styleClass="ui-confirmdialog-yes" 
-                                 icon="ui-icon-check" action="#{myReservationsView.cancelReservation()}" oncomplete="PF('cancelReservationWidget').hide()" update=":reservationForm:reservationTable"/>
-                <p:commandButton value="Ne" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('cancelReservationWidget').hide()"/>
-            </h:form>
-        </p:dialog>
+        
         
         
         <!-- scripts -->

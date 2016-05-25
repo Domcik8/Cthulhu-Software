@@ -13,7 +13,7 @@ and open the template in the editor.
     <h:head>
         <title>Vasarnamių rezervacija</title>
         <h:outputStylesheet library="css" name="custom.css"/>
-        <h:outputScript library="js" name="custom.js" />
+        <script src="//connect.facebook.net/en_US/sdk.js" type="text/javascript"/>
         <script src="https://code.jquery.com/jquery-2.2.2.min.js"   integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI="   crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"/>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous"/>
@@ -29,44 +29,47 @@ and open the template in the editor.
             <p:panel>
                 <h2>#{reservationConfirmationManager.house.title}</h2>
                 <p:galleria id="houseGalleria" value="#{reservationConfirmationManager.houseImageNames()}" var="image" 
-                    style="width: 100%" panelHeight="280" panelWidth="500" showFilmstrip="true" autoPlay="false" showCaption="false">
+                    style="width: 100%;margin:auto;" panelHeight="280" panelWidth="500" showFilmstrip="true" autoPlay="false" showCaption="false">
                     <p:graphicImage url="/images/#{image}" alt="#{image}" style="width: 100%"/>
                 </p:galleria>
-                <h:panelGrid columns="2">
+                <p:panelGrid columns="2" columnClasses="column-margin-md">
                     <h:outputText value="Aprašas:"/> <h:outputText value="#{reservationConfirmationManager.house.description}"/>
                     <h:outputText value="Adresas:"/> <h:outputText value="#{reservationConfirmationManager.house.address}"/>
                     <h:outputText value="Vietos:"/> <h:outputText value="#{reservationConfirmationManager.house.numberofplaces}"/>
-                    <h:outputText value="Savaitės kaina:"/> <h:outputText value="#{reservationConfirmationManager.house.weekprice}#{reservationConfirmationManager.currency}"/>
-                </h:panelGrid>
+                    <h:outputText value="Savaitės kaina:"/> <h:outputText value="#{reservationConfirmationManager.currency}#{reservationConfirmationManager.house.weekprice.doubleValue()}"/>
+                </p:panelGrid>
                 
-
-                <h:outputText value="Viešnagė nuo "/>
-                <h:outputText value="#{reservationConfirmationManager.dateFrom}">
-                    <f:convertDateTime pattern="yyyy-MM-dd"/> 
-                </h:outputText>
-                <h:outputText value=" iki "/>
-                <h:outputText value="#{reservationConfirmationManager.dateTo}">
-                    <f:convertDateTime pattern="yyyy-MM-dd"/> 
-                </h:outputText>
-                <p:dataList value="#{reservationConfirmationManager.serviceList()}" var="service" type="ordered">
+                <div>
+                    <h:outputText value="Viešnagė nuo "/>
+                    <h:outputText value="#{reservationConfirmationManager.dateFrom}">
+                       <f:convertDateTime pattern="yyyy-MM-dd"/> 
+                    </h:outputText>
+                    <h:outputText value=" iki "/>
+                    <h:outputText value="#{reservationConfirmationManager.dateTo}">
+                       <f:convertDateTime pattern="yyyy-MM-dd"/> 
+                    </h:outputText>   
+                </div>
+                
+                <p:dataList value="#{reservationConfirmationManager.serviceList()}" var="service" type="ordered" emptyMessage="Nepasirinkta.">
                     <f:facet name="header">
                         Papildomos paslaugos:
                     </f:facet>
-                    #{service.title} #{reservationConfirmationManager.periodPrice(service.weekprice)}#{reservationConfirmationManager.currency}
+                    #{service.title} #{reservationConfirmationManager.currency}#{reservationConfirmationManager.periodPrice(service.weekprice)}
                 </p:dataList>
-                <h:outputLabel id="totalPrice" value="Visa kaina: #{reservationConfirmationManager.totalPrice}#{reservationConfirmationManager.currency}"/>  
+                <h:outputLabel id="totalPrice" value="Visa kaina: #{reservationConfirmationManager.currency}#{reservationConfirmationManager.totalPrice}"/>  
+                    <h:form>
+                        <p:commandButton class="btn" value="Mokėti taškais" action="#{reservationConfirmationManager.reserveSummerhouse()}"/>
+                         <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" /> 
+                    </h:form>
+                <h:outputText value="Arba"/>
                     <h:panelGroup id="myScript">
                         <ui:include src="/WEB-INF/other_pages/stripeForm.xhtml" >
                             <ui:param name="price" value="#{reservationConfirmationManager.totalPriceInCents}" />
                             <ui:param name="order" value="#{reservationConfirmationManager.createReservationJSON()}" />
                         </ui:include>
-                    </h:panelGroup>
-                    <h:form>
-                         <p:commandLink class="btn btn-success" value="Mokėti taškais" action="#{reservationConfirmationManager.reserveSummerhouse()}"/>
-                         <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" /> 
-                    </h:form>
+                    </h:panelGroup>  
             </p:panel>            
         </div>
-
+<h:outputScript library="js" name="custom.js" />
     </h:body>
 </html>
