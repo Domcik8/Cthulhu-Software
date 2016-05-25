@@ -9,6 +9,7 @@ and open the template in the editor.
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:h="http://xmlns.jcp.org/jsf/html"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:outputStylesheet library="css" name="dropdown.css"/>
     <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
             <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
@@ -27,7 +28,23 @@ and open the template in the editor.
                         <li id="summerhouses"><a href="/Labanoro_Draugai/Reservation/summerhouses.html" style="outline: 0">Vasarnamiai</a></li>
                         <li id="services"><a href="#" style="outline: 0">Paslaugos</a></li>
                         <li id="reservations"><a href="/Labanoro_Draugai/Reservation/allReservations.html" style="outline: 0">Rezervacijos</a></li>
-                        <li id="admin"><a href="/Labanoro_Draugai/Administration/admin.html" style="outline: 0" >Administravimas</a></li>
+                        <div class="dropdown">
+                            <ul class="nav navbar-nav">
+                                <li id="admin" class="dropbtn"><a style="outline: 0">Administravimas</a></li>
+                            </ul>
+                            <div class="dropdown-content">
+                                <a href="/Labanoro_Draugai/Administration/houses.html">Namelių administravimas</a>
+                                <a href="/Labanoro_Draugai/Administration/users.html">Vartotojų administravimas</a>
+                                <a href="/Labanoro_Draugai/Administration/payments.html">Mokėjimų administravimas</a>
+                                <a href="/Labanoro_Draugai/Administration/sys-params.html">Parametrų administravimas</a>
+                                <a href="/Labanoro_Draugai/Administration/TestChamber/chamberOfSecrets.html">Dominik's chamber of secrets</a>
+                                <a href="/Labanoro_Draugai/Administration/TestChamber/chamberOfCalculations.html">Dominik's chamber of calculations</a>
+                                <a href="/Labanoro_Draugai/Administration/userFormCreator.html">Vatotojo formos kūrimas</a>
+                                <h:form>
+                                    <h:commandLink type="button" class="btn btn-lg btn-danger" action="#{databaseManager.fillDataBase()}">Fill databases and edit houses</h:commandLink>
+                                </h:form>
+                            </div>
+                        </div>
                         <li id="profiles"><a href="/Labanoro_Draugai/user/profiles.html" style="outline: 0" >Klubo nariai</a></li>
                         <li id="profile"><a href="/Labanoro_Draugai/user/profile.html" style="outline: 0" >Mano paskyra</a></li>
                         <li id="myReservations"><a href="/Labanoro_Draugai/Reservation/myReservations.html" style="outline: 0">Mano rezervacijos</a></li>

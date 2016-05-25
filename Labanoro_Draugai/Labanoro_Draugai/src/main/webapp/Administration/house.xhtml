@@ -130,7 +130,7 @@ and open the template in the editor.
             <h2>Nuotraukos pridėjimas</h2>
             <div>
                 <h:form enctype="multipart/form-data">
-                    <p:fileUpload value="#{editableHouse.file}" mode="simple" skinSimple="true"/> <br/>
+                    <p:fileUpload value="#{editableHouse.file}" mode="simple" skinSimple="true" label="Pasirinkti nuotrauką"/> <br/>
                     <p:commandButton value="Įkelti" ajax="false" actionListener="#{editableHouse.upload}" />
                 </h:form>
             </div>
