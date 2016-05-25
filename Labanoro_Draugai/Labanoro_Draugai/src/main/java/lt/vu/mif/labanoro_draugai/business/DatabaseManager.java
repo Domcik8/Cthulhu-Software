@@ -178,18 +178,18 @@ public class DatabaseManager {
     private void fillBasicSystemParameters() {
         addSystemParameter("SystemParameter.ExchangeRate.Euro", "Taškų kursas lyginant su euru", "10", "SystemParameter");
         addSystemParameter("SystemParameter.Currency.Euro", "Euro valiutos simbolis", "€", "SystemParameter");
-        
+
         addSystemParameter("SystemParameter.General.ContextPath", "Pagrindinis kelias", "http://localhost:8080/Labanoro_Draugai", "Pagrindines puslapio URL'as", "SystemParameter");
 
         addSystemParameter("SystemParameter.RequiredRecommendations", "Reikalingų rekomendacijų skaičius", "2", "SystemParameter");
         addSystemParameter("SystemParameter.MaxRecommendations", "Maksimalus rekomendacijų užklausų skaičius", "5", "SystemParameter");
-        
+
         addSystemParameter("SystemParameter.priorityGroup.Month", "Prioriteto grupės, perskaičiavimo laikas: menuo", "3,6,9,12", "SystemParameter");
         addSystemParameter("SystemParameter.priorityGroup.DayOfTheWeek", "Prioriteto grupės, perskaičiavimo laikas: savaitės diena", "6", "SystemParameter");
         addSystemParameter("SystemParameter.priorityGroup.HourOfTheDay", "Prioriteto grupės, perskaičiavimo laikas: dienos valanda", "22", "SystemParameter");
-        addSystemParameter("SystemParameter.priorityGroup.SeasonLength", "Prioriteto grupės, suskirstimo laikotarpis menesiais", "3", "SystemParameter"); 
-        addSystemParameter("SystemParameter.priorityGroup.Quantity", "Prioriteto grupės, grupių skaičius", "12", "SystemParameter"); 
-        
+        addSystemParameter("SystemParameter.priorityGroup.SeasonLength", "Prioriteto grupės, suskirstimo laikotarpis menesiais", "3", "SystemParameter");
+        addSystemParameter("SystemParameter.priorityGroup.Quantity", "Prioriteto grupės, grupių skaičius", "12", "SystemParameter");
+
         addSystemParameter("SystemParameter.StripeTestSecretKey", "Stripe testinis slaptas raktas", "sk_test_6K4uBYlsGNPy5H161DtWjZcm", "SystemParameter");
         addSystemParameter("SystemParameter.StripeTestPublishableKey", "Stripe testinis viešas raktas", "pk_test_tK93j3DH8bSqL4VHi65SnJ9e ", "SystemParameter");
         addSystemParameter("SystemParameter.StripeLiveSecretKey", "Stripe tikras slaptas raktas", "sk_live_zzW2TvQpbW5HLntoGzHC6o3r ", "SystemParameter");
@@ -207,9 +207,9 @@ public class DatabaseManager {
         addSystemParameter("SystemParameter.Redirect.LoginSuccess", "Sekmingas prisijungimas", "/index.html", "Nukreipimas i puslapi po sekmingo prisijungimo", "SystemParameter");
         addSystemParameter("SystemParameter.Redirect.GlobalError", "Globali klaida", "/WEB-INF/other_pages/someError.html", "Nukreipimas i puslapi po globalios klaidos", "SystemParameter");
         addSystemParameter("SystemParameter.Redirect.MyReservations", "Sėkminga rezervacija", "/Reservation/myReservations.html", "Nukreipimas i puslapi po sėkmingos rezervacijos", "SystemParameter");
-        
+
         addSystemParameter("SystemParameter.Reservation.MinDaysBeforeCancel", "Minimalus skaičius dienų, kai dar galima atšaukti rezervaciją.", "7", "", "SystemParameter");
-        
+
         addSystemParameter("SystemParameter.Mail.Address", "Gmail el.pastas", "labanorai@gmail.com", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Password", "Gmail el.pasto slaptazodis", "LabanoroDraugas", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Smtp.host", "Smtp hostas", "smtp.gmail.com", "SystemParameter");
@@ -290,6 +290,7 @@ public class DatabaseManager {
         Person person = addPerson(email, firstName, lastName, typeInternalName);
         if (person != null) {
             String hashedPassoword = Hashing.sha256().hashString(password, Charsets.UTF_8).toString();
+            hashedPassoword = Hashing.sha256().hashString(hashedPassoword, Charsets.UTF_8).toString();
             person.setPassword(hashedPassoword);
         }
 
@@ -334,6 +335,7 @@ public class DatabaseManager {
     public House addHouse(String title, String address, String typeInternalName) {
         return addHouse(title, address, generateReg("HouseReg"), typeInternalName);
     }
+
     /**
      * Creates new house and flushes it to database. Returns person entity if
      * created sucessfully
@@ -365,14 +367,14 @@ public class DatabaseManager {
         return newHouse;
     }
 
-     /**
+    /**
      * Creates new service and flushes it to database. Returns entity if created
      * sucessfully
      */
     private Service addService(String title, String houseReg, String typeInternalName) {
         return addService(title, generateReg("ServiceReg"), houseReg, typeInternalName);
     }
-    
+
     /**
      * Creates new service and flushes it to database. Returns entity if created
      * sucessfully
@@ -662,14 +664,15 @@ public class DatabaseManager {
      * Creates new payment and flushes it to database. Returns payment entity if
      * created sucessfully
      */
-    public Payment addPayment(String payerEmail, BigDecimal paymentPrice, Date paymentDate, String typeInternalName,String currencyTypeInternalName) {
+    public Payment addPayment(String payerEmail, BigDecimal paymentPrice, Date paymentDate, String typeInternalName, String currencyTypeInternalName) {
         return addPayment(generateReg("PaymentReg"), payerEmail, paymentPrice, paymentDate, typeInternalName, currencyTypeInternalName);
     }
+
     /**
      * Creates new payment and flushes it to database. Returns payment entity if
      * created sucessfully
      */
-    public Payment addPayment(String paymentReg, String payerEmail, BigDecimal paymentPrice, Date paymentDate, String typeInternalName,String currencyTypeInternalName) {
+    public Payment addPayment(String paymentReg, String payerEmail, BigDecimal paymentPrice, Date paymentDate, String typeInternalName, String currencyTypeInternalName) {
         Type type = (Type) getEntity("Type", "Internalname", typeInternalName);
         Type currnecyType = (Type) getEntity("Type", "Internalname", currencyTypeInternalName);
         Person payer = (Person) getEntity("Person", "Email", payerEmail);
@@ -687,7 +690,7 @@ public class DatabaseManager {
             System.out.println(String.format("There is no type '%s'", typeInternalName));
             return null;
         }
-        
+
         if (currnecyType == null) {
             System.out.println(String.format("There is no currnecy type '%s'", currencyTypeInternalName));
             return null;
@@ -800,7 +803,7 @@ public class DatabaseManager {
         Object entity = getEntity(className, findBy, parameter);
         return entity != null ? true : false;
     }
-    
+
     /**
      * Returns true if specified entity exists with specified parameter
      */
@@ -824,7 +827,7 @@ public class DatabaseManager {
         List entityList = getEntityList(className, findBy, parameter);
         return entityList.isEmpty() ? null : entityList.get(0);
     }
-    
+
     /**
      * Returns entity if specified entity exists with specified parameter
      */
@@ -870,14 +873,14 @@ public class DatabaseManager {
 
         return query.getResultList();
     }
-    
+
     /**
      * Returns entity if specified entity exists with specified parameter
      */
     public List getEntityList(String className, String findBy, Date parameter) {
         className = className.toLowerCase();
         findBy = findBy.toLowerCase();
-        
+
         Query query = em.createQuery("SELECT e FROM " + capitalize(className) + " e WHERE e." + findBy + " = :parameter");
         query.setParameter("parameter", parameter);
 
@@ -1096,7 +1099,7 @@ public class DatabaseManager {
             return false;
         }
     }
-    
+
     public boolean deleteHouseimageByInternalname(String internalName) {
         try {
             Query q = em.createQuery("DELETE FROM Houseimage h WHERE h.internalname = :internalName");
@@ -1109,7 +1112,7 @@ public class DatabaseManager {
             return false;
         }
     }
-    
+
     public boolean updateSystemParameterValue(Systemparameter param) {
         try {
             Query q = em.createQuery("UPDATE Systemparameter p SET p.value = :value "
@@ -1124,9 +1127,9 @@ public class DatabaseManager {
             return false;
         }
     }
-    
-    public String generateReg(String desiredReg){
+
+    public String generateReg(String desiredReg) {
         Random rand = new Random();
-        return desiredReg+"-"+System.currentTimeMillis() % 1000+rand.nextInt(10000);
+        return desiredReg + "-" + System.currentTimeMillis() % 1000 + rand.nextInt(10000);
     }
 }

@@ -79,7 +79,7 @@ public class EmailBody {
     public String getDeactivationAccountMessage(Person receiver) {
 
         String message = "Sveiki, " + receiver.getFirstname();
-        message += "<br/> Norime informuoti, kad jus buvot pasirinke issiregistravima is \"Labanoro draugai\" klubo";
+        message += "<br/><br/> Norime informuoti, kad jus buvot pasirinke issiregistravima is \"Labanoro draugai\" klubo";
         message += "<br/> Jusu paskyra " + receiver.getEmail() + " taps nepasiekiama po" + " 5 dienu";
 
         message += "<br/><br/> Pagarbiai,";

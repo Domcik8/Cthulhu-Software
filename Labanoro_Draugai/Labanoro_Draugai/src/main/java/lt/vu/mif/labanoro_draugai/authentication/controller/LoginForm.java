@@ -5,6 +5,8 @@
  */
 package lt.vu.mif.labanoro_draugai.authentication.controller;
 
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
 import javax.ejb.Stateful;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -20,7 +22,6 @@ import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
  * @author Ernest J
  */
 @Named("auth")
-//@Stateless
 @Stateful
 @RequestScoped
 public class LoginForm {
@@ -61,10 +62,11 @@ public class LoginForm {
 
             if (request.getUserPrincipal() == null) {   // check if not already logged in
                 if (controller.isUser(this.username)) {     // check if user already exists
-                    request.login(this.username, this.password);
+                    String passwordHash = Hashing.sha256().hashString(this.password, Charsets.UTF_8).toString();
+                    request.login(this.username, passwordHash);
 
                     if (request.getUserPrincipal().getName().equals(this.username)) {
-                        System.out.println("Internal login worked");                     
+                        System.out.println("Internal login worked");
                         return (dbm.getSystemParameter("SystemParameter.Redirect.LoginSuccess").getValue() + "?faces-redirect=true");
                     }
                 }

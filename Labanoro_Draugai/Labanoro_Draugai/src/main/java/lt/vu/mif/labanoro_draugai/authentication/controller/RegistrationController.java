@@ -37,19 +37,20 @@ public class RegistrationController {
 
         if (!isUser(email)) {
             Person person = db.addPerson(email, null, null, "Person.Candidate");
-
-//            SecureRandom random = new SecureRandom();
-//            String password = new BigInteger(130, random).toString(32);
+            String passwordHash = null;
             if (password != null) {
-                String passwordHash = Hashing.sha256().hashString(password, Charsets.UTF_8).toString();
-                String output = MessageFormat.format("{0} hashed to: {1}", password, passwordHash);
+                passwordHash = Hashing.sha256().hashString(password, Charsets.UTF_8).toString();
+                String passwordHashDouble = Hashing.sha256().hashString(passwordHash, Charsets.UTF_8).toString();
+                String output = MessageFormat.format("{0} hashed to: {1}", password, passwordHashDouble);
                 System.out.println(output);
-                person.setPassword(passwordHash);
+                person.setPassword(passwordHashDouble);
             }
 
             if (facebookId != null) {
+                // SecureRandom random = new SecureRandom();
+                // String passwordHash = new BigInteger(130, random).toString(32);
                 person.setFacebookid(facebookId);
-                person.setFacebookpassword(password);
+                person.setFacebookpassword(passwordHash);
             }
 
             person.setFirstname(firstName);

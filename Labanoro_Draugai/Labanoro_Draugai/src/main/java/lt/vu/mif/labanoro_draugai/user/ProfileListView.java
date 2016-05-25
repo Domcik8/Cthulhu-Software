@@ -94,7 +94,9 @@ public class ProfileListView implements Serializable {
         userTypes = new ArrayList<>();
         List<Type> types = dbm.retrieveTypes("Person");
         for (Type type : types) {
-            if(!type.getInternalname().equals("Person"))userTypes.add(type.getTitle());
+            if (!type.getInternalname().equals("Person")) {
+                userTypes.add(type.getTitle());
+            }
         }
     }
 
@@ -172,7 +174,7 @@ public class ProfileListView implements Serializable {
     }
 
     public void askRecommendation() {
-        if (isCandidate()) {
+        if (!isCandidate()) {
             return;
         }
 
