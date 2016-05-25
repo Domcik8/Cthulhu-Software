@@ -5,6 +5,7 @@
 body { 
     padding-top: 65px; 
     background-image: url("https://www.apva.lt/uploads/images/labanoras%20008.JPG");
+    /*background-image: url(https://i.ytimg.com/vi/S4oUB5D6pzw/maxresdefault.jpg);*/
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
@@ -35,12 +36,13 @@ body {
   font-size: 14px;
 }
 .ui-accordion{
-    background-color: #5cb85c;
+/*    background-color: #5cb85c;*/
+    background-color: buttonface;
 }
 .ui-accordion-header{
     font-family: sans-serif;
     font-weight: 100;
-    color: white;
+    color: black;
 }
 .ui-datepicker td {
     color: #5cb85c;

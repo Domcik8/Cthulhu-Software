@@ -86,8 +86,8 @@ public class SummerhouseManager implements Serializable {
     public void init() {
         summerhouses = (List<House>) dbm.getAllEntities("House");
         filteredSummerhouses = (List<House>) dbm.getAllEntities("House");
-        Collections.reverse(summerhouses);
-        Collections.reverse(filteredSummerhouses);
+//        Collections.reverse(summerhouses);
+//        Collections.reverse(filteredSummerhouses);
         System.out.println("summerhouses size:" + summerhouses.size());
         //filter
         //Papulint servisus is db
@@ -104,9 +104,12 @@ public class SummerhouseManager implements Serializable {
         availableOrderings.put("Seniausi", Ordering.Old);
         availableOrderings.put("Pigiausi", Ordering.Cheap);
         availableOrderings.put("Brangiausi", Ordering.Expensive);
-
-        setMaxHousePrice(new BigDecimal(1000));
+        ordering = Ordering.Expensive;
+        sortHouses();
+        setMaxHousePrice(filteredSummerhouses.get(0).getWeekprice());
         setPriceTo(getMaxHousePrice());
+        ordering = Ordering.New;
+        sortHouses();
         Systemparameter param = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Currency.Euro");
         if (param == null) {
             System.out.println("Truksta \"SystemParameter.Currency.Euro\" parametro");

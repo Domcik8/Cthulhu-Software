@@ -29,20 +29,25 @@ and open the template in the editor.
                 <div class="col-sm-4 col-md-3 col-lg-3">
                     <h:form id="filterForm">
                         <p:accordionPanel id="filterAccordion" multiple="true">
+                            <p:tab id="orderingTab" title="Rikiavimas">
+                                <h:panelGrid id="panelGridOrdering" columns="2" >
+                                    <h:outputLabel for="ordering" value="Viršuje:" style="margin-right: 10px;"/>
+                                    <h:selectOneMenu id="ordering" value="#{summerhouseManager.ordering}" >
+                                        <f:selectItems value="#{summerhouseManager.availableOrderings}" />
+                                    </h:selectOneMenu>    
+                                </h:panelGrid>  
+                                
+                            </p:tab>
                             <p:tab id="options" title="Parinktys">
                                 <!--Dropdown orering--><!--Spinner place count-->
                                 <h:panelGrid id="panelGrid" columns="2" >    
-                                    <h:outputLabel for="ordering" value="Viršuje:" />
-                                    <h:selectOneMenu id="ordering" value="#{summerhouseManager.ordering}" >
-                                        <f:selectItems value="#{summerhouseManager.availableOrderings}" />
-                                    </h:selectOneMenu>
-                                    <h:outputLabel for="placeCount" value="Vietų skaičius:" />
+                                    <h:outputLabel for="placeCount" value="Vietų skaičius:" style="margin-right: 10px;"/>
                                     <p:spinner id="placeCount" value="#{summerhouseManager.placeCount}" min="0" max="99" size="1"/>
                                     <p:tooltip id="toolTipPlaceCount" for="placeCount" value="0 žymi visus vietų skaičius" trackMouse="true" />
                                 </h:panelGrid>
                                 
                                 <!--Price slider-->
-                                <p:outputLabel for="displayRange" value="Kaina:" /><br/>
+                                <p:outputLabel for="displayRange" value="Savaitės kaina:" /><br/>
                                 <h:outputText id="displayRange" value="Nuo #{summerhouseManager.currency}#{summerhouseManager.priceFrom} iki #{summerhouseManager.currency}#{summerhouseManager.priceTo} " />
                                 <p:slider id="priceSlider" 
                                           for="priceFrom,priceTo" 
@@ -60,7 +65,7 @@ and open the template in the editor.
                                 <p:tooltip id="calendarToolTip" for="dateFrom,dateTo" value="Nameliai nuomuojami savaitėmis (nuo pirmadienio iki sekmadienio imtinai)" trackMouse="true" />
                                 <h:panelGrid id="dateGrid" columns="2" >
                                     <p:outputLabel for="dateFrom" value="Nuo: " />
-                                    <p:calendar id="dateFrom" pattern="yyyy-MM-dd" size="10"
+                                    <p:calendar id="dateFrom" pattern="yyyy-MM-dd" size="10" style="margin-left: 10px;"
                                                 beforeShowDay="calendarOnlyMonday" locale="lt" readonlyInput="true"
                                                 value="#{summerhouseManager.dateFrom}" 
                                                 mindate="#{summerhouseManager.nextMonday}" 
@@ -68,7 +73,7 @@ and open the template in the editor.
                                         <p:ajax event="dateSelect" listener="#{summerhouseManager.onDateSelect}" update="dateTo" />
                                     </p:calendar>
                                     <p:outputLabel for="dateTo" value="Iki: " />
-                                    <p:calendar id="dateTo" pattern="yyyy-MM-dd" size="10"
+                                    <p:calendar id="dateTo" pattern="yyyy-MM-dd" size="10" style="margin-left: 10px;"
                                                 beforeShowDay="calendarOnlySunday" locale="lt" readonlyInput="true"
                                                 value="#{summerhouseManager.dateTo}" 
                                                 mindate="#{summerhouseManager.dateFrom}"
@@ -79,7 +84,7 @@ and open the template in the editor.
                                 
                                 <br/>
                                 
-                                <h:outputLabel value="Rodyti tik laisvus: " />
+                                <h:outputLabel value="Rodyti tik laisvus: " style="margin-right: 10px;"/>
                                 <p:selectBooleanCheckbox value="#{summerhouseManager.showOnlyFree}" />
                                 
                             </p:tab>
