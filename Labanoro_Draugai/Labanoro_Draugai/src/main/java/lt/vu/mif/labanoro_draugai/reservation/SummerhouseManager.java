@@ -50,6 +50,7 @@ public class SummerhouseManager implements Serializable {
     private List<House> filteredSummerhouses;
     private boolean isFiltered = false;
     List<String> selectedHouseImages;
+    private boolean showOnlyFree;
 
     //Dialog
     private House selectedHouse;
@@ -145,16 +146,27 @@ public class SummerhouseManager implements Serializable {
         System.out.println("This is filter:" + getOrdering());
 
         filteredSummerhouses = new ArrayList<>();
-        for (House house : summerhouses) {
-            if ((getPlaceCount() == 0 || house.getNumberofplaces() >= getPlaceCount())
-                    && (getPriceFrom().compareTo(house.getWeekprice()) <= 0 && house.getWeekprice().compareTo(getPriceTo()) <= 0)
-                    && isHouseAvailable(house, getDateFrom(), getDateTo()) && hasSelectedServices(house, getSelectedFilters())) {
-                filteredSummerhouses.add(house);
+        if (showOnlyFree) {
+            for (House house : summerhouses) {
+                if ((getPlaceCount() == 0 || house.getNumberofplaces() >= getPlaceCount())
+                        && (getPriceFrom().compareTo(house.getWeekprice()) <= 0 && house.getWeekprice().compareTo(getPriceTo()) <= 0)
+                        && isHouseAvailable(house, getDateFrom(), getDateTo()) && hasSelectedServices(house, getSelectedFilters())) {
+                    filteredSummerhouses.add(house);
+                }
+            }
+        } else {
+            for (House house : summerhouses) {
+                if ((getPlaceCount() == 0 || house.getNumberofplaces() >= getPlaceCount())
+                        && (getPriceFrom().compareTo(house.getWeekprice()) <= 0 && house.getWeekprice().compareTo(getPriceTo()) <= 0)
+                        && isHouseAvailableInPeriod(house, getDateFrom(), getDateTo()) && hasSelectedServices(house, getSelectedFilters())) {
+                    filteredSummerhouses.add(house);
+                }
             }
         }
 
         sortHouses();
-        isFiltered = true;
+        if(showOnlyFree)isFiltered = true;
+        else isFiltered = false;
     }
 
     private boolean hasSelectedServices(House house, String[] serviceNames) {
@@ -173,6 +185,17 @@ public class SummerhouseManager implements Serializable {
                     return false;
                 }
             }
+        }
+        return true;
+    }
+
+    private boolean isHouseAvailableInPeriod(House house, Date dateFrom, Date dateTo) {
+        house = (House) dbm.getEntity("House", "Housereg", house.getHousereg());
+        if (house.getReservationList() == null || dateFrom == null || dateTo == null) {
+            return true;
+        }
+        if (house.getSeasonstartdate() != null && house.getSeasonenddate() != null && !(dateTo.before(house.getSeasonstartdate()) || dateFrom.after(house.getSeasonenddate()))) {
+            return false;
         }
         return true;
     }
@@ -547,5 +570,13 @@ public class SummerhouseManager implements Serializable {
 
     public String getCurrency() {
         return currency;
+    }
+
+    public boolean isShowOnlyFree() {
+        return showOnlyFree;
+    }
+
+    public void setShowOnlyFree(boolean showOnlyFree) {
+        this.showOnlyFree = showOnlyFree;
     }
 }

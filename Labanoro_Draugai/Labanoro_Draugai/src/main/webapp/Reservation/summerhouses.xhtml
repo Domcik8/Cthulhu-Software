@@ -61,7 +61,7 @@ and open the template in the editor.
                                 <h:panelGrid id="dateGrid" columns="2" >
                                     <p:outputLabel for="dateFrom" value="Nuo: " />
                                     <p:calendar id="dateFrom" pattern="yyyy-MM-dd" size="10"
-                                                beforeShowDay="calendarOnlyMonday" locale="lt"
+                                                beforeShowDay="calendarOnlyMonday" locale="lt" readonlyInput="true"
                                                 value="#{summerhouseManager.dateFrom}" 
                                                 mindate="#{summerhouseManager.nextMonday}" 
                                                 maxdate="#{summerhouseManager.endOfSeason}"  >
@@ -69,13 +69,19 @@ and open the template in the editor.
                                     </p:calendar>
                                     <p:outputLabel for="dateTo" value="Iki: " />
                                     <p:calendar id="dateTo" pattern="yyyy-MM-dd" size="10"
-                                                beforeShowDay="calendarOnlySunday" locale="lt"
+                                                beforeShowDay="calendarOnlySunday" locale="lt" readonlyInput="true"
                                                 value="#{summerhouseManager.dateTo}" 
                                                 mindate="#{summerhouseManager.dateFrom}"
                                                 maxdate="#{summerhouseManager.endOfSeason}" >
                                         <p:ajax event="dateSelect" update="dateFrom" />
                                     </p:calendar>    
                                 </h:panelGrid>
+                                
+                                <br/>
+                                
+                                <h:outputLabel value="Rodyti tik laisvus: " />
+                                <p:selectBooleanCheckbox value="#{summerhouseManager.showOnlyFree}" />
+                                
                             </p:tab>
                             
                             <!--Available services-->
@@ -147,7 +153,7 @@ and open the template in the editor.
                                  <p:outputLabel for="selectedDateFrom" value="Nuo: " />
                                     <p:calendar id="selectedDateFrom" pattern="yyyy-MM-dd" size="10"
                                                 beforeShowDay="calendarSelectedHouseMondays" locale="lt"
-                                                value="#{summerhouseManager.selectedDateFrom}" 
+                                                value="#{summerhouseManager.selectedDateFrom}" readonlyInput="true"
                                                 mindate="#{summerhouseManager.selectedHouseMinDate()}" 
                                                 maxdate="#{summerhouseManager.selectedHouseMaxDate()}"  >
                                         <p:ajax event="dateSelect" listener="#{summerhouseManager.onDateSelect}" update="selectedDateTo,periodPrice,selectedHouseServices" />
@@ -155,7 +161,7 @@ and open the template in the editor.
                                     <p:outputLabel for="selectedDateTo" value=" iki: " />
                                     <p:calendar id="selectedDateTo" pattern="yyyy-MM-dd" size="10"
                                                 beforeShowDay="calendarSelectedHouseSundays" locale="lt"
-                                                value="#{summerhouseManager.selectedDateTo}" 
+                                                value="#{summerhouseManager.selectedDateTo}" readonlyInput="true"
                                                 mindate="#{summerhouseManager.selectedDateFrom}"
                                                 maxdate="#{summerhouseManager.selectedHouseMaxDateTo()}" >
                                         <p:ajax event="dateSelect" update="selectedDateFrom,periodPrice,selectedHouseServices" />
