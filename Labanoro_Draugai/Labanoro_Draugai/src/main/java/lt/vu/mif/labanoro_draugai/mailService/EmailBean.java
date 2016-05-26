@@ -96,6 +96,7 @@ public class EmailBean {
         properties.put("mail.smtp.port", dbm.getSystemParameter("SystemParameter.Mail.Smtp.port").getValue());
         properties.put("mail.smtp.auth", dbm.getSystemParameter("SystemParameter.Mail.Smtp.auth").getValue());
         properties.put("mail.smtp.starttls.enable", dbm.getSystemParameter("SystemParameter.Mail.Smtp.starttls.enable").getValue());
+        properties.put("mail.smtp.ssl.trust", dbm.getSystemParameter("SystemParameter.Mail.Smtp.ssl.trust").getValue());
 
         Authenticator auth = new Authenticator() {
             public PasswordAuthentication getPasswordAuthentication() {

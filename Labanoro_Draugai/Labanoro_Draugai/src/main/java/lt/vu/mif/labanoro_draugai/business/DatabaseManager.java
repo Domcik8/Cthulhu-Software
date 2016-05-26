@@ -216,6 +216,7 @@ public class DatabaseManager {
         addSystemParameter("SystemParameter.Mail.Smtp.port", "Smtp portas", "587", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Smtp.auth", "Smtp autentifikacija", "true", "Ar reikalinga autentifikacija prisijungimui", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Smtp.starttls.enable", "Smtp TLS", "true", "Ar TLS turi buti ijungtas", "SystemParameter");
+        addSystemParameter("SystemParameter.Mail.Smtp.ssl.trust", "Smtp Turst", "smtp.gmail.com", "Ar patikimas hostas", "SystemParameter");
 
     }
 

@@ -16,8 +16,8 @@ drop table Service;
 drop table Payment;
 drop table Person;
 drop table House;
---drop table SystemParameter;
---drop table Type;
+drop table SystemParameter;
+drop table Type;
 
 CREATE TABLE Type
 (
