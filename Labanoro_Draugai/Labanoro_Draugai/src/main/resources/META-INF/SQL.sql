@@ -8,7 +8,6 @@ drop view  GroupView;
 drop table PersonRegistrationForm;
 drop table FormAttribute;
 drop table HouseImage;
-drop table SystemParameter;
 drop table MultiselectReservationToService;
 drop table MultiselectHouseToService;
 drop table Recommendation;
@@ -17,7 +16,8 @@ drop table Service;
 drop table Payment;
 drop table Person;
 drop table House;
-drop table Type;
+--drop table SystemParameter;
+--drop table Type;
 
 CREATE TABLE Type
 (
@@ -37,7 +37,7 @@ CREATE TABLE Person
     Password            VARCHAR(255),
     TypeID              INTEGER         NOT NULL,
     Priority            INTEGER,
-    Points              DECIMAL(19,4),
+    Points              DECIMAL(19,2),
     FacebookID          VARCHAR(255),
     FacebookPassword    VARCHAR(255),
     FirstName           VARCHAR(255),
@@ -78,7 +78,7 @@ CREATE TABLE Payment
     CurrencyTypeID      INTEGER         NOT NULL,
     PaymentReg          VARCHAR(255)    NOT NULL    UNIQUE,
     PersonID            INTEGER         NOT NULL,
-    PaymentPrice        Decimal(19,4),
+    PaymentPrice        Decimal(19,2),
     ReservationID       INTEGER,
     PaymentDate         TIMESTAMP,
     ApprovedDate        TIMESTAMP,
@@ -100,7 +100,7 @@ CREATE TABLE Service
     IsActive        BOOLEAN,
     SeasonStartDate TIMESTAMP,
     SeasonEndDate   TIMESTAMP,
-    WeekPrice       Decimal(19,4),
+    WeekPrice       Decimal(19,2),
     NumberOfPlaces  INTEGER,
     IsDeleted       BOOLEAN,
     OptLockVersion  INTEGER,
@@ -119,7 +119,7 @@ CREATE TABLE House
     IsActive        BOOLEAN,
     SeasonStartDate TIMESTAMP,
     SeasonEndDate   TIMESTAMP,
-    WeekPrice       Decimal(19,4),
+    WeekPrice       Decimal(19,2),
     NumberOfPlaces  INTEGER        NOT NULL                DEFAULT 0,
     IsDeleted       BOOLEAN,
     OptLockVersion  INTEGER,
@@ -229,17 +229,11 @@ CREATE TABLE PersonRegistrationForm
 CREATE TABLE PaymentLog
 (
     ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-    TypeID          INTEGER         NOT NULL, 
-    PersonID        INTEGER         NOT NULL,
-    PaymentID       INTEGER,
     PersonEmail     VARCHAR(255)    NOT NULL,
     PersonType      VARCHAR(255)    NOT NULL,
     Date            TIMESTAMP       NOT NULL,
     Method          VARCHAR(255)    NOT NULL,
     OptLockVersion  INTEGER,
-    FOREIGN KEY (TypeID)  REFERENCES Type (ID),
-    FOREIGN KEY (PersonID)  REFERENCES Person (ID),
-    FOREIGN KEY (PaymentID)  REFERENCES Payment (ID),
     PRIMARY KEY (ID)
 );
 

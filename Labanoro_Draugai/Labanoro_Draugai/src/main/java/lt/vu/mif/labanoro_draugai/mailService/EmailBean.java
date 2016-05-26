@@ -51,22 +51,22 @@ public class EmailBean {
 
     public void sendEmailConfirmationMessage(Person person) {
 
-        sendEmail(person.getEmail(), "test email confirm", body.getEmailConfirmationMessage(person));
+        sendEmail(person.getEmail(), "Elektroninio pašto patvirtinimas", body.getEmailConfirmationMessage(person));
     }
 
     public void sendCandidateApprovalMessage(Person person) {
 
-        sendEmail(person.getEmail(), "candidate approved test", body.getCandidateApprovalMessage(person));
+        sendEmail(person.getEmail(), "Kandidato patvirtinimas", body.getCandidateApprovalMessage(person));
     }
 
     public void sendAccountDeactivationMessage(Person person) {
 
-        sendEmail(person.getEmail(), "account deactivation test", body.getDeactivationAccountMessage(person));
+        sendEmail(person.getEmail(), "Paskyros deaktivavimas", body.getDeactivationAccountMessage(person));
     }
 
     public void sendCandidateRecommendationRequestMessage(Person receiver, Person requestor) {
 
-        sendEmail(receiver.getEmail(), "recommend newbie test", body.getCandidateRecommendationRequestMessage(receiver, requestor));
+        sendEmail(receiver.getEmail(), "Rekomandacijos prašymas", body.getCandidateRecommendationRequestMessage(receiver, requestor));
     }
 
     public void sendCandidateRecommendationRequestMessage(String receiver, String requestor) {
@@ -75,7 +75,7 @@ public class EmailBean {
         Person requestorPerson = (Person) dbm.getEntity("Person", "Email", requestor);
 
         if (receiverPerson != null && requestorPerson != null) {
-            sendEmail(receiver, "recommend newbie test", body.getCandidateRecommendationRequestMessage(receiverPerson, requestorPerson));
+            sendEmail(receiver, "Rekomandacijos prašymas", body.getCandidateRecommendationRequestMessage(receiverPerson, requestorPerson));
         }
     }
 
