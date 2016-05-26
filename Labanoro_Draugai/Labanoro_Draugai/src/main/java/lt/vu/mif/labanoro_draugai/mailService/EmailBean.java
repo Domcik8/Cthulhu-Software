@@ -75,7 +75,7 @@ public class EmailBean {
         Person requestorPerson = (Person) dbm.getEntity("Person", "Email", requestor);
 
         if (receiverPerson != null && requestorPerson != null) {
-            sendEmail(receiver, "Rekomandacijos prašymas", body.getCandidateRecommendationRequestMessage(receiverPerson, requestorPerson));
+            sendEmail(receiver, "Rekomendacijos prašymas", body.getCandidateRecommendationRequestMessage(receiverPerson, requestorPerson));
         }
     }
 
