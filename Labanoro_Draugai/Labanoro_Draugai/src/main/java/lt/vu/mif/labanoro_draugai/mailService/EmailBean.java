@@ -1,7 +1,10 @@
 package lt.vu.mif.labanoro_draugai.mailService;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -111,7 +114,7 @@ public class EmailBean {
             InternetAddress[] toAddresses = {new InternetAddress(to)};            // sitoje vietoje galima nurodyti kiek nori addresatu
             mailMessage.setRecipients(Message.RecipientType.TO, toAddresses);
 
-            mailMessage.setSubject(subject, "utf-8");
+            mailMessage.setSubject(MimeUtility.encodeText(subject, "utf-8", "B"));
             mailMessage.setSentDate(new Date());
             mailMessage.setContent(body, "text/html; charset=utf-8");
 
@@ -119,6 +122,8 @@ public class EmailBean {
 
         } catch (MessagingException ex) {
             ex.printStackTrace();
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(EmailBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
