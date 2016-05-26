@@ -66,7 +66,7 @@ public class EmailBean {
 
     public void sendCandidateRecommendationRequestMessage(Person receiver, Person requestor) {
 
-        sendEmail(receiver.getEmail(), "Rekomandacijos prašymas", body.getCandidateRecommendationRequestMessage(receiver, requestor));
+        sendEmail(receiver.getEmail(), "Rekomendacijos prašymas", body.getCandidateRecommendationRequestMessage(receiver, requestor));
     }
 
     public void sendCandidateRecommendationRequestMessage(String receiver, String requestor) {
@@ -105,15 +105,15 @@ public class EmailBean {
         try {
 
             mailSession.setDebug(true);
-            Message mailMessage = new MimeMessage(mailSession);
+            MimeMessage mailMessage = new MimeMessage(mailSession);
 
             mailMessage.setFrom(new InternetAddress(fromEmail));
             InternetAddress[] toAddresses = {new InternetAddress(to)};            // sitoje vietoje galima nurodyti kiek nori addresatu
             mailMessage.setRecipients(Message.RecipientType.TO, toAddresses);
 
-            mailMessage.setSubject(subject);
+            mailMessage.setSubject(subject, "utf-8");
             mailMessage.setSentDate(new Date());
-            mailMessage.setContent(body, "text/html");
+            mailMessage.setContent(body, "text/html; charset=utf-8");
 
             Transport.send(mailMessage);
 
