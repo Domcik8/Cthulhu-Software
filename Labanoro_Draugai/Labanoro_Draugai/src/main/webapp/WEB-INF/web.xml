@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
-    <!--    <welcome-file-list>
+    <welcome-file-list>
         <welcome-file>login.html</welcome-file>
-         Later change to login.html 
-    </welcome-file-list>-->
+    </welcome-file-list>
     <context-param>
         <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
         <param-value>true</param-value>
@@ -15,6 +14,10 @@
     <context-param>
         <param-name>primefaces.THEME</param-name>
         <param-value>bootstrap</param-value>
+    </context-param>
+    <context-param>
+        <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+        <param-value>client</param-value>
     </context-param>
     <session-config>
         <session-timeout>
@@ -66,7 +69,6 @@
             <url-pattern>/Administration/*</url-pattern>
             <url-pattern>/Reservation/*</url-pattern>
             <url-pattern>/user/*</url-pattern>
-            <url-pattern>/*</url-pattern> 
             <http-method>GET</http-method>
             <http-method>POST</http-method>
         </web-resource-collection>
