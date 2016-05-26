@@ -34,7 +34,7 @@ public class PriorityGroupManager {
     EntityManager em;
     
     @Inject
-    test test;
+    test test;//241591.00
     
     @Inject
     BasicPriorityGroupManager basicPgm;

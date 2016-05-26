@@ -34,10 +34,10 @@ public class EmailBody {
 
         message += "<br/> Dabar jums reikia surinkti bent " + getMinimumRecommendationNumber() + " rekomendacijų iš esamų narių, kad galėtumėte tapti pilnaverčiu klubo nariu!";
         message += "<br/> Maksimalus rekomendacijų skaičius - " + getMaximumRecommendationNumber();
-        message += "<br/> Norėdami paprašyti esamų narių, kad jus rekomenduotu, pereikite žemiau pateiktą nuorodą ir pasirinkite kam išsiusti prašymą";
+        message += "<br/> Norėdami paprašyti esamų narių, kad jus rekomenduotų, pereikite į žemiau pateiktą nuorodą ir pasirinkite kam išsiųsti prašymą";
         message += "<br/> Link: " + getContextPath() + "/profiles";
 
-        message += "<br/> Jeigu jus nevykdėte šitos registracijos - ignoruokite laišką";
+        message += "<br/> Jeigu jūs nevykdėte šitos registracijos - ignoruokite laišką";
         message += "<br/><br/><br/> Pagarbiai,";
         message += "<br/> \"Labanoro draugai\" administracija";
 
@@ -53,7 +53,7 @@ public class EmailBody {
         if (receiver.getEmailconfirmation().equals("validated")) {
             message += "<br/><br/> Jūsų el. paštas jau yra patvirtintas";
         } else {
-            message += "<br/> Norėdami patvirtinti savo el. paštą, paspauskite žemiau esančia nuorodą <br/>";
+            message += "<br/> Norėdami patvirtinti savo el. paštą, paspauskite žemiau esančią nuorodą <br/>";
             message += "<br/> " + getContextPath() + "/confirm?key=" + receiver.getEmailconfirmation();
         }
 
@@ -67,7 +67,7 @@ public class EmailBody {
 
         String message = "Sveiki, " + receiver.getFirstname();
         message += "<br/><br/> Sveikiname tapus pilnaverčiu klubo nariu!";
-        message += "<br/> Jus surinkote pakankamai rekomendacijų, todėl jums buvo suteiktas <b>Nuolatinio</b> vartotojo statusas";
+        message += "<br/> Jūs surinkote pakankamai rekomendacijų, todėl jums buvo suteiktas <b>Nuolatinio</b> vartotojo statusas";
         message += "<br/> Sumokėjus metinį narystės mokestį, jums bus suteikta teisė atlikti rezervacijas išskirtinėmis sąlygomis";
 
         message += "<br/><br/> Linkime sėkmės,";
@@ -79,8 +79,8 @@ public class EmailBody {
     public String getDeactivationAccountMessage(Person receiver) {
 
         String message = "Sveiki, " + receiver.getFirstname();
-        message += "<br/><br/> Norime informuoti, kad jus buvote pasirinkę išsiregistravimą iš \"Labanoro draugai\" klubo";
-        message += "<br/> Jusu paskyra " + receiver.getEmail() + " taps nepasiekiama po" + " 5 dienu";
+        message += "<br/><br/> Norime informuoti, kad jūs buvote pasirinkę išsiregistravimą iš \"Labanoro draugai\" klubo";
+        message += "<br/> Jūsų paskyra " + receiver.getEmail() + " taps nepasiekiama po" + " 5 dienų";
 
         message += "<br/><br/> Pagarbiai,";
         message += "<br/> \"Labanoro draugai\" administracija";
@@ -110,7 +110,7 @@ public class EmailBody {
         String message = "Sveiki, ";
         message += "<br/><br/> Kviečiame prisijungti prie \"Labanoro draugai\" klubo";
         message += "<br/> Jus rekomendavo <b>" + requestor.getFirstname() + " " + requestor.getLastname() + "</b>";
-        message += "<br/> Norėdami prisijungti, pereikite žemiau esančią nuorodą ir užpildykite registracijos anketą.";
+        message += "<br/> Norėdami prisijungti pereikite į žemiau esančią nuorodą ir užpildykite registracijos anketą.";
 
         message += "<br/><br/>" + getContextPath() + "/register.html?referral=" + requestor.getUniquekey();
 
