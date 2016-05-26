@@ -60,7 +60,6 @@
             <transport-guarantee>NONE</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
-    
     <security-constraint>
         <display-name>AdminConstraint</display-name>
         <web-resource-collection>
@@ -81,7 +80,6 @@
             <transport-guarantee>NONE</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
-
     <security-constraint>
         <display-name>CandidateConstraint</display-name>
         <web-resource-collection>
@@ -103,7 +101,6 @@
             <transport-guarantee>NONE</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
-
     <login-config>
         <auth-method>FORM</auth-method>
         <realm-name>labanoro-realm</realm-name>
@@ -128,6 +125,10 @@
         <role-name>candidate</role-name>
         <!-- not accepted user [Payment/reservation not allowed] -->
     </security-role>
+    <env-entry>
+        <env-entry-name>com.sun.faces.ClientStateSavingPassword</env-entry-name>
+        <env-entry-type>java.lang.String</env-entry-type>
+    </env-entry>
     <resource-ref>
         <res-ref-name>java:app/jdbc/LabanoroDatasource</res-ref-name>
         <res-type>javax.sql.DataSource</res-type>
