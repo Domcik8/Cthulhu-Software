@@ -64,6 +64,7 @@ and open the template in the editor.
                 <h:outputText value="Arba"/>
                     <h:panelGroup id="myScript">
                         <ui:include src="/WEB-INF/other_pages/stripeForm.xhtml" >
+                            <ui:param name="paymentType" value="Už rezervaciją" />
                             <ui:param name="price" value="#{reservationConfirmationManager.totalPriceInCents}" />
                             <ui:param name="order" value="#{reservationConfirmationManager.createReservationJSON()}" />
                         </ui:include>
