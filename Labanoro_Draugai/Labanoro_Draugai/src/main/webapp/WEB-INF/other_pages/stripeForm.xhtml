@@ -8,11 +8,10 @@
     <form id="stripeForm" action="/Labanoro_Draugai/Stripe" method="POST">
         <script
             src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-            data-key="pk_test_NuMXQ4crxg12CBo9NxrjSO63"
+            data-key="#{databaseManager.getSystemParameter('SystemParameter.StripeTestPublishableKey').getValue()}"
             data-amount="#{price}"
-            data-name="test"
-            data-description="Widget"
-            data-image="/img/documentation/checkout/marketplace.png"
+            data-name="Mokėjimas"
+            data-description="#{paymentType}"
             data-locale="auto"
             data-currency="eur">
         </script>

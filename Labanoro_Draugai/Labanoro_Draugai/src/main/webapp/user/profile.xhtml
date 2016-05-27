@@ -33,14 +33,11 @@ and open the template in the editor.
                 </p:panelGrid>
                 <p:commandButton id="inviteButton" value="Siūsti pakvietimą į klubą" onclick="PF('inviteWidget').show()" rendered="#{profileView.renderNotForCandidate()}"/>
                 
-                <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
-                <!--IDET PO TESTAVIMO rendered = "profileView.renderRecommendtionInfo()"-->
-                <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
-                <p:panelGrid columns="1" id="recomendationInfoGrid">    
+                <p:panelGrid columns="1" id="recomendationInfoGrid" rendered = "profileView.renderRecommendtionInfo()">    
                     <p:outputLabel value="Liko surinkti rekomendacijų iki klubo nario statuso: #{profileView.recommendationsTillMember()}"/>
                     <p:outputLabel value="Likusių rekomendacijos prašymų skaičius: #{profileView.remainingRecommendationRequests()}"/>
                 </p:panelGrid>
-                <p:commandButton id="askForRecommendationButton" value="Prašyti rekomendacijos" onclick="PF('askRecommendationWidget').show()"/>
+                <p:commandButton id="askForRecommendationButton" value="Prašyti rekomendacijos" onclick="PF('askRecommendationWidget').show()" rendered = "profileView.renderRecommendtionInfo()"/>
                 <h2>Pagrindinė informacija</h2>
                 <h:form id="basicInfoForm">
                     <p:panelGrid>
@@ -52,8 +49,6 @@ and open the template in the editor.
                                  <p:outputLabel id="emailLabel" value="#{profileView.user.email}"/>
                             </p:column>
                             <p:column>
-<!--                                <p:commandLink id="emailConfirmationLink" value="Siūsti naują patvirtinimo laišką" 
-                                               rendered="#{profileView.isEmailNotConfirmed()}" action="#{profileView.sendEmailConfirmation()}"/>-->
                             </p:column>
                         </p:row>
                         <p:row>

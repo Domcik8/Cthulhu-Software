@@ -157,8 +157,10 @@ public class ProfileListView implements Serializable {
             registrationForm.put("Vardas", selectedPerson.getFirstname());
             registrationForm.put("Pavardė", selectedPerson.getLastname());
             registrationForm.put("El. paštas", selectedPerson.getEmail());
+            
+            Personregistrationform regForm = person.getPersonregistrationform();
+            if(regForm==null) return;
             try {
-                Personregistrationform regForm = person.getPersonregistrationform();
                 JSONObject json = (JSONObject) parser.parse(regForm.getFormvalue());
                 this.registrationForm.putAll(parseJson(json, this.registrationForm));
             } catch (ParseException ex) {

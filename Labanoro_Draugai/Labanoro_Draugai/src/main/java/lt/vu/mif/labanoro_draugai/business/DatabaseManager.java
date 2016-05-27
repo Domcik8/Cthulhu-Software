@@ -176,6 +176,8 @@ public class DatabaseManager {
      * Fills database with basic system parameters
      */
     private void fillBasicSystemParameters() {
+        addSystemParameter("SystemParameter.BuyPoints", "Taškų kainos eurais", "5;10;15;20", "Esamos sistemos taškų kainos, kurios yra nesusijųsios su gaunamu taškų kiekiu. Naujos įvesties pvž: (5;)", "SystemParameter");
+
         addSystemParameter("SystemParameter.ExchangeRate.Euro", "Taškų kursas lyginant su euru", "10", "SystemParameter");
         addSystemParameter("SystemParameter.Currency.Euro", "Euro valiutos simbolis", "€", "SystemParameter");
 
@@ -184,39 +186,41 @@ public class DatabaseManager {
         addSystemParameter("SystemParameter.RequiredRecommendations", "Reikalingų rekomendacijų skaičius", "2", "SystemParameter");
         addSystemParameter("SystemParameter.MaxRecommendations", "Maksimalus rekomendacijų užklausų skaičius", "5", "SystemParameter");
 
-        addSystemParameter("SystemParameter.priorityGroup.Month", "Prioriteto grupės, perskaičiavimo laikas: menuo", "3,6,9,12", "SystemParameter");
+        addSystemParameter("SystemParameter.priorityGroup.Month", "Prioriteto grupės, perskaičiavimo laikas: mėnuo", "3,6,9,12", "SystemParameter");
         addSystemParameter("SystemParameter.priorityGroup.DayOfTheWeek", "Prioriteto grupės, perskaičiavimo laikas: savaitės diena", "6", "SystemParameter");
         addSystemParameter("SystemParameter.priorityGroup.HourOfTheDay", "Prioriteto grupės, perskaičiavimo laikas: dienos valanda", "22", "SystemParameter");
-        addSystemParameter("SystemParameter.priorityGroup.SeasonLength", "Prioriteto grupės, suskirstimo laikotarpis menesiais", "3", "SystemParameter");
+        addSystemParameter("SystemParameter.priorityGroup.SeasonLength", "Prioriteto grupės, suskirstimo laikotarpis mėnesiais", "3", "SystemParameter");
         addSystemParameter("SystemParameter.priorityGroup.Quantity", "Prioriteto grupės, grupių skaičius", "12", "SystemParameter");
 
-        addSystemParameter("SystemParameter.StripeTestSecretKey", "Stripe testinis slaptas raktas", "sk_test_6K4uBYlsGNPy5H161DtWjZcm", "SystemParameter");
-        addSystemParameter("SystemParameter.StripeTestPublishableKey", "Stripe testinis viešas raktas", "pk_test_tK93j3DH8bSqL4VHi65SnJ9e ", "SystemParameter");
-        addSystemParameter("SystemParameter.StripeLiveSecretKey", "Stripe tikras slaptas raktas", "sk_live_zzW2TvQpbW5HLntoGzHC6o3r ", "SystemParameter");
-        addSystemParameter("SystemParameter.StripeLivePublishableKey", "Stripe tikras viešas raktas", "pk_live_qW95KiaHrQokdCXpL6WCaZl2", "SystemParameter");
+        addSystemParameter("SystemParameter.StripeTestSecretKey", "Stripe testinis slaptas raktas", "sk_test_GkbxvPwRpIG9T4aIiruw0TWl", "SystemParameter");
+        addSystemParameter("SystemParameter.StripeTestPublishableKey", "Stripe testinis viešas raktas", "pk_test_NuMXQ4crxg12CBo9NxrjSO63", "SystemParameter");
+        addSystemParameter("SystemParameter.StripeLiveSecretKey", "Stripe tikras slaptas raktas", "sk_live_nSRfu4JPpcgYkpSlOjknfBk7", "SystemParameter");
+        addSystemParameter("SystemParameter.StripeLivePublishableKey", "Stripe tikras viešas raktas", "pk_live_Q7f9zGXVZ1877SD3DfsCbsgd", "SystemParameter");
 
         addSystemParameter("SystemParameter.TermsAndConditions", "Nuostatos ir sąlygos", "Naudodamiesi mūsų sistema jūs sutinkate, kad \"Labanoro draugai\" nėra atsakingi už sistmos nesklandumus ar kitus žalingus incidentus.", "SystemParameter");
 
-        addSystemParameter("SystemParameter.Facebook.AppId", "FB aplikacijos kodas", "198659840500311", "Facebook uzregistruotos aplikacijos kodas ", "SystemParameter");
-        addSystemParameter("SystemParameter.Facebook.AppSecret", "FB aplikacijos slaptas kodas", "97d6fc7c788463e2de89f1571385cc75", "Kodas skirtas autentifikuotis uzregistuotoje Facebook aplikacije", "SystemParameter");
-        addSystemParameter("SystemParameter.Facebook.Redirect", "FB autentifikacija", "http://localhost:8080/Labanoro_Draugai", "Nukreipimas i puslapi facebook autentifikacijos metu", "SystemParameter");
+        addSystemParameter("SystemParameter.Facebook.AppId", "FB aplikacijos kodas", "198659840500311", "Facebook užregistruotos aplikacijos kodas ", "SystemParameter");
+        addSystemParameter("SystemParameter.Facebook.AppSecret", "FB aplikacijos slaptas kodas", "97d6fc7c788463e2de89f1571385cc75", "Kodas skirtas autentifikuotis užregistruotoje Facebook aplikacijoje", "SystemParameter");
+        addSystemParameter("SystemParameter.Facebook.Redirect", "FB autentifikacija", "http://localhost:8080/Labanoro_Draugai", "Nukreipimas į puslapį facebook autentifikacijos metu", "SystemParameter");
 
-        addSystemParameter("SystemParameter.Redirect.Login", "Sekmingas prisijungimas", "/index.html", "Nukreipimas i puslapi po sekmingo prisijungimo", "SystemParameter");
-        addSystemParameter("SystemParameter.Redirect.Register", "Registracijos forma", "/register.html", "Nukreipimas i paskyros sukurimo bei kandidato anketos pildymo puslapi", "SystemParameter");
-        addSystemParameter("SystemParameter.Redirect.LoginError", "Klaidingas prisijungimas", "/loginError.html", "Nukreipimas i puslapi po nesekmingo prisijungimo", "SystemParameter");
-        addSystemParameter("SystemParameter.Redirect.LoginSuccess", "Sekmingas prisijungimas", "/index.html", "Nukreipimas i puslapi po sekmingo prisijungimo", "SystemParameter");
-        addSystemParameter("SystemParameter.Redirect.GlobalError", "Globali klaida", "/WEB-INF/other_pages/someError.html", "Nukreipimas i puslapi po globalios klaidos", "SystemParameter");
-        addSystemParameter("SystemParameter.Redirect.MyReservations", "Sėkminga rezervacija", "/Reservation/myReservations.html", "Nukreipimas i puslapi po sėkmingos rezervacijos", "SystemParameter");
+        addSystemParameter("SystemParameter.Redirect.Login", "Sėkmingas prisijungimas", "/index.html", "Nukreipimas į puslapį po sėkmingo prisijungimo", "SystemParameter");
+        addSystemParameter("SystemParameter.Redirect.Register", "Registracijos forma", "/register.html", "Nukreipimas į paskyros sūkurimo bei kandidato anketos pildymo puslapį", "SystemParameter");
+        addSystemParameter("SystemParameter.Redirect.LoginError", "Klaidingas prisijungimas", "/loginError.html", "Nukreipimas į puslapį po nesėkmingo prisijungimo", "SystemParameter");
+        addSystemParameter("SystemParameter.Redirect.LoginSuccess", "Sėkmingas prisijungimas", "/index.html", "Nukreipimas į puslapį po sėkmingo prisijungimo", "SystemParameter");
+        addSystemParameter("SystemParameter.Redirect.GlobalError", "Globali klaida", "/WEB-INF/other_pages/someError.html", "Nukreipimas į puslapį po globalios klaidos", "SystemParameter");
+        addSystemParameter("SystemParameter.Redirect.MyReservations", "Sėkminga rezervacija", "/Reservation/myReservations.html", "Nukreipimas į puslapį po sėkmingos rezervacijos", "SystemParameter");
+        addSystemParameter("SystemParameter.Redirect.Buy", "Sėkmingas taškų pirkimas", "/user/profile.html", "Nukreipimas į puslapį po sėkmingo taškų pirkimo", "SystemParameter");
+        addSystemParameter("SystemParameter.Redirect.Index", "Nukreipimas į pagrindinį puslapį", "/index.html", "Nukreipimas į puslapį po sėkmingos operacijos", "SystemParameter");
 
         addSystemParameter("SystemParameter.Reservation.MinDaysBeforeCancel", "Minimalus skaičius dienų, kai dar galima atšaukti rezervaciją.", "7", "", "SystemParameter");
 
-        addSystemParameter("SystemParameter.Mail.Address", "Gmail el.pastas", "labanorai@gmail.com", "SystemParameter");
-        addSystemParameter("SystemParameter.Mail.Password", "Gmail el.pasto slaptazodis", "LabanoroDraugas", "SystemParameter");
+        addSystemParameter("SystemParameter.Mail.Address", "Gmail el.paštas", "labanorai@gmail.com", "SystemParameter");
+        addSystemParameter("SystemParameter.Mail.Password", "Gmail el.pašto slaptažodis", "LabanoroDraugas", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Smtp.host", "Smtp hostas", "smtp.gmail.com", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Smtp.port", "Smtp portas", "587", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Smtp.auth", "Smtp autentifikacija", "true", "Ar reikalinga autentifikacija prisijungimui", "SystemParameter");
-        addSystemParameter("SystemParameter.Mail.Smtp.starttls.enable", "Smtp TLS", "true", "Ar TLS turi buti ijungtas", "SystemParameter");
-        addSystemParameter("SystemParameter.Mail.Smtp.ssl.trust", "Smtp Turst", "smtp.gmail.com", "Ar patikimas hostas", "SystemParameter");
+        addSystemParameter("SystemParameter.Mail.Smtp.starttls.enable", "Smtp TLS", "true", "Ar TLS turi būti įjungtas", "SystemParameter");
+        addSystemParameter("SystemParameter.Mail.Smtp.ssl.trust", "Smtp Trust", "smtp.gmail.com", "Ar patikimas hostas", "SystemParameter");
 
     }
 

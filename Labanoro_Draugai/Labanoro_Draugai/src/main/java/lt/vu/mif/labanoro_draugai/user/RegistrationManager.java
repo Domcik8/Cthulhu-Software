@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.AssertTrue;
+import lt.vu.mif.labanoro_draugai.authentication.FBGraph;
 import lt.vu.mif.labanoro_draugai.authentication.controller.RegistrationController;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.data_models.UserFormProperty;
@@ -44,6 +45,9 @@ import org.json.simple.JSONObject;
 @ViewScoped
 public class RegistrationManager implements Serializable {
 
+    @Inject
+    private FBGraph fbGraph;
+    
     private DynaFormModel displayModel;
     private String email;
     private String password;
@@ -52,7 +56,7 @@ public class RegistrationManager implements Serializable {
     private String lastName;
     private String termsAndConditions;
     private String referral;
-    private String facebookId;
+    private String accessToken;
 
     @AssertTrue
     private boolean isAgreeingToTerms;
@@ -70,16 +74,17 @@ public class RegistrationManager implements Serializable {
     public void init() {
 
         referral = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("referral");
-        facebookId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("facebookId");
+        accessToken = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("accessToken");
 
         if (referral != null) {
             System.out.print("Opened with referral: referral=" + referral);
         }
 
-        if (facebookId != null) {
-            System.out.print("Opened after facebook registration=" + facebookId);
+        if (accessToken != null) {
+            email = fbGraph.getEmail(accessToken);
+            System.out.print("Opened after facebook registration=" + accessToken);
         } else {
-            System.out.print("[REG MANAGER] Facebook ID =" + facebookId);
+            System.out.print("[REG MANAGER] Facebook token =" + accessToken);
         }
 
         displayModel = new DynaFormModel();
@@ -122,7 +127,7 @@ public class RegistrationManager implements Serializable {
                 jsonObject.put(ufp.getName(), ufp.getValue());
             }
         }
-
+        String facebookId = (String) fbGraph.getIdEmail(accessToken).get("id");
         Person person = regController.registerUser(email, facebookId, firstName, lastName, password);
         //Person person = dbm.addPerson(email, password, firstName, lastName, "Person.Candidate");
         person.setPoints(new BigDecimal(0));
@@ -222,5 +227,9 @@ public class RegistrationManager implements Serializable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
     }
 }

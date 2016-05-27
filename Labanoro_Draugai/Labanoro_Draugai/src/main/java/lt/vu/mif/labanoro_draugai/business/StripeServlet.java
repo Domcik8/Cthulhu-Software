@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
+import javax.interceptor.Interceptors;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -44,6 +45,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 @WebServlet(urlPatterns = {"/Stripe"})
+@Interceptors(Interceptor.class)
 public class StripeServlet extends HttpServlet {
 
     @Inject
@@ -58,6 +60,7 @@ public class StripeServlet extends HttpServlet {
         String username = request.getUserPrincipal().getName();
         Payment payment;
         Reservation reservation;
+        Systemparameter redirectparam = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Redirect.Index");
 
         //ReservationCreation
         if (request.getParameter("order") != null || !request.getParameter("order").isEmpty()) {
@@ -71,7 +74,12 @@ public class StripeServlet extends HttpServlet {
                         payment.setReservationid(reservation);
                         dbm.updateEntity(payment);
                         dbm.updateEntity(dbm.getEntity("Person", "Email", username));
-                        dbm.updateEntity(dbm.getEntity("House", "Housereg",(String) json.get("houseReg")));
+                        dbm.updateEntity(dbm.getEntity("House", "Housereg", (String) json.get("houseReg")));
+                        redirectparam = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Redirect.MyReservations");
+                        break;
+                    case "buyPoints":
+                        payment = dbm.addPayment(username, BigDecimal.valueOf(Double.parseDouble(request.getParameter("Price1")) / 100), new Date(), "Payment.Points", "Currency.Euro");
+                        redirectparam = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Redirect.Buy");
                         break;
                 }
 
@@ -82,7 +90,7 @@ public class StripeServlet extends HttpServlet {
             }
         }
 
-        Stripe.apiKey = "sk_test_GkbxvPwRpIG9T4aIiruw0TWl";
+        Stripe.apiKey = dbm.getSystemParameter("SystemParameter.StripeTestSecretKey").getValue();
 
 // Create the charge on Stripe's servers - this will charge the user's card
         try {
@@ -100,9 +108,9 @@ public class StripeServlet extends HttpServlet {
             Logger.getLogger(StripeServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
 //REDIRECT
-        Systemparameter param = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Redirect.MyReservations");
-        if (param == null) {
-            System.out.println("Truksta \"SystemParameter.Redirect.MyReservations\" parametro");
+
+        if (redirectparam == null) {
+            System.out.println("Prašome nustatyti sistemos nukreipimo parametrus");
             response.sendRedirect("/Labanoro_Draugai/index.html");
             return;
         }
@@ -112,7 +120,7 @@ public class StripeServlet extends HttpServlet {
             response.sendRedirect("/Labanoro_Draugai/index.html");
             return;
         }
-        response.sendRedirect(ContextParam.getValue()+param.getValue());
+        response.sendRedirect(ContextParam.getValue() + redirectparam.getValue());
     }
 
     private Reservation createHouseReservation(String username, JSONObject json, String paymentReg) throws java.text.ParseException {

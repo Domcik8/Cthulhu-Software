@@ -214,7 +214,11 @@ public class ProfileView implements Serializable {
     }
 
     public void updatePassword() {
-        user.setPassword(Hashing.sha256().hashString(newPass, Charsets.UTF_8).toString());
+        user.setPassword(
+                Hashing.sha256().hashString(
+                        Hashing.sha256().hashString(newPass, Charsets.UTF_8).toString(), Charsets.UTF_8
+                ).toString()
+        );
         dbm.updateEntity(user);
     }
 
