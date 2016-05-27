@@ -40,13 +40,13 @@ and open the template in the editor.
         <!-- End of Navigation panel -->
         
         <div class="container .col-md-8" style="background: white">
-            <h1>Namelio modifikavimas</h1>
-            <h:form>
-                <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
-            </h:form>
+            <h1>Namelio informacijos keitimas</h1>
             <h2>Pagrindinė informacija</h2>
-            
             <div>
+                <h:form>
+                    <p:messages id="messages" autoUpdate="true" closable="true" />
+                </h:form>
+            
                 <h:form>
                     <h:panelGrid id="grid" columns="3">
                         <h:inputHidden value="#{editableHouse.house.id}" />
@@ -130,7 +130,6 @@ and open the template in the editor.
             <h2>Nuotraukos pridėjimas</h2>
             <div>
                 <h:form enctype="multipart/form-data">
-                    <h:outputText value="Įkelti galima tik mažesnius nei 2 MB ir tik *.JPG arba *.PNG formato failus."/> <br/>
                     <p:fileUpload value="#{editableHouse.file}" mode="simple" skinSimple="true" label="Pasirinkti nuotrauką"/> <br/>
                     <p:commandButton value="Įkelti" ajax="false" actionListener="#{editableHouse.upload}" />
                 </h:form>
@@ -142,7 +141,7 @@ and open the template in the editor.
                         <f:facet name="header">
                             <h:outputText id="imageDialogHeader" value="#{editableHouse.image}"/>
                         </f:facet>
-                        <p:graphicImage id="img2" url="/images/#{editableHouse.image}" alt="#{editableHouse.image}" style="padding-right: 10px" cache="false"/>
+                        <p:graphicImage id="img2" url="/images/#{editableHouse.image}" alt="#{editableHouse.image}" style="width: 800px; height: 500px;padding-right: 10px" cache="false"/>
                     </p:dialog>
                 </h:form>
             </div> 
