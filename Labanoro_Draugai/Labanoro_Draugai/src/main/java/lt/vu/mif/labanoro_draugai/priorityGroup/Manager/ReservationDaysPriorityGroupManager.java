@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lt.vu.mif.labanoro_draugai.priorityGroup;
+package lt.vu.mif.labanoro_draugai.priorityGroup.Manager;
 
 import java.util.Calendar;
 import java.util.List;
@@ -24,7 +24,7 @@ import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 
 @Named
 @Stateless
-public class BasicPriorityGroupManager {
+public class ReservationDaysPriorityGroupManager implements IPriorityGroupManager {
     
     @Inject
     DatabaseManager dbm;

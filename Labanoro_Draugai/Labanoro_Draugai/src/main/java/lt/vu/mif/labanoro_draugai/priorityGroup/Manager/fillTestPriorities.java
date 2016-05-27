@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lt.vu.mif.labanoro_draugai.priorityGroup;
+package lt.vu.mif.labanoro_draugai.priorityGroup.Manager;
 
 import java.util.Calendar;
 import java.util.List;
@@ -12,6 +12,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.enterprise.inject.Alternative;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.entities.Reservation;
@@ -24,7 +25,7 @@ import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 
 @Named
 @Stateless
-public class test {
+public class fillTestPriorities {
     
     @Inject
     DatabaseManager dbm;
@@ -33,7 +34,8 @@ public class test {
     public void countPriorities() {
     List<Person> people = dbm.getAllEntities("Person");
         for (Person person : people) {
-            person.setPriority(666);
+            person.setPriority(555);
+            int a = 0;
             dbm.updateEntity(person);
         }
     }

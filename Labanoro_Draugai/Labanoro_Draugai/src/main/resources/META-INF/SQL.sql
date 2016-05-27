@@ -240,3 +240,6 @@ CREATE TABLE PaymentLog
 CREATE VIEW GroupView (Email, InternalName) AS
     SELECT Email, InternalName FROM LABANORODB.Person, LABANORODB."TYPE"
     WHERE Person.TYPEID = "TYPE".ID;
+
+/*INSERT INTO Person (Email, Password, TypeID, Priority, Points, MembershipDue) 
+VALUES ('admin', '998ed4d621742d0c2d85ed84173db569afa194d4597686cae947324aa58ab4bb', 3, 1, 1000000, '3917-02-01 00:00:00.000')*/

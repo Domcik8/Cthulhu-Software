@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lt.vu.mif.labanoro_draugai.priorityGroup;
+package lt.vu.mif.labanoro_draugai.priorityGroup.Manager;
 
 /**
  *
  * @author Dominik Lisovski
  */
 public interface IPriorityGroupManager {
-    public void countPriorities(String s, int tval);
+    public void countPriorities();
 }

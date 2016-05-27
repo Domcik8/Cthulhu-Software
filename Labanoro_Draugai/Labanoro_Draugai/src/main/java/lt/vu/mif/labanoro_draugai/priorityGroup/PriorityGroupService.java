@@ -17,6 +17,7 @@ import javax.persistence.PersistenceContext;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.entities.Reservation;
+import lt.vu.mif.labanoro_draugai.priorityGroup.Manager.*;
 
 /**
  *
@@ -25,7 +26,7 @@ import lt.vu.mif.labanoro_draugai.entities.Reservation;
 
 @Named
 @Stateless
-public class PriorityGroupManager {
+public class PriorityGroupService {
     
     @Inject
     DatabaseManager dbm;
@@ -33,13 +34,10 @@ public class PriorityGroupManager {
     @PersistenceContext
     EntityManager em;
     
-    @Inject
-    test test;//241591.00
+    @Inject 
+    IPriorityGroupManager pgm;
     
-    @Inject
-    BasicPriorityGroupManager basicPgm;
-    
-    //@Schedule(second="0, 30", minute="*", hour="*", dayOfWeek="*", month="*")
+    @Schedule(second="0, 30", minute="*", hour="*", dayOfWeek="*", month="*")
     public void checkServices() {
         System.out.println("Checking services");
         
@@ -47,8 +45,7 @@ public class PriorityGroupManager {
             return;
         
         System.out.println("Priority group service started");
-        
-        basicPgm.countPriorities();
+        pgm.countPriorities();
         System.out.println("Priority group service ended");
     }
     
