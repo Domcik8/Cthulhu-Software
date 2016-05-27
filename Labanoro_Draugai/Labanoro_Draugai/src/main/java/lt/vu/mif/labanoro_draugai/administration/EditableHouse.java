@@ -1,5 +1,10 @@
 package lt.vu.mif.labanoro_draugai.administration;
 
+import java.awt.Color;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -9,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
+import javax.ejb.ApplicationException;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -16,6 +22,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import org.omnifaces.cdi.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -29,6 +36,7 @@ import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Houseimage;
 import lt.vu.mif.labanoro_draugai.entities.Payment;
+import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import lt.vu.mif.labanoro_draugai.entities.Type;
 import org.primefaces.model.UploadedFile;
 import org.apache.commons.io.IOUtils;
@@ -111,17 +119,23 @@ public class EditableHouse implements Serializable {
     
     public String saveHouse() {
         
-        boolean savingSuccess = true;
-        
-        if (house.getId() != null) {
-            savingSuccess = dbm.updateHouse(house);
+        if (house.getSeasonenddate().before(house.getSeasonstartdate())) {
+            showError("Netinkamai nustatytos sezono datos!");
+            return "";
         }
         else {
-            house.setTypeid((Type)dbm.getEntity("Type", "id", Integer.parseInt(houseType)));
-            savingSuccess = insertHouse(house);
-        }
+            boolean savingSuccess = true;
+        
+            if (house.getId() != null) {
+                savingSuccess = dbm.updateHouse(house);
+            }
+            else {
+                house.setTypeid((Type)dbm.getEntity("Type", "id", Integer.parseInt(houseType)));
+                savingSuccess = insertHouse(house);
+            }
 
-        return "houses";
+            return "houses";
+        }
     }
 
     private String getParameter(String key) {
@@ -187,10 +201,6 @@ public class EditableHouse implements Serializable {
     
     public void setHouseType(String ht) {
         houseType = ht;
-    }
-    
-    public void error() {
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Klaida!", "Įvyko klaida."));
     }
     
     //======================= IMAGES ===========================
@@ -263,14 +273,72 @@ public class EditableHouse implements Serializable {
     
     public void upload() throws IOException {
         if(file != null) {
-            //FacesMessage message = new FacesMessage("Succesful", file.getFileName() + " is uploaded.");
-            //FacesContext.getCurrentInstance().addMessage(null, message);
-            byte[] blobFile = file.getContents();
-            insertHouseImage(blobFile);
+            String extension = getFileExtension(file.getFileName());
+            if (extension.equals("JPG") || extension.equals("PNG")) {
+                byte[] blobFile = file.getContents();
+                if (blobFile.length < 2097152) {  // 2097152 B == 2 MB
+                    byte[] resizedBlobFile = scale(blobFile, getImageWidthParameter(), getImageHeightParameter());
+                    insertHouseImage(resizedBlobFile, extension);
+                }
+                else {
+                    showError("Bandote įkelti per didelį failą!");
+                }
+            }
+            else {
+                showError("Bandote įkelti netinkamo formato failą!");
+            }
         }
     }
     
-    public boolean insertHouseImage(Serializable image) throws IOException {
+    public void showError(String message) {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Klaida!", message));
+    }
+    
+    private String getFileExtension(String fileName) {
+        String[] devidedName = fileName.split("\\.");
+        String lastPart = devidedName[devidedName.length-1];
+        return lastPart.toUpperCase();
+    }
+    
+    private int getImageWidthParameter() {
+        Systemparameter widthParam = dbm.getSystemParameter("SystemParameter.Houseimage.Width");
+        return Integer.parseInt(widthParam.getValue());
+    }
+    
+    private int getImageHeightParameter() {
+        Systemparameter heightParam = dbm.getSystemParameter("SystemParameter.Houseimage.Height");
+        return Integer.parseInt(heightParam.getValue());
+    }
+    
+    private byte[] scale(byte[] fileData, int width, int height) {
+    	ByteArrayInputStream in = new ByteArrayInputStream(fileData);
+    	try {
+    		BufferedImage img = ImageIO.read(in);
+    		if(height == 0) {
+    			height = (width * img.getHeight())/ img.getWidth(); 
+    		}
+    		if(width == 0) {
+    			width = (height * img.getWidth())/ img.getHeight();
+    		}
+    		Image scaledImage = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+    		BufferedImage imageBuff = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+    		imageBuff.getGraphics().drawImage(scaledImage, 0, 0, new Color(0,0,0), null);
+
+    		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+    		ImageIO.write(imageBuff, "jpg", buffer);
+
+    		return buffer.toByteArray();
+    	} catch (IOException e) {
+                return null;
+    	}
+    }
+    
+    public boolean insertHouseImage(Serializable image, String mimeType) throws IOException {
+        if (!mimeType.equals("JPG") && !mimeType.equals("PNG")) {
+            return false;
+        }
+        
         try {
             Houseimage img = new Houseimage();
             img.setImage(image);
@@ -280,7 +348,8 @@ public class EditableHouse implements Serializable {
             String internalName = "Picture." + house.getHousereg() + "_" + sequence;
             img.setInternalname(internalName);
             img.setSequence(sequence);
-            img.setMimetype("JPG");
+            
+            img.setMimetype(mimeType);
 
             em.joinTransaction();
             dbm.persistAndFlush(img);
@@ -299,7 +368,7 @@ public class EditableHouse implements Serializable {
     
     private int getLastImageSequence(House h) {
         int count = 0;
-        List<Houseimage> imgs = h.getHouseimageList();
+        List<Houseimage> imgs = dbm.getEntityList("Houseimage", "Houseid", h);//h.getHouseimageList();
         
         for (Houseimage img : imgs) {
             if (img.getSequence() > count) {
@@ -332,8 +401,6 @@ public class EditableHouse implements Serializable {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI()  + "?houseId=" + house.getId());
     }
-    
-    
     
     public void closeDialogs() throws IOException {
         //Close dialogs:
