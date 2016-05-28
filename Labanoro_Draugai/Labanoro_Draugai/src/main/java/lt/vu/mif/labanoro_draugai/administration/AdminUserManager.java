@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.ConversationScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -182,6 +183,7 @@ public class AdminUserManager implements Serializable {
         //Close dialogs:
         RequestContext requestContext = RequestContext.getCurrentInstance();  
         requestContext.execute("PF('deletionUserDialog').hide();");
+        requestContext.execute("PF('addConfirmDialog').hide();");
     }
     
     /*public void openDialog(Person u) {
@@ -238,5 +240,9 @@ public class AdminUserManager implements Serializable {
     
     public void setAddedPoints(int ap) {
         addedPoints = ap;
+    }
+    
+    public void showError(String message) {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Klaida!", message));
     }
 }

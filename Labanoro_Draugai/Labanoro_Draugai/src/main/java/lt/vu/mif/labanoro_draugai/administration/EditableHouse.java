@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -207,12 +209,23 @@ public class EditableHouse implements Serializable {
         List<String> imgs = new ArrayList<String>();
         
         List<Houseimage> result = dbm.getEntityList("Houseimage", "Houseid", house);
+        
+        Collections.sort(result, new Comparator<Houseimage>() {
+            public int compare(Houseimage o1, Houseimage o2) {
+                    return o1.getSequence().compareTo(o2.getSequence());
+                }
+        });
          
         for (Houseimage img : result) {
             imgs.add(img.getInternalname());
         }
          
         return imgs;
+    }
+    
+    public int getImageSequence(String imgName) {
+        Houseimage img = (Houseimage) dbm.getEntity("Houseimage", "Internalname", imgName);
+        return img.getSequence();
     }
     
     //========================== TYPES ==============================
@@ -243,6 +256,22 @@ public class EditableHouse implements Serializable {
         List<Type> newTypes = em.createNamedQuery("Type.findById").setParameter("id", Integer.parseInt(houseType)).getResultList();
         Type newType = newTypes.get(0);
         house.setTypeid(newType);
+    }
+    
+    public void setDefaultImage(String imgName) throws IOException {
+        Houseimage img = (Houseimage) dbm.getEntity("Houseimage", "Internalname", imgName);
+        Houseimage defaultImg = dbm.getFirstImage(house);
+        
+        if (defaultImg == null) {
+            defaultImg = new Houseimage();
+            defaultImg.setSequence(1);
+        }
+        
+        dbm.swapImageSequences(img, defaultImg);
+        
+        //Reload the page:
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI() + "?houseId=" + house.getId());
     }
     
     //======================= FILE UPLOAD ===========================

@@ -1151,4 +1151,43 @@ public class DatabaseManager {
         Random rand = new Random();
         return desiredReg + "-" + System.currentTimeMillis() % 1000 + rand.nextInt(10000);
     }
+    
+    public Houseimage getFirstImage(House house) {
+        List<Houseimage> imgs = getEntityList("Houseimage", "Houseid", house);
+        
+        for (Houseimage img : imgs) {
+            if (img.getSequence() == 1) {
+                return img;
+            }
+        }
+        
+        return null;
+    }
+    
+    public boolean setImageSequence(Houseimage img, int seq) {
+        try {
+            Query q = em.createQuery("UPDATE Houseimage p SET p.sequence = :sequence "
+                    + "WHERE p.id = :id");
+            q.setParameter("sequence", seq);
+            q.setParameter("id", img.getId());
+            em.joinTransaction();
+            int updated = q.executeUpdate();
+            em.flush();
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+    
+    public boolean swapImageSequences(Houseimage img1, Houseimage img2) {
+        try {
+           int seq1 = img1.getSequence();
+           setImageSequence(img1, img2.getSequence());
+           setImageSequence(img2, seq1);
+           return true; 
+        }
+        catch (Exception ex) {
+            return false;
+        }
+    }
 }
