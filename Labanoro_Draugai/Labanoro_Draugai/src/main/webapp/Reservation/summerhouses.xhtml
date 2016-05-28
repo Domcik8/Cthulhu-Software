@@ -23,6 +23,11 @@ and open the template in the editor.
     <h:body>
         <!-- Navigation panel-->
         <ui:include src="/WEB-INF/other_pages/navigation.xhtml" />
+        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+ 
+        <p:dialog widgetVar="statusDialog" modal="false" draggable="false" closable="false" resizable="false" showHeader="false">
+            <p:graphicImage name="ajax-loader.gif" library="img"/>
+        </p:dialog>
        <!--Filter panel--> 
        <div class="container">
             <div class="row">
