@@ -33,7 +33,7 @@ and open the template in the editor.
             <div class="row">
                 <div class="col-sm-4 col-md-3 col-lg-3">
                     <h:form id="filterForm">
-                        <p:accordionPanel id="filterAccordion" multiple="true">
+                        <p:accordionPanel id="filterAccordion" multiple="true" activeIndex="0,1">
                             <p:tab id="orderingTab" title="Rikiavimas">
                                 <h:panelGrid id="panelGridOrdering" columns="2" >
                                     <h:outputLabel for="ordering" value="Viršuje:" style="margin-right: 10px;"/>
@@ -43,7 +43,7 @@ and open the template in the editor.
                                 </h:panelGrid>  
                                 
                             </p:tab>
-                            <p:tab id="options" title="Parinktys">
+                            <p:tab id="options" title="Parinktys" >
                                 <!--Dropdown orering--><!--Spinner place count-->
                                 <h:panelGrid id="panelGrid" columns="2" >    
                                     <h:outputLabel for="placeCount" value="Vietų skaičius:" style="margin-right: 10px;"/>
