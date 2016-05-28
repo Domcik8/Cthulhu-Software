@@ -9,16 +9,17 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
+import javax.inject.Named;
 import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import net.sf.json.JSONObject;
+import org.omnifaces.cdi.ViewScoped;
 
 /**
  *
  * @author werezz
  */
-@ManagedBean
+@Named
 @ViewScoped
 public class BuyConfirmation implements Serializable {
 
@@ -28,6 +29,7 @@ public class BuyConfirmation implements Serializable {
     private String[] prices;
     private String price;
     private String currency;
+    private String ratio;
 
     @PostConstruct
     public void init() {
@@ -52,6 +54,17 @@ public class BuyConfirmation implements Serializable {
             return;
         }
         currency = param.getValue();
+    }
+
+    public long getPriceInPoints() {
+        if (price == null || price.isEmpty()) {
+            return -1;
+        }
+        double temp = Double.valueOf(price);
+        Systemparameter exchangeratio = dbm.getSystemParameter("SystemParameter.ExchangeRate.Euro");
+        ratio = exchangeratio.getValue();
+        temp *= Double.valueOf(ratio);
+        return Math.round(temp);
     }
 
     public long getPriceInCents() {

@@ -35,8 +35,8 @@ public class ReservationDaysPriorityGroupManager implements IPriorityGroupManage
     @Inject
     DatabaseManager dbm;
     
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void countPriorities() {
         
         List<Reservation> reservations = getReservationsForPriorityCount(); 

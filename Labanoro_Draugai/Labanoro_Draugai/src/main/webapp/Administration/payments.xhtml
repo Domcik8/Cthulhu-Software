@@ -54,7 +54,7 @@ and open the template in the editor.
                         </h:outputText>
                     </p:column>
 
-                    <p:column headerText="Suma" sortBy="#{payment.paymentprice}">
+                    <p:column headerText="Suma (#{adminPaymentManager.currency})" sortBy="#{payment.paymentprice}">
                         <h:outputText value="#{payment.paymentprice}" />
                     </p:column>
 

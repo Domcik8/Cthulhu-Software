@@ -57,7 +57,7 @@ public class Houseimage implements Serializable {
     @Lob
     @Column(name = "IMAGE")
     private Serializable image;
-    @Basic(optional = false, fetch = FetchType.LAZY)
+    @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "MIMETYPE")

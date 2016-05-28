@@ -189,7 +189,7 @@ public class DatabaseManager {
     private void fillBasicSystemParameters() {
         addSystemParameter("SystemParameter.BuyPoints", "Taškų kainos eurais", "5;10;15;20", "Esamos sistemos taškų kainos, kurios yra nesusijųsios su gaunamu taškų kiekiu. Naujos įvesties pvž: (5;)", "SystemParameter");
 
-        addSystemParameter("SystemParameter.ExchangeRate.Euro", "Taškų kursas lyginant su euru", "10", "SystemParameter");
+        addSystemParameter("SystemParameter.ExchangeRate.Euro", "Taškų kursas lyginant su euru", "1", "SystemParameter");
         addSystemParameter("SystemParameter.Currency.Euro", "Euro valiutos simbolis", "€", "SystemParameter");
 
         addSystemParameter("SystemParameter.General.ContextPath", "Pagrindinis kelias", "http://localhost:8080/Labanoro_Draugai", "Pagrindines puslapio URL'as", "SystemParameter");
@@ -732,6 +732,37 @@ public class DatabaseManager {
         }
 
         return newPayment;
+    }
+    
+    public Paymentlog addPaymentLog(String payerEmail, String payerType, String method) {
+        
+        if (payerEmail == null || payerType == null || method == null) {
+            System.out.println("Payment log parameters can not be null");
+            return null;
+        }
+        
+        Type type = (Type) getEntity("Type", "Internalname", payerType);
+
+        Paymentlog newPaymentLog = new Paymentlog();
+
+        newPaymentLog.setPersonemail(payerEmail);
+        newPaymentLog.setDate(new Date());
+        newPaymentLog.setMethod(method);
+
+        if (type == null) {
+            System.out.println(String.format("There is no type '%s'", payerType));
+            return null;
+        }
+        
+        newPaymentLog.setPersontype(type.getTitle());
+
+        if (persistAndFlush(newPaymentLog)) {
+            System.out.println("PaymentLog '%s' created successfully");
+        } else {
+            return null;
+        }
+
+        return newPaymentLog;
     }
 
     public Object updateEntity(Object obj) {
