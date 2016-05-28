@@ -5,6 +5,7 @@
  */
 package lt.vu.mif.labanoro_draugai.reservation;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -17,14 +18,19 @@ import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.faces.context.ExternalContext;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Reservation;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.entities.Houseimage;
+import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.entities.Service;
 import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import org.apache.commons.collections.CollectionUtils;
@@ -82,8 +88,24 @@ public class SummerhouseManager implements Serializable {
     @Inject
     DatabaseManager dbm;
 
+    private Person user;
+    
     @PostConstruct
     public void init() {
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) (ec.getRequest());
+        if (request == null || request.getUserPrincipal() == null || request.getUserPrincipal().getName() == null && request.getUserPrincipal().getName().isEmpty()) {
+            try {
+                ec.redirect("/Labanoro_Draugai/login.html");
+                return;
+            } catch (IOException ex) {
+                Logger.getLogger(ReservationConfirmationManager.class.getName()).log(Level.SEVERE, null, ex);
+                return;
+            }
+        }
+        user = (Person) dbm.getEntity("Person", "Email", request.getUserPrincipal().getName());
+        
+        
         summerhouses = (List<House>) dbm.getAllEntities("House");
         filteredSummerhouses = (List<House>) dbm.getAllEntities("House");
 //        Collections.reverse(summerhouses);
@@ -399,11 +421,11 @@ public class SummerhouseManager implements Serializable {
     }
 
     public String confirmSelectedHouse() {
-        if (selectedHouse == null || selectedDateFrom == null || selectedDateTo == null
+        if (user == null|| user.getTypeid().getInternalname().equalsIgnoreCase("Person.Candidate") || selectedHouse == null || selectedDateFrom == null || selectedDateTo == null
                 || !isHouseAvailable(selectedHouse, selectedDateFrom, selectedDateTo) || selectedHousePeriodPrice() == 0) {
             return "";
         }
-
+        
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("house", selectedHouse);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("dateFrom", selectedDateFrom);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("dateTo", selectedDateTo);
@@ -422,7 +444,10 @@ public class SummerhouseManager implements Serializable {
         }
         this.selectedFilters = selectedFilters;
     }
-
+    
+    public boolean isCandidate(){
+        return user.getTypeid().getInternalname().equalsIgnoreCase("Person.Candidate");
+    } 
     public void setSelectedHouse(House selectedHouse) {
         selectedHouseAvailableServices = new ArrayList<>();
         if (selectedHouse != null) {
@@ -581,5 +606,9 @@ public class SummerhouseManager implements Serializable {
 
     public void setShowOnlyFree(boolean showOnlyFree) {
         this.showOnlyFree = showOnlyFree;
+    }
+
+    public Person getUser() {
+        return user;
     }
 }

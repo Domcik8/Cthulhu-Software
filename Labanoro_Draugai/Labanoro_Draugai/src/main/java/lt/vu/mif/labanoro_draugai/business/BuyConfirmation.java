@@ -27,20 +27,15 @@ public class BuyConfirmation implements Serializable {
 
     private String[] prices;
     private String price;
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-                System.out.println("price updated:"+price);
-        this.price = price;
-    }
+    private String currency;
 
     @PostConstruct
     public void init() {
 
         Systemparameter parameter = dbm.getSystemParameter("SystemParameter.BuyPoints");
+        if (parameter.getValue() == null || parameter.getValue().isEmpty()) {
+            return;
+        }
         prices = parameter.getValue().split(";");
         System.out.println("Kainos");
         for (String i : prices) {
@@ -49,14 +44,22 @@ public class BuyConfirmation implements Serializable {
         if (prices.length != 0) {
             price = prices[0];
         }
+
+        Systemparameter param = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Currency.Euro");
+        if (param == null) {
+            System.out.println("Truksta \"SystemParameter.Currency.Euro\" parametro");
+            currency = "?";
+            return;
+        }
+        currency = param.getValue();
     }
 
     public long getPriceInCents() {
-        System.out.println("cents updated:"+new Date());
+        System.out.println("cents updated:" + new Date());
         if (price == null || price.isEmpty()) {
             return -1;
         }
-        System.out.println("price:"+price);
+        System.out.println("price:" + price);
         double temp = Double.valueOf(price);
         temp *= 100;
         return Math.round(temp);
@@ -73,4 +76,15 @@ public class BuyConfirmation implements Serializable {
         return prices;
     }
 
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
 }

@@ -82,6 +82,8 @@ public class RegistrationManager implements Serializable {
 
         if (accessToken != null) {
             email = fbGraph.getEmail(accessToken);
+            firstName = fbGraph.getFirstName(accessToken);
+            lastName = fbGraph.getLastName(accessToken);
             System.out.print("Opened after facebook registration=" + accessToken);
         } else {
             System.out.print("[REG MANAGER] Facebook token =" + accessToken);

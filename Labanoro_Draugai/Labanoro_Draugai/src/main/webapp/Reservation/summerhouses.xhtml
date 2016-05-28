@@ -109,7 +109,8 @@ and open the template in the editor.
                                     Vasarnamiai
                             </f:facet>
                             <h:panelGrid columns="2" style="width: 100%" columnClasses="ui-grid-col-4,ui-grid-col-8" >
-                                <p:commandLink onclick="disableScrolling(),PF('houseDialog').show()" update=":houseDialogForm:houseDetail,:houseDialogForm:houseGalleria,:houseDialogForm:reservedDays" >    
+                                <p:commandLink oncomplete="disableScrolling(),PF('houseDialog').show()" update=":houseDialogForm:houseDetail,:houseDialogForm:houseGalleria,:houseDialogForm:reservedDays" >    
+                                    <f:setPropertyActionListener value="#{house}" target="#{summerhouseManager.selectedHouse}" />
                                     <p:graphicImage id="img" url="/images/#{summerhouseManager.firstImageName(house)}" alt="#{summerhouseManager.firstImageName(house)}" style="width: 100%;padding-right: 10px"/>
                                 </p:commandLink>
                                 <p:outputPanel>
@@ -183,7 +184,7 @@ and open the template in the editor.
                                     <h:outputLabel id="periodPrice" value="Kaina: #{summerhouseManager.currency}#{summerhouseManager.selectedHousePeriodPrice()} " />
                                     <br/>
                                     <p:commandLink id="confirmOrder" action="#{summerhouseManager.confirmSelectedHouse()}" class="btn btn-success" 
-                                         style="position: relative;left: 80%; bottom: -35%;" value="Užsakyti">
+                                                   style="position: relative;left: 80%; bottom: -35%;" value="Užsakyti" rendered="#{not summerhouseManager.isCandidate()}">
                                     </p:commandLink>
                                      
 <!--                                    style="position: relative;left: 40%; bottom: -35%;"-->
