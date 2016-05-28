@@ -733,6 +733,37 @@ public class DatabaseManager {
 
         return newPayment;
     }
+    
+    public Paymentlog addPaymentLog(String payerEmail, String payerType, String method) {
+        
+        if (payerEmail == null || payerType == null || method == null) {
+            System.out.println("Payment log parameters can not be null");
+            return null;
+        }
+        
+        Type type = (Type) getEntity("Type", "Internalname", payerType);
+
+        Paymentlog newPaymentLog = new Paymentlog();
+
+        newPaymentLog.setPersonemail(payerEmail);
+        newPaymentLog.setDate(new Date());
+        newPaymentLog.setMethod(method);
+
+        if (type == null) {
+            System.out.println(String.format("There is no type '%s'", payerType));
+            return null;
+        }
+        
+        newPaymentLog.setPersontype(type.getTitle());
+
+        if (persistAndFlush(newPaymentLog)) {
+            System.out.println("PaymentLog '%s' created successfully");
+        } else {
+            return null;
+        }
+
+        return newPaymentLog;
+    }
 
     public Object updateEntity(Object obj) {
         return em.merge(obj);
