@@ -35,26 +35,25 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "PERSON")
 @NamedQueries({
-    @NamedQuery(name = "Person.findAll", query = "SELECT p FROM Person p"),
-    @NamedQuery(name = "Person.findById", query = "SELECT p FROM Person p WHERE p.id = :id"),
-    @NamedQuery(name = "Person.findByEmail", query = "SELECT p FROM Person p WHERE p.email = :email"),
-    @NamedQuery(name = "Person.findByPassword", query = "SELECT p FROM Person p WHERE p.password = :password"),
-    @NamedQuery(name = "Person.findByPriority", query = "SELECT p FROM Person p WHERE p.priority = :priority"),
-    @NamedQuery(name = "Person.findByPoints", query = "SELECT p FROM Person p WHERE p.points = :points"),
-    @NamedQuery(name = "Person.findByFacebookid", query = "SELECT p FROM Person p WHERE p.facebookid = :facebookid"),
-    @NamedQuery(name = "Person.findByFacebookpassword", query = "SELECT p FROM Person p WHERE p.facebookpassword = :facebookpassword"),
-    @NamedQuery(name = "Person.findByFirstname", query = "SELECT p FROM Person p WHERE p.firstname = :firstname"),
-    @NamedQuery(name = "Person.findByMiddlename", query = "SELECT p FROM Person p WHERE p.middlename = :middlename"),
-    @NamedQuery(name = "Person.findByLastname", query = "SELECT p FROM Person p WHERE p.lastname = :lastname"),
-    @NamedQuery(name = "Person.findByAddress", query = "SELECT p FROM Person p WHERE p.address = :address"),
-    @NamedQuery(name = "Person.findByPersonalid", query = "SELECT p FROM Person p WHERE p.personalid = :personalid"),
-    @NamedQuery(name = "Person.findByMembershipdue", query = "SELECT p FROM Person p WHERE p.membershipdue = :membershipdue"),
-    @NamedQuery(name = "Person.findByRecommendationsreceived", query = "SELECT p FROM Person p WHERE p.recommendationsreceived = :recommendationsreceived"),
-    @NamedQuery(name = "Person.findByRecommendationstosend", query = "SELECT p FROM Person p WHERE p.recommendationstosend = :recommendationstosend"),
-    @NamedQuery(name = "Person.findByEmailconfirmation", query = "SELECT p FROM Person p WHERE p.emailconfirmation = :emailconfirmation"),
-    @NamedQuery(name = "Person.findByUniquekey", query = "SELECT p FROM Person p WHERE p.uniquekey = :uniquekey"),
-    @NamedQuery(name = "Person.findByIsdeleted", query = "SELECT p FROM Person p WHERE p.isdeleted = :isdeleted"),
-    @NamedQuery(name = "Person.findByOptlockversion", query = "SELECT p FROM Person p WHERE p.optlockversion = :optlockversion")})
+    @NamedQuery(name = "Person.findAll", query = "SELECT p FROM Person p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE)"),
+    @NamedQuery(name = "Person.findById", query = "SELECT p FROM Person p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.id = :id"),
+    @NamedQuery(name = "Person.findByEmail", query = "SELECT p FROM Person p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.email = :email"),
+    @NamedQuery(name = "Person.findByPassword", query = "SELECT p FROM Person p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.password = :password"),
+    @NamedQuery(name = "Person.findByPriority", query = "SELECT p FROM Person p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.priority = :priority"),
+    @NamedQuery(name = "Person.findByPoints", query = "SELECT p FROM Person p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.points = :points"),
+    @NamedQuery(name = "Person.findByFacebookid", query = "SELECT p FROM Person p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.facebookid = :facebookid"),
+    @NamedQuery(name = "Person.findByFacebookpassword", query = "SELECT p FROM Person p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.facebookpassword = :facebookpassword"),
+    @NamedQuery(name = "Person.findByFirstname", query = "SELECT p FROM Person p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.firstname = :firstname"),
+    @NamedQuery(name = "Person.findByMiddlename", query = "SELECT p FROM Person p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.middlename = :middlename"),
+    @NamedQuery(name = "Person.findByLastname", query = "SELECT p FROM Person p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.lastname = :lastname"),
+    @NamedQuery(name = "Person.findByAddress", query = "SELECT p FROM Person p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.address = :address"),
+    @NamedQuery(name = "Person.findByPersonalid", query = "SELECT p FROM Person p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.personalid = :personalid"),
+    @NamedQuery(name = "Person.findByMembershipdue", query = "SELECT p FROM Person p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.membershipdue = :membershipdue"),
+    @NamedQuery(name = "Person.findByRecommendationsreceived", query = "SELECT p FROM Person p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.recommendationsreceived = :recommendationsreceived"),
+    @NamedQuery(name = "Person.findByRecommendationstosend", query = "SELECT p FROM Person p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.recommendationstosend = :recommendationstosend"),
+    @NamedQuery(name = "Person.findByEmailconfirmation", query = "SELECT p FROM Person p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.emailconfirmation = :emailconfirmation"),
+    @NamedQuery(name = "Person.findByUniquekey", query = "SELECT p FROM Person p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.uniquekey = :uniquekey"),
+    @NamedQuery(name = "Person.findByIsdeleted", query = "SELECT p FROM Person p WHERE p.isdeleted = :isdeleted")})
 public class Person implements Serializable {
 
     private static final long serialVersionUID = 1L;

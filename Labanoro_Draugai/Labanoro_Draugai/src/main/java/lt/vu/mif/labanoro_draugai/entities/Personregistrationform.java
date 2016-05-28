@@ -29,11 +29,10 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "PERSONREGISTRATIONFORM")
 @NamedQueries({
-    @NamedQuery(name = "Personregistrationform.findAll", query = "SELECT p FROM Personregistrationform p"),
-    @NamedQuery(name = "Personregistrationform.findById", query = "SELECT p FROM Personregistrationform p WHERE p.id = :id"),
-    @NamedQuery(name = "Personregistrationform.findByInternalname", query = "SELECT p FROM Personregistrationform p WHERE p.internalname = :internalname"),
-    @NamedQuery(name = "Personregistrationform.findByIsdeleted", query = "SELECT p FROM Personregistrationform p WHERE p.isdeleted = :isdeleted"),
-    @NamedQuery(name = "Personregistrationform.findByOptlockversion", query = "SELECT p FROM Personregistrationform p WHERE p.optlockversion = :optlockversion")})
+    @NamedQuery(name = "Personregistrationform.findAll", query = "SELECT p FROM Personregistrationform p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE)"),
+    @NamedQuery(name = "Personregistrationform.findById", query = "SELECT p FROM Personregistrationform p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.id = :id"),
+    @NamedQuery(name = "Personregistrationform.findByInternalname", query = "SELECT p FROM Personregistrationform p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.internalname = :internalname"),
+    @NamedQuery(name = "Personregistrationform.findByIsdeleted", query = "SELECT p FROM Personregistrationform p WHERE p.isdeleted = :isdeleted")})
 public class Personregistrationform implements Serializable {
 
     private static final long serialVersionUID = 1L;
