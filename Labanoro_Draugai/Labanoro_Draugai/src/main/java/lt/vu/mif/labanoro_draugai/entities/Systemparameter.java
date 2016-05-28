@@ -27,14 +27,13 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "SYSTEMPARAMETER")
 @NamedQueries({
-    @NamedQuery(name = "Systemparameter.findAll", query = "SELECT s FROM Systemparameter s"),
-    @NamedQuery(name = "Systemparameter.findById", query = "SELECT s FROM Systemparameter s WHERE s.id = :id"),
-    @NamedQuery(name = "Systemparameter.findByInternalname", query = "SELECT s FROM Systemparameter s WHERE s.internalname = :internalname"),
-    @NamedQuery(name = "Systemparameter.findByTitle", query = "SELECT s FROM Systemparameter s WHERE s.title = :title"),
-    @NamedQuery(name = "Systemparameter.findByValue", query = "SELECT s FROM Systemparameter s WHERE s.value = :value"),
-    @NamedQuery(name = "Systemparameter.findByDescription", query = "SELECT s FROM Systemparameter s WHERE s.description = :description"),
-    @NamedQuery(name = "Systemparameter.findByIsdeleted", query = "SELECT s FROM Systemparameter s WHERE s.isdeleted = :isdeleted"),
-    @NamedQuery(name = "Systemparameter.findByOptlockversion", query = "SELECT s FROM Systemparameter s WHERE s.optlockversion = :optlockversion")})
+    @NamedQuery(name = "Systemparameter.findAll", query = "SELECT s FROM Systemparameter s WHERE (s.isdeleted IS NULL OR s.isdeleted = FALSE)"),
+    @NamedQuery(name = "Systemparameter.findById", query = "SELECT s FROM Systemparameter s WHERE (s.isdeleted IS NULL OR s.isdeleted = FALSE) AND s.id = :id"),
+    @NamedQuery(name = "Systemparameter.findByInternalname", query = "SELECT s FROM Systemparameter s WHERE (s.isdeleted IS NULL OR s.isdeleted = FALSE) AND s.internalname = :internalname"),
+    @NamedQuery(name = "Systemparameter.findByTitle", query = "SELECT s FROM Systemparameter s WHERE (s.isdeleted IS NULL OR s.isdeleted = FALSE) AND s.title = :title"),
+    @NamedQuery(name = "Systemparameter.findByValue", query = "SELECT s FROM Systemparameter s WHERE (s.isdeleted IS NULL OR s.isdeleted = FALSE) AND s.value = :value"),
+    @NamedQuery(name = "Systemparameter.findByDescription", query = "SELECT s FROM Systemparameter s WHERE (s.isdeleted IS NULL OR s.isdeleted = FALSE) AND s.description = :description"),
+    @NamedQuery(name = "Systemparameter.findByIsdeleted", query = "SELECT s FROM Systemparameter s WHERE s.isdeleted = :isdeleted")})
 public class Systemparameter implements Serializable {
 
     private static final long serialVersionUID = 1L;

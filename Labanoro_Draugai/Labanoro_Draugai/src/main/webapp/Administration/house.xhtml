@@ -121,7 +121,11 @@ and open the template in the editor.
                         </p:column>
                         
                         <p:column>    
-                            <p:commandButton value="Ištrinti" actionListener="#{editableHouse.setImageForDialog(image)}" oncomplete="PF('deletionDialog').show();" update=":deletionDialogOutsideForm"/>
+                            <p:commandButton value="Ištrinti" actionListener="#{editableHouse.setImageForDialog(image)}" oncomplete="PF('deletionDialog').show();" update=":deletionDialogOutsideForm" rendered="#{editableHouse.getImageSequence(image) != 1}"/>
+                        </p:column>
+                        
+                        <p:column>    
+                            <p:commandButton value="Padaryti pagrindine" action="#{editableHouse.setDefaultImage(image)}" rendered="#{editableHouse.getImageSequence(image) != 1}"/>
                         </p:column>
                     </p:dataTable>
                 </h:form>

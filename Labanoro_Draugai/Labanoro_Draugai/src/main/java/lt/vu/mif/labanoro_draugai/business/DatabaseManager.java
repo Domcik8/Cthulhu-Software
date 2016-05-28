@@ -189,7 +189,7 @@ public class DatabaseManager {
     private void fillBasicSystemParameters() {
         addSystemParameter("SystemParameter.BuyPoints", "Taškų kainos eurais", "5;10;15;20", "Esamos sistemos taškų kainos, kurios yra nesusijųsios su gaunamu taškų kiekiu. Naujos įvesties pvž: (5;)", "SystemParameter");
 
-        addSystemParameter("SystemParameter.ExchangeRate.Euro", "Taškų kursas lyginant su euru", "10", "SystemParameter");
+        addSystemParameter("SystemParameter.ExchangeRate.Euro", "Taškų kursas lyginant su euru", "1", "SystemParameter");
         addSystemParameter("SystemParameter.Currency.Euro", "Euro valiutos simbolis", "€", "SystemParameter");
 
         addSystemParameter("SystemParameter.General.ContextPath", "Pagrindinis kelias", "http://localhost:8080/Labanoro_Draugai", "Pagrindines puslapio URL'as", "SystemParameter");
@@ -438,7 +438,7 @@ public class DatabaseManager {
      * sucessfully
      */
     public Reservation addReservation(String houseReg, String paymentReg, String typeInternalName, String personEmail, List<String> services, Date dateFrom, Date dateTo) {
-        return addReservation(generateReg("ReservationReg"), houseReg, paymentReg, typeInternalName, personEmail, services, dateFrom, dateTo);
+        return addReservation(generateReg("ResReg"), houseReg, paymentReg, typeInternalName, personEmail, services, dateFrom, dateTo);
     }
 
     /**
@@ -1150,5 +1150,44 @@ public class DatabaseManager {
     public String generateReg(String desiredReg) {
         Random rand = new Random();
         return desiredReg + "-" + System.currentTimeMillis() % 1000 + rand.nextInt(10000);
+    }
+    
+    public Houseimage getFirstImage(House house) {
+        List<Houseimage> imgs = getEntityList("Houseimage", "Houseid", house);
+        
+        for (Houseimage img : imgs) {
+            if (img.getSequence() == 1) {
+                return img;
+            }
+        }
+        
+        return null;
+    }
+    
+    public boolean setImageSequence(Houseimage img, int seq) {
+        try {
+            Query q = em.createQuery("UPDATE Houseimage p SET p.sequence = :sequence "
+                    + "WHERE p.id = :id");
+            q.setParameter("sequence", seq);
+            q.setParameter("id", img.getId());
+            em.joinTransaction();
+            int updated = q.executeUpdate();
+            em.flush();
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+    
+    public boolean swapImageSequences(Houseimage img1, Houseimage img2) {
+        try {
+           int seq1 = img1.getSequence();
+           setImageSequence(img1, img2.getSequence());
+           setImageSequence(img2, seq1);
+           return true; 
+        }
+        catch (Exception ex) {
+            return false;
+        }
     }
 }

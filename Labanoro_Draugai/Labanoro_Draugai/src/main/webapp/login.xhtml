@@ -10,6 +10,9 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"/>  
     </h:head>
     <h:body>
+        
+        #{databaseManager.fillDataBase()}
+        
         <div class="container">
             <div class="row">
                 <div class="Absolute-Center is-Responsive">
@@ -17,30 +20,27 @@
                     <div id="logo-container"></div>
                     <div class="col-sm-12 col-md-10 col-md-offset-1">
 
-                        <h3 class="omb_authTitle">Login</h3> 
+                        <h1>Sveiki atvykę į "Labanoro draugų" klubo svetainę!</h1>
+                        <hr class="omb_hrOr"/>
+                        <h3 class="omb_authTitle">Prisijungimas</h3> 
                         <hr class="omb_hrOr"/>
 
                         <h:form id="loginForm">
                             <div class="form-group input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                <h:inputText class="form-control" a:placeholder="email" value="#{auth.username}" size="20" />
+                                <h:inputText class="form-control" a:placeholder="el. paštas" value="#{auth.username}" size="20" />
                                 <!--<h:message for="username"></h:message>-->
                             </div>
                             <div class="form-group input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>  
-                                <h:inputSecret class="form-control" a:placeholder="password" value="#{auth.password}" size="20"/> 
+                                <h:inputSecret class="form-control" a:placeholder="slaptažodis" value="#{auth.password}" size="20"/> 
                                 <!--<h:message for="password"></h:message>-->
                             </div>
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox"/> I agree to the <a href="#">Terms and Conditions</a>
-                                </label>
-                            </div>
-                            <p:commandButton class="btn btn-block" type="submit" value="Login" action="#{auth.login()}" /> <br/>
+                            <p:commandButton class="btn btn-block" type="submit" value="Prisijungti" action="#{auth.login()}" /> <br/>
                         </h:form>
                         <h:form class="form-group">  
-                            <p:button class="btn btn-facebook btn-primary btn-block" href="#{loginPageCode.facebookUrlAuth}" value="Log in with Facebook" /> 
-                            <p:commandButton class="btn btn-block" action="#{auth.logout()}" value="Logout" />
+                            <p:button class="btn btn-facebook btn-primary btn-block" href="#{loginPageCode.facebookUrlAuth}" value="Prisijungti su Facebook" /> 
+                            <p:commandButton class="btn btn-block" action="#{auth.logout()}" value="Atsijungti" />
                         </h:form>
                     </div>  
                 </div>    

@@ -27,13 +27,12 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "TYPE")
 @NamedQueries({
-    @NamedQuery(name = "Type.findAll", query = "SELECT t FROM Type t"),
-    @NamedQuery(name = "Type.findById", query = "SELECT t FROM Type t WHERE t.id = :id"),
-    @NamedQuery(name = "Type.findByInternalname", query = "SELECT t FROM Type t WHERE t.internalname = :internalname"),
-    @NamedQuery(name = "Type.findByTitle", query = "SELECT t FROM Type t WHERE t.title = :title"),
-    @NamedQuery(name = "Type.findByDescription", query = "SELECT t FROM Type t WHERE t.description = :description"),
-    @NamedQuery(name = "Type.findByIsdeleted", query = "SELECT t FROM Type t WHERE t.isdeleted = :isdeleted"),
-    @NamedQuery(name = "Type.findByOptlockversion", query = "SELECT t FROM Type t WHERE t.optlockversion = :optlockversion")})
+    @NamedQuery(name = "Type.findAll", query = "SELECT t FROM Type t WHERE (t.isdeleted IS NULL OR t.isdeleted = FALSE)"),
+    @NamedQuery(name = "Type.findById", query = "SELECT t FROM Type t WHERE (t.isdeleted IS NULL OR t.isdeleted = FALSE)"),
+    @NamedQuery(name = "Type.findByInternalname", query = "SELECT t FROM Type t WHERE (t.isdeleted IS NULL OR t.isdeleted = FALSE) AND t.internalname = :internalname"),
+    @NamedQuery(name = "Type.findByTitle", query = "SELECT t FROM Type t WHERE (t.isdeleted IS NULL OR t.isdeleted = FALSE) AND t.title = :title"),
+    @NamedQuery(name = "Type.findByDescription", query = "SELECT t FROM Type t WHERE (t.isdeleted IS NULL OR t.isdeleted = FALSE) AND t.description = :description"),
+    @NamedQuery(name = "Type.findByIsdeleted", query = "SELECT t FROM Type t WHERE t.isdeleted = :isdeleted")})
 public class Type implements Serializable {
 
     private static final long serialVersionUID = 1L;

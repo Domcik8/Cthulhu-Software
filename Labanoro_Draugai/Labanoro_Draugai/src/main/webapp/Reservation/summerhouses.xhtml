@@ -23,12 +23,17 @@ and open the template in the editor.
     <h:body>
         <!-- Navigation panel-->
         <ui:include src="/WEB-INF/other_pages/navigation.xhtml" />
+        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+ 
+        <p:dialog widgetVar="statusDialog" modal="false" draggable="false" closable="false" resizable="false" showHeader="false">
+            <p:graphicImage name="ajax-loader.gif" library="img"/>
+        </p:dialog>
        <!--Filter panel--> 
        <div class="container">
             <div class="row">
                 <div class="col-sm-4 col-md-3 col-lg-3">
                     <h:form id="filterForm">
-                        <p:accordionPanel id="filterAccordion" multiple="true">
+                        <p:accordionPanel id="filterAccordion" multiple="true" activeIndex="0,1">
                             <p:tab id="orderingTab" title="Rikiavimas">
                                 <h:panelGrid id="panelGridOrdering" columns="2" >
                                     <h:outputLabel for="ordering" value="Viršuje:" style="margin-right: 10px;"/>
@@ -38,7 +43,7 @@ and open the template in the editor.
                                 </h:panelGrid>  
                                 
                             </p:tab>
-                            <p:tab id="options" title="Parinktys">
+                            <p:tab id="options" title="Parinktys" >
                                 <!--Dropdown orering--><!--Spinner place count-->
                                 <h:panelGrid id="panelGrid" columns="2" >    
                                     <h:outputLabel for="placeCount" value="Vietų skaičius:" style="margin-right: 10px;"/>
@@ -184,7 +189,7 @@ and open the template in the editor.
                                     <h:outputLabel id="periodPrice" value="Kaina: #{summerhouseManager.currency}#{summerhouseManager.selectedHousePeriodPrice()} " />
                                     <br/>
                                     <p:commandLink id="confirmOrder" action="#{summerhouseManager.confirmSelectedHouse()}" class="btn btn-success" 
-                                         style="position: relative;left: 80%; bottom: -35%;" value="Užsakyti">
+                                                   style="position: relative;left: 80%; bottom: -35%;" value="Užsakyti" rendered="#{not summerhouseManager.isCandidate()}">
                                     </p:commandLink>
                                      
 <!--                                    style="position: relative;left: 40%; bottom: -35%;"-->

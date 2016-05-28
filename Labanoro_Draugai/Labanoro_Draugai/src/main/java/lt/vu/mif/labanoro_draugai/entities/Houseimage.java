@@ -9,6 +9,8 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import static javax.persistence.FetchType.LAZY;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,14 +30,13 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "HOUSEIMAGE")
 @NamedQueries({
-    @NamedQuery(name = "Houseimage.findAll", query = "SELECT h FROM Houseimage h"),
-    @NamedQuery(name = "Houseimage.findById", query = "SELECT h FROM Houseimage h WHERE h.id = :id"),
-    @NamedQuery(name = "Houseimage.findByInternalname", query = "SELECT h FROM Houseimage h WHERE h.internalname = :internalname"),
-    @NamedQuery(name = "Houseimage.findBySequence", query = "SELECT h FROM Houseimage h WHERE h.sequence = :sequence"),
-    @NamedQuery(name = "Houseimage.findByMimetype", query = "SELECT h FROM Houseimage h WHERE h.mimetype = :mimetype"),
-    @NamedQuery(name = "Houseimage.findByDescription", query = "SELECT h FROM Houseimage h WHERE h.description = :description"),
-    @NamedQuery(name = "Houseimage.findByIsdeleted", query = "SELECT h FROM Houseimage h WHERE h.isdeleted = :isdeleted"),
-    @NamedQuery(name = "Houseimage.findByOptlockversion", query = "SELECT h FROM Houseimage h WHERE h.optlockversion = :optlockversion")})
+    @NamedQuery(name = "Houseimage.findAll", query = "SELECT h FROM Houseimage h WHERE (h.isdeleted IS NULL OR h.isdeleted = FALSE)"),
+    @NamedQuery(name = "Houseimage.findById", query = "SELECT h FROM Houseimage h WHERE (h.isdeleted IS NULL OR h.isdeleted = FALSE) AND h.id = :id"),
+    @NamedQuery(name = "Houseimage.findByInternalname", query = "SELECT h FROM Houseimage h WHERE (h.isdeleted IS NULL OR h.isdeleted = FALSE) AND h.internalname = :internalname"),
+    @NamedQuery(name = "Houseimage.findBySequence", query = "SELECT h FROM Houseimage h WHERE (h.isdeleted IS NULL OR h.isdeleted = FALSE) AND h.sequence = :sequence"),
+    @NamedQuery(name = "Houseimage.findByMimetype", query = "SELECT h FROM Houseimage h WHERE (h.isdeleted IS NULL OR h.isdeleted = FALSE) AND h.mimetype = :mimetype"),
+    @NamedQuery(name = "Houseimage.findByDescription", query = "SELECT h FROM Houseimage h WHERE (h.isdeleted IS NULL OR h.isdeleted = FALSE) AND h.description = :description"),
+    @NamedQuery(name = "Houseimage.findByIsdeleted", query = "SELECT h FROM Houseimage h WHERE h.isdeleted = :isdeleted")})
 public class Houseimage implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -51,12 +52,12 @@ public class Houseimage implements Serializable {
     private String internalname;
     @Column(name = "SEQUENCE")
     private Integer sequence;
-    @Basic(optional = false)
+    @Basic(optional=false, fetch=LAZY)
     @NotNull
     @Lob
     @Column(name = "IMAGE")
     private Serializable image;
-    @Basic(optional = false)
+    @Basic(optional = false, fetch = FetchType.LAZY)
     @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "MIMETYPE")

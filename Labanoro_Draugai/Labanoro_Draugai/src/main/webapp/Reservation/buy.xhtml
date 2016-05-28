@@ -22,17 +22,18 @@ and open the template in the editor.
         <div class="container">
             <h1>Pirkiniai</h1>
             <p:panel>
+                <h2>Taškų pirkimas</h2>
                 <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
                     <h:form>
                         <p:outputLabel for="priceRadio" value="Galimos kainos" />
                         <p:selectOneRadio id="priceRadio" value="#{buyConfirmation.price}">                   
-                            <f:selectItems value="#{buyConfirmation.prices}" var="price" itemLabel="#{price}" itemValue="#{price}"/>
+                            <f:selectItems value="#{buyConfirmation.prices}" var="price" itemLabel="#{buyConfirmation.currency}#{price}" itemValue="#{price}"/>
                             <p:ajax update="myScript" event="change"/>
                         </p:selectOneRadio>
                     </h:form>
                 </h:panelGrid>
                 <h:panelGroup id="myScript">
-                    <h:outputLabel for="description" value="Dabartinis tasku santykis yra #{buyConfirmation.price}:#{buyConfirmation.getPriceInPoints()}" />
+                    <h:outputLabel for="description" value="Už šią sumą įsigysitę #{buyConfirmation.getPriceInPoints()} #{buyConfirmation.getPriceInPoints()>10?'taškų':'taškus'} " />
                     <ui:include src="/WEB-INF/other_pages/stripeForm.xhtml" >
                         <ui:param name="paymentType" value="Už taškus" />
                         <ui:param name="price" value="#{buyConfirmation.getPriceInCents()}" />

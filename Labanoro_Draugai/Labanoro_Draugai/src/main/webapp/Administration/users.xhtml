@@ -80,25 +80,43 @@ and open the template in the editor.
             </div>
             <div>
                 <h:form id="dialogOutsideForm">
-                    <p:dialog id="firstDialog" header="Taškų pridėjimas" widgetVar="addPointsDialog" modal="true" height="200" width="400">
+                    <p:dialog id="firstDialog" header="Taškų pridėjimas" widgetVar="addPointsDialog" modal="true" height="100" width="400" resizable="false">
                         <h:form id="dialogInsideForm">   
-                            <p:messages id="msgs" />
+                            <p:messages id="msgs" autoUpdate="true" closable="true"/>
                             <h:panelGrid id="panel" columns="3" >
                                 <p:outputLabel for="userName" value="Vartotojas:" />
                                 <p:outputLabel id="userName" value="#{adminUserManager.userEmail}" />
                                 <h:inputHidden value="#{adminUserManager.userEmail}" />
                                 <p:outputLabel for="addedPoints" value="Taškų skaičius: " />
-                                <p:inputText id="addedPoints" value="#{adminUserManager.addedPoints}" required="true" requiredMessage="Taškų skaičius: Įveskite natūralujį skaičių.">
-                                    <f:validateDoubleRange minimum="1"/>
-                                </p:inputText>
+                                <p:spinner id="addedPoints" min="0" value="#{adminUserManager.addedPoints}" required="true" requiredMessage="Klaida! Taškų skaičius: Įveskite natūralujį skaičių!"/>
                                 <p:message for="addedPoints" style="color:red" />
                                 <h:inputHidden/>
                             </h:panelGrid>
-                            <p:commandButton value="Skirti" action="#{adminUserManager.addPoints}" update="msgs"/>
+                            <p:commandButton value="Skirti" oncomplete="PF('addConfirmDialog').show();" update="addConfirmOutsideForm"/>
                         </h:form>
                     </p:dialog>
                 </h:form>
             </div>  
+            
+            <div>
+                <h:form id="addConfirmOutsideForm">
+                    <p:dialog id="confirmationDialog" header="Dėmesio" widgetVar="addConfirmDialog" modal="true" height="100" width="300" resizable="false">
+                        <h:form id="dialogInsideForm">
+                            <h:outputText value="Ar tikrai norite pridėti taškus?"/>
+                            <h:panelGrid id="confirmPanel" columns="2">  
+                                <p:outputLabel for="userName" value="Vartotojas:" />
+                                <p:outputLabel id="userName" value="#{adminUserManager.userEmail}" />
+                                <p:outputLabel for="addedPoints" value="Taškų skaičius: " />
+                                <p:outputLabel id="addedPoints" value="#{adminUserManager.addedPoints}" />
+                            </h:panelGrid>
+                            <h:panelGrid id="buttonPanel" columns="2"> 
+                                <p:commandButton value="Taip" action="#{adminUserManager.addPoints}" />
+                                <p:commandButton value="Ne" action="#{adminUserManager.closeDialogs}"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+                </h:form>
+            </div>
             
             <div>
                 <h:form id="deletionUserOutsideForm">

@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.Payment;
 import lt.vu.mif.labanoro_draugai.entities.Person;
+import lt.vu.mif.labanoro_draugai.mailService.EmailBean;
 
 /**
  *
@@ -45,6 +46,9 @@ public class AdminPaymentManager implements Serializable {
     @Inject
     DatabaseManager dbm;
     
+    @Inject
+    EmailBean emailBean;
+    
     @PostConstruct
     public void init() {
         if (payments == null || payments.isEmpty()) {
@@ -58,13 +62,23 @@ public class AdminPaymentManager implements Serializable {
     
     public void approveChecked() throws IOException {
         for (Payment p : selectedPayments) {
-            if (p.getApproveddate() == null)
-                dbm.setPaymentApprovalDate(p);
+            if (p.getApproveddate() == null) {
+                boolean approvementSuccess = dbm.setPaymentApprovalDate(p);
+                if (approvementSuccess) {
+                    sendPaymentApprovementEmail(p);
+                }
+            }
         }
         
         //Reload the page:
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+    }
+    
+    private void sendPaymentApprovementEmail(Payment paym) {
+        Person pers = (Person) dbm.getEntity("Person", "Id", paym.getPersonid().getId());
+        String receiver = pers.getEmail();
+        emailBean.sendPaymentApprovementMessage(receiver, pers, paym);
     }
     
     public List<Payment> getPayments() {

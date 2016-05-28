@@ -36,19 +36,18 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "HOUSE")
 @NamedQueries({
-    @NamedQuery(name = "House.findAll", query = "SELECT h FROM House h"),
-    @NamedQuery(name = "House.findById", query = "SELECT h FROM House h WHERE h.id = :id"),
-    @NamedQuery(name = "House.findByTitle", query = "SELECT h FROM House h WHERE h.title = :title"),
-    @NamedQuery(name = "House.findByDescription", query = "SELECT h FROM House h WHERE h.description = :description"),
-    @NamedQuery(name = "House.findByHousereg", query = "SELECT h FROM House h WHERE h.housereg = :housereg"),
-    @NamedQuery(name = "House.findByAddress", query = "SELECT h FROM House h WHERE h.address = :address"),
-    @NamedQuery(name = "House.findByIsactive", query = "SELECT h FROM House h WHERE h.isactive = :isactive"),
-    @NamedQuery(name = "House.findBySeasonstartdate", query = "SELECT h FROM House h WHERE h.seasonstartdate = :seasonstartdate"),
-    @NamedQuery(name = "House.findBySeasonenddate", query = "SELECT h FROM House h WHERE h.seasonenddate = :seasonenddate"),
-    @NamedQuery(name = "House.findByWeekprice", query = "SELECT h FROM House h WHERE h.weekprice = :weekprice"),
-    @NamedQuery(name = "House.findByNumberofplaces", query = "SELECT h FROM House h WHERE h.numberofplaces = :numberofplaces"),
-    @NamedQuery(name = "House.findByIsdeleted", query = "SELECT h FROM House h WHERE h.isdeleted = :isdeleted"),
-    @NamedQuery(name = "House.findByOptlockversion", query = "SELECT h FROM House h WHERE h.optlockversion = :optlockversion")})
+    @NamedQuery(name = "House.findAll", query = "SELECT h FROM House h WHERE (h.isdeleted IS NULL OR h.isdeleted = FALSE)"),
+    @NamedQuery(name = "House.findById", query = "SELECT h FROM House h WHERE (h.isdeleted IS NULL OR h.isdeleted = FALSE) AND h.id = :id"),
+    @NamedQuery(name = "House.findByTitle", query = "SELECT h FROM House h WHERE (h.isdeleted IS NULL OR h.isdeleted = FALSE) AND h.title = :title"),
+    @NamedQuery(name = "House.findByDescription", query = "SELECT h FROM House h WHERE (h.isdeleted IS NULL OR h.isdeleted = FALSE) AND h.description = :description"),
+    @NamedQuery(name = "House.findByHousereg", query = "SELECT h FROM House h WHERE (h.isdeleted IS NULL OR h.isdeleted = FALSE) AND h.housereg = :housereg"),
+    @NamedQuery(name = "House.findByAddress", query = "SELECT h FROM House h WHERE (h.isdeleted IS NULL OR h.isdeleted = FALSE) AND h.address = :address"),
+    @NamedQuery(name = "House.findByIsactive", query = "SELECT h FROM House h WHERE (h.isdeleted IS NULL OR h.isdeleted = FALSE) AND h.isactive = :isactive"),
+    @NamedQuery(name = "House.findBySeasonstartdate", query = "SELECT h FROM House h WHERE (h.isdeleted IS NULL OR h.isdeleted = FALSE) AND h.seasonstartdate = :seasonstartdate"),
+    @NamedQuery(name = "House.findBySeasonenddate", query = "SELECT h FROM House h WHERE (h.isdeleted IS NULL OR h.isdeleted = FALSE) AND h.seasonenddate = :seasonenddate"),
+    @NamedQuery(name = "House.findByWeekprice", query = "SELECT h FROM House h WHERE (h.isdeleted IS NULL OR h.isdeleted = FALSE) AND h.weekprice = :weekprice"),
+    @NamedQuery(name = "House.findByNumberofplaces", query = "SELECT h FROM House h WHERE (h.isdeleted IS NULL OR h.isdeleted = FALSE) AND h.numberofplaces = :numberofplaces"),
+    @NamedQuery(name = "House.findByIsdeleted", query = "SELECT h FROM House h WHERE h.isdeleted = :isdeleted")})
 public class House implements Serializable {
 
     private static final long serialVersionUID = 1L;
