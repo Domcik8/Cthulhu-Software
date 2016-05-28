@@ -52,7 +52,7 @@ public class PriorityGroupService {
     private boolean isRightDate() {
         Calendar calendar = Calendar.getInstance();
         
-        if (checkDatePart("HourOfTheDay") && checkDatePart("DayOfTheWeek") && checkDatePart("Month"))
+        if (checkDatePart("HourOfTheDay") && checkDatePart("DayOfTheMonth") && checkDatePart("Month"))
             return true;
        return false;
     }
@@ -82,8 +82,8 @@ public class PriorityGroupService {
                         return false;
                     break;
                     
-                case "DayOfTheWeek": 
-                    if (dateParts[i] < 1 || dateParts[i] > 7)
+                case "DayOfTheMonth": 
+                    if (dateParts[i] < 1 || dateParts[i] > 31)
                         return false;
                     break;
                 case "Month": 
@@ -100,8 +100,8 @@ public class PriorityGroupService {
                     return true;
                 break;
                 
-            case "DayOfTheWeek": 
-                if (contains(dateParts, calendar.get(Calendar.DAY_OF_WEEK)))
+            case "DayOfTheMonth": 
+                if (contains(dateParts, calendar.get(Calendar.DAY_OF_MONTH)))
                     return true;
                 break;
                 

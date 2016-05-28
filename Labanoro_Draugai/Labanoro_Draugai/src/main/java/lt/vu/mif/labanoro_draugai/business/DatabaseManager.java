@@ -159,7 +159,9 @@ public class DatabaseManager {
      * Fills database with basic reservations
      */
     private void fillBasicReservations() {
-        try {
+        if(getAllEntities("Reservation").isEmpty())
+        {
+            try {
             List<String> services = new ArrayList<String>();
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             services.add("ServiceReg-1");
@@ -167,9 +169,18 @@ public class DatabaseManager {
 
             addReservation("HouseReg-1", "DefaultPayment", "Reservation", "doli@test.com", null, format.parse("2016-06-06"), format.parse("2016-06-12"));
             addReservation("HouseReg-1", "DefaultPayment", "Reservation", "doli@test.com", services, format.parse("2016-06-27"), format.parse("2016-07-10"));
-        } catch (ParseException ex) {
-            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            addReservation("HouseReg-1", "DefaultPayment", "Reservation", "doli@test.com", null, format.parse("2016-07-11"), format.parse("2016-07-17"));
+            addReservation("HouseReg-2", "DefaultPayment", "Reservation", "doli@test.com", null, format.parse("2016-06-06"), format.parse("2016-06-12"));
+            addReservation("HouseReg-2", "DefaultPayment", "Reservation", "doli@test.com", services, format.parse("2016-06-27"), format.parse("2016-07-10"));
+            addReservation("HouseReg-2", "DefaultPayment", "Reservation", "doli@test.com", null, format.parse("2016-07-11"), format.parse("2016-07-17"));
+            addReservation("HouseReg-3", "DefaultPayment", "Reservation", "erba@test.com", null, format.parse("2016-07-11"), format.parse("2016-07-17"));
+            
+            
+            } catch (ParseException ex) {
+                Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else 
+            System.out.println("No reservations were created, because system already has some");
     }
 
     /**
@@ -187,7 +198,7 @@ public class DatabaseManager {
         addSystemParameter("SystemParameter.MaxRecommendations", "Maksimalus rekomendacijų užklausų skaičius", "5", "SystemParameter");
 
         addSystemParameter("SystemParameter.priorityGroup.Month", "Prioriteto grupės, perskaičiavimo laikas: mėnuo", "3,6,9,12", "SystemParameter");
-        addSystemParameter("SystemParameter.priorityGroup.DayOfTheWeek", "Prioriteto grupės, perskaičiavimo laikas: savaitės diena", "6", "SystemParameter");
+        addSystemParameter("SystemParameter.priorityGroup.DayOfTheMonth", "Prioriteto grupės, perskaičiavimo laikas: mėnesio diena", "1", "SystemParameter");
         addSystemParameter("SystemParameter.priorityGroup.HourOfTheDay", "Prioriteto grupės, perskaičiavimo laikas: dienos valanda", "22", "SystemParameter");
         addSystemParameter("SystemParameter.priorityGroup.SeasonLength", "Prioriteto grupės, suskirstimo laikotarpis mėnesiais", "3", "SystemParameter");
         addSystemParameter("SystemParameter.priorityGroup.Quantity", "Prioriteto grupės, grupių skaičius", "12", "SystemParameter");

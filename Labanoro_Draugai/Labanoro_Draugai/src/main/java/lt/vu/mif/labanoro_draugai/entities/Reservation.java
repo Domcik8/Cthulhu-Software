@@ -33,6 +33,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "RESERVATION")
 @NamedQueries({
+    /*(r.ISDELETED = FALSE OR r.ISDELETED IS NULL)*/
     @NamedQuery(name = "Reservation.findAll", query = "SELECT r FROM Reservation r"),
     @NamedQuery(name = "Reservation.findById", query = "SELECT r FROM Reservation r WHERE r.id = :id"),
     @NamedQuery(name = "Reservation.findByReservationreg", query = "SELECT r FROM Reservation r WHERE r.reservationreg = :reservationreg"),
