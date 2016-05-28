@@ -44,7 +44,7 @@ and open the template in the editor.
                                 <h:outputText class="small-text" value="Adresas: #{house.address}"/>
                                 <h:outputText class="small-text" value="Vietų sk.: #{house.numberofplaces}"/>
                                 <h:outputFormat class="small-text" value="Pradžios data: {0, date, yyyy-MM-dd}">
-                                    <f:param value="#{house.seasonstartdate}" />
+                                    <f:param value="#{house.seasonstartdate}"/>
                                 </h:outputFormat>
                                 <h:outputFormat class="small-text" value="Pabaigos data: {0, date, yyyy-MM-dd}">
                                     <f:param value="#{house.seasonenddate}" />
@@ -57,7 +57,7 @@ and open the template in the editor.
                                 <h:panelGrid columns="2">
                                     <h:outputText class="price-text" value="Sav. kaina: "/>
                                     <h:outputText class="price-text" style="width: 100%; padding-left: 10px" value="#{house.weekprice}">
-                                        <f:convertNumber type="currency" currencySymbol=" € "/>
+                                        <f:convertNumber type="currency" currencySymbol=" #{adminHouseManager.currency} "/>
                                     </h:outputText>
                                 </h:panelGrid>
                                 <h:commandButton action="#{adminHouseManager.setEditableHouse()}" value="Modifikuoti">

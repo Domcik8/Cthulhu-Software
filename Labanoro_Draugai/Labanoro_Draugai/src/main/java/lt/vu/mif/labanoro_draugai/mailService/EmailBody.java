@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.Payment;
 import lt.vu.mif.labanoro_draugai.entities.Person;
+import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 
 /**
  *
@@ -127,10 +128,18 @@ public class EmailBody {
     
     public String getPaymentApprovementMessage(String receiver, Payment payment) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String currency;
+        Systemparameter param = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Currency.Euro");
+        if (param == null) {
+            currency = "?";
+        }
+        else {
+            currency = param.getValue();
+        }
         
         String message = "Sveiki, ";
         message += "<br/><br/> Norime pranešti, kad gavome jūsų mokėjimą!";
-        message += "<br/><br/> Mokėjimo suma: <b>" + payment.getPaymentprice() + " € </b>";
+        message += "<br/><br/> Mokėjimo suma: <b>" + payment.getPaymentprice() + " " + currency + " </b>";
         message += "<br/> Mokėjimo data ir laikas: <b>" + dateFormat.format(payment.getPaymentdate()) + " </b>";
         
         message += "<br/><br/> Džiaugiamės, kad naudojatės mūsų paslaugomis!";

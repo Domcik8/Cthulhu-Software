@@ -75,6 +75,8 @@ public class EditableHouse implements Serializable {
     private UploadedFile file;
     
     private String image;
+    
+    private String currency;
 
     //======================= CONSTRUCT ===========================
     
@@ -83,6 +85,13 @@ public class EditableHouse implements Serializable {
         house = getEditableHouse();
         initImages();
         initTypes();
+        
+        Systemparameter param = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Currency.Euro");
+        if (param == null) {
+            currency = "?";
+            return;
+        }
+        currency = param.getValue();
     }
     
     public EditableHouse() {
@@ -226,6 +235,10 @@ public class EditableHouse implements Serializable {
     public int getImageSequence(String imgName) {
         Houseimage img = (Houseimage) dbm.getEntity("Houseimage", "Internalname", imgName);
         return img.getSequence();
+    }
+    
+    public String getCurrency() {
+        return currency;
     }
     
     //========================== TYPES ==============================

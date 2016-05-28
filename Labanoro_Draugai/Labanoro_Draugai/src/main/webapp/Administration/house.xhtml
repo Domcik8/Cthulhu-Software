@@ -69,7 +69,7 @@ and open the template in the editor.
                         </p:inputText>
                         <p:message for="houseId" style="color:red" />
 
-                        <p:outputLabel for="weekPrice" value="Sav. kaina (EUR):"/>
+                        <p:outputLabel for="weekPrice" value="Sav. kaina (#{editableHouse.currency}):"/>
                         <p:inputText id="weekPrice" value="#{editableHouse.house.weekprice}"/>
                         <h:message for="weekPrice" style="color:red" />
 
