@@ -232,6 +232,9 @@ public class DatabaseManager {
         addSystemParameter("SystemParameter.Mail.Smtp.auth", "Smtp autentifikacija", "true", "Ar reikalinga autentifikacija prisijungimui", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Smtp.starttls.enable", "Smtp TLS", "true", "Ar TLS turi būti įjungtas", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Smtp.ssl.trust", "Smtp Trust", "smtp.gmail.com", "Ar patikimas hostas", "SystemParameter");
+        
+        addSystemParameter("SystemParameter.Houseimage.Width", "Nuotraukos plotis", "600", "Namelio nuotraukų plotis įkėlimo metu. Jeigu reikšmė 0, tai nuotraukos plotis bus nustatytas pagal jos aukštį.", "SystemParameter");
+        addSystemParameter("SystemParameter.Houseimage.Height", "Nuotraukos aukštis", "0", "Namelio nuotraukų aukštis įkėlimo metu. Jeigu reikšmė 0, tai nuotraukos aukštis bus nustatytas pagal jos plotį.", "SystemParameter");
 
     }
 
