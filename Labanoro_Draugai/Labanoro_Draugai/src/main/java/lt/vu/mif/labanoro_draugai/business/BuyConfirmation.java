@@ -8,9 +8,9 @@ package lt.vu.mif.labanoro_draugai.business;
 import java.io.Serializable;
 import java.util.Date;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.view.ViewScoped;
+import org.omnifaces.cdi.ViewScoped;
 import javax.inject.Inject;
+import javax.inject.Named;
 import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import net.sf.json.JSONObject;
 
@@ -18,8 +18,9 @@ import net.sf.json.JSONObject;
  *
  * @author werezz
  */
-@ManagedBean
+@Named
 @ViewScoped
+@Interceptorius
 public class BuyConfirmation implements Serializable {
 
     @Inject
@@ -27,13 +28,14 @@ public class BuyConfirmation implements Serializable {
 
     private String[] prices;
     private String price;
+    private String ratio;
 
     public String getPrice() {
         return price;
     }
 
     public void setPrice(String price) {
-                System.out.println("price updated:"+price);
+        System.out.println("price updated:" + price);
         this.price = price;
     }
 
@@ -52,15 +54,28 @@ public class BuyConfirmation implements Serializable {
     }
 
     public long getPriceInCents() {
-        System.out.println("cents updated:"+new Date());
+        System.out.println("cents updated:" + new Date());
         if (price == null || price.isEmpty()) {
             return -1;
         }
-        System.out.println("price:"+price);
+        System.out.println("price:" + price);
         double temp = Double.valueOf(price);
         temp *= 100;
         return Math.round(temp);
 
+    }
+
+    public long getPriceInPoints() {
+        System.out.println("points updated:" + new Date());
+        if (price == null || price.isEmpty()) {
+            return -1;
+        }
+        System.out.println("price:" + price);
+        double temp = Double.valueOf(price);
+        Systemparameter exchangeratio = dbm.getSystemParameter("SystemParameter.ExchangeRate.Euro");
+        ratio=exchangeratio.getValue();
+        temp *= Double.valueOf(ratio);
+        return Math.round(temp);
     }
 
     public String createBuyJSON() {
