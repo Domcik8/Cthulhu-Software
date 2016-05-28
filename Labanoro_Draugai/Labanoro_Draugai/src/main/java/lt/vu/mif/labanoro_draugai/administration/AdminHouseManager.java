@@ -20,6 +20,7 @@ import javax.persistence.SynchronizationType;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Houseimage;
+import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 
@@ -33,6 +34,7 @@ public class AdminHouseManager implements Serializable {
     private List<House> houses;
     
     private int id;
+    private String currency;
     
     @PersistenceContext(type=PersistenceContextType.EXTENDED, synchronization=SynchronizationType.UNSYNCHRONIZED)
     private EntityManager em;
@@ -43,7 +45,14 @@ public class AdminHouseManager implements Serializable {
     @PostConstruct
     public void init() { 
         //houses = em.createNamedQuery("House.findAll").getResultList();
-        houses = (List<House>) dbm.getAllEntities("House");
+        houses = (List<House>) dbm.getEntityList("House", "Isdeleted", false);
+        
+        Systemparameter param = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Currency.Euro");
+        if (param == null) {
+            currency = "?";
+            return;
+        }
+        currency = param.getValue();
     }
     
     public AdminHouseManager() {
@@ -55,6 +64,10 @@ public class AdminHouseManager implements Serializable {
     
     public String setEditableHouse() {
         return "house";
+    }
+    
+    public String getCurrency() {
+        return currency;
     }
     
     public String firstImageName(House house) {

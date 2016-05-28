@@ -28,7 +28,7 @@ import javax.validation.constraints.Size;
 @Table(name = "TYPE")
 @NamedQueries({
     @NamedQuery(name = "Type.findAll", query = "SELECT t FROM Type t WHERE (t.isdeleted IS NULL OR t.isdeleted = FALSE)"),
-    @NamedQuery(name = "Type.findById", query = "SELECT t FROM Type t WHERE (t.isdeleted IS NULL OR t.isdeleted = FALSE)"),
+    @NamedQuery(name = "Type.findById", query = "SELECT t FROM Type t WHERE (t.isdeleted IS NULL OR t.isdeleted = FALSE) AND t.id = :id"),
     @NamedQuery(name = "Type.findByInternalname", query = "SELECT t FROM Type t WHERE (t.isdeleted IS NULL OR t.isdeleted = FALSE) AND t.internalname = :internalname"),
     @NamedQuery(name = "Type.findByTitle", query = "SELECT t FROM Type t WHERE (t.isdeleted IS NULL OR t.isdeleted = FALSE) AND t.title = :title"),
     @NamedQuery(name = "Type.findByDescription", query = "SELECT t FROM Type t WHERE (t.isdeleted IS NULL OR t.isdeleted = FALSE) AND t.description = :description"),

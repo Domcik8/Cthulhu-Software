@@ -5,22 +5,32 @@
  */
 package lt.vu.mif.labanoro_draugai.business;
 
-import java.util.Arrays;
+import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import javax.annotation.Priority;
+import javax.enterprise.context.Dependent;
+import javax.inject.Named;
 import javax.interceptor.AroundInvoke;
+import javax.interceptor.Interceptor;
+import static javax.interceptor.Interceptor.Priority.APPLICATION;
 import javax.interceptor.InvocationContext;
+import org.omnifaces.cdi.ViewScoped;
 
 /**
  *
  * @author werezz
  */
-public class Interceptor {
+@Interceptorius @Dependent @Interceptor @Priority(APPLICATION)
+public class FullInterceptor implements Serializable{
 
     @AroundInvoke
     public Object methodInterceptor(InvocationContext ctx) throws Exception {
         System.out.println("*** Intercepting call to StripeServlet method: "
-                + ctx.getMethod().getName());        
-         System.out.println("*** Intercepting call to StripeServlet method: "
+                + ctx.getMethod().getName());
+        System.out.println("*** Intercepting call to StripeServlet method: "
                 + ctx.getTarget().getClass().getSuperclass().getName());
+        System.out.println("lolololololololo");
         return ctx.proceed();
     }
+
 }

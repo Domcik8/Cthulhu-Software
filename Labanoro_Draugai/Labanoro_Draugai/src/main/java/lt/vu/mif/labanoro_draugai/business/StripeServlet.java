@@ -45,7 +45,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 @WebServlet(urlPatterns = {"/Stripe"})
-@Interceptors(Interceptor.class)
+//@Interceptors(Interceptor.class)
 public class StripeServlet extends HttpServlet {
 
     @Inject

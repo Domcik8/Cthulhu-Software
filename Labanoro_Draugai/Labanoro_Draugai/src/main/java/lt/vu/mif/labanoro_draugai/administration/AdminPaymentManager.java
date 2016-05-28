@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.Payment;
 import lt.vu.mif.labanoro_draugai.entities.Person;
+import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
+import lt.vu.mif.labanoro_draugai.mailService.EmailBean;
 
 /**
  *
@@ -38,6 +40,7 @@ public class AdminPaymentManager implements Serializable {
     private List<Payment> selectedPayments;
     private Payment payment;
     private Date calendar;
+    private String currency;
     
     @PersistenceContext
     EntityManager em;
@@ -45,11 +48,21 @@ public class AdminPaymentManager implements Serializable {
     @Inject
     DatabaseManager dbm;
     
+    @Inject
+    EmailBean emailBean;
+    
     @PostConstruct
     public void init() {
         if (payments == null || payments.isEmpty()) {
             payments = em.createNamedQuery("Payment.findAll").getResultList();
         }
+        
+        Systemparameter param = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Currency.Euro");
+        if (param == null) {
+            currency = "?";
+            return;
+        }
+        currency = param.getValue();
     }
     
     public String getType(Payment paym) {
@@ -58,13 +71,23 @@ public class AdminPaymentManager implements Serializable {
     
     public void approveChecked() throws IOException {
         for (Payment p : selectedPayments) {
-            if (p.getApproveddate() == null)
-                dbm.setPaymentApprovalDate(p);
+            if (p.getApproveddate() == null) {
+                boolean approvementSuccess = dbm.setPaymentApprovalDate(p);
+                if (approvementSuccess) {
+                    sendPaymentApprovementEmail(p);
+                }
+            }
         }
         
         //Reload the page:
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+    }
+    
+    private void sendPaymentApprovementEmail(Payment paym) {
+        Person pers = (Person) dbm.getEntity("Person", "Id", paym.getPersonid().getId());
+        String receiver = pers.getEmail();
+        emailBean.sendPaymentApprovementMessage(receiver, pers, paym);
     }
     
     public List<Payment> getPayments() {
@@ -109,6 +132,10 @@ public class AdminPaymentManager implements Serializable {
     
     public void setSelectedPayments(List<Payment> p) {
         selectedPayments = p;
+    }
+    
+    public String getCurrency() {
+        return currency;
     }
     
     public boolean isApproved(Payment p) {

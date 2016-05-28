@@ -189,7 +189,7 @@ public class DatabaseManager {
     private void fillBasicSystemParameters() {
         addSystemParameter("SystemParameter.BuyPoints", "Taškų kainos eurais", "5;10;15;20", "Esamos sistemos taškų kainos, kurios yra nesusijųsios su gaunamu taškų kiekiu. Naujos įvesties pvž: (5;)", "SystemParameter");
 
-        addSystemParameter("SystemParameter.ExchangeRate.Euro", "Taškų kursas lyginant su euru", "10", "SystemParameter");
+        addSystemParameter("SystemParameter.ExchangeRate.Euro", "Taškų kursas lyginant su euru", "1", "SystemParameter");
         addSystemParameter("SystemParameter.Currency.Euro", "Euro valiutos simbolis", "€", "SystemParameter");
 
         addSystemParameter("SystemParameter.General.ContextPath", "Pagrindinis kelias", "http://localhost:8080/Labanoro_Draugai", "Pagrindines puslapio URL'as", "SystemParameter");
@@ -438,7 +438,7 @@ public class DatabaseManager {
      * sucessfully
      */
     public Reservation addReservation(String houseReg, String paymentReg, String typeInternalName, String personEmail, List<String> services, Date dateFrom, Date dateTo) {
-        return addReservation(generateReg("ReservationReg"), houseReg, paymentReg, typeInternalName, personEmail, services, dateFrom, dateTo);
+        return addReservation(generateReg("ResReg"), houseReg, paymentReg, typeInternalName, personEmail, services, dateFrom, dateTo);
     }
 
     /**

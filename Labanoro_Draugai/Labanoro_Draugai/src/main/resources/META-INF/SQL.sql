@@ -1,4 +1,4 @@
---Following scripts drop all tables.
+/--Following scripts drop all tables.
 
 ALTER table payment drop CONSTRAINT   SQL160515114857780;
 ALTER table payment drop CONSTRAINT   PaymentReservationID;
