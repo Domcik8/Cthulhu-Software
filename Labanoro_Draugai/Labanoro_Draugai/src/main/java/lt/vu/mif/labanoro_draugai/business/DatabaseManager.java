@@ -438,7 +438,7 @@ public class DatabaseManager {
      * sucessfully
      */
     public Reservation addReservation(String houseReg, String paymentReg, String typeInternalName, String personEmail, List<String> services, Date dateFrom, Date dateTo) {
-        return addReservation(generateReg("ReservationReg"), houseReg, paymentReg, typeInternalName, personEmail, services, dateFrom, dateTo);
+        return addReservation(generateReg("ResReg"), houseReg, paymentReg, typeInternalName, personEmail, services, dateFrom, dateTo);
     }
 
     /**
