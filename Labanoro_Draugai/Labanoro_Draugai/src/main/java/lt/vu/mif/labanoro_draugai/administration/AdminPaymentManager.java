@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.Payment;
 import lt.vu.mif.labanoro_draugai.entities.Person;
+import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import lt.vu.mif.labanoro_draugai.mailService.EmailBean;
 
 /**
@@ -39,6 +40,7 @@ public class AdminPaymentManager implements Serializable {
     private List<Payment> selectedPayments;
     private Payment payment;
     private Date calendar;
+    private String currency;
     
     @PersistenceContext
     EntityManager em;
@@ -54,6 +56,13 @@ public class AdminPaymentManager implements Serializable {
         if (payments == null || payments.isEmpty()) {
             payments = em.createNamedQuery("Payment.findAll").getResultList();
         }
+        
+        Systemparameter param = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Currency.Euro");
+        if (param == null) {
+            currency = "?";
+            return;
+        }
+        currency = param.getValue();
     }
     
     public String getType(Payment paym) {
@@ -123,6 +132,10 @@ public class AdminPaymentManager implements Serializable {
     
     public void setSelectedPayments(List<Payment> p) {
         selectedPayments = p;
+    }
+    
+    public String getCurrency() {
+        return currency;
     }
     
     public boolean isApproved(Payment p) {
