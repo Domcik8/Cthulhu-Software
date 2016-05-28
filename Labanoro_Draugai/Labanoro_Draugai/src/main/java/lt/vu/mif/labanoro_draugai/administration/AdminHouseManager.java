@@ -8,6 +8,8 @@ package lt.vu.mif.labanoro_draugai.administration;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import org.omnifaces.cdi.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -56,13 +58,21 @@ public class AdminHouseManager implements Serializable {
     }
     
     public String firstImageName(House house) {
-        if(house == null || house.getHouseimageList() == null || house.getHouseimageList().isEmpty()) return null;
+        if(house == null || house.getHouseimageList() == null || house.getHouseimageList().isEmpty()) 
+            return null;
+        
         Predicate condition = new Predicate() {
             public boolean evaluate(Object sample) {
                  return ((Houseimage)sample).getSequence().equals(1);
             }
          };
-         Houseimage result = (Houseimage)CollectionUtils.select(house.getHouseimageList(), condition).iterator().next();
-         return result.getInternalname();
+        
+        try {
+            Houseimage result = (Houseimage)CollectionUtils.select(house.getHouseimageList(), condition).iterator().next();
+            return result.getInternalname();
+        }
+        catch (Exception ex) {
+            return "Nepavyko užkrauti nuotraukos! Siūlome įeiti į sistemą iš naujo.";
+        }
     }
 }
