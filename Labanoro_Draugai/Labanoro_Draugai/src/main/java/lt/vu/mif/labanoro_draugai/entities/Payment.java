@@ -34,14 +34,13 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "PAYMENT")
 @NamedQueries({
-    @NamedQuery(name = "Payment.findAll", query = "SELECT p FROM Payment p"),
-    @NamedQuery(name = "Payment.findById", query = "SELECT p FROM Payment p WHERE p.id = :id"),
-    @NamedQuery(name = "Payment.findByPaymentreg", query = "SELECT p FROM Payment p WHERE p.paymentreg = :paymentreg"),
-    @NamedQuery(name = "Payment.findByPaymentprice", query = "SELECT p FROM Payment p WHERE p.paymentprice = :paymentprice"),
-    @NamedQuery(name = "Payment.findByPaymentdate", query = "SELECT p FROM Payment p WHERE p.paymentdate = :paymentdate"),
-    @NamedQuery(name = "Payment.findByApproveddate", query = "SELECT p FROM Payment p WHERE p.approveddate = :approveddate"),
-    @NamedQuery(name = "Payment.findByIsdeleted", query = "SELECT p FROM Payment p WHERE p.isdeleted = :isdeleted"),
-    @NamedQuery(name = "Payment.findByOptlockversion", query = "SELECT p FROM Payment p WHERE p.optlockversion = :optlockversion")})
+    @NamedQuery(name = "Payment.findAll", query = "SELECT p FROM Payment p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE)"),
+    @NamedQuery(name = "Payment.findById", query = "SELECT p FROM Payment p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.id = :id"),
+    @NamedQuery(name = "Payment.findByPaymentreg", query = "SELECT p FROM Payment p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.paymentreg = :paymentreg"),
+    @NamedQuery(name = "Payment.findByPaymentprice", query = "SELECT p FROM Payment p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.paymentprice = :paymentprice"),
+    @NamedQuery(name = "Payment.findByPaymentdate", query = "SELECT p FROM Payment p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.paymentdate = :paymentdate"),
+    @NamedQuery(name = "Payment.findByApproveddate", query = "SELECT p FROM Payment p WHERE (p.isdeleted IS NULL OR p.isdeleted = FALSE) AND p.approveddate = :approveddate"),
+    @NamedQuery(name = "Payment.findByIsdeleted", query = "SELECT p FROM Payment p WHERE p.isdeleted = :isdeleted")})
 public class Payment implements Serializable {
 
     private static final long serialVersionUID = 1L;

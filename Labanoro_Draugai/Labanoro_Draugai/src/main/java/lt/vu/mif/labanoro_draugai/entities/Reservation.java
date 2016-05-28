@@ -33,14 +33,12 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "RESERVATION")
 @NamedQueries({
-    /*(r.ISDELETED = FALSE OR r.ISDELETED IS NULL)*/
-    @NamedQuery(name = "Reservation.findAll", query = "SELECT r FROM Reservation r"),
-    @NamedQuery(name = "Reservation.findById", query = "SELECT r FROM Reservation r WHERE r.id = :id"),
-    @NamedQuery(name = "Reservation.findByReservationreg", query = "SELECT r FROM Reservation r WHERE r.reservationreg = :reservationreg"),
-    @NamedQuery(name = "Reservation.findByStartdate", query = "SELECT r FROM Reservation r WHERE r.startdate = :startdate"),
-    @NamedQuery(name = "Reservation.findByEnddate", query = "SELECT r FROM Reservation r WHERE r.enddate = :enddate"),
-    @NamedQuery(name = "Reservation.findByIsdeleted", query = "SELECT r FROM Reservation r WHERE r.isdeleted = :isdeleted"),
-    @NamedQuery(name = "Reservation.findByOptlockversion", query = "SELECT r FROM Reservation r WHERE r.optlockversion = :optlockversion")})
+    @NamedQuery(name = "Reservation.findAll", query = "SELECT r FROM Reservation r WHERE (r.isdeleted IS NULL OR r.isdeleted = FALSE)"),
+    @NamedQuery(name = "Reservation.findById", query = "SELECT r FROM Reservation r WHERE (r.isdeleted IS NULL OR r.isdeleted = FALSE) AND r.id = :id"),
+    @NamedQuery(name = "Reservation.findByReservationreg", query = "SELECT r FROM Reservation r WHERE (r.isdeleted IS NULL OR r.isdeleted = FALSE) AND r.reservationreg = :reservationreg"),
+    @NamedQuery(name = "Reservation.findByStartdate", query = "SELECT r FROM Reservation r WHERE (r.isdeleted IS NULL OR r.isdeleted = FALSE) AND r.startdate = :startdate"),
+    @NamedQuery(name = "Reservation.findByEnddate", query = "SELECT r FROM Reservation r WHERE (r.isdeleted IS NULL OR r.isdeleted = FALSE) AND r.enddate = :enddate"),
+    @NamedQuery(name = "Reservation.findByIsdeleted", query = "SELECT r FROM Reservation r WHERE r.isdeleted = :isdeleted")})
 public class Reservation implements Serializable {
 
     private static final long serialVersionUID = 1L;

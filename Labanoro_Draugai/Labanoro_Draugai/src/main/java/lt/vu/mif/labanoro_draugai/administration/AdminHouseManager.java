@@ -43,7 +43,7 @@ public class AdminHouseManager implements Serializable {
     @PostConstruct
     public void init() { 
         //houses = em.createNamedQuery("House.findAll").getResultList();
-        houses = (List<House>) dbm.getAllEntities("House");
+        houses = (List<House>) dbm.getEntityList("House", "Isdeleted", false);
     }
     
     public AdminHouseManager() {

@@ -12,6 +12,7 @@ import javax.inject.Named;
 import javax.mail.*;
 import javax.mail.internet.*;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
+import lt.vu.mif.labanoro_draugai.entities.Payment;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 
 //import lt.vu.mif.labanoro_draugai.administration.settings;
@@ -84,6 +85,10 @@ public class EmailBean {
 
     public void sendCandidateInvitationMessage(String receiver, Person requestor) {
         sendEmail(receiver, "Kvietimas prisijungti prie \"Labanoro draugai\" klubo", body.getCandidateInvitationMessage(receiver, requestor));
+    }
+    
+    public void sendPaymentApprovementMessage(String receiver, Person person, Payment payment) {
+        sendEmail(receiver, "\"Labanoro draugai\" mokėjimo patvirtinimas ", body.getPaymentApprovementMessage(receiver, payment));
     }
 
     private void sendEmail(String to, String subject, String body) {

@@ -33,18 +33,17 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "SERVICE")
 @NamedQueries({
-    @NamedQuery(name = "Service.findAll", query = "SELECT s FROM Service s"),
-    @NamedQuery(name = "Service.findById", query = "SELECT s FROM Service s WHERE s.id = :id"),
-    @NamedQuery(name = "Service.findByTitle", query = "SELECT s FROM Service s WHERE s.title = :title"),
-    @NamedQuery(name = "Service.findByDescription", query = "SELECT s FROM Service s WHERE s.description = :description"),
-    @NamedQuery(name = "Service.findByServicereg", query = "SELECT s FROM Service s WHERE s.servicereg = :servicereg"),
-    @NamedQuery(name = "Service.findByIsactive", query = "SELECT s FROM Service s WHERE s.isactive = :isactive"),
-    @NamedQuery(name = "Service.findBySeasonstartdate", query = "SELECT s FROM Service s WHERE s.seasonstartdate = :seasonstartdate"),
-    @NamedQuery(name = "Service.findBySeasonenddate", query = "SELECT s FROM Service s WHERE s.seasonenddate = :seasonenddate"),
-    @NamedQuery(name = "Service.findByWeekprice", query = "SELECT s FROM Service s WHERE s.weekprice = :weekprice"),
-    @NamedQuery(name = "Service.findByNumberofplaces", query = "SELECT s FROM Service s WHERE s.numberofplaces = :numberofplaces"),
-    @NamedQuery(name = "Service.findByIsdeleted", query = "SELECT s FROM Service s WHERE s.isdeleted = :isdeleted"),
-    @NamedQuery(name = "Service.findByOptlockversion", query = "SELECT s FROM Service s WHERE s.optlockversion = :optlockversion")})
+    @NamedQuery(name = "Service.findAll", query = "SELECT s FROM Service s WHERE (s.isdeleted IS NULL OR s.isdeleted = FALSE)"),
+    @NamedQuery(name = "Service.findById", query = "SELECT s FROM Service s WHERE (s.isdeleted IS NULL OR s.isdeleted = FALSE) AND s.id = :id"),
+    @NamedQuery(name = "Service.findByTitle", query = "SELECT s FROM Service s WHERE (s.isdeleted IS NULL OR s.isdeleted = FALSE) AND s.title = :title"),
+    @NamedQuery(name = "Service.findByDescription", query = "SELECT s FROM Service s WHERE (s.isdeleted IS NULL OR s.isdeleted = FALSE) AND s.description = :description"),
+    @NamedQuery(name = "Service.findByServicereg", query = "SELECT s FROM Service s WHERE (s.isdeleted IS NULL OR s.isdeleted = FALSE) AND s.servicereg = :servicereg"),
+    @NamedQuery(name = "Service.findByIsactive", query = "SELECT s FROM Service s WHERE (s.isdeleted IS NULL OR s.isdeleted = FALSE) AND s.isactive = :isactive"),
+    @NamedQuery(name = "Service.findBySeasonstartdate", query = "SELECT s FROM Service s WHERE (s.isdeleted IS NULL OR s.isdeleted = FALSE) AND s.seasonstartdate = :seasonstartdate"),
+    @NamedQuery(name = "Service.findBySeasonenddate", query = "SELECT s FROM Service s WHERE (s.isdeleted IS NULL OR s.isdeleted = FALSE) AND s.seasonenddate = :seasonenddate"),
+    @NamedQuery(name = "Service.findByWeekprice", query = "SELECT s FROM Service s WHERE (s.isdeleted IS NULL OR s.isdeleted = FALSE) AND s.weekprice = :weekprice"),
+    @NamedQuery(name = "Service.findByNumberofplaces", query = "SELECT s FROM Service s WHERE (s.isdeleted IS NULL OR s.isdeleted = FALSE) AND s.numberofplaces = :numberofplaces"),
+    @NamedQuery(name = "Service.findByIsdeleted", query = "SELECT s FROM Service s WHERE s.isdeleted = :isdeleted")})
 public class Service implements Serializable {
 
     private static final long serialVersionUID = 1L;

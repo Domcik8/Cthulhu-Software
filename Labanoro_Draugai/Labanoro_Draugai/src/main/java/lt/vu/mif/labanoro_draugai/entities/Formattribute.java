@@ -27,15 +27,14 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "FORMATTRIBUTE")
 @NamedQueries({
-    @NamedQuery(name = "Formattribute.findAll", query = "SELECT f FROM Formattribute f"),
-    @NamedQuery(name = "Formattribute.findById", query = "SELECT f FROM Formattribute f WHERE f.id = :id"),
-    @NamedQuery(name = "Formattribute.findByInternalname", query = "SELECT f FROM Formattribute f WHERE f.internalname = :internalname"),
-    @NamedQuery(name = "Formattribute.findByName", query = "SELECT f FROM Formattribute f WHERE f.name = :name"),
-    @NamedQuery(name = "Formattribute.findByListitems", query = "SELECT f FROM Formattribute f WHERE f.listitems = :listitems"),
-    @NamedQuery(name = "Formattribute.findByIsrequired", query = "SELECT f FROM Formattribute f WHERE f.isrequired = :isrequired"),
-    @NamedQuery(name = "Formattribute.findByDescription", query = "SELECT f FROM Formattribute f WHERE f.description = :description"),
-    @NamedQuery(name = "Formattribute.findByIsdeleted", query = "SELECT f FROM Formattribute f WHERE f.isdeleted = :isdeleted"),
-    @NamedQuery(name = "Formattribute.findByOptlockversion", query = "SELECT f FROM Formattribute f WHERE f.optlockversion = :optlockversion")})
+    @NamedQuery(name = "Formattribute.findAll", query = "SELECT f FROM Formattribute f WHERE (f.isdeleted IS NULL OR f.isdeleted = FALSE)"),
+    @NamedQuery(name = "Formattribute.findById", query = "SELECT f FROM Formattribute f WHERE (f.isdeleted IS NULL OR f.isdeleted = FALSE) AND f.id = :id"),
+    @NamedQuery(name = "Formattribute.findByInternalname", query = "SELECT f FROM Formattribute f WHERE (f.isdeleted IS NULL OR f.isdeleted = FALSE) AND f.internalname = :internalname"),
+    @NamedQuery(name = "Formattribute.findByName", query = "SELECT f FROM Formattribute f WHERE (f.isdeleted IS NULL OR f.isdeleted = FALSE) AND f.name = :name"),
+    @NamedQuery(name = "Formattribute.findByListitems", query = "SELECT f FROM Formattribute f WHERE (f.isdeleted IS NULL OR f.isdeleted = FALSE) AND f.listitems = :listitems"),
+    @NamedQuery(name = "Formattribute.findByIsrequired", query = "SELECT f FROM Formattribute f WHERE (f.isdeleted IS NULL OR f.isdeleted = FALSE) AND f.isrequired = :isrequired"),
+    @NamedQuery(name = "Formattribute.findByDescription", query = "SELECT f FROM Formattribute f WHERE (f.isdeleted IS NULL OR f.isdeleted = FALSE) AND f.description = :description"),
+    @NamedQuery(name = "Formattribute.findByIsdeleted", query = "SELECT f FROM Formattribute f WHERE f.isdeleted = :isdeleted")})
 public class Formattribute implements Serializable {
 
     private static final long serialVersionUID = 1L;
