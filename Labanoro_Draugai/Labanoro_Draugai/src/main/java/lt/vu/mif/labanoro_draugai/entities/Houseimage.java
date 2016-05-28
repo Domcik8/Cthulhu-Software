@@ -9,6 +9,7 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import static javax.persistence.FetchType.LAZY;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -51,12 +52,12 @@ public class Houseimage implements Serializable {
     private String internalname;
     @Column(name = "SEQUENCE")
     private Integer sequence;
-    @Basic(fetch=LAZY)
+    @Basic(optional=false, fetch=LAZY)
     @NotNull
     @Lob
     @Column(name = "IMAGE")
     private Serializable image;
-    @Basic(optional = false)
+    @Basic(optional = false, fetch = FetchType.LAZY)
     @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "MIMETYPE")
