@@ -22,6 +22,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.data_models.UserFormProperty;
@@ -251,6 +252,32 @@ public class ProfileView implements Serializable {
         return result;
     }
 
+    public String unregister(){
+        if(user==null){
+            return "";
+        }
+        user.setIsdeleted(Boolean.TRUE);
+        user.setEmail(user.getEmail()+"_DELETED_"+user.getId());
+        if(user.getPersonregistrationform()!=null){
+            user.getPersonregistrationform().setInternalname(user.getEmail());
+            dbm.updateEntity(user.getPersonregistrationform());
+        }
+        dbm.updateEntity(user);
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+
+        String destination = (dbm.getSystemParameter("SystemParameter.Redirect.Login").getValue() + "?faces-redirect=true");
+        try {
+            request.logout();
+            System.out.println("Logout worked");
+        } catch (ServletException e) {
+            System.out.println("Failed to logout user!");
+            destination = (dbm.getSystemParameter("SystemParameter.Redirect.LoginError").getValue() + "?faces-redirect=true");
+        }
+
+        return destination;
+    }
+    
     //Getters
     public DynaFormModel getDisplayModel() {
         return displayModel;
