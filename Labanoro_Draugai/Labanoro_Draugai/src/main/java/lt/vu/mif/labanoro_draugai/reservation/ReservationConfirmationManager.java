@@ -161,7 +161,7 @@ public class ReservationConfirmationManager implements Serializable{
         totalPrice+=periodPrice(house.getWeekprice());
         if(selectedServices == null) return totalPrice;
         for(String str:selectedServices){
-            Service service = (Service)dbm.getEntity("Service", "Title", str);
+            Service service = (Service)dbm.getEntity("Service", "Servicereg", str);
             if(service == null) continue;
             totalPrice+=periodPrice(service.getWeekprice());
         }

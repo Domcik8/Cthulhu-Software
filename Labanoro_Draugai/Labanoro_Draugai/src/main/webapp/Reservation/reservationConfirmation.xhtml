@@ -50,13 +50,15 @@ and open the template in the editor.
                     </h:outputText>   
                 </div>
                 
-                <p:dataList value="#{reservationConfirmationManager.serviceList()}" var="service" type="ordered" emptyMessage="Nepasirinkta.">
+                <p:dataList value="#{reservationConfirmationManager.serviceList()}" var="service" emptyMessage="Nepasirinkta." >
                     <f:facet name="header">
                         Papildomos paslaugos:
                     </f:facet>
                     #{service.title} #{reservationConfirmationManager.currency}#{reservationConfirmationManager.periodPrice(service.weekprice)}
                 </p:dataList>
-                <h:outputLabel id="totalPrice" value="Visa kaina: #{reservationConfirmationManager.currency}#{reservationConfirmationManager.totalPrice}"/>  
+                <h:outputLabel id="totalPrice" value="Visa kaina: 
+                               #{reservationConfirmationManager.currency}#{reservationConfirmationManager.calculateTotalPrice()} 
+                               (#{reservationConfirmationManager.totalPriceInPoints} taškai)"/>  
                     <h:form>
                         <p:commandButton class="btn" value="Mokėti taškais" action="#{reservationConfirmationManager.reserveSummerhouse()}"/>
                          <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" /> 
