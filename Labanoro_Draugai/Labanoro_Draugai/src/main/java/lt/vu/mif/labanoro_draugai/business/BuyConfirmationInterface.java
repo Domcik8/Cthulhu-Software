@@ -6,6 +6,7 @@
 package lt.vu.mif.labanoro_draugai.business;
 
 import java.math.BigDecimal;
+import lt.vu.mif.labanoro_draugai.entities.Person;
 
 /**
  *
@@ -13,8 +14,8 @@ import java.math.BigDecimal;
  */
 public interface BuyConfirmationInterface {
 
-    public long getDiscountPrice(long price);
-    public BigDecimal getDiscountPrice(BigDecimal price);
-    public BigDecimal getIncreasedPoints(BigDecimal points);
+    public long getDiscountPrice(long price, Person user);
+    public BigDecimal getDiscountPrice(BigDecimal price, Person user);
+    public BigDecimal getIncreasedPoints(BigDecimal points, Person user);
 
 }

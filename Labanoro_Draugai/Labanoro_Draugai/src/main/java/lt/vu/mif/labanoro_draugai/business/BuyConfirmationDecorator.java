@@ -30,29 +30,24 @@ public class BuyConfirmationDecorator implements Serializable, BuyConfirmationIn
     BuyConfirmationInterface priceDiscount;
 
     @Override
-    public long getDiscountPrice(long price) {
-        price = priceDiscount.getDiscountPrice(price);
-        return isJonas() ? price / 2 : price;
+    public long getDiscountPrice(long price, Person user) {
+        price = priceDiscount.getDiscountPrice(price, user);
+        return isJonas(user) ? price / 2 : price;
     }
 
     @Override
-    public BigDecimal getDiscountPrice(BigDecimal price) {
-        price = priceDiscount.getDiscountPrice(price);
-        return isJonas() ? price.divide(new BigDecimal(2)) : price;
+    public BigDecimal getDiscountPrice(BigDecimal price, Person user) {
+        price = priceDiscount.getDiscountPrice(price, user);
+        return isJonas(user) ? price.divide(new BigDecimal(2)) : price;
     }
 
     @Override
-    public BigDecimal getIncreasedPoints(BigDecimal points) {
-        points = priceDiscount.getIncreasedPoints(points);
-        return isJonas() ? points.multiply(new BigDecimal(2)) : points;
+    public BigDecimal getIncreasedPoints(BigDecimal points, Person user) {
+        points = priceDiscount.getIncreasedPoints(points, user);
+        return isJonas(user) ? points.multiply(new BigDecimal(2)) : points;
     }
 
-    private boolean isJonas() {
-
-        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-        HttpServletRequest request = (HttpServletRequest) (ec.getRequest());
-
-        Person user = (Person) dbm.getEntity("Person", "Email", request.getUserPrincipal().getName());
+    private boolean isJonas(Person user) {
 
         return user.getFirstname().equalsIgnoreCase("Jonas");
 

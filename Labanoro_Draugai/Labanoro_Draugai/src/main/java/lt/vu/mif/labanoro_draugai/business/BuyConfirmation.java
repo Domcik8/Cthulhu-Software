@@ -5,13 +5,21 @@
  */
 package lt.vu.mif.labanoro_draugai.business;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
+import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
+import lt.vu.mif.labanoro_draugai.reservation.ReservationConfirmationManager;
 import net.sf.json.JSONObject;
 import org.omnifaces.cdi.ViewScoped;
 
@@ -33,6 +41,15 @@ public class BuyConfirmation implements Serializable {
     private String price;
     private String currency;
     private String ratio;
+    private Person user;
+
+    public Person getUser() {
+        return user;
+    }
+
+    public void setUser(Person user) {
+        this.user = user;
+    }
 
     @PostConstruct
     public void init() {
@@ -57,6 +74,18 @@ public class BuyConfirmation implements Serializable {
             return;
         }
         currency = param.getValue();
+
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) (ec.getRequest());
+        if (request == null || request.getUserPrincipal() == null || request.getUserPrincipal().getName() == null && request.getUserPrincipal().getName().isEmpty()) {
+            try {
+                ec.redirect("/Labanoro_Draugai/Reservation/buy.html");
+            } catch (IOException ex) {
+                Logger.getLogger(ReservationConfirmationManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        user = (Person) dbm.getEntity("Person", "Email", request.getUserPrincipal().getName());
     }
 
     public BigDecimal getPriceInPoints() {

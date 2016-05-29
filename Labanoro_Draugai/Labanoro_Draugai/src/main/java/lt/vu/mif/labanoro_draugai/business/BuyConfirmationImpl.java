@@ -7,6 +7,7 @@ package lt.vu.mif.labanoro_draugai.business;
 
 import java.math.BigDecimal;
 import javax.ejb.Stateless;
+import lt.vu.mif.labanoro_draugai.entities.Person;
 
 /**
  *
@@ -16,17 +17,17 @@ import javax.ejb.Stateless;
 public class BuyConfirmationImpl implements BuyConfirmationInterface {
 
     @Override
-    public long getDiscountPrice(long price) {
+    public long getDiscountPrice(long price, Person user) {
         return price;
     }
 
     @Override
-    public BigDecimal getDiscountPrice(BigDecimal price) {
+    public BigDecimal getDiscountPrice(BigDecimal price, Person user) {
         return price;
     }
 
     @Override
-    public BigDecimal getIncreasedPoints(BigDecimal points) {
+    public BigDecimal getIncreasedPoints(BigDecimal points, Person user) {
         return points;
     }
     
