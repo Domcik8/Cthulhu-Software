@@ -26,10 +26,13 @@ and open the template in the editor.
             <h1>Paskyros valdymas</h1>
             <p:panel>
                 <h2>Statusas</h2>
-                <p:panelGrid columns="1" id="statusInfoGrid">    
+                <p:panelGrid columns="1" id="statusInfoGrid">
                     <p:outputLabel value="Vartotojo statusas: #{profileView.user.typeid.title}"/>
                     <p:outputLabel value="Turimi taškai: #{profileView.user.points.doubleValue()}t"/>
-                    <p:outputLabel value="Narystė galioja iki: #{profileView.formattedMembershipEndDate()}" rendered="#{profileView.renderNotForCandidate()}"/>
+                </p:panelGrid>
+                <p:panelGrid columns="2" id="membershipInfoGrid" rendered="#{profileView.renderNotForCandidate()}">    
+                    <p:outputLabel value="Narystė galioja iki: #{profileView.formattedMembershipEndDate()}" style="#{profileView.user.membershipdue.before(profileView.today())?'color:red;':''}"/>
+                    <p:commandLink id="changeLastNameLink" value="Pratęsti narystę" onclick="PF('membershipWidget').show()" style="color: green" rendered="#{profileView.ableToBuyMembership()}" update=":membershipForm:stripeScript"/>
                 </p:panelGrid>
                 <p:commandButton id="inviteButton" value="Siūsti pakvietimą į klubą" onclick="PF('inviteWidget').show()" rendered="#{profileView.renderNotForCandidate()}"/>
 
@@ -105,6 +108,7 @@ and open the template in the editor.
             </div>    
         </div>
         <div id="dialogs">
+            
             <p:dialog id="informationDialog" header="Išsaugota sėkmingai!"  widgetVar="infoWidget" resizable="false" draggable="false" responsive="true"
                       closeOnEscape="true" fitViewport="true" position="center"  modal="true"/>
 
@@ -187,6 +191,28 @@ and open the template in the editor.
                                      icon="ui-icon-check" action="#{profileView.inviteFriend()}" 
                                      oncomplete="if(args &amp;&amp; !args.validationFailed) PF('inviteWidget').hide()"/>
                     <p:commandButton value="Atšaukti" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('inviteWidget').hide()"/>
+                </h:form>
+            </p:dialog>
+            
+             <p:dialog id="membershipDialog" header="Klubo narystės apmokėjimas." widgetVar="membershipWidget" closeOnEscape="true" resizable="false" draggable="false" responsive="true"
+                      fitViewport="true" position="center"  modal="true">
+                <h:form id="membershipForm">
+                    <p:outputLabel value="Metinė narystė kainuoja #{profileView.currency}#{profileView.membershipPrice} 
+                                   (#{profileView.pricePointDisplay()}). "/>
+                    <br/>
+                    <p:outputLabel value="Pasirinkite mokėjimo būdą:"/>
+                    <br/>
+                    <p:commandButton value="Mokėti taškais" action="#{profileView.payWithPoints()}" update="membershipInfoGrid statusInfoGrid" oncomplete="if(args &amp;&amp; !args.validationFailed) PF('membershipWidget').hide()" />
+                    <br/>
+                    <h:outputText value="Arba"/>
+                    <h:panelGroup id="stripeScript">
+                        <ui:include src="/WEB-INF/other_pages/stripeForm.xhtml" >
+                            <ui:param name="paymentType" value="Už klubo narystę" />
+                            <ui:param name="price" value="#{profileView.membershipPriceInCents()}" />
+                            <ui:param name="order" value="#{profileView.createMembershipOrderJSON()}" />
+                        </ui:include>
+                        <h:outputText value="*Turėsite laukti administratoriaus patvirtinimo."/>
+                    </h:panelGroup>
                 </h:form>
             </p:dialog>
         </div>

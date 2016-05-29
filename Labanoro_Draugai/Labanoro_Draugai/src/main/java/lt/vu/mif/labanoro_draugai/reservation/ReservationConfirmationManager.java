@@ -48,9 +48,9 @@ public class ReservationConfirmationManager implements Serializable{
     private Date dateTo;
     List<String> selectedServices;
     private Person user;
-    private double totalPrice;
-    private double totalPriceInPoints; 
-    private double exchangeRate;
+    private BigDecimal totalPrice;
+    private BigDecimal totalPriceInPoints; 
+    private BigDecimal exchangeRate;
     private String currency;
     @Inject
     DatabaseManager dbm;
@@ -58,7 +58,7 @@ public class ReservationConfirmationManager implements Serializable{
     //neveikia redirectas
     @PostConstruct
     public void init(){
-        totalPrice = -1;
+        totalPrice = new BigDecimal(-1);
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletRequest request = (HttpServletRequest) (ec.getRequest());
         if(request==null || request.getUserPrincipal()==null || request.getUserPrincipal().getName() == null) try {
@@ -74,11 +74,11 @@ public class ReservationConfirmationManager implements Serializable{
         Systemparameter param = (Systemparameter)dbm.getEntity("SystemParameter", "internalName", "SystemParameter.ExchangeRate.Euro");
         if(param == null){
             System.out.println("Truksta \"SystemParameter.ExchangeRate.Euro\" parametro");
-            exchangeRate = -1;
+            exchangeRate = new BigDecimal(-1);
             currency = "?";
             return;
         }
-        exchangeRate = Double.parseDouble(param.getValue());
+        exchangeRate = new BigDecimal(param.getValue());
         param = (Systemparameter)dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Currency.Euro");
         if(param == null){
             System.out.println("Truksta \"SystemParameter.Currency.Euro\" parametro");
@@ -128,14 +128,14 @@ public class ReservationConfirmationManager implements Serializable{
     }
     
     public String reserveSummerhouse(){       
-        if(user.getPoints().doubleValue()<totalPriceInPoints){
+        if(user.getPoints().compareTo(totalPriceInPoints)==-1){
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Nepavyko!", "Jūsų sąskaitoje yra nepakankamai taškų."));
             return null;
         }
         
-        Payment pay = dbm.addPayment(user.getEmail(), BigDecimal.valueOf(totalPrice), new Date(), "Payment.Reservation", "Currency.Points");
+        Payment pay = dbm.addPayment(user.getEmail(), totalPrice, new Date(), "Payment.Reservation", "Currency.Points");
         
-        user.setPoints(user.getPoints().subtract(BigDecimal.valueOf(totalPriceInPoints)));
+        user.setPoints(user.getPoints().subtract(totalPriceInPoints));
 
         Reservation reservation = dbm.addReservation(house.getHousereg(),pay.getPaymentreg(),"Reservation", user.getEmail(), selectedServices, dateFrom, dateTo);
         pay.setReservationid(reservation);
@@ -158,18 +158,18 @@ public class ReservationConfirmationManager implements Serializable{
         return param.getValue();
     }
     
-    public double calculateTotalPrice(){
-        totalPrice = 0;
+    public BigDecimal calculateTotalPrice(){
+        totalPrice = new BigDecimal(0);
         if(house == null )return totalPrice;
         
-        totalPrice+=periodPrice(house.getWeekprice());
+        totalPrice = totalPrice.add(periodPrice(house.getWeekprice()));
         if(selectedServices == null) return totalPrice;
         for(String str:selectedServices){
             Service service = (Service)dbm.getEntity("Service", "Servicereg", str);
             if(service == null) continue;
-            totalPrice+=periodPrice(service.getWeekprice());
+            totalPrice = totalPrice.add(periodPrice(service.getWeekprice()));
         }
-        totalPriceInPoints = totalPrice*exchangeRate;
+        totalPriceInPoints = totalPrice.multiply(exchangeRate);
         return totalPrice;
     }
     
@@ -182,13 +182,13 @@ public class ReservationConfirmationManager implements Serializable{
          return result;
     }
     
-    public double periodPrice(BigDecimal weekPrice){
+    public BigDecimal periodPrice(BigDecimal weekPrice){
         int dayCount = getDaysBetweenDates(dateFrom, dateTo).size()+1;
-        return weekPrice.multiply(new BigDecimal(dayCount / 7)).doubleValue();
+        return weekPrice.multiply(new BigDecimal(dayCount / 7));
     }
     
     public long getTotalPriceInCents(){
-        return Math.round(totalPrice*100);
+        return Math.round(totalPrice.doubleValue()*100);
     }
     
     private List<Date> getDaysBetweenDates(Date startdate, Date enddate){
@@ -259,18 +259,18 @@ public class ReservationConfirmationManager implements Serializable{
         this.selectedServices = selectedServices;
     }
 
-    public double getTotalPrice() {
-        if (totalPrice == -1) {
-            totalPrice =  (Double) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("price");
+    public BigDecimal getTotalPrice() {
+        if (totalPrice.compareTo(new BigDecimal(-1))==0) {
+            totalPrice =  new BigDecimal((Double) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("price"));
         }
         return totalPrice;
     }
 
-    public void setTotalPrice(double totalPrice) {      
+    public void setTotalPrice(BigDecimal totalPrice) {      
         this.totalPrice = totalPrice;
     }
 
-    public double getTotalPriceInPoints() {
+    public BigDecimal getTotalPriceInPoints() {
         return totalPriceInPoints;
     }
 

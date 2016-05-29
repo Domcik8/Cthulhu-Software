@@ -24,12 +24,12 @@ and open the template in the editor.
         <!-- Navigation panel-->
         <ui:include src="/WEB-INF/other_pages/navigation.xhtml" />
         <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
- 
+
         <p:dialog widgetVar="statusDialog" modal="false" draggable="false" closable="false" resizable="false" showHeader="false">
             <p:graphicImage name="ajax-loader.gif" library="img"/>
         </p:dialog>
-       <!--Filter panel--> 
-       <div class="container">
+        <!--Filter panel--> 
+        <div class="container">
             <div class="row">
                 <div class="col-sm-4 col-md-3 col-lg-3">
                     <h:form id="filterForm">
@@ -41,7 +41,7 @@ and open the template in the editor.
                                         <f:selectItems value="#{summerhouseManager.availableOrderings}" />
                                     </h:selectOneMenu>    
                                 </h:panelGrid>  
-                                
+
                             </p:tab>
                             <p:tab id="options" title="Parinktys" >
                                 <!--Dropdown orering--><!--Spinner place count-->
@@ -50,7 +50,7 @@ and open the template in the editor.
                                     <p:spinner id="placeCount" value="#{summerhouseManager.placeCount}" min="0" max="99" size="1"/>
                                     <p:tooltip id="toolTipPlaceCount" for="placeCount" value="0 žymi visus vietų skaičius" trackMouse="true" />
                                 </h:panelGrid>
-                                
+
                                 <!--Price slider-->
                                 <p:outputLabel for="displayRange" value="Savaitės kaina:" /><br/>
                                 <h:outputText id="displayRange" value="Nuo #{summerhouseManager.currency}#{summerhouseManager.priceFrom} iki #{summerhouseManager.currency}#{summerhouseManager.priceTo} " />
@@ -86,14 +86,14 @@ and open the template in the editor.
                                         <p:ajax event="dateSelect" update="dateFrom" />
                                     </p:calendar>    
                                 </h:panelGrid>
-                                
+
                                 <br/>
-                                
+
                                 <h:outputLabel value="Rodyti tik laisvus: " style="margin-right: 10px;"/>
                                 <p:selectBooleanCheckbox value="#{summerhouseManager.showOnlyFree}" />
-                                
+
                             </p:tab>
-                            
+
                             <!--Available services-->
                             <p:tab title="Paslaugos">
                                 <p:selectManyCheckbox id="grid2" value="#{summerhouseManager.selectedFilters}" layout="pageDirection" columns="3">
@@ -101,43 +101,43 @@ and open the template in the editor.
                                 </p:selectManyCheckbox> 
                             </p:tab>
                         </p:accordionPanel>    
-                        
+
                         <p:commandButton class="btn btn-primary" value="Filtruoti" action="#{summerhouseManager.filter()}" update="houseDataScroller" style="width: 100%"/>
                         <p:commandButton class="btn btn-success" value="Rodyti visus" action="#{summerhouseManager.showAll()}" update="houseDataScroller" style="width: 100%"/>   
                     </h:form>
                 </div>
-        
-            <!--summerhouse data-->
+
+                <!--summerhouse data-->
                 <div class="col-sm-8 col-md-9 col-lg-9">
-                        <p:dataScroller id="houseDataScroller" value="#{summerhouseManager.filteredSummerhouses}" var="house" chunkSize="10" style="border:thin" >
-                            <f:facet name="header" >
-                                    Vasarnamiai
-                            </f:facet>
-                            <h:panelGrid columns="2" style="width: 100%" columnClasses="ui-grid-col-4,ui-grid-col-8" >
-                                <p:commandLink oncomplete="disableScrolling(),PF('houseDialog').show()" update=":houseDialogForm:houseDetail,:houseDialogForm:houseGalleria,:houseDialogForm:reservedDays" >    
+                    <p:dataScroller id="houseDataScroller" value="#{summerhouseManager.filteredSummerhouses}" var="house" chunkSize="10" style="border:thin" >
+                        <f:facet name="header" >
+                            Vasarnamiai
+                        </f:facet>
+                        <h:panelGrid columns="2" style="width: 100%" columnClasses="ui-grid-col-4,ui-grid-col-8" >
+                            <p:commandLink oncomplete="disableScrolling(),PF('houseDialog').show()" update=":houseDialogForm:houseDetail,:houseDialogForm:houseGalleria,:houseDialogForm:reservedDays" >    
+                                <f:setPropertyActionListener value="#{house}" target="#{summerhouseManager.selectedHouse}" />
+                                <p:graphicImage id="img" url="/images/#{summerhouseManager.firstImageName(house)}" alt="#{summerhouseManager.firstImageName(house)}" style="width: 100%;padding-right: 10px"/>
+                            </p:commandLink>
+                            <p:outputPanel>
+
+                                <p:commandLink oncomplete="disableScrolling(),PF('houseDialog').show()" update=":houseDialogForm:houseDetail,:houseDialogForm:houseGalleria,:houseDialogForm:reservedDays" >
                                     <f:setPropertyActionListener value="#{house}" target="#{summerhouseManager.selectedHouse}" />
-                                    <p:graphicImage id="img" url="/images/#{summerhouseManager.firstImageName(house)}" alt="#{summerhouseManager.firstImageName(house)}" style="width: 100%;padding-right: 10px"/>
+                                    <h:outputText class="title-text" value="#{house.title}"/>
                                 </p:commandLink>
-                                <p:outputPanel>
 
-                                    <p:commandLink oncomplete="disableScrolling(),PF('houseDialog').show()" update=":houseDialogForm:houseDetail,:houseDialogForm:houseGalleria,:houseDialogForm:reservedDays" >
-                                        <f:setPropertyActionListener value="#{house}" target="#{summerhouseManager.selectedHouse}" />
-                                        <h:outputText class="title-text" value="#{house.title}"/>
-                                    </p:commandLink>
+                                <h:panelGrid columns="1" style="width: 100%" columnClasses="forty-percent top-alignment, sixty-percent top-alignment" >
+                                    <h:outputText class="small-text" value="Adresas: #{house.address}"/>
+                                    <h:outputText class="small-text" value="Vietos: #{house.numberofplaces}"/>
+                                </h:panelGrid>
+                                <h:outputText class="price-text" style="width: 100%" value="#{summerhouseManager.currency}#{house.weekprice} "/>
 
-                                    <h:panelGrid columns="1" style="width: 100%" columnClasses="forty-percent top-alignment, sixty-percent top-alignment" >
-                                        <h:outputText class="small-text" value="Adresas: #{house.address}"/>
-                                        <h:outputText class="small-text" value="Vietos: #{house.numberofplaces}"/>
-                                    </h:panelGrid>
-                                    <h:outputText class="price-text" style="width: 100%" value="#{summerhouseManager.currency}#{house.weekprice.doubleValue()} "/>
+                            </p:outputPanel>
+                        </h:panelGrid>
+                        <hr/>
+                    </p:dataScroller>
 
-                                </p:outputPanel>
-                            </h:panelGrid>
-                            <hr/>
-                        </p:dataScroller>
-                    
-                    
-                    
+
+
                     <h:form id="houseDialogForm" >
                         <h:inputHidden id="reservedDays" value="#{summerhouseManager.selectedHouseReservedDays}" />    
                         <p:dialog id="houseDetail" header="#{summerhouseManager.selectedHouse.title}"
@@ -157,52 +157,52 @@ and open the template in the editor.
                                     <h:outputText class="small-text" value="Aprašas: #{summerhouseManager.selectedHouse.description}"/>
                                     <h:outputText class="small-text" value="Adresas: #{summerhouseManager.selectedHouse.address}"/>
                                     <h:outputText class="small-text" value="Vietos: #{summerhouseManager.selectedHouse.numberofplaces}"/>
-                                    <h:outputText class="small-text" value="Savaitės kaina: #{summerhouseManager.currency}#{summerhouseManager.selectedHouse.weekprice.doubleValue()}"/>
+                                    <h:outputText class="small-text" value="Savaitės kaina: #{summerhouseManager.currency}#{summerhouseManager.selectedHouse.weekprice}"/>
                                 </h:panelGrid>
-                                
-                                
-                                 <p:outputLabel for="selectedDateFrom" value="Nuo: " />
-                                    <p:calendar id="selectedDateFrom" pattern="yyyy-MM-dd" size="10"
-                                                beforeShowDay="calendarSelectedHouseMondays" locale="lt"
-                                                value="#{summerhouseManager.selectedDateFrom}" readonlyInput="true"
-                                                mindate="#{summerhouseManager.selectedHouseMinDate()}" 
-                                                maxdate="#{summerhouseManager.selectedHouseMaxDate()}"  >
-                                        <p:ajax event="dateSelect" listener="#{summerhouseManager.onDateSelect}" update="selectedDateTo,periodPrice,selectedHouseServices" />
-                                    </p:calendar>
-                                    <p:outputLabel for="selectedDateTo" value=" iki: " />
-                                    <p:calendar id="selectedDateTo" pattern="yyyy-MM-dd" size="10"
-                                                beforeShowDay="calendarSelectedHouseSundays" locale="lt"
-                                                value="#{summerhouseManager.selectedDateTo}" readonlyInput="true"
-                                                mindate="#{summerhouseManager.selectedDateFrom}"
-                                                maxdate="#{summerhouseManager.selectedHouseMaxDateTo()}" >
-                                        <p:ajax event="dateSelect" update="selectedDateFrom,periodPrice,selectedHouseServices" />
-                                    </p:calendar>
-                                    <br/>
-                                    
-                                     <h:outputLabel for="selectedHouseServices" value="Papildomos paslaugos" />
-                                    <p:selectManyCheckbox id="selectedHouseServices" value="#{summerhouseManager.selectedHouseSelectedServices}" layout="pageDirection" columns="3">
-                                        <p:ajax update="periodPrice" />
-                                        <f:selectItems value="#{summerhouseManager.selectedHouseAvailableServices}" var="service" 
-                                                       itemLabel="#{service.title} #{summerhouseManager.currency}#{summerhouseManager.servicePeriodPrice(service)} " itemValue="#{service.servicereg}" />
-                                    </p:selectManyCheckbox>
-                                    <br/>
-                                    <h:outputLabel id="periodPrice" value="Kaina: #{summerhouseManager.currency}#{summerhouseManager.selectedHousePeriodPrice()} " />
-                                    <br/>
-                                    <p:commandLink id="confirmOrder" action="#{summerhouseManager.confirmSelectedHouse()}" class="btn btn-success" 
-                                                   style="position: relative;left: 80%; bottom: -35%;" value="Užsakyti" rendered="#{not summerhouseManager.isCandidate()}">
-                                    </p:commandLink>
-                                     
-<!--                                    style="position: relative;left: 40%; bottom: -35%;"-->
-                                </p:outputPanel>
+
+
+                                <p:outputLabel for="selectedDateFrom" value="Nuo: " />
+                                <p:calendar id="selectedDateFrom" pattern="yyyy-MM-dd" size="10"
+                                            beforeShowDay="calendarSelectedHouseMondays" locale="lt"
+                                            value="#{summerhouseManager.selectedDateFrom}" readonlyInput="true"
+                                            mindate="#{summerhouseManager.selectedHouseMinDate()}" 
+                                            maxdate="#{summerhouseManager.selectedHouseMaxDate()}"  >
+                                    <p:ajax event="dateSelect" listener="#{summerhouseManager.onDateSelect}" update="selectedDateTo,periodPrice,selectedHouseServices" />
+                                </p:calendar>
+                                <p:outputLabel for="selectedDateTo" value=" iki: " />
+                                <p:calendar id="selectedDateTo" pattern="yyyy-MM-dd" size="10"
+                                            beforeShowDay="calendarSelectedHouseSundays" locale="lt"
+                                            value="#{summerhouseManager.selectedDateTo}" readonlyInput="true"
+                                            mindate="#{summerhouseManager.selectedDateFrom}"
+                                            maxdate="#{summerhouseManager.selectedHouseMaxDateTo()}" >
+                                    <p:ajax event="dateSelect" update="selectedDateFrom,periodPrice,selectedHouseServices" />
+                                </p:calendar>
+                                <br/>
+
+                                <h:outputLabel for="selectedHouseServices" value="Papildomos paslaugos" />
+                                <p:selectManyCheckbox id="selectedHouseServices" value="#{summerhouseManager.selectedHouseSelectedServices}" layout="pageDirection" columns="3">
+                                    <p:ajax update="periodPrice" />
+                                    <f:selectItems value="#{summerhouseManager.selectedHouseAvailableServices}" var="service" 
+                                                   itemLabel="#{service.title} #{summerhouseManager.currency}#{summerhouseManager.servicePeriodPrice(service)} " itemValue="#{service.servicereg}" />
+                                </p:selectManyCheckbox>
+                                <br/>
+                                <h:outputLabel id="periodPrice" value="Kaina: #{summerhouseManager.currency}#{summerhouseManager.selectedHousePeriodPrice()} " />
+                                <br/>
+                                <p:commandLink id="confirmOrder" action="#{summerhouseManager.confirmSelectedHouse()}" class="btn btn-success" 
+                                               style="position: relative;left: 80%; bottom: -35%;" value="Užsakyti" rendered="#{not summerhouseManager.isCandidate() and summerhouseManager.userMembershipPayed()}">
+                                </p:commandLink>
+                                <h:outputText  style="color:red;" value="Kandidatai negali rezervuotis namelių." rendered="#{summerhouseManager.isCandidate()}"/>
+                                <h:outputText  style="color:red;" value="Prašome susimokėti metinį narystės mokestį. Tai galite atlikti savo paskyroje." rendered="#{not summerhouseManager.isCandidate() and not summerhouseManager.userMembershipPayed()}"/>
+                            </p:outputPanel>
                         </p:dialog>
                     </h:form> 
                 </div>
             </div>
         </div>
-        
-        
 
-        
+
+
+
         <!-- scripts -->
         <h:outputScript library="js" name="custom.js" />
         <script>setActiveNavTab("summerhouses")</script>
