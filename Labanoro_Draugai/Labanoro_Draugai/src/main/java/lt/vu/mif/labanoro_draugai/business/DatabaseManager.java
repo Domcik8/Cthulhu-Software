@@ -99,6 +99,7 @@ public class DatabaseManager {
         addType("Payment", "Mokėjimas");
         addType("Payment.Reservation", "Rezervacija");
         addType("Payment.Points", "Taškų pirkimas");
+        addType("Payment.Membership", "Klubo narystės mokestis");
         addType("Currency", "Valiuta");
         addType("Currency.Points", "Taškai");
         addType("Currency.Euro", "Eurai");
@@ -192,7 +193,7 @@ public class DatabaseManager {
 
         addSystemParameter("SystemParameter.ExchangeRate.Euro", "Taškų kursas lyginant su euru", "1", "SystemParameter");
         addSystemParameter("SystemParameter.Currency.Euro", "Euro valiutos simbolis", "€", "SystemParameter");
-        addSystemParameter("SystemParameter.Membership.Price", "Narystės mokesčio kaina eurais.", "20,0", "SystemParameter");
+        addSystemParameter("SystemParameter.Membership.Price", "Narystės mokesčio kaina eurais.", "20.00", "SystemParameter");
         addSystemParameter("SystemParameter.Membership.YearLimit", "Narystės metų limitas", "0", "Keliems metams į priekį galima turėti narystės mokestį.(0 - galima užsisakyti tik pasibaigus narystei, 1 - galima užsisakyti turint ne daugiau kaip metus narystės ir t.t.)", "SystemParameter");
 
         addSystemParameter("SystemParameter.General.ContextPath", "Pagrindinis kelias", "http://localhost:8080/Labanoro_Draugai", "Pagrindines puslapio URL'as", "SystemParameter");
