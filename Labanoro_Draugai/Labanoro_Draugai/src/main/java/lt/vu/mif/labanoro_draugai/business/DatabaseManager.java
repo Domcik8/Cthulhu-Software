@@ -773,7 +773,8 @@ public class DatabaseManager {
             Object result = em.merge(obj);
             return result;
         } catch (OptimisticLockException ol) {
-            System.out.println(String.format("Kažkas jau modifikavo objektą. Prašome bandyti dar karta."));
+            for (int i = 0; i < 10; i++)
+                System.out.println(String.format("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Kažkas jau modifikavo objektą. Prašome bandyti dar karta. XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"));
         }
         return null;
     }
