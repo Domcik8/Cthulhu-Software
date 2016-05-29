@@ -33,11 +33,11 @@ and open the template in the editor.
                 </p:panelGrid>
                 <p:commandButton id="inviteButton" value="Siūsti pakvietimą į klubą" onclick="PF('inviteWidget').show()" rendered="#{profileView.renderNotForCandidate()}"/>
 
-                <p:panelGrid columns="1" id="recomendationInfoGrid" rendered = "profileView.renderRecommendtionInfo()">    
+                <p:panelGrid columns="1" id="recomendationInfoGrid" rendered = "#{profileView.renderRecommendtionInfo()}">    
                     <p:outputLabel value="Liko surinkti rekomendacijų iki klubo nario statuso: #{profileView.recommendationsTillMember()}"/>
                     <p:outputLabel value="Likusių rekomendacijos prašymų skaičius: #{profileView.remainingRecommendationRequests()}"/>
                 </p:panelGrid>
-                <p:commandButton id="askForRecommendationButton" value="Prašyti rekomendacijos" onclick="PF('askRecommendationWidget').show()" rendered = "profileView.renderRecommendtionInfo()"/>
+                <p:commandButton id="askForRecommendationButton" value="Prašyti rekomendacijos" onclick="PF('askRecommendationWidget').show()" rendered = "#{profileView.renderRecommendtionInfo()}"/>
                 <h2>Pagrindinė informacija</h2>
                 <h:form id="basicInfoForm">
                     <p:panelGrid>
@@ -93,7 +93,7 @@ and open the template in the editor.
                             <ui:param name="model" value="#{profileView.displayModel}" />
                         </ui:include>
 
-                        <p:commandButton class="btn" value="Išsaugoti pakeitimus" action="#{profileView.saveChanges()}"
+                        <p:commandButton value="Išsaugoti pakeitimus" action="#{profileView.saveChanges()}"
                                          oncomplete="if (args &amp;&amp; !args.validationFailed) PF('infoWidget').show()" update="displayDynaFormGroup"/> 
 
 
