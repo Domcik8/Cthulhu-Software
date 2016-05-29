@@ -188,10 +188,12 @@ public class DatabaseManager {
      * Fills database with basic system parameters
      */
     private void fillBasicSystemParameters() {
-        addSystemParameter("SystemParameter.BuyPoints", "Taškų kainos eurais", "5;10;15;20", "Esamos sistemos taškų kainos, kurios yra nesusijųsios su gaunamu taškų kiekiu. Naujos įvesties pvž: (5;)", "SystemParameter");
+        addSystemParameter("SystemParameter.BuyPoints", "Taškų kainos eurais", "5;10;15;20", "Esamos sistemos taškų kainos, kurios yra nesusijųsios su gaunamu taškų kiekiu. Naujos įvesties pvz.: (5;)", "SystemParameter");
 
         addSystemParameter("SystemParameter.ExchangeRate.Euro", "Taškų kursas lyginant su euru", "1", "SystemParameter");
         addSystemParameter("SystemParameter.Currency.Euro", "Euro valiutos simbolis", "€", "SystemParameter");
+        addSystemParameter("SystemParameter.Membership.Price", "Narystės mokesčio kaina eurais.", "20,0", "SystemParameter");
+        addSystemParameter("SystemParameter.Membership.YearLimit", "Narystės metų limitas", "0", "Keliems metams į priekį galima turėti narystės mokestį.(0 - galima užsisakyti tik pasibaigus narystei, 1 - galima užsisakyti turint ne daugiau kaip metus narystės ir t.t.)", "SystemParameter");
 
         addSystemParameter("SystemParameter.General.ContextPath", "Pagrindinis kelias", "http://localhost:8080/Labanoro_Draugai", "Pagrindines puslapio URL'as", "SystemParameter");
 
@@ -842,7 +844,8 @@ public class DatabaseManager {
     }
 
     public Systemparameter getSystemParameter(String internalName) {
-        return (Systemparameter) getEntity("Systemparameter", "Internalname", internalName);
+        Systemparameter param = (Systemparameter) getEntity("Systemparameter", "Internalname", internalName);
+        return param;
     }
 
     /**
@@ -1187,7 +1190,7 @@ public class DatabaseManager {
 
     public String generateReg(String desiredReg) {
         Random rand = new Random();
-        return desiredReg + "-" + System.currentTimeMillis() % 1000 + rand.nextInt(10000);
+        return desiredReg + "-" + System.currentTimeMillis() % 10000 + rand.nextInt(1000);
     }
     
     public Houseimage getFirstImage(House house) {
