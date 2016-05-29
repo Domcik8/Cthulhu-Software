@@ -149,6 +149,10 @@ public class SummerhouseManager implements Serializable {
         System.out.println(toString() + " constructed.");
     }
 
+    public boolean userMembershipPayed(){
+        return user.getMembershipdue().after(new Date());
+    }
+    
     public String firstImageName(House house) {
         if (house == null || house.getHouseimageList() == null || house.getHouseimageList().isEmpty()) {
             return null;
@@ -429,7 +433,7 @@ public class SummerhouseManager implements Serializable {
 
     public String confirmSelectedHouse() {
         if (user == null|| user.getTypeid().getInternalname().equalsIgnoreCase("Person.Candidate") || selectedHouse == null || selectedDateFrom == null || selectedDateTo == null
-                || !isHouseAvailable(selectedHouse, selectedDateFrom, selectedDateTo) || (selectedHousePeriodPrice().compareTo(new BigDecimal(0)) == 0) ) {
+                || !isHouseAvailable(selectedHouse, selectedDateFrom, selectedDateTo) || (selectedHousePeriodPrice().compareTo(new BigDecimal(0)) == 0) || !userMembershipPayed()) {
             return "";
         }
         
