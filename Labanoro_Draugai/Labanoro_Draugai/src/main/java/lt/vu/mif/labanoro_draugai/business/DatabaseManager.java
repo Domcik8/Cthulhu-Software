@@ -1173,6 +1173,22 @@ public class DatabaseManager {
             return false;
         }
     }
+    
+    public boolean updatePersonMembershipDue(Person p) {
+        try {
+            Query q = em.createQuery("UPDATE Person p SET p.membershipdue = :membershipdue "
+                    + "WHERE p.id = :id");
+            q.setParameter("membershipdue", p.getMembershipdue());
+            q.setParameter("id", p.getId());
+            em.detach(p);
+            em.joinTransaction();
+            int updated = q.executeUpdate();
+            em.flush();
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
 
     public boolean updatePaymentApprovalDate(Payment p) {
         try {
