@@ -39,7 +39,10 @@ and open the template in the editor.
                     <input name="dummypassword" type="password" id="dummypassword" style="display: none"/>
                     <h:panelGrid columns="2" border="0" columnClasses="align-right,align-left">
                         <p:outputLabel id="emailLabel" for="email" value="Elektroninio pašto adresas "/>
-                        <p:inputText id="email" value="#{registrationManager.email}" required="true" disabled="#{not empty registrationManager.accessToken}"/>
+                        <p:inputText id="email" value="#{registrationManager.email}" required="true" disabled="#{not empty registrationManager.accessToken}">
+                            <f:validator validatorId="emailValidator" />
+                            <f:validator validatorId="simpleEmailValidator" />
+                        </p:inputText>
                         <p:outputLabel id="firstNameLabel" for="firstName" value="Vardas "/>
                         <p:inputText id="firstName" value="#{registrationManager.firstName}" required="true"/>
                         <p:outputLabel id="lastNameLabel" for="lastName" value="Pavardė "/>
