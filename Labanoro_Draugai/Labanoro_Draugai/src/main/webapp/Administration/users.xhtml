@@ -54,7 +54,9 @@ and open the template in the editor.
                         </p:column>
 
                         <p:column headerText="Taškai" sortBy="#{user.points}">
-                            <h:outputText value="#{user.points}" />
+                            <h:outputText value="#{user.points}">
+                                <f:convertNumber groupingUsed="false" minFractionDigits="2" maxFractionDigits="2"/>
+                            </h:outputText>
                             <p:commandButton image="ui-icon-plusthick" action="#{adminUserManager.setUserEmail(user.getEmail())}" oncomplete="PF('addPointsDialog').show();" update="dialogOutsideForm" />
                         </p:column>
 

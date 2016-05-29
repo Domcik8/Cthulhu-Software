@@ -107,9 +107,16 @@ public class AdminPaymentManager implements Serializable {
         
         if (Objects.equals(paym.getTypeid().getId(), membershipType.getId())) {
             Date oldValue = pers.getMembershipdue();
-        
-            Calendar c = Calendar.getInstance(); 
-            c.setTime(oldValue); 
+                        
+            Calendar c = Calendar.getInstance();
+            
+            if (Calendar.getInstance().getTime().after(oldValue)) {
+                c.setTime(Calendar.getInstance().getTime());
+            }
+            else {
+                c.setTime(oldValue);
+            } 
+            
             c.add(Calendar.YEAR, 1);
             Date newValue = c.getTime();
 

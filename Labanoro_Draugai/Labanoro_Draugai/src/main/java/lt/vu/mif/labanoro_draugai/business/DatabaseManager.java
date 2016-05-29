@@ -243,6 +243,12 @@ public class DatabaseManager {
         addSystemParameter("SystemParameter.Houseimage.Width", "Nuotraukos plotis", "600", "Namelio nuotraukų plotis įkėlimo metu. Jeigu reikšmė 0, tai nuotraukos plotis bus nustatytas pagal jos aukštį.", "SystemParameter");
         addSystemParameter("SystemParameter.Houseimage.Height", "Nuotraukos aukštis", "0", "Namelio nuotraukų aukštis įkėlimo metu. Jeigu reikšmė 0, tai nuotraukos aukštis bus nustatytas pagal jos plotį.", "SystemParameter");
 
+        addSystemParameter("SystemParameter.Index.Title1", "Pagrindinio puslapio antraštė", "Klubas \"Labanoro Draugai\"", "Pagrindinio puslapio pirmosios sekcijos antraštė.", "SystemParameter");
+        addSystemParameter("SystemParameter.Index.Description1", "Pagrindinio puslapio pirmos sekcijos turinys", "Labanoro regioninis parkas – regioninis parkas rytinėje Lietuvos dalyje, Švenčionių, Molėtų ir Utenos rajonuose. Parko direkcija įsikūrusi Labanoro miestelyje. #Parko teritorija užima 55344 ha (kitais duomenimis – 52848 ha) plotą.", "Pagrindinio puslapio pirmosios sekcijos turinys. Jis rodomas po pirmos antraštės. Naujos eilutės simbolis: #", "SystemParameter");
+        addSystemParameter("SystemParameter.Index.Title2", "Pagrindinio antros sekcijos antraštė", "Apie mus", "Pagrindinio puslapio pirmosios sekcijos antraštė.", "SystemParameter");
+        addSystemParameter("SystemParameter.Index.Description2", "Pagrindinio puslapio antros sekcijos turinys", "Mūsų klubo nariai - gamtos mėgėjai, kurie noriai savo poilsiui renkasi Labanoro girią! Šis puslapis surenka bendraminčius ir palengviną jų poilsio organizavimą.", "Pagrindinio puslapio pirmosios sekcijos turinys. Jis rodomas po antros antraštės. Naujos eilutės simbolis: #", "SystemParameter");
+        addSystemParameter("SystemParameter.Index.Title3", "Pagrindinio trečios sekcijos antraštė", "Kontaktai", "Pagrindinio puslapio pirmosios sekcijos antraštė.", "SystemParameter");
+        addSystemParameter("SystemParameter.Index.Description3", "Pagrindinio puslapio trečios sekcijos turinys", "Mūsų būstinės adresas: Būstinės g. 111 #Telefonas: +37060000000 #Administratoriaus el. pašto adresas: labanorai@gmail.com", "Pagrindinio puslapio pirmosios sekcijos turinys. Jis rodomas po trečios antraštės. Naujos eilutės simbolis: #", "SystemParameter");
     }
 
     /**
