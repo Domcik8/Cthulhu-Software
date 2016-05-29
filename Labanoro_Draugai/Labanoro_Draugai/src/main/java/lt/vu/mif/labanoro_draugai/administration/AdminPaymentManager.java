@@ -8,8 +8,11 @@ package lt.vu.mif.labanoro_draugai.administration;
 import java.beans.*;
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.enterprise.context.ConversationScoped;
@@ -25,7 +28,9 @@ import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.Payment;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
+import lt.vu.mif.labanoro_draugai.entities.Type;
 import lt.vu.mif.labanoro_draugai.mailService.EmailBean;
+import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
 /**
  *
@@ -72,8 +77,10 @@ public class AdminPaymentManager implements Serializable {
     public void approveChecked() throws IOException {
         for (Payment p : selectedPayments) {
             if (p.getApproveddate() == null) {
-                boolean approvementSuccess = dbm.setPaymentApprovalDate(p);
+                boolean approvementSuccess = dbm.updatePaymentApprovalDate(p);
                 if (approvementSuccess) {
+                    addPoints(p);
+                    addMembership(p);
                     sendPaymentApprovementEmail(p);
                 }
             }
@@ -82,6 +89,41 @@ public class AdminPaymentManager implements Serializable {
         //Reload the page:
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+    }
+    
+    private void addPoints(Payment paym) {
+        Systemparameter param = (Systemparameter) dbm.getEntity("Systemparameter", "Internalname", "SystemParameter.ExchangeRate.Euro");
+        double rate = Double.parseDouble(param.getValue());
+        Person pers = (Person) dbm.getEntity("Person", "Id", paym.getPersonid().getId());
+        double points = Double.parseDouble(paym.getPaymentprice().toString()) * rate;
+        pers.setPoints(pers.getPoints().add(new BigDecimal(points)));
+        dbm.updatePersonPoints(pers);
+    }
+    
+    public void addMembership(Payment paym) {
+        Person pers = (Person) dbm.getEntity("Person", "Id", paym.getPersonid().getId());
+        
+        Type membershipType = (Type) dbm.getEntity("Type", "Internalname", "Payment.Membership");
+        
+        if (Objects.equals(paym.getTypeid().getId(), membershipType.getId())) {
+            Date oldValue = pers.getMembershipdue();
+                        
+            Calendar c = Calendar.getInstance();
+            
+            if (Calendar.getInstance().getTime().after(oldValue)) {
+                c.setTime(Calendar.getInstance().getTime());
+            }
+            else {
+                c.setTime(oldValue);
+            } 
+            
+            c.add(Calendar.YEAR, 1);
+            Date newValue = c.getTime();
+
+            pers.setMembershipdue(newValue);
+
+            dbm.updatePersonMembershipDue(pers);
+        }
     }
     
     private void sendPaymentApprovementEmail(Payment paym) {

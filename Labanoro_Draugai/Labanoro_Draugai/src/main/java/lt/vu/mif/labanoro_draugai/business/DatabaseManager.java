@@ -2,6 +2,7 @@ package lt.vu.mif.labanoro_draugai.business;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
+import java.beans.Statement;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -25,6 +26,9 @@ import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaUpdate;
+import javax.persistence.criteria.Root;
 import javax.transaction.TransactionSynchronizationRegistry;
 import lt.vu.mif.labanoro_draugai.data_models.AdminUserFormProperty;
 import lt.vu.mif.labanoro_draugai.entities.*;
@@ -191,7 +195,7 @@ public class DatabaseManager {
     private void fillBasicSystemParameters() {
         addSystemParameter("SystemParameter.BuyPoints", "Taškų kainos eurais", "5;10;15;20", "Esamos sistemos taškų kainos, kurios yra nesusijųsios su gaunamu taškų kiekiu. Naujos įvesties pvz.: (5;)", "SystemParameter");
 
-        addSystemParameter("SystemParameter.ExchangeRate.Euro", "Taškų kursas lyginant su euru", "1", "SystemParameter");
+        addSystemParameter("SystemParameter.ExchangeRate.Euro", "Taškų kursas lyginant su euru", "1", "Pinigai * Kursas = Taškai", "SystemParameter");
         addSystemParameter("SystemParameter.Currency.Euro", "Euro valiutos simbolis", "€", "SystemParameter");
         addSystemParameter("SystemParameter.Membership.Price", "Narystės mokesčio kaina eurais.", "20.00", "SystemParameter");
         addSystemParameter("SystemParameter.Membership.YearLimit", "Narystės metų limitas", "0", "Keliems metams į priekį galima turėti narystės mokestį.(0 - galima užsisakyti tik pasibaigus narystei, 1 - galima užsisakyti turint ne daugiau kaip metus narystės ir t.t.)", "SystemParameter");
@@ -240,6 +244,12 @@ public class DatabaseManager {
         addSystemParameter("SystemParameter.Houseimage.Width", "Nuotraukos plotis", "600", "Namelio nuotraukų plotis įkėlimo metu. Jeigu reikšmė 0, tai nuotraukos plotis bus nustatytas pagal jos aukštį.", "SystemParameter");
         addSystemParameter("SystemParameter.Houseimage.Height", "Nuotraukos aukštis", "0", "Namelio nuotraukų aukštis įkėlimo metu. Jeigu reikšmė 0, tai nuotraukos aukštis bus nustatytas pagal jos plotį.", "SystemParameter");
 
+        addSystemParameter("SystemParameter.Index.Title1", "Pagrindinio puslapio antraštė", "Klubas \"Labanoro Draugai\"", "Pagrindinio puslapio pirmosios sekcijos antraštė.", "SystemParameter");
+        addSystemParameter("SystemParameter.Index.Description1", "Pagrindinio puslapio pirmos sekcijos turinys", "Labanoro regioninis parkas – regioninis parkas rytinėje Lietuvos dalyje, Švenčionių, Molėtų ir Utenos rajonuose. Parko direkcija įsikūrusi Labanoro miestelyje. #Parko teritorija užima 55344 ha (kitais duomenimis – 52848 ha) plotą.", "Pagrindinio puslapio pirmosios sekcijos turinys. Jis rodomas po pirmos antraštės. Naujos eilutės simbolis: #", "SystemParameter");
+        addSystemParameter("SystemParameter.Index.Title2", "Pagrindinio antros sekcijos antraštė", "Apie mus", "Pagrindinio puslapio pirmosios sekcijos antraštė.", "SystemParameter");
+        addSystemParameter("SystemParameter.Index.Description2", "Pagrindinio puslapio antros sekcijos turinys", "Mūsų klubo nariai - gamtos mėgėjai, kurie noriai savo poilsiui renkasi Labanoro girią! Šis puslapis surenka bendraminčius ir palengviną jų poilsio organizavimą.", "Pagrindinio puslapio pirmosios sekcijos turinys. Jis rodomas po antros antraštės. Naujos eilutės simbolis: #", "SystemParameter");
+        addSystemParameter("SystemParameter.Index.Title3", "Pagrindinio trečios sekcijos antraštė", "Kontaktai", "Pagrindinio puslapio pirmosios sekcijos antraštė.", "SystemParameter");
+        addSystemParameter("SystemParameter.Index.Description3", "Pagrindinio puslapio trečios sekcijos turinys", "Mūsų būstinės adresas: Būstinės g. 111 #Telefonas: +37060000000 #Administratoriaus el. pašto adresas: labanorai@gmail.com", "Pagrindinio puslapio pirmosios sekcijos turinys. Jis rodomas po trečios antraštės. Naujos eilutės simbolis: #", "SystemParameter");
     }
 
     /**
@@ -1091,19 +1101,33 @@ public class DatabaseManager {
             Query q = em.createQuery("UPDATE House h SET h.title = :title, h.typeid = :typeid, "
                     + "h.description = :description, h.housereg = :housereg, h.address = :address, "
                     + "h.seasonstartdate = :startdt, h.seasonenddate = :enddt, "
-                    + "h.isactive = :isactive, h.weekprice = :price, h.numberofplaces = :places "
+                    + "h.weekprice = :price, h.numberofplaces = :places "
                     + "WHERE h.id = :id");
             q.setParameter("title", h.getTitle());
             q.setParameter("typeid", h.getTypeid());
             q.setParameter("description", h.getDescription());
             q.setParameter("housereg", h.getHousereg());
             q.setParameter("address", h.getAddress());
-            q.setParameter("isactive", h.getIsactive());
             q.setParameter("startdt", h.getSeasonstartdate());
             q.setParameter("enddt", h.getSeasonenddate());
             q.setParameter("price", h.getWeekprice());
             q.setParameter("places", h.getNumberofplaces());
             q.setParameter("id", h.getId());
+            em.detach(h);
+            em.joinTransaction();
+            int updated = q.executeUpdate();
+            em.flush();
+            updateHouseIsActive(h.getId(), h.getIsactive());
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+    
+    public boolean updateHouseIsActive(int houseId, boolean newValue) {
+        try {
+            Query q = em.createNativeQuery("UPDATE House h SET h.isactive = " + newValue + " WHERE h.id = " + houseId);
+            
             em.joinTransaction();
             int updated = q.executeUpdate();
             em.flush();
@@ -1112,13 +1136,26 @@ public class DatabaseManager {
             return false;
         }
     }
-
-    public boolean setHouseIsDeletedTrue(House h) {
+    
+    public boolean updateEntityIsDeletedTrue(String className, int id) {
         try {
-            Query q = em.createQuery("UPDATE House h SET h.isdeleted = :isdeleted "
-                    + "WHERE h.id = :id");
+            Query q = em.createNativeQuery("UPDATE " + className + " e SET e.isdeleted = true WHERE e.id = " + id);
+            em.joinTransaction();
+            int updated = q.executeUpdate();
+            em.flush();
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+    
+    public boolean updatePersonIsDeletedTrue(Person p) {
+        try {
+            Query q = em.createQuery("UPDATE Person p SET p.isdeleted = :isdeleted "
+                    + "WHERE p.id = :id");
             q.setParameter("isdeleted", true);
-            q.setParameter("id", h.getId());
+            q.setParameter("id", p.getId());
+            em.detach(p);
             em.joinTransaction();
             int updated = q.executeUpdate();
             em.flush();
@@ -1134,6 +1171,7 @@ public class DatabaseManager {
                     + "WHERE p.id = :id");
             q.setParameter("points", p.getPoints());
             q.setParameter("id", p.getId());
+            em.detach(p);
             em.joinTransaction();
             int updated = q.executeUpdate();
             em.flush();
@@ -1141,18 +1179,31 @@ public class DatabaseManager {
         } catch (Exception ex) {
             return false;
         }
-        /*Person p2 = (Person) getEntity("Person", "id", p.getId());
-        p2.setPoints(p2.getPoints());
-        updateEntity(p2);
-        return true;*/
+    }
+    
+    public boolean updatePersonMembershipDue(Person p) {
+        try {
+            Query q = em.createQuery("UPDATE Person p SET p.membershipdue = :membershipdue "
+                    + "WHERE p.id = :id");
+            q.setParameter("membershipdue", p.getMembershipdue());
+            q.setParameter("id", p.getId());
+            em.detach(p);
+            em.joinTransaction();
+            int updated = q.executeUpdate();
+            em.flush();
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
-    public boolean setPaymentApprovalDate(Payment p) {
+    public boolean updatePaymentApprovalDate(Payment p) {
         try {
             Query q = em.createQuery("UPDATE Payment p SET p.approveddate = :approvedate "
                     + "WHERE p.id = :id");
             q.setParameter("approvedate", new Date());
             q.setParameter("id", p.getId());
+            em.detach(p);
             em.joinTransaction();
             int updated = q.executeUpdate();
             em.flush();
@@ -1207,12 +1258,13 @@ public class DatabaseManager {
         return null;
     }
     
-    public boolean setImageSequence(Houseimage img, int seq) {
+    public boolean updateImageSequence(Houseimage img, int seq) {
         try {
             Query q = em.createQuery("UPDATE Houseimage p SET p.sequence = :sequence "
                     + "WHERE p.id = :id");
             q.setParameter("sequence", seq);
             q.setParameter("id", img.getId());
+            em.detach(img);
             em.joinTransaction();
             int updated = q.executeUpdate();
             em.flush();
@@ -1225,8 +1277,8 @@ public class DatabaseManager {
     public boolean swapImageSequences(Houseimage img1, Houseimage img2) {
         try {
            int seq1 = img1.getSequence();
-           setImageSequence(img1, img2.getSequence());
-           setImageSequence(img2, seq1);
+           updateImageSequence(img1, img2.getSequence());
+           updateImageSequence(img2, seq1);
            return true; 
         }
         catch (Exception ex) {
