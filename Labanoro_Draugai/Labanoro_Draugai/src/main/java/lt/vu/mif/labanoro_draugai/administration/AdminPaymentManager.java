@@ -72,7 +72,7 @@ public class AdminPaymentManager implements Serializable {
     public void approveChecked() throws IOException {
         for (Payment p : selectedPayments) {
             if (p.getApproveddate() == null) {
-                boolean approvementSuccess = dbm.setPaymentApprovalDate(p);
+                boolean approvementSuccess = dbm.updatePaymentApprovalDate(p);
                 if (approvementSuccess) {
                     sendPaymentApprovementEmail(p);
                 }

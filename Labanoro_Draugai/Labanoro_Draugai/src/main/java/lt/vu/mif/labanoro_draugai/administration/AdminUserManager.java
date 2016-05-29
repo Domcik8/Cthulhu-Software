@@ -87,10 +87,11 @@ public class AdminUserManager implements Serializable {
             Person userToDelete = usersToDelete.get(0);
 
             userToDelete.setIsdeleted(true);
-
-            em.joinTransaction();
             
-            isSuccess = dbm.persistAndFlush(userToDelete);
+            em.detach(userToDelete);
+            //em.joinTransaction();
+            
+            isSuccess = dbm.updateEntityIsDeletedTrue("Person", userToDelete.getId());
         }
         catch (Exception ex) {
             //return error page

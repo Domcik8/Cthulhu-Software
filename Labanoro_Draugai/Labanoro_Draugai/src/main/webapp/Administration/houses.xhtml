@@ -43,12 +43,18 @@ and open the template in the editor.
                                 <h:outputText class="small-text" value="Namelio reg. nr.: #{house.housereg}"/>
                                 <h:outputText class="small-text" value="Adresas: #{house.address}"/>
                                 <h:outputText class="small-text" value="Vietų sk.: #{house.numberofplaces}"/>
-                                <h:outputFormat class="small-text" value="Pradžios data: {0, date, yyyy-MM-dd}">
-                                    <f:param value="#{house.seasonstartdate}"/>
-                                </h:outputFormat>
-                                <h:outputFormat class="small-text" value="Pabaigos data: {0, date, yyyy-MM-dd}">
-                                    <f:param value="#{house.seasonenddate}" />
-                                </h:outputFormat>
+                                <h:panelGrid columns="2">
+                                    <h:outputText value="Pradžios data:" class="small-text"/>
+                                    <h:outputFormat class="small-text" value="{0, date, yyyy-MM-dd}" rendered="#{house.seasonstartdate != null}">
+                                        <f:param value="#{house.seasonstartdate}"/>
+                                    </h:outputFormat>
+                                    <h:inputHidden rendered="#{house.seasonstartdate == null}"/>
+                                    <h:outputText value="Pabaigos data:" class="small-text"/>
+                                    <h:outputFormat class="small-text" value="{0, date, yyyy-MM-dd}" rendered="#{house.seasonenddate != null}">
+                                        <f:param value="#{house.seasonenddate}" />
+                                    </h:outputFormat>
+                                    <h:inputHidden rendered="#{house.seasonenddate == null}"/>
+                                </h:panelGrid>
                                 <h:outputText class="small-text" value="Tipas: #{house.getTypeid().getTitle()}"/>
                                 <h:panelGrid columns="2">
                                     <h:outputText class="small-text" value="Aktyvus:"/>
