@@ -8,7 +8,6 @@ package lt.vu.mif.labanoro_draugai.business;
 import java.io.Serializable;
 import java.util.Date;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
 import javax.inject.Inject;
 import javax.inject.Named;
 import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
@@ -79,6 +78,7 @@ public class BuyConfirmation implements Serializable {
 
     }
 
+    @Interceptorius
     public String createBuyJSON() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.element("type", "buyPoints");

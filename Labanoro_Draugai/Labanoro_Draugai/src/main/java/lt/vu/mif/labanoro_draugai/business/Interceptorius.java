@@ -10,16 +10,13 @@ import static java.lang.annotation.ElementType.TYPE;
 import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
-import javax.inject.Named;
 import javax.interceptor.InterceptorBinding;
-import org.omnifaces.cdi.ViewScoped;
 
 /**
  *
  * @author werezz
  */
-@Named
-@ViewScoped
+
 @InterceptorBinding
 @Retention(RUNTIME)
 @Target({METHOD, TYPE})
