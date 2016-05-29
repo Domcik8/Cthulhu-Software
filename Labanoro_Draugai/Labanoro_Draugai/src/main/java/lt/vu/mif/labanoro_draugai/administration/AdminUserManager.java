@@ -25,6 +25,7 @@ import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.Person;
+import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import org.primefaces.context.RequestContext;
 import org.omnifaces.cdi.ViewScoped;
 

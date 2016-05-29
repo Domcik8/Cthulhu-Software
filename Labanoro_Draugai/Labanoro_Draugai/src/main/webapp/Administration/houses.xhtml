@@ -29,7 +29,7 @@ and open the template in the editor.
         <div class="container .col-md-8" style="background: white">
             <h1>Namelių sąrašas</h1>
             <h:form>
-                <h:commandButton action="house" value="Pridėti namelį"/>
+                <p:commandButton action="house" value="Pridėti namelį"/>
             </h:form>
             
             <p:dataScroller id="houseDataScroller" value="#{adminHouseManager.houses}" var="house" chunkSize="10" style="border:thin" >
@@ -66,9 +66,9 @@ and open the template in the editor.
                                         <f:convertNumber type="currency" currencySymbol=" #{adminHouseManager.currency} "/>
                                     </h:outputText>
                                 </h:panelGrid>
-                                <h:commandButton action="#{adminHouseManager.setEditableHouse()}" value="Modifikuoti">
+                                <p:commandButton action="#{adminHouseManager.setEditableHouse()}" value="Modifikuoti">
                                     <f:param name="houseId" value="#{house.id}"/>
-                                </h:commandButton>
+                                </p:commandButton>
                             </h:panelGrid>
                         </h:form>
                     </p:outputPanel>
