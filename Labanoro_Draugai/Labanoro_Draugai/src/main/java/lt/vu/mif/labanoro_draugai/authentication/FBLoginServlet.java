@@ -86,11 +86,13 @@ public class FBLoginServlet extends HttpServlet {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Auth error caught: " + request.getContextPath());
+            System.out.println("Auth error caught: " + request.getContextPath()); 
+            
+            request.logout();
             response.sendRedirect(request.getContextPath() + dbm.getSystemParameter("SystemParameter.Redirect.LoginError").getValue());
             return;
         }
-
+        request.logout();
         response.sendRedirect(request.getContextPath() + dbm.getSystemParameter("SystemParameter.Redirect.LoginError").getValue());
         return;
 //        } else {
