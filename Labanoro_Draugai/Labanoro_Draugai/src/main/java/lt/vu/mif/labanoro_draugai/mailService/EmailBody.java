@@ -155,7 +155,8 @@ public class EmailBody {
         String emailKey = person.getEmailconfirmation();
         if (emailKey == null || emailKey.equals("")) {
             person.setEmailconfirmation(generateConfirmationLink());
-            //dbm.updateEntity(person); Optimistic lock exception
+            dbm.updateEntity(person); //Optimistic lock exception
+            person.setOptlockversion(person.getOptlockversion() + 1);
         }
     }
 
@@ -164,7 +165,8 @@ public class EmailBody {
         String reqKey = person.getUniquekey();
         if (reqKey == null || reqKey.equals("")) {
             person.setUniquekey(generateConfirmationLink());
-            //dbm.updateEntity(person); Optimistic lock exception
+            dbm.updateEntity(person); //Optimistic lock exception
+            person.setOptlockversion(person.getOptlockversion() + 1);
         }
     }
 
