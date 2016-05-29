@@ -5,13 +5,16 @@
  */
 package lt.vu.mif.labanoro_draugai.business;
 
+import java.math.BigDecimal;
+
 /**
  *
  * @author werezz
  */
 public interface BuyConfirmationInterface {
 
-    public void init();
-    public long getPriceInCents();
+    public long getDiscountPrice(long price);
+    public BigDecimal getDiscountPrice(BigDecimal price);
+    public BigDecimal getIncreasedPoints(BigDecimal points);
 
 }

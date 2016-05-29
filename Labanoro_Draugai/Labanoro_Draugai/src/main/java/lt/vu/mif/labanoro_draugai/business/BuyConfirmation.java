@@ -6,6 +6,7 @@
 package lt.vu.mif.labanoro_draugai.business;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -24,6 +25,9 @@ public class BuyConfirmation implements Serializable {
 
     @Inject
     DatabaseManager dbm;
+
+    @Inject
+    private BuyConfirmationInterface priceService;
 
     private String[] prices;
     private String price;
@@ -55,15 +59,20 @@ public class BuyConfirmation implements Serializable {
         currency = param.getValue();
     }
 
-    public long getPriceInPoints() {
+    public BigDecimal getPriceInPoints() {
         if (price == null || price.isEmpty()) {
-            return -1;
+            return new BigDecimal(-1);
         }
-        double temp = Double.valueOf(price);
-        Systemparameter exchangeratio = dbm.getSystemParameter("SystemParameter.ExchangeRate.Euro");
-        ratio = exchangeratio.getValue();
-        temp *= Double.valueOf(ratio);
-        return Math.round(temp);
+        BigDecimal exchangeratio = new BigDecimal(dbm.getSystemParameter("SystemParameter.ExchangeRate.Euro").getValue());
+        return exchangeratio.multiply(new BigDecimal(price));
+    }
+
+    public BuyConfirmationInterface getPriceService() {
+        return priceService;
+    }
+
+    public void setPriceService(BuyConfirmationInterface priceService) {
+        this.priceService = priceService;
     }
 
     public long getPriceInCents() {
