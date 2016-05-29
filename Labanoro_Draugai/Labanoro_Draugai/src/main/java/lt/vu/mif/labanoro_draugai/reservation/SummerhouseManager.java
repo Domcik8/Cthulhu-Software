@@ -106,8 +106,15 @@ public class SummerhouseManager implements Serializable {
         user = (Person) dbm.getEntity("Person", "Email", request.getUserPrincipal().getName());
         
         
-        summerhouses = (List<House>) dbm.getAllEntities("House");
-        filteredSummerhouses = (List<House>) dbm.getAllEntities("House");
+        summerhouses = new ArrayList<>();;
+        filteredSummerhouses = new ArrayList<>();
+        for(House house:(List<House>) dbm.getAllEntities("House")){
+            if(house.getIsactive()!= null &&  house.getIsactive()){
+                summerhouses.add(house);
+                filteredSummerhouses.add(house);
+            }
+        }
+//        filteredSummerhouses = (List<House>) dbm.getAllEntities("House");
 //        Collections.reverse(summerhouses);
 //        Collections.reverse(filteredSummerhouses);
         System.out.println("summerhouses size:" + summerhouses.size());
