@@ -15,7 +15,6 @@ import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.Payment;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 
-//import lt.vu.mif.labanoro_draugai.administration.settings;
 /**
  *
  * @author Ernest J
@@ -29,20 +28,6 @@ public class EmailBean {
 
     @Inject
     private DatabaseManager dbm;
-
-    public void testMethod() {
-
-//        FacesContext context = FacesContext.getCurrentInstance();
-//        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-//        Person person = (Person) dbm.getEntity("Person", "Email", "user");
-//        Person requestor = (Person) dbm.getEntity("Person", "Email", request.getUserPrincipal().getName());
-//        sendRegisterConfirmationMessage(person);
-//        sendCandidateRecommendationRequestMessage(person, requestor);
-//        sendEmailConfirmationMessage(person);
-//        sendCandidateApprovalMessage(person);
-//        sendAccountDeactivationMessage(person);
-//        sendCandidateInvitationMessage("necrqlt@gmail.com", person);
-    }
 
     public void sendRegisterConfirmationMessage(Person person) {
 
@@ -86,7 +71,7 @@ public class EmailBean {
     public void sendCandidateInvitationMessage(String receiver, Person requestor) {
         sendEmail(receiver, "Kvietimas prisijungti prie \"Labanoro draugai\" klubo", body.getCandidateInvitationMessage(receiver, requestor));
     }
-    
+
     public void sendPaymentApprovementMessage(String receiver, Person person, Payment payment) {
         sendEmail(receiver, "\"Labanoro draugai\" mokėjimo patvirtinimas ", body.getPaymentApprovementMessage(receiver, payment));
     }

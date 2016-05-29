@@ -22,6 +22,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import org.omnifaces.cdi.ViewScoped;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -35,6 +36,7 @@ public class LoginForm {
     private String username;
     private String password;
     private String url;
+//    private String loginStatus;
 
     @Inject
     private LoginController controller;
@@ -45,6 +47,13 @@ public class LoginForm {
     public LoginForm() {
     }
 
+//    public void setLoginStatus(String text) {
+//        this.loginStatus = text;
+//    }
+//
+//    public String getLoginStatus() {
+//        return this.loginStatus;
+//    }
     public void setUrl(String param) {
         this.url = param;
     }
@@ -74,7 +83,6 @@ public class LoginForm {
 
         FacesContext context = FacesContext.getCurrentInstance();
         ExternalContext ex = context.getExternalContext();
-//        HttpServletRequest request = (HttpServletRequest) ex.getRequest();
 
         String dispatcherUrl = (String) ex.getRequestMap().get(RequestDispatcher.FORWARD_REQUEST_URI);
         String dispatcherParam = (String) ex.getRequestMap().get(RequestDispatcher.FORWARD_QUERY_STRING);
@@ -92,10 +100,11 @@ public class LoginForm {
 
     public String login() {
 
-        FacesContext context = FacesContext.getCurrentInstance();
-        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-        try {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        RequestContext requestContext = RequestContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
 
+        try {
             if (request.getUserPrincipal() == null) {   // check if not already logged in
                 if (controller.isUser(this.username)) {     // check if user already exists
                     String passwordHash = Hashing.sha256().hashString(this.password, Charsets.UTF_8).toString();
@@ -103,10 +112,9 @@ public class LoginForm {
 
                     if (request.getUserPrincipal().getName().equals(this.username)) {
                         System.out.println("Internal login worked");
-
                         if (!this.url.isEmpty() || this.url != null) {
                             try {
-                                context.getExternalContext().redirect(this.url);
+                                facesContext.getExternalContext().redirect(this.url);
                             } catch (IOException ex) {
                                 Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);
                             }
@@ -115,16 +123,19 @@ public class LoginForm {
                             return (dbm.getSystemParameter("SystemParameter.Redirect.LoginSuccess").getValue() + "?faces-redirect=true");
                         }
                     }
+                } else {
+                    requestContext.execute("PF('ShowNotExistingUserStatus').show();");
+                    return "";
                 }
             }
-
         } catch (ServletException e) {
             System.out.println("Failed to log in user!");
-            context.addMessage(null, new FacesMessage("Login failed."));
-            return (dbm.getSystemParameter("SystemParameter.Redirect.LoginError").getValue() + "?faces-redirect=true");
+            this.password = "";
+            requestContext.execute("PF('showIncorrectCredentials').show(); ");
+            return "";
         }
 
-        return (dbm.getSystemParameter("SystemParameter.Redirect.LoginError").getValue() + "?faces-redirect=true");
+        return (dbm.getSystemParameter("SystemParameter.Redirect.LoginSuccess").getValue() + "?faces-redirect=true");
     }
 
     public String logout() {
@@ -138,7 +149,6 @@ public class LoginForm {
             System.out.println("Logout worked");
         } catch (ServletException e) {
             System.out.println("Failed to logout user!");
-            destination = (dbm.getSystemParameter("SystemParameter.Redirect.LoginError").getValue() + "?faces-redirect=true");
         }
 
         return destination;
