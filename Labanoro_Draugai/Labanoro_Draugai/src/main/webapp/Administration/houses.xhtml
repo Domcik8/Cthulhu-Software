@@ -27,9 +27,9 @@ and open the template in the editor.
         
         <!-- Summerhouse list -->
         <div class="container .col-md-8" style="background: white">
-            <h1>Namelių sąrašas</h1>
+            <h1>Vasarnamių sąrašas</h1>
             <h:form>
-                <h:commandButton action="house" value="Pridėti namelį"/>
+                <p:commandButton action="house" value="Pridėti vasarnamį"/>
             </h:form>
             
             <p:dataScroller id="houseDataScroller" value="#{adminHouseManager.houses}" var="house" chunkSize="10" style="border:thin" >
@@ -40,15 +40,21 @@ and open the template in the editor.
                                 <h:panelGrid columns="1" style="width: 100%" columnClasses="forty-percent top-alignment, sixty-percent top-alignment" >
                                 <h:outputText class="title-text" value="#{house.title}"/>
                                 <h:outputLabel class="small-text" value="#{house.description}" rendered="#{house.description != null and !(empty house.description)}"/>
-                                <h:outputText class="small-text" value="Namelio reg. nr.: #{house.housereg}"/>
+                                <h:outputText class="small-text" value="Vasarnamio reg. nr.: #{house.housereg}"/>
                                 <h:outputText class="small-text" value="Adresas: #{house.address}"/>
                                 <h:outputText class="small-text" value="Vietų sk.: #{house.numberofplaces}"/>
-                                <h:outputFormat class="small-text" value="Pradžios data: {0, date, yyyy-MM-dd}">
-                                    <f:param value="#{house.seasonstartdate}"/>
-                                </h:outputFormat>
-                                <h:outputFormat class="small-text" value="Pabaigos data: {0, date, yyyy-MM-dd}">
-                                    <f:param value="#{house.seasonenddate}" />
-                                </h:outputFormat>
+                                <h:panelGrid columns="2">
+                                    <h:outputText value="Pradžios data:" class="small-text"/>
+                                    <h:outputFormat class="small-text" value="{0, date, yyyy-MM-dd}" rendered="#{house.seasonstartdate != null}">
+                                        <f:param value="#{house.seasonstartdate}"/>
+                                    </h:outputFormat>
+                                    <h:inputHidden rendered="#{house.seasonstartdate == null}"/>
+                                    <h:outputText value="Pabaigos data:" class="small-text"/>
+                                    <h:outputFormat class="small-text" value="{0, date, yyyy-MM-dd}" rendered="#{house.seasonenddate != null}">
+                                        <f:param value="#{house.seasonenddate}" />
+                                    </h:outputFormat>
+                                    <h:inputHidden rendered="#{house.seasonenddate == null}"/>
+                                </h:panelGrid>
                                 <h:outputText class="small-text" value="Tipas: #{house.getTypeid().getTitle()}"/>
                                 <h:panelGrid columns="2">
                                     <h:outputText class="small-text" value="Aktyvus:"/>
@@ -60,9 +66,9 @@ and open the template in the editor.
                                         <f:convertNumber type="currency" currencySymbol=" #{adminHouseManager.currency} "/>
                                     </h:outputText>
                                 </h:panelGrid>
-                                <h:commandButton action="#{adminHouseManager.setEditableHouse()}" value="Modifikuoti">
+                                <p:commandButton action="#{adminHouseManager.setEditableHouse()}" value="Modifikuoti">
                                     <f:param name="houseId" value="#{house.id}"/>
-                                </h:commandButton>
+                                </p:commandButton>
                             </h:panelGrid>
                         </h:form>
                     </p:outputPanel>

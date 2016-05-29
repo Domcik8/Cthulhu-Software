@@ -46,7 +46,7 @@ and open the template in the editor.
                         <h:outputText value="#{reservation.reservationreg}" />
                     </p:column>
                     <p:column filterBy="#{reservation.paymentid.paymentprice}" headerText="Kaina" filterMatchMode="contains">
-                        <h:outputText value="#{reservation.paymentid.paymentprice.doubleValue()}#{myReservationsView.currency}" style="float: right"/>
+                        <h:outputText value="#{reservation.paymentid.paymentprice}#{myReservationsView.currency}" style="float: right"/>
                     </p:column>
                     <p:column filterBy="#{reservation.startdate}" headerText="Pradžios data" filterMatchMode="contains" filterFunction="#{myReservationsView.filterFromDate}" >
                         <f:facet name="filter">

@@ -64,7 +64,7 @@ public class EditableHouse implements Serializable {
     private Map<String, String> houseTypes;
     private String houseType;
     
-    @PersistenceContext(type=PersistenceContextType.TRANSACTION, synchronization=SynchronizationType.UNSYNCHRONIZED)
+    @PersistenceContext(type=PersistenceContextType.TRANSACTION, synchronization=SynchronizationType.SYNCHRONIZED)
     private EntityManager em;
 
     @Inject
@@ -161,8 +161,8 @@ public class EditableHouse implements Serializable {
     
     public String deleteHouse() {
         try {
-            em.joinTransaction();
-            boolean savingSuccess = dbm.setHouseIsDeletedTrue(house);
+            //em.joinTransaction();
+            boolean savingSuccess = dbm.updateEntityIsDeletedTrue("House", house.getId());
             return "houses";
         }
         catch (Exception ex) {
