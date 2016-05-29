@@ -7,15 +7,21 @@ package lt.vu.mif.labanoro_draugai.authentication.controller;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
+import org.omnifaces.cdi.ViewScoped;
 
 /**
  *
@@ -23,11 +29,12 @@ import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
  */
 @Named("auth")
 @Stateful
-@RequestScoped
+@ViewScoped
 public class LoginForm {
 
     private String username;
     private String password;
+    private String url;
 
     @Inject
     private LoginController controller;
@@ -36,6 +43,14 @@ public class LoginForm {
     private DatabaseManager dbm;
 
     public LoginForm() {
+    }
+
+    public void setUrl(String param) {
+        this.url = param;
+    }
+
+    public String getUrl() {
+        return this.url;
     }
 
     public String getUsername() {
@@ -54,6 +69,27 @@ public class LoginForm {
         this.password = password;
     }
 
+    @PostConstruct
+    public void init() {
+
+        FacesContext context = FacesContext.getCurrentInstance();
+        ExternalContext ex = context.getExternalContext();
+//        HttpServletRequest request = (HttpServletRequest) ex.getRequest();
+
+        String dispatcherUrl = (String) ex.getRequestMap().get(RequestDispatcher.FORWARD_REQUEST_URI);
+        String dispatcherParam = (String) ex.getRequestMap().get(RequestDispatcher.FORWARD_QUERY_STRING);
+
+        System.out.println("dispatcherUrl: " + dispatcherUrl);
+        System.out.println("dispatcherUrlParam: " + dispatcherParam);
+
+        // For redirect purposes (url with params and w/o)
+        if (dispatcherUrl != null && dispatcherParam != null) {
+            this.url = dispatcherUrl + "?" + dispatcherParam;
+        } else {
+            this.url = dispatcherUrl;
+        }
+    }
+
     public String login() {
 
         FacesContext context = FacesContext.getCurrentInstance();
@@ -67,7 +103,17 @@ public class LoginForm {
 
                     if (request.getUserPrincipal().getName().equals(this.username)) {
                         System.out.println("Internal login worked");
-                        return (dbm.getSystemParameter("SystemParameter.Redirect.LoginSuccess").getValue() + "?faces-redirect=true");
+
+                        if (!this.url.isEmpty() || this.url != null) {
+                            try {
+                                context.getExternalContext().redirect(this.url);
+                            } catch (IOException ex) {
+                                Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            return "";
+                        } else {
+                            return (dbm.getSystemParameter("SystemParameter.Redirect.LoginSuccess").getValue() + "?faces-redirect=true");
+                        }
                     }
                 }
             }
