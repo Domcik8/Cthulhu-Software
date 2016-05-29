@@ -20,6 +20,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -67,6 +68,7 @@ public class Houseimage implements Serializable {
     private String description;
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
+    @Version
     @Column(name = "OPTLOCKVERSION")
     private Integer optlockversion;
     @JoinColumn(name = "HOUSEID", referencedColumnName = "ID")

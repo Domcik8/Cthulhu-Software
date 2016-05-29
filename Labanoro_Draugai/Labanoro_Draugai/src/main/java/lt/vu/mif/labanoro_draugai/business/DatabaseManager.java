@@ -21,6 +21,7 @@ import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -757,7 +758,7 @@ public class DatabaseManager {
         newPaymentLog.setPersontype(type.getTitle());
 
         if (persistAndFlush(newPaymentLog)) {
-            System.out.println("PaymentLog '%s' created successfully");
+            System.out.println("PaymentLog created successfully");
         } else {
             return null;
         }
@@ -766,7 +767,13 @@ public class DatabaseManager {
     }
 
     public Object updateEntity(Object obj) {
-        return em.merge(obj);
+        try {
+            Object result = em.merge(obj);
+            return result;
+        } catch (OptimisticLockException ol) {
+            System.out.println(String.format("Kažkas jau modifikavo objektą. Prašome bandyti dar karta."));
+        }
+        return null;
     }
 
     public Boolean recommendationExists(String recommenderEmail, String recommendedEmail) {
