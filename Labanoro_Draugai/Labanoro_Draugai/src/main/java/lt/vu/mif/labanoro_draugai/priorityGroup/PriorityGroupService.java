@@ -37,7 +37,7 @@ public class PriorityGroupService {
     @Inject 
     IPriorityGroupManager pgm;
     
-    @Schedule(second="0, 30", minute="*", hour="*", dayOfWeek="*", month="*")
+    //@Schedule(hour="*", dayOfWeek="*", month="*")
     public void checkServices() {
         System.out.println("Checking services");
         
