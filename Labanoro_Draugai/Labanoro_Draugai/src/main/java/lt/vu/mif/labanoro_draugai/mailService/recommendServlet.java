@@ -84,7 +84,7 @@ public class recommendServlet extends HttpServlet {
                         dbm.updateEntity(recommendation);
                         recommendedPersonReceivedRecommendations += 1;
                         recommendedPerson.setRecommendationsreceived(recommendedPersonReceivedRecommendations);
-                        dbm.updateEntity(recommendedPerson);
+                        //dbm.updateEntity(recommendedPerson); Optimistic locking
                     }
                 } else {
                     // If there was no recommendation, create one with confirm date
@@ -92,7 +92,7 @@ public class recommendServlet extends HttpServlet {
                     if (recommendation != null) {
                         recommendedPersonReceivedRecommendations += 1;
                         recommendedPerson.setRecommendationsreceived(recommendedPersonReceivedRecommendations);
-                        dbm.updateEntity(recommendedPerson);
+                        //dbm.updateEntity(recommendedPerson); Optimistic locking
                     }
                 }
 
@@ -103,11 +103,11 @@ public class recommendServlet extends HttpServlet {
 
                     if (memberType != null) {
                         recommendedPerson.setTypeid(memberType);
-                        dbm.updateEntity(recommendedPerson);
+                        //dbm.updateEntity(recommendedPerson); Optimistic locking
                         ema.sendCandidateApprovalMessage(recommendedPerson);
                     }
                 }
-
+                dbm.updateEntity(recommendedPerson); //Optimistic locking
             }
         }
 

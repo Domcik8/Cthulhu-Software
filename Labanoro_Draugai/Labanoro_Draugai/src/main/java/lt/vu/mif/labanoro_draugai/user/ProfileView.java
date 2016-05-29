@@ -176,6 +176,7 @@ public class ProfileView implements Serializable {
 
     public void inviteFriend() {
         emailBean.sendCandidateInvitationMessage(friendEmail, user);
+        dbm.updateEntity(user);
     }
 
     //renderers
@@ -252,6 +253,7 @@ public class ProfileView implements Serializable {
 
     public void sendEmailConfirmation() {
         emailBean.sendEmailConfirmationMessage(user);
+        dbm.updateEntity(user); //Pakeitimai del optimistic locking
     }
 
     //Util

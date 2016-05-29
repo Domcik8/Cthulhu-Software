@@ -80,6 +80,7 @@ public class EmailBean {
 
         if (receiverPerson != null && requestorPerson != null) {
             sendEmail(receiver, "Rekomendacijos prašymas", body.getCandidateRecommendationRequestMessage(receiverPerson, requestorPerson));
+            dbm.updateEntity(requestorPerson); //Del optimistic locking
         }
     }
 
