@@ -392,17 +392,17 @@ public class SummerhouseManager implements Serializable {
         return dates;
     }
 
-    public double selectedHousePeriodPrice() {
+    public BigDecimal selectedHousePeriodPrice() {
         if (selectedDateFrom == null || selectedDateTo == null || selectedHouse == null) {
-            return 0;
+            return new BigDecimal(0);
         }
         int dayCount = getDaysBetweenDates(selectedDateFrom, selectedDateTo).size() + 1;
-        double price = selectedHouse.getWeekprice().doubleValue() * (dayCount / 7);
+        BigDecimal price = selectedHouse.getWeekprice().multiply(new BigDecimal(dayCount / 7));
         if (selectedHouseSelectedServices != null && selectedHouseAvailableServices != null) {
             for (String serviceReg : selectedHouseSelectedServices) {
                 for (Service service : selectedHouseAvailableServices) {
                     if (service.getServicereg().equals(serviceReg)) {
-                        price += servicePeriodPrice(service);
+                        price = price.add(servicePeriodPrice(service));
                         break;
                     }
                 }
@@ -411,18 +411,18 @@ public class SummerhouseManager implements Serializable {
         return price;
     }
 
-    public double servicePeriodPrice(Service service) {
+    public BigDecimal servicePeriodPrice(Service service) {
         if (selectedDateFrom == null || selectedDateTo == null || selectedHouse == null || service == null) {
-            return 0;
+            return new BigDecimal(0);
         }
         int dayCount = getDaysBetweenDates(selectedDateFrom, selectedDateTo).size() + 1;
 
-        return service.getWeekprice().doubleValue() * (dayCount / 7);
+        return service.getWeekprice().multiply(new BigDecimal(dayCount / 7));
     }
 
     public String confirmSelectedHouse() {
         if (user == null|| user.getTypeid().getInternalname().equalsIgnoreCase("Person.Candidate") || selectedHouse == null || selectedDateFrom == null || selectedDateTo == null
-                || !isHouseAvailable(selectedHouse, selectedDateFrom, selectedDateTo) || selectedHousePeriodPrice() == 0) {
+                || !isHouseAvailable(selectedHouse, selectedDateFrom, selectedDateTo) || (selectedHousePeriodPrice().compareTo(new BigDecimal(0)) == 0) ) {
             return "";
         }
         
@@ -430,7 +430,7 @@ public class SummerhouseManager implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("dateFrom", selectedDateFrom);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("dateTo", selectedDateTo);
         FacesContext.getCurrentInstance().getExternalContext().getFlash().put("selectedServices", selectedHouseSelectedServices);
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("price", selectedHousePeriodPrice());
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("price", selectedHousePeriodPrice().doubleValue());
 
         return "reservationConfirmation?faces-redirect=true";
     }

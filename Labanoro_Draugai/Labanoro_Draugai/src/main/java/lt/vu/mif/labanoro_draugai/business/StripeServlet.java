@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -85,6 +86,20 @@ public class StripeServlet extends HttpServlet {
                         break;
                     case "buyPoints":
                         payment = dbm.addPayment(username, BigDecimal.valueOf(Double.parseDouble(request.getParameter("Price1")) / 100), new Date(), "Payment.Points", "Currency.Euro");
+                        person = (Person) dbm.getEntity("Person", "Email", username);
+                        person.getPaymentList().add(payment);
+                        
+                        dbm.updateEntity(person);
+                        
+                        redirectparam = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Redirect.Buy");
+                        break;
+                    case "membershipPayment":
+                        payment = dbm.addPayment(username, BigDecimal.valueOf(Double.parseDouble(request.getParameter("Price1")) / 100), new Date(), "Payment.Membership", "Currency.Euro");
+                        person = (Person) dbm.getEntity("Person", "Email", username);
+                        person.getPaymentList().add(payment);
+                        
+                        dbm.updateEntity(person);
+                        
                         redirectparam = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Redirect.Buy");
                         break;
                 }

@@ -9,14 +9,17 @@ import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
@@ -27,12 +30,14 @@ import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.data_models.UserFormProperty;
 import lt.vu.mif.labanoro_draugai.entities.Formattribute;
+import lt.vu.mif.labanoro_draugai.entities.Payment;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.entities.Personregistrationform;
 import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import lt.vu.mif.labanoro_draugai.entities.Type;
 import lt.vu.mif.labanoro_draugai.mailService.EmailBean;
 import lt.vu.mif.labanoro_draugai.reservation.ReservationConfirmationManager;
+import net.sf.json.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.omnifaces.cdi.ViewScoped;
@@ -56,6 +61,10 @@ public class ProfileView implements Serializable {
     private String newPass;
     private String newPassConfirm;
     private String friendEmail;
+    private BigDecimal membershipPrice;
+    private BigDecimal exchangeRate;
+    private int membershipYearLimit;
+    private String currency;
 
     @Inject
     DatabaseManager dbm;
@@ -124,6 +133,13 @@ public class ProfileView implements Serializable {
             );
             label.setForControl(control);
         }
+
+        Systemparameter membershipProp = dbm.getSystemParameter("SystemParameter.Membership.Price");
+        membershipPrice = new BigDecimal(membershipProp.getValue());
+        membershipProp = dbm.getSystemParameter("SystemParameter.Membership.YearLimit");
+        membershipYearLimit = Integer.parseInt(membershipProp.getValue());
+        currency = dbm.getSystemParameter("SystemParameter.Currency.Euro").getValue();
+        exchangeRate = new BigDecimal(dbm.getSystemParameter("SystemParameter.ExchangeRate.Euro").getValue());
         System.out.println(toString() + " constructed.");
     }
 
@@ -252,13 +268,13 @@ public class ProfileView implements Serializable {
         return result;
     }
 
-    public String unregister(){
-        if(user==null){
+    public String unregister() {
+        if (user == null) {
             return "";
         }
         user.setIsdeleted(Boolean.TRUE);
-        user.setEmail(user.getEmail()+"_DELETED_"+user.getId());
-        if(user.getPersonregistrationform()!=null){
+        user.setEmail(user.getEmail() + "_DELETED_" + user.getId());
+        if (user.getPersonregistrationform() != null) {
             user.getPersonregistrationform().setInternalname(user.getEmail());
             dbm.updateEntity(user.getPersonregistrationform());
         }
@@ -277,7 +293,80 @@ public class ProfileView implements Serializable {
 
         return destination;
     }
-    
+
+    //Membership
+    public Date today() {
+        return new Date();
+    }
+
+    public boolean ableToBuyMembership() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(user.getMembershipdue());
+        cal.add(Calendar.YEAR, membershipYearLimit * -1);
+        if (!today().after(cal.getTime())) {
+            return false;
+        }
+
+        int unapprovedPaymentCount = 0;
+        for (Payment payment : user.getPaymentList()) {
+            if (payment.getTypeid().getInternalname().equals("Payment.Membership") && payment.getApproveddate() == null) {
+                unapprovedPaymentCount++;
+            }
+        }
+        cal.add(Calendar.YEAR, unapprovedPaymentCount);
+        return cal.getTime().before(today());
+    }
+
+    public void payWithPoints() {
+        //TODO implement
+        if (!ableToBuyMembership()) {
+            return;
+        }
+        BigDecimal membershipInPoints = exchangeRate.multiply(membershipPrice);
+        if (user.getPoints().compareTo(membershipInPoints) == -1) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Nepavyko!", "Jūsų sąskaitoje yra nepakankamai taškų."));
+            return;
+        }
+        user.setPoints(user.getPoints().subtract(membershipInPoints));
+
+        Payment payment = dbm.addPayment(user.getEmail(), membershipPrice, new Date(), "Payment.Membership", "Currency.Points");
+        user.getPaymentList().add(payment);
+
+        Calendar cal = Calendar.getInstance();
+        if (today().after(user.getMembershipdue())) {
+            cal.setTime(today());
+        } else {
+            cal.setTime(user.getMembershipdue());
+        }
+        cal.add(Calendar.YEAR, 1);
+        user.setMembershipdue(cal.getTime());
+
+        dbm.updateEntity(user);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Pavyko!", "Jūsų narystė pratęsta."));
+    }
+
+    public long membershipPriceInCents() {
+        return Math.round(membershipPrice.doubleValue() * 100);
+    }
+
+    public String createMembershipOrderJSON() {
+        if (user == null) {
+            return "";
+        }
+        net.sf.json.JSONObject jsonObject = new net.sf.json.JSONObject();
+        jsonObject.element("type", "membershipPayment");
+        return jsonObject.toString();
+    }
+
+    public String pricePointDisplay() {
+        BigDecimal membershipInPoints = exchangeRate.multiply(membershipPrice);
+        if (membershipInPoints.compareTo(new BigDecimal(10)) == -1) {
+            return membershipInPoints + " taškus";
+        }else{
+            return membershipInPoints + " taškų";
+        }
+    }
+
     //Getters
     public DynaFormModel getDisplayModel() {
         return displayModel;
@@ -318,4 +407,17 @@ public class ProfileView implements Serializable {
     public void setFriendEmail(String friendEmail) {
         this.friendEmail = friendEmail;
     }
+
+    public BigDecimal getMembershipPrice() {
+        return membershipPrice;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public BigDecimal getExchangeRate() {
+        return exchangeRate;
+    }
+
 }
