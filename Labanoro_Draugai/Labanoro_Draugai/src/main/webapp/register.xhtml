@@ -28,6 +28,12 @@ and open the template in the editor.
         </h1>
             <p:panel>
                 <h:form id="registrationForm" >
+                    <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+
+                    <p:dialog widgetVar="statusDialog" modal="false" draggable="false" closable="false" resizable="false" showHeader="false">
+                        <p:graphicImage name="ajax-loader.gif" library="img"/>
+                    </p:dialog>
+                    
                     <h2>Prisijungimo informacija</h2>
                     <input name="dummyinput" id="dummyinput" type="text" style="display: none"/> 
                     <input name="dummypassword" type="password" id="dummypassword" style="display: none"/>
