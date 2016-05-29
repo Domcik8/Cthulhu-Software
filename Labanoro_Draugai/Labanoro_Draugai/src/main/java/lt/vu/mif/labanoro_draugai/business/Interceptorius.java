@@ -16,7 +16,6 @@ import javax.interceptor.InterceptorBinding;
  *
  * @author werezz
  */
-
 @InterceptorBinding
 @Retention(RUNTIME)
 @Target({METHOD, TYPE})
