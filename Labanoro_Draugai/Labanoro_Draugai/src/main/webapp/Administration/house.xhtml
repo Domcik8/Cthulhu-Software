@@ -40,7 +40,7 @@ and open the template in the editor.
         <!-- End of Navigation panel -->
         
         <div class="container .col-md-8" style="background: white">
-            <h1>Namelio modifikavimas</h1>
+            <h1>Vasarnamio modifikavimas</h1>
             <h:form>
                 <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
             </h:form>
@@ -54,7 +54,7 @@ and open the template in the editor.
                         <h:inputHidden/>
 
                         <p:outputLabel for="title" value="Pavadinimas:"/>
-                        <p:inputText id="title" value="#{editableHouse.house.title}" required="true" requiredMessage="Įveskite namelio pavadinimą! Maks. ilgis 255 simboliai.">
+                        <p:inputText id="title" value="#{editableHouse.house.title}" required="true" requiredMessage="Įveskite vasarnamio pavadinimą! Maks. ilgis 255 simboliai.">
                             <f:validateLength minimum="1" maximum="255"/>
                         </p:inputText>
                         <p:message for="title" style="color:red" />
@@ -63,8 +63,8 @@ and open the template in the editor.
                         <p:inputText id="description" value="#{editableHouse.house.description}"/>
                         <h:message for="description" style="color:red" />
 
-                        <p:outputLabel for="houseId" value="Namelio reg. nr."/>
-                        <p:inputText id="houseId" value="#{editableHouse.house.housereg}" required="true" requiredMessage="Įveskite namelio registracijos numerį! Maks. ilgis 255 simboliai.">
+                        <p:outputLabel for="houseId" value="Vasarnamio reg. nr."/>
+                        <p:inputText id="houseId" value="#{editableHouse.house.housereg}" required="true" requiredMessage="Įveskite vasarnamio registracijos numerį! Maks. ilgis 255 simboliai.">
                             <f:validateLength minimum="1" maximum="255"/>
                         </p:inputText>
                         <p:message for="houseId" style="color:red" />
@@ -103,7 +103,7 @@ and open the template in the editor.
                     <h:panelGrid columns="3">
                         <p:commandButton action="#{editableHouse.saveHouse}" value="Išsaugoti" process="@form"/>
                         <p:commandButton action="#{editableHouse.declineChanges}" value="Atmesti" process="@this"/>
-                        <p:commandButton actionListener="#{editableHouse.deleteHouse}" oncomplete="PF('deletionHouseDialog').show();" value="Panaikinti" process="@this" update=":deletionHouseOutsideForm"/>
+                        <p:commandButton oncomplete="PF('deletionHouseDialog').show();" value="Panaikinti" process="@this" update=":deletionHouseOutsideForm"/>
                     </h:panelGrid>
                 </h:form>
             </div>
@@ -169,7 +169,7 @@ and open the template in the editor.
                 <h:form id="deletionHouseOutsideForm">
                     <p:dialog id="secondDialog" header="Dėmesio" widgetVar="deletionHouseDialog" modal="true" height="80" width="300" resizable="false">
                         <h:form id="dialogInsideForm">
-                            <h:outputText value="Ar tikrai norite panaikinti šį namelį?"/>
+                            <h:outputText value="Ar tikrai norite panaikinti šį vasarnamį?"/>
                             <h:panelGrid id="panel" columns="2">  
                                 <p:commandButton value="Taip" action="#{editableHouse.deleteHouse}"/>
                                 <p:commandButton value="Ne" action="#{editableHouse.closeDialogs}"/>
@@ -184,5 +184,7 @@ and open the template in the editor.
         <h:outputScript library="js" name="custom.js" />
         <script>setActiveNavTab("admin")</script>
         <!-- end of scripts -->
+        
+        
     </h:body>
 </html>

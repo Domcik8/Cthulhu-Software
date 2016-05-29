@@ -19,6 +19,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -53,6 +54,7 @@ public class Personregistrationform implements Serializable {
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
     @Column(name = "OPTLOCKVERSION")
+    @Version
     private Integer optlockversion;
     @JoinColumn(name = "PERSONID", referencedColumnName = "ID")
     @OneToOne(optional = false)

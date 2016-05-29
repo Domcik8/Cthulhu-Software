@@ -22,7 +22,7 @@ and open the template in the editor.
     <h:body>
         <ui:include src="/WEB-INF/other_pages/navigation.xhtml" /> 
         <div class="container">
-            
+
             <h1>Paskyros valdymas</h1>
             <p:panel>
                 <h2>Statusas</h2>
@@ -32,28 +32,28 @@ and open the template in the editor.
                     <p:outputLabel value="Narystė galioja iki: #{profileView.formattedMembershipEndDate()}" rendered="#{profileView.renderNotForCandidate()}"/>
                 </p:panelGrid>
                 <p:commandButton id="inviteButton" value="Siūsti pakvietimą į klubą" onclick="PF('inviteWidget').show()" rendered="#{profileView.renderNotForCandidate()}"/>
-                
-                <p:panelGrid columns="1" id="recomendationInfoGrid" rendered = "profileView.renderRecommendtionInfo()">    
+
+                <p:panelGrid columns="1" id="recomendationInfoGrid" rendered = "#{profileView.renderRecommendtionInfo()}">    
                     <p:outputLabel value="Liko surinkti rekomendacijų iki klubo nario statuso: #{profileView.recommendationsTillMember()}"/>
                     <p:outputLabel value="Likusių rekomendacijos prašymų skaičius: #{profileView.remainingRecommendationRequests()}"/>
                 </p:panelGrid>
-                <p:commandButton id="askForRecommendationButton" value="Prašyti rekomendacijos" onclick="PF('askRecommendationWidget').show()" rendered = "profileView.renderRecommendtionInfo()"/>
+                <p:commandButton id="askForRecommendationButton" value="Prašyti rekomendacijos" onclick="PF('askRecommendationWidget').show()" rendered = "#{profileView.renderRecommendtionInfo()}"/>
                 <h2>Pagrindinė informacija</h2>
                 <h:form id="basicInfoForm">
                     <p:panelGrid>
                         <p:row>
                             <p:column>
-                                 <p:outputLabel value="Elektroninio pašto adresas:" for="emailLabel"/>
+                                <p:outputLabel value="Elektroninio pašto adresas:" for="emailLabel"/>
                             </p:column>
                             <p:column>
-                                 <p:outputLabel id="emailLabel" value="#{profileView.user.email}"/>
+                                <p:outputLabel id="emailLabel" value="#{profileView.user.email}"/>
                             </p:column>
                             <p:column>
                             </p:column>
                         </p:row>
                         <p:row>
                             <p:column>
-                                 <p:outputLabel value="Vardas:" for="firstNameLabel"/>
+                                <p:outputLabel value="Vardas:" for="firstNameLabel"/>
                             </p:column>
                             <p:column>
                                 <p:outputLabel id="firstNameLabel" value="#{profileView.user.firstname}"/>
@@ -64,7 +64,7 @@ and open the template in the editor.
                         </p:row>
                         <p:row>
                             <p:column>
-                                 <p:outputLabel value="Pavardė:" for="lastNameLabel"/>
+                                <p:outputLabel value="Pavardė:" for="lastNameLabel"/>
                             </p:column>
                             <p:column>
                                 <p:outputLabel id="lastNameLabel" value="#{profileView.user.lastname}"/>
@@ -75,7 +75,7 @@ and open the template in the editor.
                         </p:row>
                         <p:row>
                             <p:column>
-                                 <p:outputLabel value="Slaptažodis:" for="passwordLabel"/>
+                                <p:outputLabel value="Slaptažodis:" for="passwordLabel"/>
                             </p:column>
                             <p:column>
                                 <p:outputLabel id="passwordLabel" value="********"/>
@@ -92,21 +92,33 @@ and open the template in the editor.
                         <ui:include src="/WEB-INF/other_pages/dynamicUserForm.xhtml">
                             <ui:param name="model" value="#{profileView.displayModel}" />
                         </ui:include>
-                    
-                        <p:commandButton class="btn" value="Išsaugoti pakeitimus" action="#{profileView.saveChanges()}"
+
+                        <p:commandButton value="Išsaugoti pakeitimus" action="#{profileView.saveChanges()}"
                                          oncomplete="if (args &amp;&amp; !args.validationFailed) PF('infoWidget').show()" update="displayDynaFormGroup"/> 
-                        
+
 
                     </h:form> 
                 </p:panel>     
             </p:panel>
+            <div class="pull-right">
+                <p:commandButton id="unregisterButton" value="Išsiregistruoti" onclick="PF('deleteAccountWidget').show()" style="margin: auto;" class="btn btn-danger"/>
+            </div>    
         </div>
         <div id="dialogs">
             <p:dialog id="informationDialog" header="Išsaugota sėkmingai!"  widgetVar="infoWidget" resizable="false" draggable="false" responsive="true"
-            closeOnEscape="true" fitViewport="true" position="center"  modal="true"/>
-            
+                      closeOnEscape="true" fitViewport="true" position="center"  modal="true"/>
+
+            <p:dialog id="deleteAccountConfirm" header="Ar tikrai norite išsiregistuoti?" widgetVar="deleteAccountWidget" closeOnEscape="true" resizable="false" draggable="false" responsive="true"
+                      fitViewport="true" position="center"  modal="true">
+                <h:form>
+                    <p:commandButton value="Taip" styleClass="ui-confirmdialog-yes"
+                                     icon="ui-icon-check" action="#{profileView.unregister()}" oncomplete="PF('deleteAccountWidget').hide()" />
+                    <p:commandButton value="Ne" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('deleteAccountWidget').hide()"/>     
+                </h:form> 
+            </p:dialog>
+
             <p:dialog id="fNameConfirm" header="Vardo keitimas." widgetVar="fNameConfirmWidget" closeOnEscape="true" resizable="false" draggable="false" responsive="true"
-                fitViewport="true" position="center"  modal="true">
+                      fitViewport="true" position="center"  modal="true">
                 <h:form>
                     <p:inputText id="fNameInput" value="#{profileView.user.firstname}" required="true" />
                     <p:commandButton value="Išsaugoti" styleClass="ui-confirmdialog-yes"
@@ -116,24 +128,24 @@ and open the template in the editor.
             </p:dialog>
 
             <p:dialog id="lNameConfirm" header="Pavardės keitimas." widgetVar="lNameConfirmWidget" closeOnEscape="true" resizable="false" draggable="false" responsive="true"
-                fitViewport="true" position="center"  modal="true">
+                      fitViewport="true" position="center"  modal="true">
                 <h:form>
                     <p:inputText id="lNameInput" value="#{profileView.user.lastname}" required="true" />
                     <p:commandButton value="Išsaugoti" styleClass="ui-confirmdialog-yes" 
-                                icon="ui-icon-check" action="#{profileView.updateUser()}" oncomplete="if(args &amp;&amp; !args.validationFailed) PF('lNameConfirmWidget').hide()" update=":basicInfoForm:lastNameLabel lNameInput"/>
+                                     icon="ui-icon-check" action="#{profileView.updateUser()}" oncomplete="if(args &amp;&amp; !args.validationFailed) PF('lNameConfirmWidget').hide()" update=":basicInfoForm:lastNameLabel lNameInput"/>
                     <p:commandButton value="Atšaukti" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('lNameConfirmWidget').hide()"/>
                 </h:form>
             </p:dialog>
-            
-             <p:dialog id="passChangeDialog" header="Slaptažodžio keitimas." widgetVar="passChangeWidget" closeOnEscape="true" resizable="false" draggable="false" responsive="true"
-                fitViewport="true" position="center"  modal="true">
+
+            <p:dialog id="passChangeDialog" header="Slaptažodžio keitimas." widgetVar="passChangeWidget" closeOnEscape="true" resizable="false" draggable="false" responsive="true"
+                      fitViewport="true" position="center"  modal="true">
                 <h:form id="passChangeForm">
                     <p:panelGrid columns="2" id="passGrid">
                         <p:outputLabel id="oldPassLabel" value="Senas slaptažodis:" for="oldPass"/> 
                         <p:password id="oldPass" value="#{profileView.oldPass}" label="oldPassLabel" required="true" >
                             <f:validator validatorId="oldPasswordValidator" />
                             <f:attribute name="confirm" value="#{profileView.user.password}" />
-<!--                                <p:ajax event="blur" update="oldPass" />-->
+                            <!--                                <p:ajax event="blur" update="oldPass" />-->
                         </p:password>
                         <p:outputLabel value="Naujas slaptažodis:" for="newPass"/> 
                         <p:password id="newPass" value="#{profileView.newPass}" required="true" match="newPassConfirm"/>
@@ -142,14 +154,14 @@ and open the template in the editor.
                         <p:password style="display: none;"/> 
                     </p:panelGrid>
                     <br/>
-                     <p:commandButton value="Išsaugoti" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" action="#{profileView.updatePassword()}"
-                                      oncomplete="if(args &amp;&amp; !args.validationFailed) PF('passChangeWidget').hide()" update="passGrid"/>
+                    <p:commandButton value="Išsaugoti" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" action="#{profileView.updatePassword()}"
+                                     oncomplete="if(args &amp;&amp; !args.validationFailed) PF('passChangeWidget').hide()" update="passGrid"/>
                     <p:commandButton value="Atšaukti" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('passChangeWidget').hide()"/>
                 </h:form>
             </p:dialog>
-            
-             <p:dialog id="askRecommendationDialog" header="Rekomendacijos prašymas." widgetVar="askRecommendationWidget" closeOnEscape="true" resizable="false" draggable="false" responsive="true"
-                fitViewport="true" position="center"  modal="true">
+
+            <p:dialog id="askRecommendationDialog" header="Rekomendacijos prašymas." widgetVar="askRecommendationWidget" closeOnEscape="true" resizable="false" draggable="false" responsive="true"
+                      fitViewport="true" position="center"  modal="true">
                 <h:form>
                     <p:outputLabel value="Įveskite klubo nario elektroninį paštą:" for="friendEmail"/>
                     <p:inputText id="friendEmail" value="#{profileView.friendEmail}" required="true">
@@ -162,9 +174,9 @@ and open the template in the editor.
                     <p:commandButton value="Atšaukti" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('askRecommendationWidget').hide()"/>
                 </h:form>
             </p:dialog>
-            
+
             <p:dialog id="inviteDialog" header="Draugo pakvietimas." widgetVar="inviteWidget" closeOnEscape="true" resizable="false" draggable="false" responsive="true"
-                fitViewport="true" position="center"  modal="true">
+                      fitViewport="true" position="center"  modal="true">
                 <h:form>
                     <p:outputLabel value="Įveskite draugo elektroninį paštą:" for="invitedFriendEmail"/>
                     <p:inputText id="invitedFriendEmail" value="#{profileView.friendEmail}" required="true">

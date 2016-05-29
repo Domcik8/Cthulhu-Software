@@ -124,9 +124,9 @@ and open the template in the editor.
                         <h:form id="dialogInsideForm">
                             <h:outputText value="Ar tikrai norite panaikinti šį narį?"/>
                             <h:panelGrid id="panel" columns="2">  
-                                <h:commandButton action="#{adminUserManager.removeUser()}" value="Taip">
+                                <p:commandButton action="#{adminUserManager.removeUser()}" value="Taip">
                                     <f:param name="userId" value="#{user.id}"/>
-                                </h:commandButton>
+                                </p:commandButton>
                                 <p:commandButton value="Ne" action="#{adminUserManager.closeDialogs}"/>
                             </h:panelGrid>
                         </h:form>

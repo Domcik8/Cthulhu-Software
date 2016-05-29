@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lt.vu.mif.labanoro_draugai.entities.Payment;
+import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.entities.Reservation;
 import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import org.json.simple.JSONArray;
@@ -66,10 +67,19 @@ public class StripeServlet extends HttpServlet {
                     case "houseReservation":
                         payment = dbm.addPayment(username, BigDecimal.valueOf(Double.parseDouble(request.getParameter("Price1")) / 100), new Date(), "Payment.Reservation", "Currency.Euro");
                         reservation = createHouseReservation(username, json, payment.getPaymentreg());
+                        
                         payment.setReservationid(reservation);
+                        
+                        Person person = (Person) dbm.getEntity("Person", "Email", username);
+                        person.getReservationList().add(reservation);
+                        person.getPaymentList().add(payment);
+                        
+                        House house = (House) dbm.getEntity("House", "Housereg", (String) json.get("houseReg"));
+                        house.getReservationList().add(reservation);
+                        
                         dbm.updateEntity(payment);
-                        dbm.updateEntity(dbm.getEntity("Person", "Email", username));
-                        dbm.updateEntity(dbm.getEntity("House", "Housereg", (String) json.get("houseReg")));
+                        dbm.updateEntity(person);
+                        dbm.updateEntity(house);
                         redirectparam = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Redirect.MyReservations");
                         break;
                     case "buyPoints":

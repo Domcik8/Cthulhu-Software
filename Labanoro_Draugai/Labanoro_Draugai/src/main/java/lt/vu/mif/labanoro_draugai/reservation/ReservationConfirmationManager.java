@@ -142,6 +142,10 @@ public class ReservationConfirmationManager implements Serializable{
         pay.setApproveddate(new Date());
         user.getReservationList().add(reservation);
         user.getPaymentList().add(pay);
+                        
+        house.getReservationList().add(reservation);
+        
+        
         dbm.updateEntity(pay);
         dbm.updateEntity(user);
         dbm.updateEntity(house);

@@ -18,6 +18,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -63,6 +64,7 @@ public class Paymentlog implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "METHOD")
     private String method;
+    @Version
     @Column(name = "OPTLOCKVERSION")
     private Integer optlockversion;
 

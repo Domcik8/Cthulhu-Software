@@ -2,6 +2,7 @@ package lt.vu.mif.labanoro_draugai.business;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
+import java.beans.Statement;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -21,9 +22,13 @@ import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaUpdate;
+import javax.persistence.criteria.Root;
 import javax.transaction.TransactionSynchronizationRegistry;
 import lt.vu.mif.labanoro_draugai.data_models.AdminUserFormProperty;
 import lt.vu.mif.labanoro_draugai.entities.*;
@@ -187,10 +192,12 @@ public class DatabaseManager {
      * Fills database with basic system parameters
      */
     private void fillBasicSystemParameters() {
-        addSystemParameter("SystemParameter.BuyPoints", "Taškų kainos eurais", "5;10;15;20", "Esamos sistemos taškų kainos, kurios yra nesusijųsios su gaunamu taškų kiekiu. Naujos įvesties pvž: (5;)", "SystemParameter");
+        addSystemParameter("SystemParameter.BuyPoints", "Taškų kainos eurais", "5;10;15;20", "Esamos sistemos taškų kainos, kurios yra nesusijųsios su gaunamu taškų kiekiu. Naujos įvesties pvz.: (5;)", "SystemParameter");
 
-        addSystemParameter("SystemParameter.ExchangeRate.Euro", "Taškų kursas lyginant su euru", "1", "SystemParameter");
+        addSystemParameter("SystemParameter.ExchangeRate.Euro", "Taškų kursas lyginant su euru", "1", "Pinigai * Kursas = Taškai", "SystemParameter");
         addSystemParameter("SystemParameter.Currency.Euro", "Euro valiutos simbolis", "€", "SystemParameter");
+        addSystemParameter("SystemParameter.Membership.Price", "Narystės mokesčio kaina eurais.", "20,0", "SystemParameter");
+        addSystemParameter("SystemParameter.Membership.YearLimit", "Narystės metų limitas", "0", "Keliems metams į priekį galima turėti narystės mokestį.(0 - galima užsisakyti tik pasibaigus narystei, 1 - galima užsisakyti turint ne daugiau kaip metus narystės ir t.t.)", "SystemParameter");
 
         addSystemParameter("SystemParameter.General.ContextPath", "Pagrindinis kelias", "http://localhost:8080/Labanoro_Draugai", "Pagrindines puslapio URL'as", "SystemParameter");
 
@@ -757,7 +764,7 @@ public class DatabaseManager {
         newPaymentLog.setPersontype(type.getTitle());
 
         if (persistAndFlush(newPaymentLog)) {
-            System.out.println("PaymentLog '%s' created successfully");
+            System.out.println("PaymentLog created successfully");
         } else {
             return null;
         }
@@ -766,7 +773,14 @@ public class DatabaseManager {
     }
 
     public Object updateEntity(Object obj) {
-        return em.merge(obj);
+        try {
+            Object result = em.merge(obj);
+            return result;
+        } catch (OptimisticLockException ol) {
+            for (int i = 0; i < 10; i++)
+                System.out.println(String.format("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Kažkas jau modifikavo objektą. Prašome bandyti dar karta. XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"));
+        }
+        return null;
     }
 
     public Boolean recommendationExists(String recommenderEmail, String recommendedEmail) {
@@ -835,7 +849,8 @@ public class DatabaseManager {
     }
 
     public Systemparameter getSystemParameter(String internalName) {
-        return (Systemparameter) getEntity("Systemparameter", "Internalname", internalName);
+        Systemparameter param = (Systemparameter) getEntity("Systemparameter", "Internalname", internalName);
+        return param;
     }
 
     /**
@@ -1079,19 +1094,33 @@ public class DatabaseManager {
             Query q = em.createQuery("UPDATE House h SET h.title = :title, h.typeid = :typeid, "
                     + "h.description = :description, h.housereg = :housereg, h.address = :address, "
                     + "h.seasonstartdate = :startdt, h.seasonenddate = :enddt, "
-                    + "h.isactive = :isactive, h.weekprice = :price, h.numberofplaces = :places "
+                    + "h.weekprice = :price, h.numberofplaces = :places "
                     + "WHERE h.id = :id");
             q.setParameter("title", h.getTitle());
             q.setParameter("typeid", h.getTypeid());
             q.setParameter("description", h.getDescription());
             q.setParameter("housereg", h.getHousereg());
             q.setParameter("address", h.getAddress());
-            q.setParameter("isactive", h.getIsactive());
             q.setParameter("startdt", h.getSeasonstartdate());
             q.setParameter("enddt", h.getSeasonenddate());
             q.setParameter("price", h.getWeekprice());
             q.setParameter("places", h.getNumberofplaces());
             q.setParameter("id", h.getId());
+            em.detach(h);
+            em.joinTransaction();
+            int updated = q.executeUpdate();
+            em.flush();
+            updateHouseIsActive(h.getId(), h.getIsactive());
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+    
+    public boolean updateHouseIsActive(int houseId, boolean newValue) {
+        try {
+            Query q = em.createNativeQuery("UPDATE House h SET h.isactive = " + newValue + " WHERE h.id = " + houseId);
+            
             em.joinTransaction();
             int updated = q.executeUpdate();
             em.flush();
@@ -1100,13 +1129,26 @@ public class DatabaseManager {
             return false;
         }
     }
-
-    public boolean setHouseIsDeletedTrue(House h) {
+    
+    public boolean updateEntityIsDeletedTrue(String className, int id) {
         try {
-            Query q = em.createQuery("UPDATE House h SET h.isdeleted = :isdeleted "
-                    + "WHERE h.id = :id");
+            Query q = em.createNativeQuery("UPDATE " + className + " e SET e.isdeleted = true WHERE e.id = " + id);
+            em.joinTransaction();
+            int updated = q.executeUpdate();
+            em.flush();
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+    
+    public boolean updatePersonIsDeletedTrue(Person p) {
+        try {
+            Query q = em.createQuery("UPDATE Person p SET p.isdeleted = :isdeleted "
+                    + "WHERE p.id = :id");
             q.setParameter("isdeleted", true);
-            q.setParameter("id", h.getId());
+            q.setParameter("id", p.getId());
+            em.detach(p);
             em.joinTransaction();
             int updated = q.executeUpdate();
             em.flush();
@@ -1122,6 +1164,7 @@ public class DatabaseManager {
                     + "WHERE p.id = :id");
             q.setParameter("points", p.getPoints());
             q.setParameter("id", p.getId());
+            em.detach(p);
             em.joinTransaction();
             int updated = q.executeUpdate();
             em.flush();
@@ -1129,18 +1172,15 @@ public class DatabaseManager {
         } catch (Exception ex) {
             return false;
         }
-        /*Person p2 = (Person) getEntity("Person", "id", p.getId());
-        p2.setPoints(p2.getPoints());
-        updateEntity(p2);
-        return true;*/
     }
 
-    public boolean setPaymentApprovalDate(Payment p) {
+    public boolean updatePaymentApprovalDate(Payment p) {
         try {
             Query q = em.createQuery("UPDATE Payment p SET p.approveddate = :approvedate "
                     + "WHERE p.id = :id");
             q.setParameter("approvedate", new Date());
             q.setParameter("id", p.getId());
+            em.detach(p);
             em.joinTransaction();
             int updated = q.executeUpdate();
             em.flush();
@@ -1180,7 +1220,7 @@ public class DatabaseManager {
 
     public String generateReg(String desiredReg) {
         Random rand = new Random();
-        return desiredReg + "-" + System.currentTimeMillis() % 1000 + rand.nextInt(10000);
+        return desiredReg + "-" + System.currentTimeMillis() % 10000 + rand.nextInt(1000);
     }
     
     public Houseimage getFirstImage(House house) {
@@ -1195,12 +1235,13 @@ public class DatabaseManager {
         return null;
     }
     
-    public boolean setImageSequence(Houseimage img, int seq) {
+    public boolean updateImageSequence(Houseimage img, int seq) {
         try {
             Query q = em.createQuery("UPDATE Houseimage p SET p.sequence = :sequence "
                     + "WHERE p.id = :id");
             q.setParameter("sequence", seq);
             q.setParameter("id", img.getId());
+            em.detach(img);
             em.joinTransaction();
             int updated = q.executeUpdate();
             em.flush();
@@ -1213,8 +1254,8 @@ public class DatabaseManager {
     public boolean swapImageSequences(Houseimage img1, Houseimage img2) {
         try {
            int seq1 = img1.getSequence();
-           setImageSequence(img1, img2.getSequence());
-           setImageSequence(img2, seq1);
+           updateImageSequence(img1, img2.getSequence());
+           updateImageSequence(img2, seq1);
            return true; 
         }
         catch (Exception ex) {

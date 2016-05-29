@@ -23,6 +23,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -79,6 +80,7 @@ public class Service implements Serializable {
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
     @Column(name = "OPTLOCKVERSION")
+    @Version
     private Integer optlockversion;
     @ManyToMany(mappedBy = "serviceList")
     private List<House> houseList;

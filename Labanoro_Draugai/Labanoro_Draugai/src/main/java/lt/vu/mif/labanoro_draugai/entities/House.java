@@ -26,6 +26,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -88,6 +89,7 @@ public class House implements Serializable {
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
     @Column(name = "OPTLOCKVERSION")
+    @Version
     private Integer optlockversion;
     @JoinTable(name = "MULTISELECTHOUSETOSERVICE", joinColumns = {
         @JoinColumn(name = "PARENTID", referencedColumnName = "ID")}, inverseJoinColumns = {

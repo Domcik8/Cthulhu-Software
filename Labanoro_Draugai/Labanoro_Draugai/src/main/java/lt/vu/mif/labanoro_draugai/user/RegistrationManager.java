@@ -155,7 +155,7 @@ public class RegistrationManager implements Serializable {
             return null;
         }
 
-        dbm.updateEntity(person);
+        //person = (Person) dbm.updateEntity(person);
         emailBean.sendEmailConfirmationMessage(person);
         
         return (dbm.getSystemParameter("SystemParameter.Redirect.Login").getValue() + "?faces-redirect=true");

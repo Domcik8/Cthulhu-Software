@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -63,6 +64,7 @@ public class Systemparameter implements Serializable {
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
     @Column(name = "OPTLOCKVERSION")
+    @Version
     private Integer optlockversion;
     @JoinColumn(name = "TYPEID", referencedColumnName = "ID")
     @ManyToOne(optional = false)
