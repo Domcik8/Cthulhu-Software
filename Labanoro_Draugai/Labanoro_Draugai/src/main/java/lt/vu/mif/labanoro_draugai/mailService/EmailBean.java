@@ -34,8 +34,6 @@ public class EmailBean {
         String to = person.getEmail();
         String subject = "\"Labanoro draugai\" klubo registracija";
         sendEmail(to, subject, body.getRegistrationConfirmationMessage(person));
-        person = (Person) dbm.updateEntity(person, false);
-
         //start time out for confirmation link
     }
 

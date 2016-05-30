@@ -156,7 +156,7 @@ public class RegistrationManager implements Serializable {
         }
 
         emailBean.sendRegisterConfirmationMessage(person);
-        person = (Person) dbm.updateEntity(person); //Pakeitimai del optimistic locking
+        person = (Person) dbm.updateEntity(person, false); //Pakeitimai del optimistic locking
         
         return (dbm.getSystemParameter("SystemParameter.Redirect.Login").getValue() + "?faces-redirect=true");
     }
