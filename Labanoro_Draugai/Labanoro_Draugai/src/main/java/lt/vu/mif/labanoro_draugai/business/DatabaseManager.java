@@ -294,7 +294,7 @@ public class DatabaseManager {
         addSystemParameter("SystemParameter.StripeLiveSecretKey", "Stripe tikras slaptas raktas", "sk_live_nSRfu4JPpcgYkpSlOjknfBk7", "SystemParameter");
         addSystemParameter("SystemParameter.StripeLivePublishableKey", "Stripe tikras viešas raktas", "pk_live_Q7f9zGXVZ1877SD3DfsCbsgd", "SystemParameter");
 
-        addSystemParameter("SystemParameter.TermsAndConditions", "Nuostatos ir sąlygos", "Naudodamiesi mūsų sistema jūs sutinkate, kad „Labanoro draugai“ nėra atsakingi už sistmos nesklandumus ar kitus žalingus incidentus.", "SystemParameter");
+        addSystemParameter("SystemParameter.TermsAndConditions", "Nuostatos ir sąlygos", "Naudodamiesi mūsų sistema jūs sutinkate, kad „Labanoro draugai“ nėra atsakingi už sistemos nesklandumus ar kitus žalingus incidentus.", "SystemParameter");
 
         addSystemParameter("SystemParameter.Facebook.AppId", "FB aplikacijos kodas", "198659840500311", "Facebook užregistruotos aplikacijos kodas ", "SystemParameter");
         addSystemParameter("SystemParameter.Facebook.AppSecret", "FB aplikacijos slaptas kodas", "97d6fc7c788463e2de89f1571385cc75", "Kodas skirtas autentifikuotis užregistruotoje Facebook aplikacijoje", "SystemParameter");
@@ -854,9 +854,7 @@ public class DatabaseManager {
             Object result = em.merge(obj);
             return result;
         } catch (OptimisticLockException ol) {
-            for (int i = 0; i < 10; i++) {
-                System.out.println(String.format("Vidinė klaida: Kažkas jau modifikavo objektą."));
-            }
+            System.out.println(String.format("Vidinė klaida: Kažkas jau modifikavo objektą."));
         }
         return null;
     }
@@ -867,9 +865,7 @@ public class DatabaseManager {
             Object result = em.merge(obj);
             return result;
         } catch (OptimisticLockException ol) {
-            for (int i = 0; i < 10; i++) {
-                System.out.println(String.format("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Kažkas jau modifikavo objektą. REIKIA ISMESTI INTERNAL ERROR. XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"));
-            }
+            System.out.println(String.format("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Kažkas jau modifikavo objektą. REIKIA ISMESTI INTERNAL ERROR. XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"));
 
             FacesContext facesContext = FacesContext.getCurrentInstance();
             HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();

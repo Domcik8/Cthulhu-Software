@@ -151,7 +151,7 @@ public class StripeServlet extends HttpServlet {
             response.sendRedirect("/Labanoro_Draugai/index.html");
             return;
         }
-        response.sendRedirect(ContextParam.getValue() + redirectparam.getValue());
+        response.sendRedirect(ContextParam.getValue() + redirectparam.getValue() + "?faces-redirect=true");
     }
 
     private Reservation createHouseReservation(String username, JSONObject json, String paymentReg) throws java.text.ParseException {

@@ -166,7 +166,7 @@ public class ReservationConfirmationManager implements Serializable {
             return "/index";
         }
 
-        return param.getValue();
+        return param.getValue() + "?faces-redirect=true";
     }
 
     public BigDecimal calculateTotalPrice() {

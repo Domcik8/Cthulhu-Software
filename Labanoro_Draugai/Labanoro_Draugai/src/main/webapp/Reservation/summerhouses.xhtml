@@ -189,9 +189,9 @@ and open the template in the editor.
                                 <h:outputLabel id="periodPrice" value="Kaina: #{summerhouseManager.currency}#{summerhouseManager.selectedHousePeriodPrice()} " />
                                 <br/>
                                 <p:commandLink id="confirmOrder" action="#{summerhouseManager.confirmSelectedHouse()}" class="btn btn-success" 
-                                               style="position: relative;left: 80%; bottom: -35%;" value="Užsakyti" rendered="#{not summerhouseManager.isCandidate() and summerhouseManager.userMembershipPayed() and priorityGroupUtils.canPersonReserveHouses(summerhouseManager.user)}">
+                                               style="position: relative; left: 80%; bottom: -35%;" value="Užsakyti" rendered="#{not summerhouseManager.isCandidate() and summerhouseManager.userMembershipPayed() and priorityGroupUtils.canPersonReserveHouses(summerhouseManager.user)}">
                                 </p:commandLink>
-                                <h:outputText  style="color:red;" value="Kandidatai negali rezervuotis namelių." rendered="#{summerhouseManager.isCandidate()}"/>
+                                <h:outputText  style="color:red;" value="Kandidatai negali rezervuoti namelių." rendered="#{summerhouseManager.isCandidate()}"/>
                                 <h:outputText  style="color:red;" value="Prašome susimokėti metinį narystės mokestį. Tai galite atlikti savo paskyroje." rendered="#{not summerhouseManager.isCandidate() and not summerhouseManager.userMembershipPayed()}"/>
                             </p:outputPanel>
                         </p:dialog>
