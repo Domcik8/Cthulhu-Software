@@ -773,31 +773,33 @@ public class DatabaseManager {
 
         return newPaymentLog;
     }
-    
-     public Object updateEntity(Object obj, Boolean throwInternalError) {
-        
+
+    public Object updateEntity(Object obj, Boolean throwInternalError) {
+
         if (throwInternalError) {
             return updateEntity(obj);
         }
-         
+
         try {
             Object result = em.merge(obj);
             return result;
         } catch (OptimisticLockException ol) {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++) {
                 System.out.println(String.format("Vidinė klaida: Kažkas jau modifikavo objektą."));
+            }
         }
         return null;
     }
 
     public Object updateEntity(Object obj) {
-        
+
         try {
             Object result = em.merge(obj);
             return result;
         } catch (OptimisticLockException ol) {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++) {
                 System.out.println(String.format("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Kažkas jau modifikavo objektą. REIKIA ISMESTI INTERNAL ERROR. XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"));
+            }
         }
         return null;
     }
