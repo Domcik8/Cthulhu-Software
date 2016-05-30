@@ -71,8 +71,8 @@ public class AdminHouseManager implements Serializable {
     }
     
     public String firstImageName(House house) {
-        if(house == null || house.getHouseimageList() == null || house.getHouseimageList().isEmpty()) 
-            return null;
+        //if(house == null || house.getHouseimageList() == null || house.getHouseimageList().isEmpty()) 
+            //return null;
         
         Predicate condition = new Predicate() {
             public boolean evaluate(Object sample) {
@@ -81,7 +81,8 @@ public class AdminHouseManager implements Serializable {
          };
         
         try {
-            Houseimage result = (Houseimage)CollectionUtils.select(house.getHouseimageList(), condition).iterator().next();
+            List<Houseimage> imgs = dbm.getEntityList("Houseimage", "Houseid", house);
+            Houseimage result = (Houseimage)CollectionUtils.select(imgs, condition).iterator().next();
             return result.getInternalname();
         }
         catch (Exception ex) {
