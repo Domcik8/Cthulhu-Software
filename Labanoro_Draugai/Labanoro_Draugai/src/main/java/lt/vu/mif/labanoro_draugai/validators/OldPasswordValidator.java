@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lt.vu.mif.labanoro_draugai.user;
+package lt.vu.mif.labanoro_draugai.validators;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lt.vu.mif.labanoro_draugai.user;
+package lt.vu.mif.labanoro_draugai.validators;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -14,14 +14,13 @@ import javax.faces.validator.ValidatorException;
 import javax.inject.Inject;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.Person;
-import org.apache.commons.validator.routines.EmailValidator;
 
 /**
  *
  * @author Karolis
  */
-@FacesValidator("simpleEmailValidator")
-public class SimpleEmailValidator implements Validator {
+@FacesValidator("emailIsFreeValidator")
+public class EmailIsFreeValidator implements Validator{
     @Inject
     DatabaseManager dbm;
     
@@ -32,8 +31,9 @@ public class SimpleEmailValidator implements Validator {
         if (email == null) {
             return; // Just ignore and let required="true" do its job.
         }
-        EmailValidator emailValidator = EmailValidator.getInstance();
-        if(!emailValidator.isValid(email)) 
-            throw new ValidatorException(new FacesMessage("Netinkmas elektroninis paštas."));
+        
+        Person reciever = (Person)dbm.getEntity("Person", "Email", email);
+        if(reciever != null)
+            throw new ValidatorException(new FacesMessage("Klubo narys su tokiu elektroniniu paštu jau egzistuoja."));
     }
 }
