@@ -45,4 +45,11 @@ public class UserSession {
         return (person.getTypeid().getInternalname().equalsIgnoreCase("Person.Administrator"));
     }
 
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
 }

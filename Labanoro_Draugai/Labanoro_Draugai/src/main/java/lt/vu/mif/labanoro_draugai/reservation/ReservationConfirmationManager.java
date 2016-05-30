@@ -274,7 +274,7 @@ public class ReservationConfirmationManager implements Serializable {
 
     public BigDecimal getTotalPrice() {
         if (totalPrice.compareTo(new BigDecimal(-1)) == 0) {
-            totalPrice = new BigDecimal((Double) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("price"));
+            totalPrice = new BigDecimal((Double)FacesContext.getCurrentInstance().getExternalContext().getFlash().get("price"));
         }
         return totalPrice;
     }
