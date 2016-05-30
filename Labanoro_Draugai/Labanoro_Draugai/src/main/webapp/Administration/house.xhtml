@@ -108,6 +108,18 @@ and open the template in the editor.
                 </h:form>
             </div>
             
+            <h2>Paslaugos</h2>
+            <div>
+                <h:form>
+                    <p:tab title="Paslaugos">
+                        <p:selectManyCheckbox id="grid2" value="#{editableHouse.selectedServices}" layout="responsive" columns="3">
+                            <f:selectItems value="#{editableHouse.availableServices}" var="srvc" itemLabel="#{srvc}" itemValue="#{srvc}" />
+                        </p:selectManyCheckbox> 
+                    </p:tab>
+                    <p:commandButton action="#{editableHouse.saveServices}" value="Išsaugoti"/>
+                </h:form>
+            </div>
+            
             <h2>Nuotraukos</h2>
             <div>
                 <h:form id="imagesForm">
