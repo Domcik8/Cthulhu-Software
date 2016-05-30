@@ -28,6 +28,7 @@ import javax.inject.Named;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
+import lt.vu.mif.labanoro_draugai.business.Interceptorius;
 import lt.vu.mif.labanoro_draugai.data_models.UserFormProperty;
 import lt.vu.mif.labanoro_draugai.entities.Formattribute;
 import lt.vu.mif.labanoro_draugai.entities.Payment;
@@ -37,7 +38,6 @@ import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import lt.vu.mif.labanoro_draugai.entities.Type;
 import lt.vu.mif.labanoro_draugai.mailService.EmailBean;
 import lt.vu.mif.labanoro_draugai.reservation.ReservationConfirmationManager;
-import net.sf.json.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.omnifaces.cdi.ViewScoped;
@@ -319,8 +319,9 @@ public class ProfileView implements Serializable {
         return cal.getTime().before(today());
     }
 
+    @Interceptorius
     public void payWithPoints() {
-        //TODO implement
+
         if (!ableToBuyMembership()) {
             return;
         }
@@ -364,7 +365,7 @@ public class ProfileView implements Serializable {
         BigDecimal membershipInPoints = exchangeRate.multiply(membershipPrice);
         if (membershipInPoints.compareTo(new BigDecimal(10)) == -1) {
             return membershipInPoints + " taškus";
-        }else{
+        } else {
             return membershipInPoints + " taškų";
         }
     }
