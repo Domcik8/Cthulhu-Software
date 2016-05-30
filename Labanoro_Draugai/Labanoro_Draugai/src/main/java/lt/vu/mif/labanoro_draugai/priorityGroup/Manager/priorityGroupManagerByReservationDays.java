@@ -81,6 +81,7 @@ public class priorityGroupManagerByReservationDays implements IPriorityGroupMana
                     tryCount--;
                 }
             }
+        dbm.setLastCountDate();
     }
     
     private List<Reservation> getReservationsForPriorityCount() {
