@@ -29,7 +29,7 @@ and open the template in the editor.
                         <p:dataTable var="person" value="#{profileListView.persons}" widgetVar="paramsTable"
                                       paginator="true" filteredValue="#{profileListView.filteredProfiles}"
                                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                     rowsPerPageTemplate="10,50,100" rows="10" currentPageReportTemplate="{currentPage} iš {totalPages}">
+                                     rowsPerPageTemplate="10,50,100" rows="10" currentPageReportTemplate="{currentPage} iš {totalPages}" tableStyle="table-layout: auto;">
 
                             <p:column headerText="Vardas pavarde" filterBy="#{person.firstname}" filterMatchMode="contains">
                                 <h:outputText value="#{person.firstname} #{person.lastname}" />
