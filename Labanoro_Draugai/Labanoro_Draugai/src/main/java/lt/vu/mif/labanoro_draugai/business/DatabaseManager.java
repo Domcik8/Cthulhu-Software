@@ -66,7 +66,7 @@ public class DatabaseManager {
         fillBasicHouseImages();
         fillBasicRecommendations();
 
-        editPeople();
+        //editPeople();
         //editHouses();
         //editServices();
         return "DataBase has been filled and have been houses edited";
