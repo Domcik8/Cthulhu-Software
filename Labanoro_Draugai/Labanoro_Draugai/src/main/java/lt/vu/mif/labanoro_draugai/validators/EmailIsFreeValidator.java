@@ -34,6 +34,6 @@ public class EmailIsFreeValidator implements Validator{
         
         Person reciever = (Person)dbm.getEntity("Person", "Email", email);
         if(reciever != null)
-            throw new ValidatorException(new FacesMessage("Klubo narys su tokiu elektroniniu paštu jau egzistuoja."));
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_FATAL, "El. paštas užimtas.", "Klubo narys su tokiu elektroniniu paštu jau egzistuoja."));
     }
 }

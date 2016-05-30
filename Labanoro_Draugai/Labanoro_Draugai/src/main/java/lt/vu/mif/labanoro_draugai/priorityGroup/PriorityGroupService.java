@@ -10,6 +10,8 @@ import java.util.Calendar;
 import java.util.List;
 import javax.ejb.Schedule;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -38,7 +40,7 @@ public class PriorityGroupService {
     @Inject 
     IPriorityGroupManager pgm;
     
-    //@Schedule(hour="*", dayOfWeek="*", month="*")
+    @Schedule(second="0, 30", minute="*", hour="*", dayOfWeek="*", month="*")
     public void checkServices() {
         System.out.println("Checking services");
         
@@ -47,7 +49,6 @@ public class PriorityGroupService {
         
         System.out.println("Priority group service started");
         pgm.countPriorities();
-        setLastCountDate();
         System.out.println("Priority group service ended");
     }
     
@@ -122,18 +123,5 @@ public class PriorityGroupService {
         }
         
         return false;
-    }
-    
-    private void setLastCountDate() {
-        int tryCounter = 3;
-        
-        while (tryCounter > 0) {
-            Systemparameter lastCountDateSysParam = dbm.getSystemParameter("SystemParameter.priorityGroup.LastCountDate");
-            lastCountDateSysParam.setValue(Calendar.MONTH + "," + Calendar.DAY_OF_MONTH + "," + Calendar.HOUR_OF_DAY);
-            if (dbm.updateEntity(lastCountDateSysParam, false) != null) {
-                break;
-            }
-            tryCounter--;
-        }
     }
 }

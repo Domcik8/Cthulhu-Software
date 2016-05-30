@@ -23,6 +23,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
+import lt.vu.mif.labanoro_draugai.business.BuyConfirmationInterface;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.business.Interceptorius;
 import lt.vu.mif.labanoro_draugai.entities.House;
@@ -55,7 +56,11 @@ public class ReservationConfirmationManager implements Serializable {
     private String currency;
     @Inject
     DatabaseManager dbm;
-
+    
+    //Decorator
+    @Inject
+    private BuyConfirmationInterface priceService;
+    
     //neveikia redirectas
     @PostConstruct
     public void init() {
@@ -170,7 +175,7 @@ public class ReservationConfirmationManager implements Serializable {
             return totalPrice;
         }
 
-        totalPrice = totalPrice.add(periodPrice(house.getWeekprice()));
+        totalPrice = totalPrice.add(periodPrice(getWeekPriceHouse(house)));
         if (selectedServices == null) {
             return totalPrice;
         }
@@ -179,7 +184,7 @@ public class ReservationConfirmationManager implements Serializable {
             if (service == null) {
                 continue;
             }
-            totalPrice = totalPrice.add(periodPrice(service.getWeekprice()));
+            totalPrice = totalPrice.add(periodPrice(getWeekPriceService(service)));
         }
         totalPriceInPoints = totalPrice.multiply(exchangeRate);
         return totalPrice;
@@ -201,6 +206,16 @@ public class ReservationConfirmationManager implements Serializable {
         return weekPrice.multiply(new BigDecimal(dayCount / 7));
     }
 
+    public BigDecimal getWeekPriceHouse(House house){
+        if(house == null) return new BigDecimal(Integer.MAX_VALUE);
+        return priceService.getDiscountPrice(house.getWeekprice(), user, "Payment.Reservation");
+    }
+    
+    public BigDecimal getWeekPriceService(Service service){
+        if(service == null) return new BigDecimal(Integer.MAX_VALUE);
+        return priceService.getDiscountPrice(service.getWeekprice(), user, "Payment.Reservation");
+    }
+    
     public long getTotalPriceInCents() {
         return Math.round(totalPrice.doubleValue() * 100);
     }
@@ -274,7 +289,7 @@ public class ReservationConfirmationManager implements Serializable {
 
     public BigDecimal getTotalPrice() {
         if (totalPrice.compareTo(new BigDecimal(-1)) == 0) {
-            totalPrice = new BigDecimal((Double) FacesContext.getCurrentInstance().getExternalContext().getFlash().get("price"));
+            totalPrice = new BigDecimal((Double)FacesContext.getCurrentInstance().getExternalContext().getFlash().get("price"));
         }
         return totalPrice;
     }

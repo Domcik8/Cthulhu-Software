@@ -23,26 +23,34 @@ and open the template in the editor.
                 <a href="/Labanoro_Draugai/index.html" class="navbar-brand" style="outline: 0" >Labanoro Draugai</a>    
             </div>
             <!-- Collection of nav links and other content for toggling -->
-            <div id="navbarCollapse" class="collapse navbar-collapse">
+            <div id="navbarCollapse" class="collapse navbar-collapse ">
                 <ul class="nav navbar-nav">
                     <li id="summerhouses"><a href="/Labanoro_Draugai/Reservation/summerhouses.html" style="outline: 0">Vasarnamiai</a></li>
                     <li id="reservations"><a href="/Labanoro_Draugai/Reservation/allReservations.html" style="outline: 0">Rezervacijos</a></li>
-                    <li id="buyPoints"><a href="/Labanoro_Draugai/Reservation/buy.html" style="outline: 0">Pirkimai</a></li>
-                    <li id="profiles"><a href="/Labanoro_Draugai/user/profiles.html" style="outline: 0" >Klubo nariai</a></li>
-                    <li id="myReservations"><a href="/Labanoro_Draugai/Reservation/myReservations.html" style="outline: 0">Mano rezervacijos</a></li>
-                    <li class="dropdown" style="#{userSession.isAdmin()?'':'display:none;'}">
+                    <li id="profiles"><a href="/Labanoro_Draugai/user/profiles.html" style="outline: 0" >Klubo nariai</a></li>                 
+                    <li id="admin" class="dropdown" style="#{userSession.isAdmin()?'':'display:none;'}">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administravimas<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="/Labanoro_Draugai/Administration/houses.html">Vasarnamių administravimas</a></li>
-                            <li><a href="/Labanoro_Draugai/Administration/users.html">Vartotojų administravimas</a></li>
-                            <li><a href="/Labanoro_Draugai/Administration/payments.html">Mokėjimų administravimas</a></li>
-                            <li><a href="/Labanoro_Draugai/Administration/sys-params.html">Parametrų administravimas</a></li>
+                            <li><a href="/Labanoro_Draugai/Administration/houses.html">Vasarnamiai</a></li>
+                            <li><a href="/Labanoro_Draugai/Administration/users.html">Vartotojai</a></li>
+                            <li><a href="/Labanoro_Draugai/Administration/payments.html">Mokėjimai</a></li>
+                            <li><a href="/Labanoro_Draugai/Administration/sys-params.html">Parametrai</a></li>
+                            <li><a href="/Labanoro_Draugai/Administration/services.html">Paslaugos</a></li>
                             <li><a href="/Labanoro_Draugai/Administration/userFormCreator.html">Vatotojo formos kūrimas</a></li>
                         </ul>
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li id="profile"><a href="/Labanoro_Draugai/user/profile.html" style="outline: 0" >Mano paskyra</a></li>
+                    <li id="profile" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" 
+                           aria-haspopup="true" aria-expanded="false">#{userSession.person.firstname} #{userSession.person.lastname}: #{userSession.person.points} tašk.<span class="caret"></span></a>
+                        <ul class="dropdown-menu" style="width: 100%">
+                            <li ><a href="/Labanoro_Draugai/user/profile.html" style="outline: 0" >Mano paskyra</a></li>
+                            <li><a href="/Labanoro_Draugai/Reservation/myReservations.html" style="outline: 0">Mano rezervacijos</a></li>
+                            <li ><a href="/Labanoro_Draugai/Reservation/buy.html" style="outline: 0">Taškų pirkimas</a></li>
+                        </ul>
+                    </li>
+                   
                     <!--                        <li>
                                                 <a class="btn btn-default btn-outline btn-circle collapsed" data-toggle="collapse" href="#nav-profile" aria-expanded="false" aria-controls="nav-profile">Profile</a>
                                             </li>-->

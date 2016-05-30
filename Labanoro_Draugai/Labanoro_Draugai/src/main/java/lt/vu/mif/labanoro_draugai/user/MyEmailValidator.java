@@ -21,19 +21,25 @@ import lt.vu.mif.labanoro_draugai.entities.Person;
  */
 @FacesValidator("emailValidator")
 public class MyEmailValidator implements Validator {
+
     @Inject
     DatabaseManager dbm;
-    
+
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         String email = (String) value;
-        
+
         if (email == null) {
             return; // Just ignore and let required="true" do its job.
         }
+
+        Person reciever = (Person) dbm.getEntity("Person", "Email", email);
+        if (reciever == null) {
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_FATAL, "Klubo nario su tokiu elektroniniu paštu nėra.", "Klubo nario su tokiu elektroniniu paštu nėra."));
+        }
         
-        Person reciever = (Person)dbm.getEntity("Person", "Email", email);
-        if(reciever == null)
-            throw new ValidatorException(new FacesMessage("Klubo nario su tokiu elektroniniu paštu nėra."));
+        if(reciever.getTypeid().getInternalname().equalsIgnoreCase("Person.Candidate")){
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_FATAL, "Kandidatas.", "Elektroninis paštas turi būti klubo nario, o ne kandidato."));
+        }
     }
 }
