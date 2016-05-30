@@ -2,7 +2,6 @@ package lt.vu.mif.labanoro_draugai.business;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
-import java.beans.Statement;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -26,9 +25,6 @@ import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaUpdate;
-import javax.persistence.criteria.Root;
 import javax.transaction.TransactionSynchronizationRegistry;
 import lt.vu.mif.labanoro_draugai.data_models.AdminUserFormProperty;
 import lt.vu.mif.labanoro_draugai.entities.*;
@@ -165,28 +161,27 @@ public class DatabaseManager {
      * Fills database with basic reservations
      */
     private void fillBasicReservations() {
-        if(getAllEntities("Reservation").isEmpty())
-        {
+        if (getAllEntities("Reservation").isEmpty()) {
             try {
-            List<String> services = new ArrayList<String>();
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            services.add("ServiceReg-1");
-            services.add("ServiceReg-2");
+                List<String> services = new ArrayList<String>();
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                services.add("ServiceReg-1");
+                services.add("ServiceReg-2");
 
-            addReservation("HouseReg-1", "DefaultPayment", "Reservation", "doli@test.com", null, format.parse("2016-06-06"), format.parse("2016-06-12"));
-            addReservation("HouseReg-1", "DefaultPayment", "Reservation", "doli@test.com", services, format.parse("2016-06-27"), format.parse("2016-07-10"));
-            addReservation("HouseReg-1", "DefaultPayment", "Reservation", "doli@test.com", null, format.parse("2016-07-11"), format.parse("2016-07-17"));
-            addReservation("HouseReg-2", "DefaultPayment", "Reservation", "doli@test.com", null, format.parse("2016-06-06"), format.parse("2016-06-12"));
-            addReservation("HouseReg-2", "DefaultPayment", "Reservation", "doli@test.com", services, format.parse("2016-06-27"), format.parse("2016-07-10"));
-            addReservation("HouseReg-2", "DefaultPayment", "Reservation", "doli@test.com", null, format.parse("2016-07-11"), format.parse("2016-07-17"));
-            addReservation("HouseReg-3", "DefaultPayment", "Reservation", "erba@test.com", null, format.parse("2016-07-11"), format.parse("2016-07-17"));
-            
-            
+                addReservation("HouseReg-1", "DefaultPayment", "Reservation", "doli@test.com", null, format.parse("2016-06-06"), format.parse("2016-06-12"));
+                addReservation("HouseReg-1", "DefaultPayment", "Reservation", "doli@test.com", services, format.parse("2016-06-27"), format.parse("2016-07-10"));
+                addReservation("HouseReg-1", "DefaultPayment", "Reservation", "doli@test.com", null, format.parse("2016-07-11"), format.parse("2016-07-17"));
+                addReservation("HouseReg-2", "DefaultPayment", "Reservation", "doli@test.com", null, format.parse("2016-06-06"), format.parse("2016-06-12"));
+                addReservation("HouseReg-2", "DefaultPayment", "Reservation", "doli@test.com", services, format.parse("2016-06-27"), format.parse("2016-07-10"));
+                addReservation("HouseReg-2", "DefaultPayment", "Reservation", "doli@test.com", null, format.parse("2016-07-11"), format.parse("2016-07-17"));
+                addReservation("HouseReg-3", "DefaultPayment", "Reservation", "erba@test.com", null, format.parse("2016-07-11"), format.parse("2016-07-17"));
+
             } catch (ParseException ex) {
                 Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else 
+        } else {
             System.out.println("No reservations were created, because system already has some");
+        }
     }
 
     /**
@@ -241,7 +236,7 @@ public class DatabaseManager {
         addSystemParameter("SystemParameter.Mail.Smtp.auth", "Smtp autentifikacija", "true", "Ar reikalinga autentifikacija prisijungimui", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Smtp.starttls.enable", "Smtp TLS", "true", "Ar TLS turi būti įjungtas", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Smtp.ssl.trust", "Smtp Trust", "smtp.gmail.com", "Ar patikimas hostas", "SystemParameter");
-        
+
         addSystemParameter("SystemParameter.Houseimage.Width", "Nuotraukos plotis", "600", "Namelio nuotraukų plotis įkėlimo metu. Jeigu reikšmė 0, tai nuotraukos plotis bus nustatytas pagal jos aukštį.", "SystemParameter");
         addSystemParameter("SystemParameter.Houseimage.Height", "Nuotraukos aukštis", "0", "Namelio nuotraukų aukštis įkėlimo metu. Jeigu reikšmė 0, tai nuotraukos aukštis bus nustatytas pagal jos plotį.", "SystemParameter");
 
@@ -749,14 +744,14 @@ public class DatabaseManager {
 
         return newPayment;
     }
-    
+
     public Paymentlog addPaymentLog(String payerEmail, String payerType, String method) {
-        
+
         if (payerEmail == null || payerType == null || method == null) {
             System.out.println("Payment log parameters can not be null");
             return null;
         }
-        
+
         Type type = (Type) getEntity("Type", "Internalname", payerType);
 
         Paymentlog newPaymentLog = new Paymentlog();
@@ -769,7 +764,7 @@ public class DatabaseManager {
             System.out.println(String.format("There is no type '%s'", payerType));
             return null;
         }
-        
+
         newPaymentLog.setPersontype(type.getTitle());
 
         if (persistAndFlush(newPaymentLog)) {
@@ -780,31 +775,33 @@ public class DatabaseManager {
 
         return newPaymentLog;
     }
-    
-     public Object updateEntity(Object obj, Boolean throwInternalError) {
-        
+
+    public Object updateEntity(Object obj, Boolean throwInternalError) {
+
         if (throwInternalError) {
             return updateEntity(obj);
         }
-         
+
         try {
             Object result = em.merge(obj);
             return result;
         } catch (OptimisticLockException ol) {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++) {
                 System.out.println(String.format("Vidinė klaida: Kažkas jau modifikavo objektą."));
+            }
         }
         return null;
     }
 
     public Object updateEntity(Object obj) {
-        
+
         try {
             Object result = em.merge(obj);
             return result;
         } catch (OptimisticLockException ol) {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++) {
                 System.out.println(String.format("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Kažkas jau modifikavo objektą. REIKIA ISMESTI INTERNAL ERROR. XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"));
+            }
         }
         return null;
     }
@@ -1132,11 +1129,11 @@ public class DatabaseManager {
             return false;
         }
     }
-    
+
     public boolean updateHouseIsActive(int houseId, boolean newValue) {
         try {
             Query q = em.createNativeQuery("UPDATE House h SET h.isactive = " + newValue + " WHERE h.id = " + houseId);
-            
+
             em.joinTransaction();
             int updated = q.executeUpdate();
             em.flush();
@@ -1145,7 +1142,7 @@ public class DatabaseManager {
             return false;
         }
     }
-    
+
     public boolean updateEntityIsDeletedTrue(String className, int id) {
         try {
             Query q = em.createNativeQuery("UPDATE " + className + " e SET e.isdeleted = true WHERE e.id = " + id);
@@ -1157,7 +1154,7 @@ public class DatabaseManager {
             return false;
         }
     }
-    
+
     public boolean updatePersonIsDeletedTrue(Person p) {
         try {
             Query q = em.createQuery("UPDATE Person p SET p.isdeleted = :isdeleted "
@@ -1189,7 +1186,7 @@ public class DatabaseManager {
             return false;
         }
     }
-    
+
     public boolean updatePersonMembershipDue(Person p) {
         try {
             Query q = em.createQuery("UPDATE Person p SET p.membershipdue = :membershipdue "
@@ -1254,19 +1251,19 @@ public class DatabaseManager {
         Random rand = new Random();
         return desiredReg + "-" + System.currentTimeMillis() % 10000 + rand.nextInt(1000);
     }
-    
+
     public Houseimage getFirstImage(House house) {
         List<Houseimage> imgs = getEntityList("Houseimage", "Houseid", house);
-        
+
         for (Houseimage img : imgs) {
             if (img.getSequence() == 1) {
                 return img;
             }
         }
-        
+
         return null;
     }
-    
+
     public boolean updateImageSequence(Houseimage img, int seq) {
         try {
             Query q = em.createQuery("UPDATE Houseimage p SET p.sequence = :sequence "
@@ -1282,15 +1279,14 @@ public class DatabaseManager {
             return false;
         }
     }
-    
+
     public boolean swapImageSequences(Houseimage img1, Houseimage img2) {
         try {
-           int seq1 = img1.getSequence();
-           updateImageSequence(img1, img2.getSequence());
-           updateImageSequence(img2, seq1);
-           return true; 
-        }
-        catch (Exception ex) {
+            int seq1 = img1.getSequence();
+            updateImageSequence(img1, img2.getSequence());
+            updateImageSequence(img2, seq1);
+            return true;
+        } catch (Exception ex) {
             return false;
         }
     }

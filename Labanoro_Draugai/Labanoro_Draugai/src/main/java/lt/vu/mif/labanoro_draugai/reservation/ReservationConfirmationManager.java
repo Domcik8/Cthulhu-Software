@@ -18,13 +18,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
+import lt.vu.mif.labanoro_draugai.business.Interceptorius;
 import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Houseimage;
 import lt.vu.mif.labanoro_draugai.entities.Payment;
@@ -34,12 +34,13 @@ import lt.vu.mif.labanoro_draugai.entities.Service;
 import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.omnifaces.cdi.ViewScoped;
 
 /**
  *
  * @author Karolis
  */
-@ManagedBean
+@Named
 @ViewScoped
 public class ReservationConfirmationManager implements Serializable {
 
@@ -131,6 +132,7 @@ public class ReservationConfirmationManager implements Serializable {
         return jsonObject.toString();
     }
 
+    @Interceptorius
     public String reserveSummerhouse() {
         if (user.getPoints().compareTo(totalPriceInPoints) == -1) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Nepavyko!", "Jūsų sąskaitoje yra nepakankamai taškų."));

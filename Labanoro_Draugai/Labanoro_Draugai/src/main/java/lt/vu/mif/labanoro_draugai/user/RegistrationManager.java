@@ -110,14 +110,14 @@ public class RegistrationManager implements Serializable {
     public String submitRegistration() {
 
         if (!password.equals(passwordConfirm)) {
-            return null;
+            return "";
         }
 
-        EmailValidator emailValidator = EmailValidator.getInstance();
-
-        if (!emailValidator.isValid(email)) {
-            return null;
-        }
+//        EmailValidator emailValidator = EmailValidator.getInstance();
+//
+//        if (!emailValidator.isValid(email)) {
+//            return null;
+//        }
 
         JSONObject jsonObject = new JSONObject();
         for (DynaFormControl control : displayModel.getControls()) {

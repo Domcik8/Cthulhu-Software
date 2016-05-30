@@ -48,6 +48,8 @@ public class StripeServlet extends HttpServlet {
     @Inject
     DatabaseManager dbm;
 
+    private Person user;
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         System.out.println("Darau dopost");
@@ -64,11 +66,12 @@ public class StripeServlet extends HttpServlet {
             try {
                 JSONParser parser = new JSONParser();
                 JSONObject json = (JSONObject) parser.parse(request.getParameter("order"));
+                user = (Person) dbm.getEntity("Person", "Email", request.getUserPrincipal().getName());
                 switch ((String) json.get("type")) {
                     case "houseReservation":
                         payment = dbm.addPayment(username, BigDecimal.valueOf(Double.parseDouble(request.getParameter("Price1")) / 100), new Date(), "Payment.Reservation", "Currency.Euro");
                         reservation = createHouseReservation(username, json, payment.getPaymentreg());
-                        
+
                         payment.setReservationid(reservation);
                         payment = (Payment) dbm.updateEntity(payment);
                         
@@ -80,6 +83,8 @@ public class StripeServlet extends HttpServlet {
                         House house = (House) dbm.getEntity("House", "Housereg", (String) json.get("houseReg"));
                         house.getReservationList().add(reservation);
                         house = (House) dbm.updateEntity(house);
+
+                        dbm.addPaymentLog(user.getEmail(), user.getTypeid().getInternalname(), "lt.vu.mif.labanoro_draugai.business.houseReservation");
                         
                         redirectparam = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Redirect.MyReservations");
                         break;
@@ -90,6 +95,9 @@ public class StripeServlet extends HttpServlet {
                         
                         person = (Person) dbm.updateEntity(person);
                         
+                        dbm.addPaymentLog(user.getEmail(), user.getTypeid().getInternalname(), "lt.vu.mif.labanoro_draugai.business.buyPoints");
+
+
                         redirectparam = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Redirect.Buy");
                         break;
                     case "membershipPayment":
@@ -99,6 +107,9 @@ public class StripeServlet extends HttpServlet {
                         
                         person = (Person) dbm.updateEntity(person);
                         
+                        dbm.addPaymentLog(user.getEmail(), user.getTypeid().getInternalname(), "lt.vu.mif.labanoro_draugai.business.membershipPayment");
+
+
                         redirectparam = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Redirect.Buy");
                         break;
                 }

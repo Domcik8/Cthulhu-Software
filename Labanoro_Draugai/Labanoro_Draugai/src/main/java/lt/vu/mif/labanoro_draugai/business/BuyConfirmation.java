@@ -58,7 +58,7 @@ public class BuyConfirmation implements Serializable {
         if (parameter.getValue() == null || parameter.getValue().isEmpty()) {
             return;
         }
-        prices = parameter.getValue().split(";");
+        prices = parameter.getValue().trim().split(";");
         System.out.println("Kainos");
         for (String i : prices) {
             System.out.println(i);
@@ -116,7 +116,6 @@ public class BuyConfirmation implements Serializable {
 
     }
 
-    @Interceptorius
     public String createBuyJSON() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.element("type", "buyPoints");

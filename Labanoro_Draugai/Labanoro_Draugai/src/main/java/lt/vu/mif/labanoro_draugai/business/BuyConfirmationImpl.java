@@ -17,17 +17,17 @@ import lt.vu.mif.labanoro_draugai.entities.Person;
 public class BuyConfirmationImpl implements BuyConfirmationInterface {
 
     @Override
-    public long getDiscountPrice(long price, Person user) {
+    public long getDiscountPrice(long price, Person user,String typeInternalName) {
         return price;
     }
 
     @Override
-    public BigDecimal getDiscountPrice(BigDecimal price, Person user) {
+    public BigDecimal getDiscountPrice(BigDecimal price, Person user,String typeInternalName) {
         return price;
     }
 
     @Override
-    public BigDecimal getIncreasedPoints(BigDecimal points, Person user) {
+    public BigDecimal getIncreasedPoints(BigDecimal points, Person user,String typeInternalName) {
         return points;
     }
     

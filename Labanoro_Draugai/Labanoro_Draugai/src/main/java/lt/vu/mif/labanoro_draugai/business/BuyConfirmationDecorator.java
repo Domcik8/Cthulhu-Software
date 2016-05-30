@@ -9,10 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.decorator.Decorator;
 import javax.decorator.Delegate;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 
 /**
@@ -30,20 +27,20 @@ public class BuyConfirmationDecorator implements Serializable, BuyConfirmationIn
     BuyConfirmationInterface priceDiscount;
 
     @Override
-    public long getDiscountPrice(long price, Person user) {
-        price = priceDiscount.getDiscountPrice(price, user);
+    public long getDiscountPrice(long price, Person user, String typeInternalName) {
+        price = priceDiscount.getDiscountPrice(price, user, typeInternalName);
         return isJonas(user) ? price / 2 : price;
     }
 
     @Override
-    public BigDecimal getDiscountPrice(BigDecimal price, Person user) {
-        price = priceDiscount.getDiscountPrice(price, user);
+    public BigDecimal getDiscountPrice(BigDecimal price, Person user, String typeInternalName) {
+        price = priceDiscount.getDiscountPrice(price, user, typeInternalName);
         return isJonas(user) ? price.divide(new BigDecimal(2)) : price;
     }
 
     @Override
-    public BigDecimal getIncreasedPoints(BigDecimal points, Person user) {
-        points = priceDiscount.getIncreasedPoints(points, user);
+    public BigDecimal getIncreasedPoints(BigDecimal points, Person user, String typeInternalName) {
+        points = priceDiscount.getIncreasedPoints(points, user, typeInternalName);
         return isJonas(user) ? points.multiply(new BigDecimal(2)) : points;
     }
 
