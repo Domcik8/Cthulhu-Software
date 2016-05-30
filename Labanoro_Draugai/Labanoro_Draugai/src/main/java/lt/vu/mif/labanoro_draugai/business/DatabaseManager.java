@@ -205,7 +205,7 @@ public class DatabaseManager {
         addSystemParameter("SystemParameter.priorityGroup.HourOfTheDay", "Prioriteto grupės, perskaičiavimo laikas: dienos valanda", "22", "SystemParameter");
         addSystemParameter("SystemParameter.priorityGroup.SeasonLength", "Prioriteto grupės, suskirstimo laikotarpis mėnesiais", "3", "SystemParameter");
         addSystemParameter("SystemParameter.priorityGroup.Quantity", "Prioriteto grupės, grupių skaičius", "12", "SystemParameter");
-        addSystemParameter("SystemParameter.priorityGroup.LastCountDate", "Prioriteto grupės, paskutinio grupių perskačiavimo laikas", "12", "Menuo, menesio diena bei valanda, kada paskutini karta buvo perskaičiuotos prioriteto grupės. Atsižvelgiant į šią datą yra nustatomą einamoji sistemos prioriteto grupė", "SystemParameter");
+        addSystemParameter("SystemParameter.priorityGroup.LastCountDate", "Prioriteto grupės, paskutinio grupių perskačiavimo laikas", "12", "Metai, mėnuo, mėnesio diena bei valanda, kada paskutini karta buvo perskaičiuotos prioriteto grupės. Atsižvelgiant į šią datą yra nustatomą einamoji sistemos prioriteto grupė", "SystemParameter");
 
         addSystemParameter("SystemParameter.StripeTestSecretKey", "Stripe testinis slaptas raktas", "sk_test_GkbxvPwRpIG9T4aIiruw0TWl", "SystemParameter");
         addSystemParameter("SystemParameter.StripeTestPublishableKey", "Stripe testinis viešas raktas", "pk_test_NuMXQ4crxg12CBo9NxrjSO63", "SystemParameter");
@@ -1288,6 +1288,21 @@ public class DatabaseManager {
             return true;
         } catch (Exception ex) {
             return false;
+        }
+    }
+    
+    public void setLastCountDate() {
+        int tryCounter = 3;
+        Calendar calendar = Calendar.getInstance();
+        
+        while (tryCounter > 0) {
+            Systemparameter lastCountDateSysParam = getSystemParameter("SystemParameter.priorityGroup.LastCountDate");
+            lastCountDateSysParam.setValue(calendar.get(Calendar.YEAR) + "," + (calendar.get(Calendar.MONTH) + 1) + "," + 
+                    calendar.get(Calendar.DAY_OF_MONTH) + "," + calendar.get(Calendar.HOUR_OF_DAY));
+            if (updateEntity(lastCountDateSysParam, false) != null) {
+                break;
+            }
+            tryCounter--;
         }
     }
 }

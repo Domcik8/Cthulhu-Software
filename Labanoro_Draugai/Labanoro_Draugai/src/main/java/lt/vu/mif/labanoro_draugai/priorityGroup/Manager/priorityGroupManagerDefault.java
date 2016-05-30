@@ -5,6 +5,7 @@
  */
 package lt.vu.mif.labanoro_draugai.priorityGroup.Manager;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import javax.ejb.Stateless;
@@ -65,5 +66,6 @@ public class priorityGroupManagerDefault implements IPriorityGroupManager {
                 }
             }
         }
+        dbm.setLastCountDate();
     }
 }
