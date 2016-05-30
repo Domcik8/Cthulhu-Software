@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
-import javax.enterprise.context.ConversationScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -25,7 +24,6 @@ import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.Person;
-import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import org.primefaces.context.RequestContext;
 import org.omnifaces.cdi.ViewScoped;
 
@@ -37,118 +35,115 @@ import org.omnifaces.cdi.ViewScoped;
 @Stateful
 @ViewScoped
 public class AdminUserManager implements Serializable {
-    
+
     private List<Person> users;
     private List<Person> filteredUsers;
     private Date calendar;
-    
+
     //Dialog:
     private Person user;
     private Person userForDeletion;
     private String userEmail;
     private int addedPoints;
-    
+
     @PersistenceContext
     EntityManager em;
-    
+
     @Inject
     DatabaseManager dbm;
-    
+
     @PostConstruct
-    public void init() {        
+    public void init() {
         if (users == null || users.isEmpty()) {
             users = em.createNamedQuery("Person.findAll").getResultList();
         }
-        
+
         initFilters();
     }
-    
+
     public List<Person> getUsers() {
         return users;
     }
-    
+
     public List<Person> getFilteredUsers() {
         return filteredUsers;
     }
-    
+
     public void setFilteredUsers(List<Person> filtUsers) {
         filteredUsers = filtUsers;
     }
-    
+
     public String removeUser() {
         boolean isSuccess = true;
-        
+
         try {
             //String userId = getParameter("userId");
             //int id = Integer.parseInt(userId);
 
             int id = userForDeletion.getId();
-            
-            List<Person> usersToDelete = em.createNamedQuery("Person.findById").setParameter("id",  id).getResultList();
+
+            List<Person> usersToDelete = em.createNamedQuery("Person.findById").setParameter("id", id).getResultList();
             Person userToDelete = usersToDelete.get(0);
 
             userToDelete.setIsdeleted(true);
-            
+
             em.detach(userToDelete);
             //em.joinTransaction();
-            
+
             isSuccess = dbm.updateEntityIsDeletedTrue("Person", userToDelete.getId());
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             //return error page
         }
 
-        
         //if (!isSuccess)
-            //return error page
+        //return error page
         //else
         return "users";
     }
-    
+
     public AdminUserManager() {
     }
-    
+
     private String getParameter(String key) {
         FacesContext fc = FacesContext.getCurrentInstance();
-        Map<String,String> params = fc.getExternalContext().getRequestParameterMap();
-        
+        Map<String, String> params = fc.getExternalContext().getRequestParameterMap();
+
         return params.get(key);
     }
-    
+
     // FILTERS:
-    
     private int filter;
     private Map<String, Object> filters;
     private String filterKey;
-    
+
     public int getFilter() {
         return filter;
     }
-    
+
     public void setFilter(int filt) {
         filter = filt;
     }
-    
+
     public Map<String, Object> getFilters() {
         return filters;
     }
-    
+
     public void initFilters() {
         filters = new LinkedHashMap<String, Object>();
-        
+
         filters.put("El. paštas", 0);
         filters.put("Vardas", 1);
         filters.put("Pavardė", 2);
     }
-    
+
     public String getFilterKey() {
         return filterKey;
     }
-    
+
     public void setFilterKey(String filtKey) {
         filterKey = filtKey;
     }
-    
+
     public String filterUsers() {
         if (!filterKey.equals("")) {
             switch (filter) {
@@ -163,31 +158,31 @@ public class AdminUserManager implements Serializable {
         }
         return "users";
     }
-    
+
     public void addPoints() throws IOException {
         Person u = (Person) dbm.getEntity("Person", "Email", userEmail);
         u.setPoints(u.getPoints().add(new BigDecimal(addedPoints)));
         if (dbm.updatePersonPoints(u)) {
             userEmail = "";
             addedPoints = 0;
-            
+
             //Close the dialog:
-            RequestContext requestContext = RequestContext.getCurrentInstance();  
+            RequestContext requestContext = RequestContext.getCurrentInstance();
             requestContext.execute("PF('addPointsDialog').hide();");
-            
+
             //Reload the page:
             ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
             ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
         }
     }
-    
+
     public void closeDialogs() throws IOException {
         //Close dialogs:
-        RequestContext requestContext = RequestContext.getCurrentInstance();  
+        RequestContext requestContext = RequestContext.getCurrentInstance();
         requestContext.execute("PF('deletionUserDialog').hide();");
         requestContext.execute("PF('addConfirmDialog').hide();");
     }
-    
+
     /*public void openDialog(Person u) {
         user = u;
         userEmail = u.getEmail();
@@ -195,55 +190,54 @@ public class AdminUserManager implements Serializable {
         RequestContext requestContext = RequestContext.getCurrentInstance();  
         requestContext.execute("PF('addPointsDialog').show();");
     }*/
-    
     public Date getCalendar() {
         return calendar;
     }
- 
+
     public void setCalendar(Date date) {
         this.calendar = date;
     }
-    
+
     public Date getCurrentDate() {
         return new Date();
     }
-    
+
     public String getType(Person user) {
         return user.getTypeid().getTitle();
     }
-    
+
     public Person getUser() {
         return user;
     }
-    
+
     public void setUser(Person u) {
         user = u;
     }
-    
+
     public Person getUserForDeletion() {
         return userForDeletion;
     }
-    
+
     public void setUserForDeletion(Person u) {
         userForDeletion = u;
     }
-    
+
     public void setUserEmail(String eml) {
         userEmail = eml;
     }
-    
+
     public String getUserEmail() {
         return userEmail;
     }
-    
+
     public int getAddedPoints() {
         return addedPoints;
     }
-    
+
     public void setAddedPoints(int ap) {
         addedPoints = ap;
     }
-    
+
     public void showError(String message) {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Klaida!", message));
     }
