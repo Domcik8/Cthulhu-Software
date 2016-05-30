@@ -121,10 +121,10 @@ public class EditableHouse implements Serializable {
                 return "";
             }
         }
-        
+        house.setTypeid((Type)dbm.getEntity("Type", "Id", Integer.parseInt(houseType)));
         house.setIsdeleted(Boolean.FALSE);
         house = (House) dbm.updateEntity(house);
-        dbm.persistAndFlush(house);
+        boolean isSuccess = dbm.persistAndFlush(house);
         
         return "houses";
     }
