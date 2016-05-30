@@ -4,6 +4,7 @@ import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -19,16 +20,19 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.TransactionSynchronizationRegistry;
 import lt.vu.mif.labanoro_draugai.data_models.AdminUserFormProperty;
 import lt.vu.mif.labanoro_draugai.entities.*;
 import org.apache.commons.io.IOUtils;
+import org.primefaces.context.RequestContext;
 
 @Named
 @Stateless
@@ -801,6 +805,15 @@ public class DatabaseManager {
         } catch (OptimisticLockException ol) {
             for (int i = 0; i < 10; i++) {
                 System.out.println(String.format("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Kažkas jau modifikavo objektą. REIKIA ISMESTI INTERNAL ERROR. XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"));
+            }
+
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
+            try {
+                em.clear();
+                facesContext.getExternalContext().redirect(request.getContextPath() + "/conflict.html");
+                return null;
+            } catch (Exception e) {
             }
         }
         return null;
