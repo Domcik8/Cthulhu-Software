@@ -360,7 +360,9 @@ public class EditableHouse implements Serializable {
             
             img.setMimetype(mimeType);
 
-            em.joinTransaction();
+            house.getHouseimageList().add(img);
+            
+            house = (House) dbm.updateEntity(house);
             dbm.persistAndFlush(img);
 
             return true;
