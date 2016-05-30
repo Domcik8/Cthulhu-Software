@@ -33,7 +33,7 @@ and open the template in the editor.
                     </h:form>
                 </h:panelGrid>
                 <h:panelGroup id="myScript">
-                    <h:outputLabel for="description" value="Už šią sumą įsigysitę #{buyConfirmation.priceService.getIncreasedPoints(buyConfirmation.getPriceInPoints(),buyConfirmation.user)} tašk. " />
+                    <h:outputLabel for="description" value="Už šią sumą įsigysitę #{buyConfirmation.priceService.getIncreasedPoints(buyConfirmation.getPriceInPoints(),buyConfirmation.user,'Payment.Points')} tašk. " />
                     <ui:include src="/WEB-INF/other_pages/stripeForm.xhtml" >
                         <ui:param name="paymentType" value="Už taškus" />
                         <ui:param name="price" value="#{buyConfirmation.getPriceInCents()}" />
