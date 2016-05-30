@@ -81,7 +81,7 @@ public class recommendServlet extends HttpServlet {
                     // If there is no recommendation date, when it means that recommendation was not confirmed
                     if (recommendation.getRecommendationdate() == null) {
                         recommendation.setRecommendationdate(new Date());
-                        dbm.updateEntity(recommendation);
+                        recommendation = (Recommendation) dbm.updateEntity(recommendation);
                         recommendedPersonReceivedRecommendations += 1;
                         recommendedPerson.setRecommendationsreceived(recommendedPersonReceivedRecommendations);
                         //dbm.updateEntity(recommendedPerson); Optimistic locking
@@ -107,7 +107,7 @@ public class recommendServlet extends HttpServlet {
                         ema.sendCandidateApprovalMessage(recommendedPerson);
                     }
                 }
-                dbm.updateEntity(recommendedPerson); //Optimistic locking
+                recommendedPerson = (Person) dbm.updateEntity(recommendedPerson); //Optimistic locking
             }
         }
 

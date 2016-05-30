@@ -41,7 +41,7 @@ public class confirmServlet extends HttpServlet {
             Person person = (Person) dbm.getEntity("Person", "Emailconfirmation", confirmKey);
             if (person != null) {
                 person.setEmailconfirmation("validated");
-                dbm.updateEntity(person);
+                person = (Person) dbm.updateEntity(person);
             }
             response.sendRedirect(request.getContextPath() + redirect);
 

@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -71,17 +70,17 @@ public class StripeServlet extends HttpServlet {
                         reservation = createHouseReservation(username, json, payment.getPaymentreg());
                         
                         payment.setReservationid(reservation);
+                        payment = (Payment) dbm.updateEntity(payment);
                         
                         Person person = (Person) dbm.getEntity("Person", "Email", username);
                         person.getReservationList().add(reservation);
                         person.getPaymentList().add(payment);
+                        person = (Person) dbm.updateEntity(person);
                         
                         House house = (House) dbm.getEntity("House", "Housereg", (String) json.get("houseReg"));
                         house.getReservationList().add(reservation);
+                        house = (House) dbm.updateEntity(house);
                         
-                        dbm.updateEntity(payment);
-                        dbm.updateEntity(person);
-                        dbm.updateEntity(house);
                         redirectparam = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Redirect.MyReservations");
                         break;
                     case "buyPoints":
@@ -89,7 +88,7 @@ public class StripeServlet extends HttpServlet {
                         person = (Person) dbm.getEntity("Person", "Email", username);
                         person.getPaymentList().add(payment);
                         
-                        dbm.updateEntity(person);
+                        person = (Person) dbm.updateEntity(person);
                         
                         redirectparam = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Redirect.Buy");
                         break;
@@ -98,7 +97,7 @@ public class StripeServlet extends HttpServlet {
                         person = (Person) dbm.getEntity("Person", "Email", username);
                         person.getPaymentList().add(payment);
                         
-                        dbm.updateEntity(person);
+                        person = (Person) dbm.updateEntity(person);
                         
                         redirectparam = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Redirect.Buy");
                         break;

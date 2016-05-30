@@ -224,7 +224,7 @@ public class ProfileListView implements Serializable {
                 }
             }
 
-            dbm.updateEntity(selectedPerson);
+            selectedPerson = (Person) dbm.updateEntity(selectedPerson);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Pavyko!", "Kandidatas sėkmingai rekomenduotas."));
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nepavyko!", "Kandidatas jau turi jūsų rekomandaciją."));

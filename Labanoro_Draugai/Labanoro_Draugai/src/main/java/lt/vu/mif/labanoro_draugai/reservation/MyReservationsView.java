@@ -92,7 +92,7 @@ public class MyReservationsView implements Serializable {
         selectedReservation.setIsdeleted(Boolean.TRUE);
         user.setPoints(user.getPoints().add(BigDecimal.valueOf(reservationPointPrice(selectedReservation))));
         dbm.updatePersonPoints(user);
-        dbm.updateEntity(selectedReservation);
+        selectedReservation = (Reservation) dbm.updateEntity(selectedReservation);
         reservations.remove(selectedReservation);
         filteredReservations.remove(selectedReservation);
         selectedReservation = null;

@@ -41,7 +41,8 @@ public class priorityGroupManagerTest implements IPriorityGroupManager {
                     person.setPriority(666);
                     if(dbm.updateEntity(person) == null) {
                         person = (Person) dbm.getEntity("Person", "Email", person.getEmail());
-                    }
+                    } else
+                        break;
                     tryCount--;
                 }
             }

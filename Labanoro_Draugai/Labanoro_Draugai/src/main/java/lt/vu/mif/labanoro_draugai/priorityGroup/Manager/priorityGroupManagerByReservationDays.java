@@ -54,7 +54,8 @@ public class priorityGroupManagerByReservationDays implements IPriorityGroupMana
                     person.setPriority(0);
                     if(dbm.updateEntity(person) == null) {
                         person = (Person) dbm.getEntity("Person", "Email", person.getEmail());
-                    }
+                    } else
+                        break;
                     tryCount--;
                 }
             }
@@ -75,7 +76,8 @@ public class priorityGroupManagerByReservationDays implements IPriorityGroupMana
                     
                     if(dbm.updateEntity(person) == null) {
                         person = (Person) dbm.getEntity("Person", "Email", person.getEmail());
-                    }
+                    } else
+                        break;
                     tryCount--;
                 }
             }

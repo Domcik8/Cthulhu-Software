@@ -171,12 +171,12 @@ public class ProfileView implements Serializable {
         }
         emailBean.sendCandidateRecommendationRequestMessage(reciever, user);
         user.setRecommendationstosend(user.getRecommendationstosend() + 1);
-        dbm.updateEntity(user);
+        user = (Person) dbm.updateEntity(user);
     }
 
     public void inviteFriend() {
         emailBean.sendCandidateInvitationMessage(friendEmail, user);
-        dbm.updateEntity(user);
+        user = (Person) dbm.updateEntity(user);
     }
 
     //renderers
@@ -221,14 +221,14 @@ public class ProfileView implements Serializable {
             if (!dbm.persistAndFlush(regInfo)) {
                 return;
             }
-            dbm.updateEntity(user);
+            user = (Person) dbm.updateEntity(user);
         }
         regInfo.setFormvalue(jsonObject.toString());
-        dbm.updateEntity(regInfo);
+        regInfo = (Personregistrationform) dbm.updateEntity(regInfo);
     }
 
     public void updateUser() {
-        dbm.updateEntity(user);
+        user = (Person) dbm.updateEntity(user);
     }
 
     public void updatePassword() {
@@ -237,7 +237,7 @@ public class ProfileView implements Serializable {
                         Hashing.sha256().hashString(newPass, Charsets.UTF_8).toString(), Charsets.UTF_8
                 ).toString()
         );
-        dbm.updateEntity(user);
+        user = (Person) dbm.updateEntity(user);
     }
 
     //Email
@@ -253,7 +253,7 @@ public class ProfileView implements Serializable {
 
     public void sendEmailConfirmation() {
         emailBean.sendEmailConfirmationMessage(user);
-        dbm.updateEntity(user); //Pakeitimai del optimistic locking
+        user = (Person) dbm.updateEntity(user); //Pakeitimai del optimistic locking
     }
 
     //Util
@@ -280,7 +280,7 @@ public class ProfileView implements Serializable {
             user.getPersonregistrationform().setInternalname(user.getEmail());
             dbm.updateEntity(user.getPersonregistrationform());
         }
-        dbm.updateEntity(user);
+        user = (Person) dbm.updateEntity(user);
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
 
@@ -343,7 +343,7 @@ public class ProfileView implements Serializable {
         cal.add(Calendar.YEAR, 1);
         user.setMembershipdue(cal.getTime());
 
-        dbm.updateEntity(user);
+        user = (Person) dbm.updateEntity(user);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Pavyko!", "Jūsų narystė pratęsta."));
     }
 

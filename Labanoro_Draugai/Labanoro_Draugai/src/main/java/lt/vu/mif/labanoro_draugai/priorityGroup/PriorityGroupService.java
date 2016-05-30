@@ -17,6 +17,7 @@ import javax.persistence.PersistenceContext;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.entities.Reservation;
+import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import lt.vu.mif.labanoro_draugai.priorityGroup.Manager.*;
 
 /**
@@ -46,6 +47,7 @@ public class PriorityGroupService {
         
         System.out.println("Priority group service started");
         pgm.countPriorities();
+        setLastCountDate();
         System.out.println("Priority group service ended");
     }
     
@@ -120,5 +122,18 @@ public class PriorityGroupService {
         }
         
         return false;
+    }
+    
+    private void setLastCountDate() {
+        int tryCounter = 3;
+        
+        while (tryCounter > 0) {
+            Systemparameter lastCountDateSysParam = dbm.getSystemParameter("SystemParameter.priorityGroup.LastCountDate");
+            lastCountDateSysParam.setValue(Calendar.MONTH + "," + Calendar.DAY_OF_MONTH + "," + Calendar.HOUR_OF_DAY);
+            if (dbm.updateEntity(lastCountDateSysParam, false) != null) {
+                break;
+            }
+            tryCounter--;
+        }
     }
 }
