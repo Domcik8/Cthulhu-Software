@@ -166,14 +166,15 @@ and open the template in the editor.
 
             <p:dialog id="askRecommendationDialog" header="Rekomendacijos prašymas." widgetVar="askRecommendationWidget" closeOnEscape="true" resizable="false" draggable="false" responsive="true"
                       fitViewport="true" position="center"  modal="true">
-                <h:form>
+                <h:form id="askRecommendationForm">
+                    <p:message id="message" showDetail="true" for="friendEmail"/> 
                     <p:outputLabel value="Įveskite klubo nario elektroninį paštą:" for="friendEmail"/>
-                    <p:inputText id="friendEmail" value="#{profileView.friendEmail}" required="true">
+                    <p:inputText id="friendEmail" value="#{profileView.friendEmail}" required="true" requiredMessage="Laukas negali būti tuščias.">
                         <f:validator validatorId="emailValidator" />
                     </p:inputText>
                     <br/>
-                    <p:commandButton value="Siūsti" styleClass="ui-confirmdialog-yes" update="recomendationInfoGrid"
-                                     icon="ui-icon-check" action="#{profileView.askForRecommendation()}" 
+                    <p:commandButton value="Siūsti" styleClass="ui-confirmdialog-yes" update="askRecommendationForm recomendationInfoGrid"
+                                     icon="ui-icon-check" action="#{profileView.askForRecommendation()}" process="askRecommendationForm"
                                      oncomplete="if(args &amp;&amp; !args.validationFailed) PF('askRecommendationWidget').hide()"/>
                     <p:commandButton value="Atšaukti" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" onclick="PF('askRecommendationWidget').hide()"/>
                 </h:form>
