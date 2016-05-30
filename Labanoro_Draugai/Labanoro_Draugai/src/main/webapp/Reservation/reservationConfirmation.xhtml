@@ -36,7 +36,8 @@ and open the template in the editor.
                     <h:outputText value="Aprašas:"/> <h:outputText value="#{reservationConfirmationManager.house.description}"/>
                     <h:outputText value="Adresas:"/> <h:outputText value="#{reservationConfirmationManager.house.address}"/>
                     <h:outputText value="Vietos:"/> <h:outputText value="#{reservationConfirmationManager.house.numberofplaces}"/>
-                    <h:outputText value="Savaitės kaina:"/> <h:outputText value="#{reservationConfirmationManager.currency}#{reservationConfirmationManager.house.weekprice}"/>
+                    <h:outputText value="Savaitės kaina:"/> <h:outputText 
+                        value="#{reservationConfirmationManager.currency}#{reservationConfirmationManager.getWeekPriceHouse(reservationConfirmationManager.house)}"/>
                 </p:panelGrid>
                 
                 <div>
@@ -54,7 +55,7 @@ and open the template in the editor.
                     <f:facet name="header">
                         Papildomos paslaugos:
                     </f:facet>
-                    #{service.title} #{reservationConfirmationManager.currency}#{reservationConfirmationManager.periodPrice(service.weekprice)}
+                    #{service.title} #{reservationConfirmationManager.currency}#{reservationConfirmationManager.periodPrice(reservationConfirmationManager.getWeekPriceService(service))}
                 </p:dataList>
                 <h:outputLabel id="totalPrice" value="Visa kaina: 
                                #{reservationConfirmationManager.currency}#{reservationConfirmationManager.calculateTotalPrice()} 

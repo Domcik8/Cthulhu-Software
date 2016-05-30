@@ -30,6 +30,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.business.BuyConfirmationImpl;
+import lt.vu.mif.labanoro_draugai.business.BuyConfirmationInterface;
 import lt.vu.mif.labanoro_draugai.entities.Houseimage;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.entities.Service;
@@ -58,6 +59,10 @@ public class SummerhouseManager implements Serializable {
     private boolean isFiltered = false;
     List<String> selectedHouseImages;
     private boolean showOnlyFree;
+    
+    //Decorator
+    @Inject
+    private BuyConfirmationInterface priceService;
     
     //Dialog
     private House selectedHouse;
@@ -136,7 +141,7 @@ public class SummerhouseManager implements Serializable {
         availableOrderings.put("Brangiausi", Ordering.Expensive);
         ordering = Ordering.Expensive;
         sortHouses();
-        setMaxHousePrice(filteredSummerhouses.get(0).getWeekprice());
+        setMaxHousePrice(getWeekPrice(filteredSummerhouses.get(0)));
         setPriceTo(getMaxHousePrice());
         ordering = Ordering.New;
         sortHouses();
@@ -186,7 +191,7 @@ public class SummerhouseManager implements Serializable {
         if (showOnlyFree) {
             for (House house : summerhouses) {
                 if ((getPlaceCount() == 0 || house.getNumberofplaces() >= getPlaceCount())
-                        && (getPriceFrom().compareTo(house.getWeekprice()) <= 0 && house.getWeekprice().compareTo(getPriceTo()) <= 0)
+                        && (getPriceFrom().compareTo(getWeekPrice(house)) <= 0 && getWeekPrice(house).compareTo(getPriceTo()) <= 0)
                         && isHouseAvailable(house, getDateFrom(), getDateTo()) && hasSelectedServices(house, getSelectedFilters())) {
                     filteredSummerhouses.add(house);
                 }
@@ -194,7 +199,7 @@ public class SummerhouseManager implements Serializable {
         } else {
             for (House house : summerhouses) {
                 if ((getPlaceCount() == 0 || house.getNumberofplaces() >= getPlaceCount())
-                        && (getPriceFrom().compareTo(house.getWeekprice()) <= 0 && house.getWeekprice().compareTo(getPriceTo()) <= 0)
+                        && (getPriceFrom().compareTo(getWeekPrice(house)) <= 0 && getWeekPrice(house).compareTo(getPriceTo()) <= 0)
                         && isHouseAvailableInPeriod(house, getDateFrom(), getDateTo()) && hasSelectedServices(house, getSelectedFilters())) {
                     filteredSummerhouses.add(house);
                 }
@@ -259,7 +264,7 @@ public class SummerhouseManager implements Serializable {
                 Collections.sort(filteredSummerhouses, new Comparator<House>() {
                     @Override
                     public int compare(House h1, House h2) {
-                        return h1.getWeekprice().compareTo(h2.getWeekprice());
+                        return getWeekPrice(h1).compareTo(getWeekPrice(h2));
                     }
                 });
                 break;
@@ -267,7 +272,7 @@ public class SummerhouseManager implements Serializable {
                 Collections.sort(filteredSummerhouses, new Comparator<House>() {
                     @Override
                     public int compare(House h1, House h2) {
-                        return h2.getWeekprice().compareTo(h1.getWeekprice());
+                        return getWeekPrice(h2).compareTo(getWeekPrice(h1));
                     }
                 });
                 break;
@@ -409,7 +414,7 @@ public class SummerhouseManager implements Serializable {
             return new BigDecimal(0);
         }
         int dayCount = getDaysBetweenDates(selectedDateFrom, selectedDateTo).size() + 1;
-        BigDecimal price = selectedHouse.getWeekprice().multiply(new BigDecimal(dayCount / 7));
+        BigDecimal price = getWeekPrice(selectedHouse).multiply(new BigDecimal(dayCount / 7));
         if (selectedHouseSelectedServices != null && selectedHouseAvailableServices != null) {
             for (String serviceReg : selectedHouseSelectedServices) {
                 for (Service service : selectedHouseAvailableServices) {
@@ -429,7 +434,7 @@ public class SummerhouseManager implements Serializable {
         }
         int dayCount = getDaysBetweenDates(selectedDateFrom, selectedDateTo).size() + 1;
 
-        return service.getWeekprice().multiply(new BigDecimal(dayCount / 7));
+        return getWeekPrice(service).multiply(new BigDecimal(dayCount / 7));
     }
 
     public String confirmSelectedHouse() {
@@ -485,6 +490,16 @@ public class SummerhouseManager implements Serializable {
 //            else selectedDateFrom = getNextMonday();
         }
         return selectedDateFrom;
+    }
+    
+    public BigDecimal getWeekPrice(House house){
+        if(house == null) return new BigDecimal(Integer.MAX_VALUE);
+        return priceService.getDiscountPrice(house.getWeekprice(), user, "Payment.Reservation");
+    }
+    
+    public BigDecimal getWeekPrice(Service service){
+        if(service == null) return new BigDecimal(Integer.MAX_VALUE);
+        return priceService.getDiscountPrice(service.getWeekprice(), user, "Payment.Reservation");
     }
 
     //Basic setters/getters
