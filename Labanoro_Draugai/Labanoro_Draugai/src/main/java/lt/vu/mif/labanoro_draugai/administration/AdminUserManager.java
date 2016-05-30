@@ -74,12 +74,7 @@ public class AdminUserManager implements Serializable {
     }
 
     public String removeUser() {
-        boolean isSuccess = true;
-
         try {
-            //String userId = getParameter("userId");
-            //int id = Integer.parseInt(userId);
-
             int id = userForDeletion.getId();
 
             List<Person> usersToDelete = em.createNamedQuery("Person.findById").setParameter("id", id).getResultList();
@@ -88,16 +83,18 @@ public class AdminUserManager implements Serializable {
             userToDelete.setIsdeleted(true);
 
             em.detach(userToDelete);
-            //em.joinTransaction();
+            
+            userToDelete.setIsdeleted(Boolean.TRUE);
+            userToDelete = (Person) dbm.updateEntity(userToDelete);
+            dbm.persistAndFlush(userToDelete);
+            
+            closeDialogs();
+            
+            //Reload the page:
+            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+            ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+        } catch (Exception ex) { }
 
-            isSuccess = dbm.updateEntityIsDeletedTrue("Person", userToDelete.getId());
-        } catch (Exception ex) {
-            //return error page
-        }
-
-        //if (!isSuccess)
-        //return error page
-        //else
         return "users";
     }
 
@@ -182,14 +179,7 @@ public class AdminUserManager implements Serializable {
         requestContext.execute("PF('deletionUserDialog').hide();");
         requestContext.execute("PF('addConfirmDialog').hide();");
     }
-
-    /*public void openDialog(Person u) {
-        user = u;
-        userEmail = u.getEmail();
-        
-        RequestContext requestContext = RequestContext.getCurrentInstance();  
-        requestContext.execute("PF('addPointsDialog').show();");
-    }*/
+    
     public Date getCalendar() {
         return calendar;
     }
