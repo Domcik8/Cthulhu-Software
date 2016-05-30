@@ -30,7 +30,7 @@ and open the template in the editor.
                 <p:dataTable id="reservationTable" var="reservation" value="#{myReservationsView.reservations}" widgetVar="reservationsTable"
                     emptyMessage="Rezervacijų nerasta." filteredValue="#{myReservationsView.filteredReservations}" rows="15"                        
                     paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                    rowsPerPageTemplate="15,30,50" paginator="true">
+                    rowsPerPageTemplate="15,30,50" paginator="true" tableStyle="table-layout: auto;">
  
 <!--                    <f:facet name="header">
                         <p:outputPanel>
@@ -67,6 +67,14 @@ and open the template in the editor.
                         <h:outputText value="#{reservation.enddate}">
                             <f:convertDateTime pattern="yyyy-MM-dd"/> 
                         </h:outputText>
+                    </p:column>
+                    <p:column headerText="Užsakymo data" sortBy="#{reservation.paymentid.paymentdate}">
+                        <h:outputText value="#{reservation.paymentid.paymentdate}">
+                            <f:convertDateTime pattern="yyyy-MM-dd"/> 
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Rezervacijos statusas" sortBy="#{empty reservation.paymentid.approveddate}">
+                        <h:outputText value="#{empty reservation.paymentid.approveddate?'Nepatvirtintas':'Patvirtintas' }" style="color:#{empty reservation.paymentid.approveddate?'RED':'GREEN' }"/>
                     </p:column>
                     <p:column>
                         <p:commandButton value="Atšaukti rezervaciją" onclick="PF('cancelReservationWidget').show()" rendered="#{myReservationsView.canBeCanceled(reservation)}">

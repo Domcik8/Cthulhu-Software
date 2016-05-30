@@ -773,27 +773,33 @@ public class DatabaseManager {
 
         return newPaymentLog;
     }
-
-    public Object updateEntity(Object obj) {
+    
+     public Object updateEntity(Object obj, Boolean throwInternalError) {
+        
+        if (throwInternalError) {
+            return updateEntity(obj);
+        }
+         
         try {
             Object result = em.merge(obj);
             return result;
         } catch (OptimisticLockException ol) {
-            for (int i = 0; i < 10; i++) {
-                System.out.println(String.format("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Kažkas jau modifikavo objektą. Prašome bandyti dar karta. XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"));
-            }
+            for (int i = 0; i < 10; i++)
+                System.out.println(String.format("Vidinė klaida: Kažkas jau modifikavo objektą."));
         }
         return null;
     }
 
-    public Boolean recommendationExists(String recommenderEmail, String recommendedEmail) {
-
-        Person recommender = (Person) getEntity("Person", "Email", recommenderEmail);
-        Person recommended = (Person) getEntity("Person", "Email", recommendedEmail);
-
-        Recommendation recommendation = null;
-//        if (recommender.getReservationList().contains(tx))
-        return false;
+    public Object updateEntity(Object obj) {
+        
+        try {
+            Object result = em.merge(obj);
+            return result;
+        } catch (OptimisticLockException ol) {
+            for (int i = 0; i < 10; i++)
+                System.out.println(String.format("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Kažkas jau modifikavo objektą. REIKIA ISMESTI INTERNAL ERROR. XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"));
+        }
+        return null;
     }
 
     /**

@@ -116,7 +116,6 @@ public class BuyConfirmation implements Serializable {
 
     }
 
-    //@Interceptorius
     public String createBuyJSON() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.element("type", "buyPoints");

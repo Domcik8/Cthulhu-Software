@@ -15,8 +15,6 @@ import javax.inject.Named;
 import javax.enterprise.inject.Alternative;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.Person;
-import lt.vu.mif.labanoro_draugai.entities.Reservation;
-import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 
 /**
  *
@@ -25,18 +23,27 @@ import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 
 @Named
 @Stateless
-public class fillTestPriorities {
+@Alternative
+public class priorityGroupManagerTest implements IPriorityGroupManager {
     
     @Inject
     DatabaseManager dbm;
     
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void countPriorities() {
-    List<Person> people = dbm.getAllEntities("Person");
-        for (Person person : people) {
-            person.setPriority(555);
-            int a = 0;
-            dbm.updateEntity(person);
+        List<Person> people = dbm.getAllEntities("Person");
+            int tryCount;
+            
+            for (Person person : people) {
+                tryCount = 3;
+                
+                while (tryCount > 0) {
+                    person.setPriority(666);
+                    if(dbm.updateEntity(person) == null) {
+                        person = (Person) dbm.getEntity("Person", "Email", person.getEmail());
+                    }
+                    tryCount--;
+                }
+            }
         }
-    }
 }
