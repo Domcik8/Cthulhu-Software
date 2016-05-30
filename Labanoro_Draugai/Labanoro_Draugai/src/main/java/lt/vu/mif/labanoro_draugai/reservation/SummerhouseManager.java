@@ -230,7 +230,7 @@ public class SummerhouseManager implements Serializable {
         if (house.getReservationList() == null || dateFrom == null || dateTo == null) {
             return true;
         }
-        if (house.getSeasonstartdate() != null && house.getSeasonenddate() != null && !(dateTo.before(house.getSeasonstartdate()) || dateFrom.after(house.getSeasonenddate()))) {
+        if (house.getSeasonstartdate() != null && house.getSeasonenddate() != null && (dateTo.before(house.getSeasonstartdate()) || dateFrom.after(house.getSeasonenddate()))) {
             return false;
         }
         return true;
@@ -241,7 +241,7 @@ public class SummerhouseManager implements Serializable {
         if (house.getReservationList() == null || dateFrom == null || dateTo == null) {
             return true;
         }
-        if (house.getSeasonstartdate() != null && house.getSeasonenddate() != null && !(dateTo.before(house.getSeasonstartdate()) || dateFrom.after(house.getSeasonenddate()))) {
+        if (house.getSeasonstartdate() != null && house.getSeasonenddate() != null && (dateTo.before(house.getSeasonstartdate()) || dateFrom.after(house.getSeasonenddate()))) {
             return false;
         }
         for (Reservation reservation : house.getReservationList()) {
