@@ -34,7 +34,7 @@ public class OldPasswordValidator implements Validator {
             Hashing.sha256().hashString(password, Charsets.UTF_8).toString(), Charsets.UTF_8
         ).toString();
         if (!password.equals(confirm)) {
-            throw new ValidatorException(new FacesMessage("Passwords are not equal."));
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_FATAL,  "Prašome bandyti dar kartą.","Slaptažodžiai nėra vienodi."));
         }
     }
 

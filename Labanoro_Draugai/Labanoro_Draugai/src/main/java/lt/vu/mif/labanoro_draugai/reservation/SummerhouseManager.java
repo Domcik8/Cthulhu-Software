@@ -29,6 +29,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
+import lt.vu.mif.labanoro_draugai.business.BuyConfirmationImpl;
 import lt.vu.mif.labanoro_draugai.entities.Houseimage;
 import lt.vu.mif.labanoro_draugai.entities.Person;
 import lt.vu.mif.labanoro_draugai.entities.Service;
@@ -57,7 +58,7 @@ public class SummerhouseManager implements Serializable {
     private boolean isFiltered = false;
     List<String> selectedHouseImages;
     private boolean showOnlyFree;
-
+    
     //Dialog
     private House selectedHouse;
     private Date selectedDateFrom;

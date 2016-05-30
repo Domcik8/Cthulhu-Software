@@ -23,9 +23,9 @@ and open the template in the editor.
     </h:head>
     <body>
         <div class="container">
-        <h1>
-            Registracija
-        </h1>
+            <h1>
+                Registracija
+            </h1>
             <p:panel>
                 <h:form id="registrationForm" >
                     <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
@@ -33,50 +33,53 @@ and open the template in the editor.
                     <p:dialog widgetVar="statusDialog" modal="false" draggable="false" closable="false" resizable="false" showHeader="false">
                         <p:graphicImage name="ajax-loader.gif" library="img"/>
                     </p:dialog>
-                    
+
                     <h2>Prisijungimo informacija</h2>
-                    <input name="dummyinput" id="dummyinput" type="text" style="display: none"/> 
-                    <input name="dummypassword" type="password" id="dummypassword" style="display: none"/>
-                    <h:panelGrid columns="2" border="0" columnClasses="align-right,align-left">
-                        <p:outputLabel id="emailLabel" for="email" value="Elektroninio pašto adresas "/>
-                        <p:inputText id="email" value="#{registrationManager.email}" required="true" disabled="#{not empty registrationManager.accessToken}">
-                            <f:validator validatorId="simpleEmailValidator" />
-                            <f:validator validatorId="emailIsFreeValidator" />
-                        </p:inputText>
-                        <p:outputLabel id="firstNameLabel" for="firstName" value="Vardas "/>
-                        <p:inputText id="firstName" value="#{registrationManager.firstName}" required="true"/>
-                        <p:outputLabel id="lastNameLabel" for="lastName" value="Pavardė "/>
-                        <p:inputText id="lastName" value="#{registrationManager.lastName}" required="true"/>                       
-                        <p:outputLabel id="pswLabel" for="psw" value="Slaptažodis "/>
-                        <p:password id="psw" value="#{registrationManager.password}" required="true"/>
-                        <p:outputLabel id="psw2Label" for="psw2" value="Pakartokite slaptažodį "/>
-                        <p:password id="psw2" value="#{registrationManager.passwordConfirm}" required="true"/>
-                    </h:panelGrid>
-                    <h2>Papasakok apie save</h2>
-                    <ui:include src="/WEB-INF/other_pages/dynamicUserForm.xhtml">
-                        <ui:param name="model" value="#{registrationManager.displayModel}" />
-                    </ui:include>
-                    <p:commandLink oncomplete="PF('termsWidget').show()" update=":termsForm:termsDialog">
-                        <p:outputLabel for="terms" id="termsLabel" value="Sutinku su taisyklėmis "/> 
-                    </p:commandLink>
-                    <p:selectBooleanCheckbox id="terms" value="#{registrationManager.isAgreeingToTerms}" required="true"/>
-                    <br/>
-                    <p:commandButton value="Patvirtinti" class="btn" action="#{registrationManager.submitRegistration()}"
-                                             process="registrationForm" update="registrationForm"  /> 
+                    <h:form>
+                        <p:message id="messages" showDetail="true" for="email"/> 
+                        <input name="dummyinput" id="dummyinput" type="text" style="display: none"/> 
+                        <input name="dummypassword" type="password" id="dummypassword" style="display: none"/>
+                        <h:panelGrid columns="2" border="0" columnClasses="align-right,align-left">
+                            <p:outputLabel id="emailLabel" for="email" value="Elektroninio pašto adresas "/>
+                            <p:inputText id="email" value="#{registrationManager.email}" required="true" disabled="#{not empty registrationManager.accessToken}" requiredMessage="Elektroninio pašto laukas yra privalomas.">
+                                <f:validator validatorId="simpleEmailValidator" />
+                                <f:validator validatorId="emailIsFreeValidator" />
+                            </p:inputText>
+                            <p:outputLabel id="firstNameLabel" for="firstName" value="Vardas "/>
+                            <p:inputText id="firstName" value="#{registrationManager.firstName}" required="true"/>
+                            <p:outputLabel id="lastNameLabel" for="lastName" value="Pavardė "/>
+                            <p:inputText id="lastName" value="#{registrationManager.lastName}" required="true"/>                       
+                            <p:outputLabel id="pswLabel" for="psw" value="Slaptažodis "/>
+                            <p:password id="psw" value="#{registrationManager.password}" required="true"/>
+                            <p:outputLabel id="psw2Label" for="psw2" value="Pakartokite slaptažodį "/>
+                            <p:password id="psw2" value="#{registrationManager.passwordConfirm}" required="true"/>
+                        </h:panelGrid>
+                        <h2>Papasakok apie save</h2>
+                        <ui:include src="/WEB-INF/other_pages/dynamicUserForm.xhtml">
+                            <ui:param name="model" value="#{registrationManager.displayModel}" />
+                        </ui:include>
+                        <p:commandLink oncomplete="PF('termsWidget').show()" update=":termsForm:termsDialog">
+                            <p:outputLabel for="terms" id="termsLabel" value="Sutinku su taisyklėmis "/> 
+                        </p:commandLink>
+                        <p:selectBooleanCheckbox id="terms" value="#{registrationManager.isAgreeingToTerms}" required="true"/>
+                        <br/>
+                        <p:commandButton value="Patvirtinti" class="btn" action="#{registrationManager.submitRegistration()}"
+                                         process="registrationForm" update="registrationForm"  /> 
+                    </h:form>
                 </h:form>
             </p:panel>
             <h:form id="termsForm">
                 <p:dialog id="termsDialog" header="Taisyklės"
-                                  width="300"
-                                  modal="true" widgetVar="termsWidget"
-                                  resizable="false" draggable="false" responsive="true"
-                                  closeOnEscape="true" fitViewport="true" position="center">
+                          width="300"
+                          modal="true" widgetVar="termsWidget"
+                          resizable="false" draggable="false" responsive="true"
+                          closeOnEscape="true" fitViewport="true" position="center">
                     <h:form >
                         <h:outputText value="#{registrationManager.termsAndConditions}" />
                     </h:form>
                 </p:dialog>
             </h:form>
         </div>
-              
+
     </body>
 </html>
