@@ -1178,75 +1178,6 @@ public class DatabaseManager {
         return new String(c);
     }
 
-    public boolean updateHouse(House h) {
-        try {
-            Query q = em.createQuery("UPDATE House h SET h.title = :title, h.typeid = :typeid, "
-                    + "h.description = :description, h.housereg = :housereg, h.address = :address, "
-                    + "h.seasonstartdate = :startdt, h.seasonenddate = :enddt, "
-                    + "h.weekprice = :price, h.numberofplaces = :places "
-                    + "WHERE h.id = :id");
-            q.setParameter("title", h.getTitle());
-            q.setParameter("typeid", h.getTypeid());
-            q.setParameter("description", h.getDescription());
-            q.setParameter("housereg", h.getHousereg());
-            q.setParameter("address", h.getAddress());
-            q.setParameter("startdt", h.getSeasonstartdate());
-            q.setParameter("enddt", h.getSeasonenddate());
-            q.setParameter("price", h.getWeekprice());
-            q.setParameter("places", h.getNumberofplaces());
-            q.setParameter("id", h.getId());
-            em.detach(h);
-            em.joinTransaction();
-            int updated = q.executeUpdate();
-            em.flush();
-            updateHouseIsActive(h.getId(), h.getIsactive());
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
-    }
-
-    public boolean updateHouseIsActive(int houseId, boolean newValue) {
-        try {
-            Query q = em.createNativeQuery("UPDATE House h SET h.isactive = " + newValue + " WHERE h.id = " + houseId);
-
-            em.joinTransaction();
-            int updated = q.executeUpdate();
-            em.flush();
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
-    }
-
-    public boolean updateEntityIsDeletedTrue(String className, int id) {
-        try {
-            Query q = em.createNativeQuery("UPDATE " + className + " e SET e.isdeleted = true WHERE e.id = " + id);
-            em.joinTransaction();
-            int updated = q.executeUpdate();
-            em.flush();
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
-    }
-
-    public boolean updatePersonIsDeletedTrue(Person p) {
-        try {
-            Query q = em.createQuery("UPDATE Person p SET p.isdeleted = :isdeleted "
-                    + "WHERE p.id = :id");
-            q.setParameter("isdeleted", true);
-            q.setParameter("id", p.getId());
-            em.detach(p);
-            em.joinTransaction();
-            int updated = q.executeUpdate();
-            em.flush();
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
-    }
-
     public boolean updatePersonPoints(Person p) {
         try {
             Query q = em.createQuery("UPDATE Person p SET p.points = :points "
@@ -1301,21 +1232,6 @@ public class DatabaseManager {
             q.setParameter("internalName", internalName);
             em.joinTransaction();
             int deleted = q.executeUpdate();
-            em.flush();
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
-    }
-
-    public boolean updateSystemParameterValue(Systemparameter param) {
-        try {
-            Query q = em.createQuery("UPDATE Systemparameter p SET p.value = :value "
-                    + "WHERE p.id = :id");
-            q.setParameter("value", param.getValue());
-            q.setParameter("id", param.getId());
-            em.joinTransaction();
-            int updated = q.executeUpdate();
             em.flush();
             return true;
         } catch (Exception ex) {

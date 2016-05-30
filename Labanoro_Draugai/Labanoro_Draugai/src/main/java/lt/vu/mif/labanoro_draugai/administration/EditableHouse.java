@@ -85,10 +85,7 @@ public class EditableHouse implements Serializable {
         currency = param.getValue();
     }
     
-    public EditableHouse() {
-        //house = new House();
-        //house = getEditableHouse();
-    }
+    public EditableHouse() { }
     
     //======================= HOUSE INFO ===========================
     
@@ -125,16 +122,9 @@ public class EditableHouse implements Serializable {
             }
         }
         
-        boolean savingSuccess = true;
-        
-        if (house.getId() != null) {
-            savingSuccess = dbm.updateHouse(house);
-        }
-        else {
-            house.setTypeid((Type)dbm.getEntity("Type", "id", Integer.parseInt(houseType)));
-            house.setIsdeleted(false);
-            savingSuccess = insertHouse(house);
-        }
+        house.setIsdeleted(Boolean.FALSE);
+        house = (House) dbm.updateEntity(house);
+        dbm.persistAndFlush(house);
         
         return "houses";
     }
@@ -153,8 +143,9 @@ public class EditableHouse implements Serializable {
     
     public String deleteHouse() {
         try {
-            //em.joinTransaction();
-            boolean savingSuccess = dbm.updateEntityIsDeletedTrue("House", house.getId());
+            house.setIsdeleted(Boolean.TRUE);
+            house = (House) dbm.updateEntity(house);
+            dbm.persistAndFlush(house);
             return "houses";
         }
         catch (Exception ex) {
@@ -433,8 +424,10 @@ public class EditableHouse implements Serializable {
         availableServices = new LinkedHashMap<String, String>();
         List<Service> allServices = em.createNamedQuery("Service.findAll").getResultList();
         
-        for (Service s : allServices) {
-            availableServices.put(s.getId().toString(), s.getTitle());
+        if (allServices != null) {
+            for (Service s : allServices) {
+                availableServices.put(s.getId().toString(), s.getTitle());
+            }
         }
     }
     
@@ -442,8 +435,10 @@ public class EditableHouse implements Serializable {
         selectedServices = new ArrayList<String>();
         List<Service> allServices = house.getServiceList();
         
-        for (Service s : allServices) {
-            selectedServices.add(/*s.getId().toString(), */s.getTitle());
+        if (allServices != null) {
+            for (Service s : allServices) {
+                selectedServices.add(/*s.getId().toString(), */s.getTitle());
+            }
         }
     }
     
