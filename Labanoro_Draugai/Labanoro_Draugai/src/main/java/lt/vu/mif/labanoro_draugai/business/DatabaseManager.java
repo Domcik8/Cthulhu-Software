@@ -213,19 +213,29 @@ public class DatabaseManager {
      * Fills database with basic services
      */
     private void fillBasicServices() {
-        addService("Vandens pramogos", "ServiceReg-1", "HouseReg-1", "Service.Other", "Papildomos vandens pramogos", "30");
-        addService("Vandens pramogos", "ServiceReg-1", "HouseReg-2", "Service.Other", "Papildomos vandens pramogos", "30");
-        addService("Vandens pramogos", "ServiceReg-1", "HouseReg-3", "Service.Other", "Papildomos vandens pramogos", "30");
-        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-1", "Service.Vehicle.Bike", "Dviračiai išsinuomavimui", "10");
-        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-2", "Service.Vehicle.Bike", "Dviračiai išsinuomavimui", "10");
-        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-3", "Service.Vehicle.Bike", "Dviračiai išsinuomavimui", "10");
-        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-4", "Service.Vehicle.Bike", "Dviračiai išsinuomavimui", "10");
-        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-5", "Service.Vehicle.Bike", "Dviračiai išsinuomavimui", "10");
-        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-6", "Service.Vehicle.Bike", "Dviračiai išsinuomavimui", "10");
-        addService("Pažintinė kelionė aplink regioną", "ServiceReg-3", "HouseReg-1", "Service.Other", "Kelionė aplink labanoro apylinkes", "40");
-        addService("Pažintinė kelionė aplink regioną", "ServiceReg-3", "HouseReg-1", "Service.Other", "Kelionė aplink labanoro apylinkes", "40");
-        addService("Pažintinė kelionė aplink regioną", "ServiceReg-3", "HouseReg-7", "Service.Other", "Kelionė aplink labanoro apylinkes", "40");
-        addService("Pažintinė kelionė aplink regioną", "ServiceReg-3", "HouseReg-8", "Service.Other", "Kelionė aplink labanoro apylinkes", "40");
+        Service service = addService("Vandens pramogos", "ServiceReg-1", "HouseReg-1", "Service.Other", "Papildomos vandens pramogos", "30");
+        House house = (House) getEntity("House", "HouseReg", "HouseReg-2");
+        house.getServiceList().add(service);
+        house = (House) getEntity("House", "HouseReg", "HouseReg-3");
+        house.getServiceList().add(service);
+        
+        service = addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-1", "Service.Vehicle.Bike", "Dviračiai išsinuomavimui", "10");
+        house = (House) getEntity("House", "HouseReg", "HouseReg-2");
+        house.getServiceList().add(service);
+        house = (House) getEntity("House", "HouseReg", "HouseReg-3");
+        house.getServiceList().add(service);
+        house = (House) getEntity("House", "HouseReg", "HouseReg-4");
+        house.getServiceList().add(service);
+        house = (House) getEntity("House", "HouseReg", "HouseReg-5");
+        house.getServiceList().add(service);
+        house = (House) getEntity("House", "HouseReg", "HouseReg-6");
+        house.getServiceList().add(service);
+        
+        service = addService("Pažintinė kelionė aplink regioną", "ServiceReg-3", "HouseReg-1", "Service.Other", "Kelionė aplink labanoro apylinkes", "40");
+        house = (House) getEntity("House", "HouseReg", "HouseReg-7");
+        house.getServiceList().add(service);
+        house = (House) getEntity("House", "HouseReg", "HouseReg-8");
+        house.getServiceList().add(service);
 
     }
 
