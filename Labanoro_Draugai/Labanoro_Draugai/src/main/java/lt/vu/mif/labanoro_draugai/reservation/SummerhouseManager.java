@@ -59,10 +59,6 @@ public class SummerhouseManager implements Serializable {
     List<String> selectedHouseImages;
     private boolean showOnlyFree;
     
-    //Decorator
-    @Inject
-    BuyConfirmationImpl discountDecorator;
-    
     //Dialog
     private House selectedHouse;
     private Date selectedDateFrom;
