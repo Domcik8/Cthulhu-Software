@@ -260,18 +260,6 @@ public class DatabaseManager {
         addRecommendation("doli@test.com", "erba@test.com", "Recommendation");
     }
 
-    public void fillBasicRecommendations1() {
-        addRecommendation("admin", "doli@test.com", "Recommendation");
-        addRecommendation("admin", "erba@test.com", "Recommendation");
-        addRecommendation("admin", "erja@test.com", "Recommendation");
-        addRecommendation("admin", "kauz@test.com", "Recommendation");
-        addRecommendation("admin", "paru@test.com", "Recommendation");
-        addRecommendation("admin", "can", "Recommendation");
-        addRecommendation("admin", "user", "Recommendation");
-        addRecommendation("can", "doli@test.com", "Recommendation");
-        addRecommendation("can", "erba@test.com", "Recommendation");
-    }
-
     /**
      * Fills database with basic house pictures
      */
@@ -1303,15 +1291,15 @@ public class DatabaseManager {
             return false;
         }
     }
-    
+
     public void setLastCountDate() {
         int tryCounter = 3;
         Calendar calendar = Calendar.getInstance();
-        
+
         while (tryCounter > 0) {
             Systemparameter lastCountDateSysParam = getSystemParameter("SystemParameter.priorityGroup.LastCountDate");
-            lastCountDateSysParam.setValue(calendar.get(Calendar.YEAR) + "," + (calendar.get(Calendar.MONTH) + 1) + "," + 
-                    calendar.get(Calendar.DAY_OF_MONTH) + "," + calendar.get(Calendar.HOUR_OF_DAY));
+            lastCountDateSysParam.setValue(calendar.get(Calendar.YEAR) + "," + (calendar.get(Calendar.MONTH) + 1) + ","
+                    + calendar.get(Calendar.DAY_OF_MONTH) + "," + calendar.get(Calendar.HOUR_OF_DAY));
             if (updateEntity(lastCountDateSysParam, false) != null) {
                 break;
             }
