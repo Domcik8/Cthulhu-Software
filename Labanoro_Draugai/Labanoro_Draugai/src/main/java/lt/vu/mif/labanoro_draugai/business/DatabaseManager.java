@@ -790,16 +790,6 @@ public class DatabaseManager {
         return null;
     }
 
-    public Boolean recommendationExists(String recommenderEmail, String recommendedEmail) {
-
-        Person recommender = (Person) getEntity("Person", "Email", recommenderEmail);
-        Person recommended = (Person) getEntity("Person", "Email", recommendedEmail);
-
-        Recommendation recommendation = null;
-//        if (recommender.getReservationList().contains(tx))
-        return false;
-    }
-
     /**
      * Gets byte[] of image in given path
      */
