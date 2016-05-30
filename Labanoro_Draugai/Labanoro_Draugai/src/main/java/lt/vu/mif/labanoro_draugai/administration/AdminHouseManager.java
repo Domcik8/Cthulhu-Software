@@ -86,7 +86,7 @@ public class AdminHouseManager implements Serializable {
             return result.getInternalname();
         }
         catch (Exception ex) {
-            return "Nepavyko užkrauti nuotraukos! Siūlome įeiti į sistemą iš naujo.";
+            return "Nepavyko užkrauti nuotraukos!";
         }
     }
 }

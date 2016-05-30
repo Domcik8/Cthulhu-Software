@@ -194,6 +194,8 @@ public class ProfileListView implements Serializable {
 //        if (recommendation != null) {
         email.sendCandidateRecommendationRequestMessage(receiverEmail, requestorEmail);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Pavyko!", "Rekomendacijos prašymas sėkmingai išsiūstas."));
+        user.setRecommendationstosend(user.getRecommendationstosend() + 1);
+        user = (Person) dbm.updateEntity(user);
 //        } else {
 //            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nepavyko!", "Šis vartotojas jau gavo jūsų prašymą."));
 //        }

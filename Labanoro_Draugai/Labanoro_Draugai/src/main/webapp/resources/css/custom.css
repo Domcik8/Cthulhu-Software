@@ -133,6 +133,10 @@ body {
     background: #F75D59  !important ;
 }
 
+.new-service {
+    background: #55FF74  !important ;
+}
+
 .ui-panelgrid td, .ui-panelgrid tr
 {
     border-style: none !important

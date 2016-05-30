@@ -8,6 +8,9 @@ package lt.vu.mif.labanoro_draugai.administration;
 import java.beans.*;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +25,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
+import lt.vu.mif.labanoro_draugai.entities.Houseimage;
 import lt.vu.mif.labanoro_draugai.entities.Payment;
 import lt.vu.mif.labanoro_draugai.entities.Service;
 import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
@@ -59,6 +63,8 @@ public class AdminServiceManager implements Serializable {
             services = em.createNamedQuery("Service.findAll").getResultList();
         }
         
+        services = sortServices(services);
+        
         Systemparameter param = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Currency.Euro");
         if (param == null) {
             currency = "?";
@@ -67,6 +73,23 @@ public class AdminServiceManager implements Serializable {
         currency = param.getValue();
         
         initTypes();
+    }
+    
+    public List<Service> sortServices(List<Service> srvcs) {
+        List<Service> toAdd = new ArrayList<Service>();
+        
+        for (Service s : srvcs) {
+            if (s.getTitle() == null || s.getTitle().equals("")) {
+                toAdd.add(s);
+            }
+        }
+        
+        for (Service s : toAdd) {
+            srvcs.remove(s);
+            srvcs.add(0, s);
+        }
+        
+        return srvcs;
     }
     
     public String getType(Service service) {
@@ -104,7 +127,12 @@ public class AdminServiceManager implements Serializable {
     }
     
     public void addService() throws IOException {
-        services.add(new Service());
+        //services.add(new Service());
+        Service srv = new Service();
+        srv.setServicereg(dbm.generateReg("ServiceReg"));
+        srv.setTypeid((Type) dbm.getEntity("Type", "Internalname", "Service"));
+        boolean isSuccess = dbm.persistAndFlush(srv);
+        
         //Reload the page:
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());

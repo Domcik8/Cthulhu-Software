@@ -60,7 +60,10 @@ public class AdminSysParamsManager implements Serializable {
     
     public void saveChanges() throws IOException {
         if (editedParameter != null) {
-            if (dbm.updateSystemParameterValue(editedParameter)) {
+            //if (dbm.updateSystemParameterValue(editedParameter)) {
+                editedParameter = (Systemparameter) dbm.updateEntity(editedParameter);
+                dbm.persistAndFlush(editedParameter);
+            
                 //Close the dialog:
                 RequestContext requestContext = RequestContext.getCurrentInstance();  
                 requestContext.execute("PF('confirmDialog').hide();");
@@ -68,7 +71,7 @@ public class AdminSysParamsManager implements Serializable {
                 //Reload the page:
                 ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
                 ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
-            }
+            //}
         }
     }
     
