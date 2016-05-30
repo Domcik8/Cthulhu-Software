@@ -118,15 +118,16 @@ public class DatabaseManager {
             addPerson("candidate@labanorai.lt", "candidate", "candidate", "Person.Candidate", "candidate", "candidate", "0", 0, new Date());
             addPerson("user@labanorai.lt", "user", "user", "Person.User", "user", "user", "1000", 0, sdf.parse("2017-05-1"));
             addPerson("Domcik8@gmail.com", "Jonas", "Jonaitis", "Person.User", "user", "Vilnius, Jonaitiškių 3", "1000", 0, sdf.parse("2017-05-1"));
-            addPerson("rudzas.com@gmail.com",  "Paulius", "Paulaitis", "Person.User","user", "Vilnius, Pauliškių 3", "1000", 0, sdf.parse("2017-05-1"));
+            addPerson("rudzas.com@gmail.com", "Paulius", "Paulaitis", "Person.User", "user", "Vilnius, Pauliškių 3", "1000", 0, sdf.parse("2017-05-1"));
         } catch (ParseException ex) {
             Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        }
-        /**
-         * Creates new person and flushes it to database. Returns person entity
-         * if created sucessfully
-         */
+    }
+
+    /**
+     * Creates new person and flushes it to database. Returns person entity if
+     * created sucessfully
+     */
     public Person addPerson(String email, String firstName, String lastName, String typeInternalName, String password, String address, String points, int priority, Date membershipDue) {
         Person person = addPerson(email, firstName, lastName, typeInternalName);
         if (person != null) {
@@ -141,7 +142,7 @@ public class DatabaseManager {
 
         return person;
     }
-    
+
     /**
      * Fills database with basic houses
      */
@@ -212,19 +213,19 @@ public class DatabaseManager {
      * Fills database with basic services
      */
     private void fillBasicServices() {
-        addService("Vandens pramogos", "ServiceReg-1", "HouseReg-1", "Service.Other","Papildomos vandens pramogos","30");
-        addService("Vandens pramogos", "ServiceReg-1", "HouseReg-2", "Service.Other","Papildomos vandens pramogos","30");
-        addService("Vandens pramogos", "ServiceReg-1", "HouseReg-3", "Service.Other","Papildomos vandens pramogos","30");
-        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-1", "Service.Vehicle.Bike","Dviračiai išsinuomavimui","10");
-        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-2", "Service.Vehicle.Bike","Dviračiai išsinuomavimui","10");
-        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-3", "Service.Vehicle.Bike","Dviračiai išsinuomavimui","10");
-        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-4", "Service.Vehicle.Bike","Dviračiai išsinuomavimui","10");
-        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-5", "Service.Vehicle.Bike","Dviračiai išsinuomavimui","10");
-        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-6", "Service.Vehicle.Bike","Dviračiai išsinuomavimui","10");
-        addService("Pažintinė kelionė aplink regioną", "ServiceReg-3", "HouseReg-1", "Service.Other","Kelionė aplink labanoro apylinkes","40");
-        addService("Pažintinė kelionė aplink regioną", "ServiceReg-3", "HouseReg-1", "Service.Other","Kelionė aplink labanoro apylinkes","40");
-        addService("Pažintinė kelionė aplink regioną", "ServiceReg-3", "HouseReg-7", "Service.Other","Kelionė aplink labanoro apylinkes","40");
-        addService("Pažintinė kelionė aplink regioną", "ServiceReg-3", "HouseReg-8", "Service.Other","Kelionė aplink labanoro apylinkes","40");
+        addService("Vandens pramogos", "ServiceReg-1", "HouseReg-1", "Service.Other", "Papildomos vandens pramogos", "30");
+        addService("Vandens pramogos", "ServiceReg-1", "HouseReg-2", "Service.Other", "Papildomos vandens pramogos", "30");
+        addService("Vandens pramogos", "ServiceReg-1", "HouseReg-3", "Service.Other", "Papildomos vandens pramogos", "30");
+        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-1", "Service.Vehicle.Bike", "Dviračiai išsinuomavimui", "10");
+        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-2", "Service.Vehicle.Bike", "Dviračiai išsinuomavimui", "10");
+        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-3", "Service.Vehicle.Bike", "Dviračiai išsinuomavimui", "10");
+        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-4", "Service.Vehicle.Bike", "Dviračiai išsinuomavimui", "10");
+        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-5", "Service.Vehicle.Bike", "Dviračiai išsinuomavimui", "10");
+        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-6", "Service.Vehicle.Bike", "Dviračiai išsinuomavimui", "10");
+        addService("Pažintinė kelionė aplink regioną", "ServiceReg-3", "HouseReg-1", "Service.Other", "Kelionė aplink labanoro apylinkes", "40");
+        addService("Pažintinė kelionė aplink regioną", "ServiceReg-3", "HouseReg-1", "Service.Other", "Kelionė aplink labanoro apylinkes", "40");
+        addService("Pažintinė kelionė aplink regioną", "ServiceReg-3", "HouseReg-7", "Service.Other", "Kelionė aplink labanoro apylinkes", "40");
+        addService("Pažintinė kelionė aplink regioną", "ServiceReg-3", "HouseReg-8", "Service.Other", "Kelionė aplink labanoro apylinkes", "40");
 
     }
 
