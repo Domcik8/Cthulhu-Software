@@ -11,6 +11,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
@@ -27,7 +28,8 @@ import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 
 @Named
 @Stateless
-public class ReservationDaysPriorityGroupManager implements IPriorityGroupManager {
+@Alternative
+public class priorityGroupManagerByReservationDays implements IPriorityGroupManager {
     
     @PersistenceContext
     EntityManager em;
@@ -35,9 +37,9 @@ public class ReservationDaysPriorityGroupManager implements IPriorityGroupManage
     @Inject
     DatabaseManager dbm;
     
-    @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void countPriorities() {
+        int tryCount;
         
         List<Reservation> reservations = getReservationsForPriorityCount(); 
         List<Person> people = dbm.getAllEntities("Person");
@@ -46,17 +48,36 @@ public class ReservationDaysPriorityGroupManager implements IPriorityGroupManage
         
         if (priorityGroupThreshhold < 1)
             for (Person person : people) {
-                person.setPriority(0);
+                tryCount = 3;
+                
+                while (tryCount > 0) {
+                    person.setPriority(0);
+                    if(dbm.updateEntity(person) == null) {
+                        person = (Person) dbm.getEntity("Person", "Email", person.getEmail());
+                    }
+                    tryCount--;
+                }
             }
         else
             for (Person person : people) {
-                float reservedDaysCount = getReservedDaysCount(person.getReservationList());
-                int personPriority = 0;
-                while(reservedDaysCount > 0) {
-                    reservedDaysCount -= priorityGroupThreshhold;
-                    personPriority++;
-                } 
-                person.setPriority(personPriority);
+                float reservedDaysCount;
+                tryCount = 3;
+                int personPriority;
+                
+                while (tryCount > 0) {
+                    personPriority = 0;
+                    reservedDaysCount = getReservedDaysCount(person.getReservationList());
+                    while(reservedDaysCount > 0) {
+                        reservedDaysCount -= priorityGroupThreshhold;
+                        personPriority++;
+                    } 
+                    person.setPriority(personPriority);
+                    
+                    if(dbm.updateEntity(person) == null) {
+                        person = (Person) dbm.getEntity("Person", "Email", person.getEmail());
+                    }
+                    tryCount--;
+                }
             }
     }
     
@@ -82,7 +103,7 @@ public class ReservationDaysPriorityGroupManager implements IPriorityGroupManage
         
         float priorityGroupThreshhold = 0;
         
-        Systemparameter numberOfPriorityGroupsSysParam = dbm.getSystemParameter("SystemParameter.priorityGroup.SeasonLength");
+        Systemparameter numberOfPriorityGroupsSysParam = dbm.getSystemParameter("SystemParameter.priorityGroup.Quantity");
         int numberOfPriorityGroups = Integer.parseInt(numberOfPriorityGroupsSysParam.getValue());
         
         if (numberOfPriorityGroups > 0) {
