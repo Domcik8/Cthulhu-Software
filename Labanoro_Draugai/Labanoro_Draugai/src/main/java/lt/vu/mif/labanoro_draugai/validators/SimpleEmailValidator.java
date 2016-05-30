@@ -34,6 +34,7 @@ public class SimpleEmailValidator implements Validator {
         }
         EmailValidator emailValidator = EmailValidator.getInstance();
         if(!emailValidator.isValid(email)) 
-            throw new ValidatorException(new FacesMessage("Netinkmas elektroninis paštas."));
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_FATAL, "Prašome įvesti naują elektroninį paštą.", "Netinkmas elektroninis paštas."));
+   
     }
 }
