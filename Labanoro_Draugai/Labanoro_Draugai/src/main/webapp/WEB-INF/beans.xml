@@ -3,7 +3,7 @@
 
     <alternatives>
 <!--            <class>lt.vu.mif.labanoro_draugai.priorityGroup.Manager.priorityGroupManagerTest</class>-->
-            <!-- <class>lt.vu.mif.labanoro_draugai.priorityGroup.Manager.priorityGroupManagerByReservationDays</class>-->
+            <class>lt.vu.mif.labanoro_draugai.priorityGroup.Manager.priorityGroupManagerByReservationDays</class>
     </alternatives>
     <interceptors>
         <class>lt.vu.mif.labanoro_draugai.business.FullInterceptor</class>

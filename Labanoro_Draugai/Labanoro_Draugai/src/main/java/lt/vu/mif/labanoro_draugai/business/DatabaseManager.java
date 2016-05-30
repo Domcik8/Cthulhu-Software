@@ -207,7 +207,7 @@ public class DatabaseManager {
         addSystemParameter("SystemParameter.priorityGroup.HourOfTheDay", "Prioriteto grupės, perskaičiavimo laikas: dienos valanda", "22", "SystemParameter");
         addSystemParameter("SystemParameter.priorityGroup.SeasonLength", "Prioriteto grupės, suskirstimo laikotarpis mėnesiais", "3", "SystemParameter");
         addSystemParameter("SystemParameter.priorityGroup.Quantity", "Prioriteto grupės, grupių skaičius", "12", "SystemParameter");
-        addSystemParameter("SystemParameter.priorityGroup.LastCountDate", "Prioriteto grupės, paskutinio grupių perskačiavimo laikas", "12", "Metai, mėnuo, mėnesio diena bei valanda, kada paskutini karta buvo perskaičiuotos prioriteto grupės. Atsižvelgiant į šią datą yra nustatomą einamoji sistemos prioriteto grupė", "SystemParameter");
+        addSystemParameter("SystemParameter.priorityGroup.LastCountDate", "Prioriteto grupės, paskutinio grupių perskačiavimo laikas", "", "Metai, mėnuo, mėnesio diena bei valanda, kada paskutini karta buvo perskaičiuotos prioriteto grupės. Atsižvelgiant į šią datą yra nustatomą einamoji sistemos prioriteto grupė", "SystemParameter");
 
         addSystemParameter("SystemParameter.StripeTestSecretKey", "Stripe testinis slaptas raktas", "sk_test_GkbxvPwRpIG9T4aIiruw0TWl", "SystemParameter");
         addSystemParameter("SystemParameter.StripeTestPublishableKey", "Stripe testinis viešas raktas", "pk_test_NuMXQ4crxg12CBo9NxrjSO63", "SystemParameter");
@@ -230,6 +230,7 @@ public class DatabaseManager {
         addSystemParameter("SystemParameter.Redirect.Index", "Nukreipimas į pagrindinį puslapį", "/index.html", "Nukreipimas į puslapį po sėkmingos operacijos", "SystemParameter");
 
         addSystemParameter("SystemParameter.Reservation.MinDaysBeforeCancel", "Minimalus skaičius dienų, kai dar galima atšaukti rezervaciją.", "7", "", "SystemParameter");
+        addSystemParameter("SystemParameter.Reservation.LastReservationDay", "Kiek dienų į priekį po paskutinio prioriteto grupių skaičiavimo galima rezervuoti vasarnamius", "95", "", "SystemParameter");
 
         addSystemParameter("SystemParameter.Mail.Address", "Gmail el.paštas", "labanorai@gmail.com", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Password", "Gmail el.pašto slaptažodis", "LabanoroDraugas", "SystemParameter");

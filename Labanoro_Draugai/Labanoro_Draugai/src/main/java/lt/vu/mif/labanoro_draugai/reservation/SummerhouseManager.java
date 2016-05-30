@@ -307,11 +307,45 @@ public class SummerhouseManager implements Serializable {
         isFiltered = false;
     }
 
-    //TODO Sezono pradžia čia turi but<-------------------------------------------------------
     public Date getEndOfSeason() {
+        String lastReservationDayStr = dbm.getSystemParameter("SystemParameter.Reservation.LastReservationDay").getValue();
+        String lastCountDateStr = dbm.getSystemParameter("SystemParameter.priorityGroup.LastCountDate").getValue();
+        
         Calendar today = Calendar.getInstance();
-        today.add(Calendar.YEAR, 1);
-        return today.getTime();
+        
+        if (lastCountDateStr.equals("")) {
+            today.add(Calendar.YEAR, 1);
+            return today.getTime();
+        }
+        
+        int lastReservationDay = Integer.parseInt(lastReservationDayStr);
+            
+        if (lastReservationDay < 0) {
+            today.add(Calendar.YEAR, 1);
+            return today.getTime();
+        }
+                
+        String[] lastCountDateParts = lastCountDateStr.split(",");
+        int[] dateParts = new int[lastCountDateParts.length];
+
+        if (dateParts.length != 4) {
+            today.add(Calendar.YEAR, 1);
+            return today.getTime();
+        }
+
+        for (int i = 0; i < lastCountDateParts.length; i++) {
+            dateParts[i] = Integer.parseInt(lastCountDateParts[i]);
+        }
+
+        Calendar lastCountDate = Calendar.getInstance();
+        lastCountDate.set(Calendar.YEAR, dateParts[0]);
+        lastCountDate.set(Calendar.MONTH, (dateParts[1] - 1));
+        lastCountDate.set(Calendar.DAY_OF_MONTH, dateParts[2]);
+        lastCountDate.set(Calendar.HOUR_OF_DAY, dateParts[3]);
+
+        lastCountDate.add(Calendar.DAY_OF_MONTH, lastReservationDay);
+                
+        return lastCountDate.getTime();
     }
 
     public Date getNextMonday() {

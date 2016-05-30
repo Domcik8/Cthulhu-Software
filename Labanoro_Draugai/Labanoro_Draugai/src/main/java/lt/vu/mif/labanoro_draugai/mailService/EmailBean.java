@@ -34,6 +34,7 @@ public class EmailBean {
         String to = person.getEmail();
         String subject = "\"Labanoro draugai\" klubo registracija";
         sendEmail(to, subject, body.getRegistrationConfirmationMessage(person));
+        person = (Person) dbm.updateEntity(person, false);
 
         //start time out for confirmation link
     }
@@ -65,7 +66,7 @@ public class EmailBean {
 
         if (receiverPerson != null && requestorPerson != null) {
             sendEmail(receiver, "Rekomendacijos prašymas", body.getCandidateRecommendationRequestMessage(receiverPerson, requestorPerson));
-            requestorPerson = (Person) dbm.updateEntity(requestorPerson); //Del optimistic locking
+            requestorPerson = (Person) dbm.updateEntity(requestorPerson, false); //Del optimistic locking
         }
     }
 
