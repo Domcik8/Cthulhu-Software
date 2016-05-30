@@ -4,7 +4,6 @@ import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -32,7 +31,6 @@ import javax.transaction.TransactionSynchronizationRegistry;
 import lt.vu.mif.labanoro_draugai.data_models.AdminUserFormProperty;
 import lt.vu.mif.labanoro_draugai.entities.*;
 import org.apache.commons.io.IOUtils;
-import org.primefaces.context.RequestContext;
 
 @Named
 @Stateless
