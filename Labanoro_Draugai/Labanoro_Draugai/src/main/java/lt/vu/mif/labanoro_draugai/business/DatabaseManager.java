@@ -114,7 +114,7 @@ public class DatabaseManager {
     public void fillBasicPeople() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            addPerson("admin@labanorai.lt", "admin", "admin", "Person.Administrator", "admin", "admin", "10000", 0, sdf.parse("2017-05-1"));
+            addPerson("admin@labanorai.lt", "admin", "admin", "Person.Administrator", "admin", "admin", "10000", 0, sdf.parse("3000-05-1"));
             addPerson("candidate@labanorai.lt", "candidate", "candidate", "Person.Candidate", "candidate", "candidate", "0", 0, new Date());
             addPerson("user@labanorai.lt", "user", "user", "Person.User", "user", "user", "1000", 0, sdf.parse("2017-05-1"));
             addPerson("Domcik8@gmail.com", "Jonas", "Jonaitis", "Person.User", "user", "Vilnius, Jonaitiškių 3", "1000", 0, sdf.parse("2017-05-1"));
@@ -149,29 +149,29 @@ public class DatabaseManager {
     private void fillBasicHouses() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            addHouse("Namelis \"Trolių Lūšna\"", "Labanoro giria, 1", "HouseReg-1", "House.Penthouse",
-                    "Jaukus namelis labanoro miško širdyje", "120", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 5);
-            addHouse("Namelis \"Eglių Lūšna\"", "Labanoro giria, 2", "HouseReg-2", "House.Penthouse",
+            addHouse("Namelis „Trolių Lūšna“", "Labanoro giria, 1", "HouseReg-1", "House.Penthouse",
+                    "Jaukus namelis labanoro miško širdyje", "120", sdf.parse("2016-05-1"), sdf.parse("2016-12-30"), 5);
+            addHouse("Namelis „Eglių Lūšna“", "Labanoro giria, 2", "HouseReg-2", "House.Penthouse",
                     "Jaukus namelis labanoro miško pakraštyje", "100", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 5);
-            addHouse("Namelis \"Vandens Guolis\"", "Labanoro giria, 3", "HouseReg-3", "House.Penthouse",
-                    "Jaukus namelis labanoro miško širdyje ir arti ežero", "110", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 4);
-            addHouse("Namelis \"Miškinio Draugas\"", "Labanoro giria, 4", "HouseReg-4", "House.Penthouse",
+            addHouse("Namelis „Vandens Guolis“", "Labanoro giria, 3", "HouseReg-3", "House.Penthouse",
+                    "Jaukus namelis labanoro miško širdyje ir arti ežero", "110", sdf.parse("2016-05-1"), sdf.parse("2016-12-30"), 4);
+            addHouse("Namelis „Miškinio Draugas“", "Labanoro giria, 4", "HouseReg-4", "House.Penthouse",
                     "Jaukus namelis labanoro miško širdyje, kuris arti miškininko trobelės", "150", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 6);
-            addHouse("Namelis \"Pelėdos Urvas\"", "Labanoro giria, 5", "HouseReg-5", "House.Penthouse",
-                    "Jaukus namelis labanoro miško širdyje, kur naktimis skraido arti pelėdos", "120", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 4);
-            addHouse("Namelis \"Barsuko Guolis\"", "Labanoro giria, 6", "HouseReg-6", "House.Penthouse",
+            addHouse("Namelis „Pelėdos Urvas“", "Labanoro giria, 5", "HouseReg-5", "House.Penthouse",
+                    "Jaukus namelis labanoro miško širdyje, kur naktimis skraido arti pelėdos", "120", sdf.parse("2016-05-1"), sdf.parse("2016-12-30"), 4);
+            addHouse("Namelis „Barsuko Guolis“", "Labanoro giria, 6", "HouseReg-6", "House.Penthouse",
                     "Jaukus namelis labanoro miško širdyje ir dar arti barsukai", "80", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 3);
-            addHouse("Namelis \"Samanų Paklodė\"", "Labanoro giria, 7", "HouseReg-7", "House.Penthouse",
-                    "Jaukus namelis labanoro miško širdyje", "90", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 3);
-            addHouse("Namelis \"Didysis Urvas\"", "Labanoro giria, 8", "HouseReg-8", "House.Penthouse",
+            addHouse("Namelis „Samanų Paklodė“", "Labanoro giria, 7", "HouseReg-7", "House.Penthouse",
+                    "Jaukus namelis labanoro miško širdyje", "90", sdf.parse("2016-05-1"), sdf.parse("2016-12-30"), 3);
+            addHouse("Namelis „Didysis Urvas“", "Labanoro giria, 8", "HouseReg-8", "House.Penthouse",
                     "Jaukus namelis labanoro miško pakraštyje, prie kurio dar randasi urvai", "160", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 8);
-            addHouse("Namelis \"Namiškių Lūšna\"", "Labanoro giria, 9", "HouseReg-9", "House.Penthouse",
-                    "Jaukus namelis labanoro miško šone, kuris primins senus laikus", "120", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 4);
-            addHouse("Namelis \"Kaimiška  Dvasia\"", "Labanoro giria, 10", "HouseReg-10", "House.Penthouse",
+            addHouse("Namelis „Namiškių Lūšna“", "Labanoro giria, 9", "HouseReg-9", "House.Penthouse",
+                    "Jaukus namelis labanoro miško šone, kuris primins senus laikus", "120", sdf.parse("2016-05-1"), sdf.parse("2016-12-30"), 4);
+            addHouse("Namelis „Kaimiška  Dvasia“", "Labanoro giria, 10", "HouseReg-10", "House.Penthouse",
                     "Jaukus namelis labanoro miško širdyje, kuris primena senovinį kaimą", "115", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 5);
-            addHouse("Namelis \"Meilės Guolis\"", "Labanoro giria, 11", "HouseReg-11", "House.Penthouse",
-                    "Jaukus namelis labanoro miško širdyje ir tiems kam patinka romantika", "105", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 2);
-            addHouse("Namelis \"Gerasis Sapnas\"", "Labanoro giria, 12", "HouseReg-12", "House.Penthouse",
+            addHouse("Namelis „Meilės Guolis“", "Labanoro giria, 11", "HouseReg-11", "House.Penthouse",
+                    "Jaukus namelis labanoro miško širdyje ir tiems kam patinka romantika", "105", sdf.parse("2016-05-1"), sdf.parse("2016-12-30"), 2);
+            addHouse("Namelis „Gerasis Sapnas“", "Labanoro giria, 12", "HouseReg-12", "House.Penthouse",
                     "Jaukus namelis labanoro miško širdyje", "120", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 4);
         } catch (ParseException ex) {
             Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -277,14 +277,14 @@ public class DatabaseManager {
         addSystemParameter("SystemParameter.priorityGroup.HourOfTheDay", "Prioriteto grupės, perskaičiavimo laikas: dienos valanda", "22", "SystemParameter");
         addSystemParameter("SystemParameter.priorityGroup.SeasonLength", "Prioriteto grupės, suskirstimo laikotarpis mėnesiais", "3", "SystemParameter");
         addSystemParameter("SystemParameter.priorityGroup.Quantity", "Prioriteto grupės, grupių skaičius", "12", "SystemParameter");
-        addSystemParameter("SystemParameter.priorityGroup.LastCountDate", "Prioriteto grupės, paskutinio grupių perskačiavimo laikas", "", "Metai, mėnuo, mėnesio diena bei valanda, kada paskutini karta buvo perskaičiuotos prioriteto grupės. Atsižvelgiant į šią datą yra nustatomą einamoji sistemos prioriteto grupė", "SystemParameter");
+        addSystemParameter("SystemParameter.priorityGroup.LastCountDate", "Prioriteto grupės, paskutinio grupių perskačiavimo laikas", "0", "Metai, mėnuo, mėnesio diena bei valanda, kada paskutini karta buvo perskaičiuotos prioriteto grupės. Atsižvelgiant į šią datą yra nustatomą einamoji sistemos prioriteto grupė", "SystemParameter");
 
         addSystemParameter("SystemParameter.StripeTestSecretKey", "Stripe testinis slaptas raktas", "sk_test_GkbxvPwRpIG9T4aIiruw0TWl", "SystemParameter");
         addSystemParameter("SystemParameter.StripeTestPublishableKey", "Stripe testinis viešas raktas", "pk_test_NuMXQ4crxg12CBo9NxrjSO63", "SystemParameter");
         addSystemParameter("SystemParameter.StripeLiveSecretKey", "Stripe tikras slaptas raktas", "sk_live_nSRfu4JPpcgYkpSlOjknfBk7", "SystemParameter");
         addSystemParameter("SystemParameter.StripeLivePublishableKey", "Stripe tikras viešas raktas", "pk_live_Q7f9zGXVZ1877SD3DfsCbsgd", "SystemParameter");
 
-        addSystemParameter("SystemParameter.TermsAndConditions", "Nuostatos ir sąlygos", "Naudodamiesi mūsų sistema jūs sutinkate, kad \"Labanoro draugai\" nėra atsakingi už sistmos nesklandumus ar kitus žalingus incidentus.", "SystemParameter");
+        addSystemParameter("SystemParameter.TermsAndConditions", "Nuostatos ir sąlygos", "Naudodamiesi mūsų sistema jūs sutinkate, kad „Labanoro draugai“ nėra atsakingi už sistmos nesklandumus ar kitus žalingus incidentus.", "SystemParameter");
 
         addSystemParameter("SystemParameter.Facebook.AppId", "FB aplikacijos kodas", "198659840500311", "Facebook užregistruotos aplikacijos kodas ", "SystemParameter");
         addSystemParameter("SystemParameter.Facebook.AppSecret", "FB aplikacijos slaptas kodas", "97d6fc7c788463e2de89f1571385cc75", "Kodas skirtas autentifikuotis užregistruotoje Facebook aplikacijoje", "SystemParameter");
@@ -300,7 +300,7 @@ public class DatabaseManager {
         addSystemParameter("SystemParameter.Redirect.Index", "Nukreipimas į pagrindinį puslapį", "/index.html", "Nukreipimas į puslapį po sėkmingos operacijos", "SystemParameter");
 
         addSystemParameter("SystemParameter.Reservation.MinDaysBeforeCancel", "Minimalus skaičius dienų, kai dar galima atšaukti rezervaciją.", "7", "", "SystemParameter");
-        addSystemParameter("SystemParameter.Reservation.LastReservationDay", "Kiek dienų į priekį po paskutinio prioriteto grupių skaičiavimo galima rezervuoti vasarnamius", "95", "", "SystemParameter");
+        addSystemParameter("SystemParameter.Reservation.LastReservationDay", "Kiek dienų į priekį po paskutinio prioriteto grupių skaičiavimo galima rezervuoti vasarnamius", "185", "", "SystemParameter");
 
         addSystemParameter("SystemParameter.Mail.Address", "Gmail el.paštas", "labanorai@gmail.com", "SystemParameter");
         addSystemParameter("SystemParameter.Mail.Password", "Gmail el.pašto slaptažodis", "LabanoroDraugas", "SystemParameter");
@@ -313,7 +313,7 @@ public class DatabaseManager {
         addSystemParameter("SystemParameter.Houseimage.Width", "Nuotraukos plotis", "600", "Namelio nuotraukų plotis įkėlimo metu. Jeigu reikšmė 0, tai nuotraukos plotis bus nustatytas pagal jos aukštį.", "SystemParameter");
         addSystemParameter("SystemParameter.Houseimage.Height", "Nuotraukos aukštis", "0", "Namelio nuotraukų aukštis įkėlimo metu. Jeigu reikšmė 0, tai nuotraukos aukštis bus nustatytas pagal jos plotį.", "SystemParameter");
 
-        addSystemParameter("SystemParameter.Index.Title1", "Pagrindinio puslapio antraštė", "Klubas \"Labanoro Draugai\"", "Pagrindinio puslapio pirmosios sekcijos antraštė.", "SystemParameter");
+        addSystemParameter("SystemParameter.Index.Title1", "Pagrindinio puslapio antraštė", "Klubas „Labanoro Draugai“", "Pagrindinio puslapio pirmosios sekcijos antraštė.", "SystemParameter");
         addSystemParameter("SystemParameter.Index.Description1", "Pagrindinio puslapio pirmos sekcijos turinys", "Labanoro regioninis parkas – regioninis parkas rytinėje Lietuvos dalyje, Švenčionių, Molėtų ir Utenos rajonuose. Parko direkcija įsikūrusi Labanoro miestelyje. #Parko teritorija užima 55344 ha (kitais duomenimis – 52848 ha) plotą.", "Pagrindinio puslapio pirmosios sekcijos turinys. Jis rodomas po pirmos antraštės. Naujos eilutės simbolis: #", "SystemParameter");
         addSystemParameter("SystemParameter.Index.Title2", "Pagrindinio antros sekcijos antraštė", "Apie mus", "Pagrindinio puslapio pirmosios sekcijos antraštė.", "SystemParameter");
         addSystemParameter("SystemParameter.Index.Description2", "Pagrindinio puslapio antros sekcijos turinys", "Mūsų klubo nariai - gamtos mėgėjai, kurie noriai savo poilsiui renkasi Labanoro girią! Šis puslapis surenka bendraminčius ir palengviną jų poilsio organizavimą.", "Pagrindinio puslapio pirmosios sekcijos turinys. Jis rodomas po antros antraštės. Naujos eilutės simbolis: #", "SystemParameter");
