@@ -66,9 +66,9 @@ public class DatabaseManager {
         fillBasicHouseImages();
         fillBasicRecommendations();
 
-        editPeople();
-        editHouses();
-        editServices();
+        //editPeople();
+        //editHouses();
+        //editServices();
         return "DataBase has been filled and have been houses edited";
     }
 
@@ -88,6 +88,7 @@ public class DatabaseManager {
         addType("Service.Vehicle", "Transporto priemonė");
         addType("Service.Vehicle.Car", "Automobilis");
         addType("Service.Vehicle.Bike", "Dviratis");
+        addType("Service.Other", "Kitos paslaugos");
         addType("Reservation", "Rezervacija");
         addType("Picture", "Nuotrauka");
         addType("Picture.House", "Namo nuotrauka");
@@ -111,52 +112,121 @@ public class DatabaseManager {
      * Fills database with basic people
      */
     public void fillBasicPeople() {
-        addPerson("System", "admin", "System", "System", "Person.Administrator");
-        addPerson("doli@test.com", "admin", "Dominik", "Lisovski", "Person.Administrator");
-        addPerson("erba@test.com", "admin", "Ernest", "Barkovski", "Person.Administrator");
-        addPerson("erja@test.com", "admin", "Ernest", "Jascanin", "Person.Administrator");
-        addPerson("kauz@test.com", "admin", "Karolis", "Uždanavičius", "Person.Administrator");
-        addPerson("paru@test.com", "admin", "Paulius", "Rudzinskas", "Person.Administrator");
-        addPerson("admin", "admin", "admin", "admin", "Person.Administrator");
-        addPerson("can", "admin", "can", "can", "Person.Candidate");
-        addPerson("user", "admin", "user", "user", "Person.User");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            addPerson("admin@labanorai.lt", "admin", "admin", "Person.Administrator", "admin", "admin", "10000", 0, sdf.parse("2017-05-1"));
+            addPerson("candidate@labanorai.lt", "candidate", "candidate", "Person.Candidate", "candidate", "candidate", "0", 0, new Date());
+            addPerson("user@labanorai.lt", "user", "user", "Person.User", "user", "user", "1000", 0, sdf.parse("2017-05-1"));
+            addPerson("Domcik8@gmail.com", "Jonas", "Jonaitis", "Person.User", "user", "Vilnius, Jonaitiškių 3", "1000", 0, sdf.parse("2017-05-1"));
+            addPerson("rudzas.com@gmail.com", "Paulius", "Paulaitis", "Person.User", "user", "Vilnius, Pauliškių 3", "1000", 0, sdf.parse("2017-05-1"));
+        } catch (ParseException ex) {
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Creates new person and flushes it to database. Returns person entity if
+     * created sucessfully
+     */
+    public Person addPerson(String email, String firstName, String lastName, String typeInternalName, String password, String address, String points, int priority, Date membershipDue) {
+        Person person = addPerson(email, firstName, lastName, typeInternalName);
+        if (person != null) {
+            String hashedPassoword = Hashing.sha256().hashString(password, Charsets.UTF_8).toString();
+            hashedPassoword = Hashing.sha256().hashString(hashedPassoword, Charsets.UTF_8).toString();
+            person.setPassword(hashedPassoword);
+            person.setAddress(address);
+            person.setPoints(new BigDecimal(points));
+            person.setPriority(priority);
+            person.setMembershipdue(membershipDue);
+        }
+
+        return person;
     }
 
     /**
      * Fills database with basic houses
      */
     private void fillBasicHouses() {
-        addHouse("Old small house", "Vilnius", "HouseReg-1", "House.Penthouse");
-        addHouse("New small house", "Vilnius", "HouseReg-2", "House.Penthouse");
-        addHouse("Old small house", "Vilnius", "HouseReg-3", "House.Penthouse");
-        addHouse("New small house", "Vilnius", "HouseReg-4", "House.Penthouse");
-        addHouse("Old small house", "Vilnius", "HouseReg-5", "House.Penthouse");
-        addHouse("New small house", "Vilnius", "HouseReg-6", "House.Penthouse");
-        addHouse("Old small house", "Vilnius", "HouseReg-7", "House.Penthouse");
-        addHouse("New small house", "Vilnius", "HouseReg-8", "House.Penthouse");
-        addHouse("Old small house", "Vilnius", "HouseReg-9", "House.Penthouse");
-        addHouse("New small house", "Vilnius", "HouseReg-10", "House.Penthouse");
-        addHouse("Old small house", "Vilnius", "HouseReg-11", "House.Penthouse");
-        addHouse("New small house", "Vilnius", "HouseReg-12", "House.Penthouse");
-        addHouse("Old small house", "Vilnius", "HouseReg-13", "House.Penthouse");
-        addHouse("New small house", "Vilnius", "HouseReg-14", "House.Penthouse");
-        addHouse("Old small house", "Vilnius", "HouseReg-15", "House.Penthouse");
-        addHouse("New small house", "Vilnius", "HouseReg-16", "House.Penthouse");
-        addHouse("Old small house", "Vilnius", "HouseReg-17", "House.Penthouse");
-        addHouse("New small house", "Vilnius", "HouseReg-18", "House.Penthouse");
-        addHouse("New small house", "Vilnius", "HouseReg-19", "House.Penthouse");
-        addHouse("Old small house", "Vilnius", "HouseReg-20", "House.Penthouse");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            addHouse("Namelis \"Trolių Lūšna\"", "Labanoro giria, 1", "HouseReg-1", "House.Penthouse",
+                    "Jaukus namelis labanoro miško širdyje", "120", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 5);
+            addHouse("Namelis \"Eglių Lūšna\"", "Labanoro giria, 2", "HouseReg-2", "House.Penthouse",
+                    "Jaukus namelis labanoro miško pakraštyje", "100", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 5);
+            addHouse("Namelis \"Vandens Guolis\"", "Labanoro giria, 3", "HouseReg-3", "House.Penthouse",
+                    "Jaukus namelis labanoro miško širdyje ir arti ežero", "110", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 4);
+            addHouse("Namelis \"Miškinio Draugas\"", "Labanoro giria, 4", "HouseReg-4", "House.Penthouse",
+                    "Jaukus namelis labanoro miško širdyje, kuris arti miškininko trobelės", "150", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 6);
+            addHouse("Namelis \"Pelėdos Urvas\"", "Labanoro giria, 5", "HouseReg-5", "House.Penthouse",
+                    "Jaukus namelis labanoro miško širdyje, kur naktimis skraido arti pelėdos", "120", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 4);
+            addHouse("Namelis \"Barsuko Guolis\"", "Labanoro giria, 6", "HouseReg-6", "House.Penthouse",
+                    "Jaukus namelis labanoro miško širdyje ir dar arti barsukai", "80", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 3);
+            addHouse("Namelis \"Samanų Paklodė\"", "Labanoro giria, 7", "HouseReg-7", "House.Penthouse",
+                    "Jaukus namelis labanoro miško širdyje", "90", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 3);
+            addHouse("Namelis \"Didysis Urvas\"", "Labanoro giria, 8", "HouseReg-8", "House.Penthouse",
+                    "Jaukus namelis labanoro miško pakraštyje, prie kurio dar randasi urvai", "160", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 8);
+            addHouse("Namelis \"Namiškių Lūšna\"", "Labanoro giria, 9", "HouseReg-9", "House.Penthouse",
+                    "Jaukus namelis labanoro miško šone, kuris primins senus laikus", "120", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 4);
+            addHouse("Namelis \"Kaimiška  Dvasia\"", "Labanoro giria, 10", "HouseReg-10", "House.Penthouse",
+                    "Jaukus namelis labanoro miško širdyje, kuris primena senovinį kaimą", "115", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 5);
+            addHouse("Namelis \"Meilės Guolis\"", "Labanoro giria, 11", "HouseReg-11", "House.Penthouse",
+                    "Jaukus namelis labanoro miško širdyje ir tiems kam patinka romantika", "105", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 2);
+            addHouse("Namelis \"Gerasis Sapnas\"", "Labanoro giria, 12", "HouseReg-12", "House.Penthouse",
+                    "Jaukus namelis labanoro miško širdyje", "120", sdf.parse("2016-05-1"), sdf.parse("2016-08-30"), 4);
+        } catch (ParseException ex) {
+            Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Fills database with legit houses
+     */
+    public House addHouse(String title, String address, String houseReg, String typeInternalName, String description, String weekPrice, Date seasonStart, Date seasonEnd, int numberOfPlaces) {
+        House house = addHouse(title, address, houseReg, typeInternalName);
+        if (house != null) {
+
+            house.setDescription(description);
+            house.setWeekprice(new BigDecimal(weekPrice));
+            house.setSeasonenddate(seasonEnd);
+            house.setSeasonstartdate(seasonStart);
+            house.setNumberofplaces(numberOfPlaces);
+            house.setIsactive(Boolean.TRUE);
+        }
+
+        return house;
+    }
+
+    /**
+     * Fills database with legit services
+     */
+    public Service addService(String title, String serviceReg, String houseReg, String typeInternalName, String description, String weekPrice) {
+        Service service = addService(title, serviceReg, houseReg, typeInternalName);
+        if (service != null) {
+            service.setDescription(description);
+            service.setWeekprice(new BigDecimal(weekPrice));
+        }
+
+        return service;
     }
 
     /**
      * Fills database with basic services
      */
     private void fillBasicServices() {
-        addService("New red lamborghini", "ServiceReg-1", "HouseReg-1", "Service.Vehicle.Car");
-        addService("New blue bike", "ServiceReg-2", "HouseReg-1", "Service.Vehicle.Bike");
-        for (int i = 2; i <= 20; i++) {
-            addService("coolSerice" + i, "ServiceReg-" + i, "HouseReg-" + i, "Service.Vehicle.Bike");
-        }
+        addService("Vandens pramogos", "ServiceReg-1", "HouseReg-1", "Service.Other", "Papildomos vandens pramogos", "30");
+        addService("Vandens pramogos", "ServiceReg-1", "HouseReg-2", "Service.Other", "Papildomos vandens pramogos", "30");
+        addService("Vandens pramogos", "ServiceReg-1", "HouseReg-3", "Service.Other", "Papildomos vandens pramogos", "30");
+        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-1", "Service.Vehicle.Bike", "Dviračiai išsinuomavimui", "10");
+        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-2", "Service.Vehicle.Bike", "Dviračiai išsinuomavimui", "10");
+        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-3", "Service.Vehicle.Bike", "Dviračiai išsinuomavimui", "10");
+        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-4", "Service.Vehicle.Bike", "Dviračiai išsinuomavimui", "10");
+        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-5", "Service.Vehicle.Bike", "Dviračiai išsinuomavimui", "10");
+        addService("Dviračiai pasivažinėjimui", "ServiceReg-2", "HouseReg-6", "Service.Vehicle.Bike", "Dviračiai išsinuomavimui", "10");
+        addService("Pažintinė kelionė aplink regioną", "ServiceReg-3", "HouseReg-1", "Service.Other", "Kelionė aplink labanoro apylinkes", "40");
+        addService("Pažintinė kelionė aplink regioną", "ServiceReg-3", "HouseReg-1", "Service.Other", "Kelionė aplink labanoro apylinkes", "40");
+        addService("Pažintinė kelionė aplink regioną", "ServiceReg-3", "HouseReg-7", "Service.Other", "Kelionė aplink labanoro apylinkes", "40");
+        addService("Pažintinė kelionė aplink regioną", "ServiceReg-3", "HouseReg-8", "Service.Other", "Kelionė aplink labanoro apylinkes", "40");
+
     }
 
     /**
@@ -262,13 +332,23 @@ public class DatabaseManager {
      * Fills database with basic house pictures
      */
     private void fillBasicHouseImages() {
-        for (int i = 2; i <= 20; i++) {
-            addHouseImage("Picture.HouseReg-" + i + "_1", "Images/House/House-1_1.JPG", 1, "HouseReg-" + i, "Picture.House");
-        }
-        addHouseImage("Picture.HouseReg-1_1", "Images/House/House-2_1.JPG", 1, "HouseReg-1", "Picture.House");
-        addHouseImage("Picture.HouseReg-1_2", "Images/House/House-2_2.JPG", 2, "HouseReg-1", "Picture.House");
-        addHouseImage("Picture.HouseReg-1_3", "Images/House/House-2_3.JPG", 3, "HouseReg-1", "Picture.House");
-        addHouseImage("Picture.HouseReg-2_2", "Images/House/House-1_2.JPG", 2, "HouseReg-2", "Picture.House");
+        addHouseImage("Picture.HouseReg-1_1", "Images/House/Housereg-1.jpg", 1, "HouseReg-1", "Picture.House");
+        addHouseImage("Picture.HouseReg-1_2", "Images/House/Housereg-2.jpg", 2, "HouseReg-1", "Picture.House");
+        addHouseImage("Picture.HouseReg-1_3", "Images/House/Housereg-3.jpg", 3, "HouseReg-1", "Picture.House");
+        addHouseImage("Picture.HouseReg-2_1", "Images/House/Housereg-2.jpg", 1, "HouseReg-2", "Picture.House");
+        addHouseImage("Picture.HouseReg-2_2", "Images/House/Housereg-3.jpg", 2, "HouseReg-2", "Picture.House");
+        addHouseImage("Picture.HouseReg-3_1", "Images/House/Housereg-3.jpg", 1, "HouseReg-3", "Picture.House");
+        addHouseImage("Picture.HouseReg-4_1", "Images/House/Housereg-4.jpg", 1, "HouseReg-4", "Picture.House");
+        addHouseImage("Picture.HouseReg-5_1", "Images/House/Housereg-5.jpg", 1, "HouseReg-5", "Picture.House");
+        addHouseImage("Picture.HouseReg-6_1", "Images/House/Housereg-6.jpg", 1, "HouseReg-6", "Picture.House");
+        addHouseImage("Picture.HouseReg-7_1", "Images/House/Housereg-7.jpg", 1, "HouseReg-7", "Picture.House");
+        addHouseImage("Picture.HouseReg-8_1", "Images/House/Housereg-8.jpg", 1, "HouseReg-8", "Picture.House");
+        addHouseImage("Picture.HouseReg-9_1", "Images/House/Housereg-9.jpg", 1, "HouseReg-9", "Picture.House");
+        addHouseImage("Picture.HouseReg-10_1", "Images/House/Housereg-10.jpg", 1, "HouseReg-10", "Picture.House");
+        addHouseImage("Picture.HouseReg-11_1", "Images/House/Housereg-10.jpg", 1, "HouseReg-11", "Picture.House");
+        addHouseImage("Picture.HouseReg-11_2", "Images/House/Housereg-11.jpg", 2, "HouseReg-11", "Picture.House");
+        addHouseImage("Picture.HouseReg-11_3", "Images/House/Housereg-12.jpg", 3, "HouseReg-11", "Picture.House");
+        addHouseImage("Picture.HouseReg-12_1", "Images/House/Housereg-12.jpg", 1, "HouseReg-12", "Picture.House");
     }
 
     /**
@@ -299,21 +379,6 @@ public class DatabaseManager {
             return null;
         }
         return newType;
-    }
-
-    /**
-     * Creates new person and flushes it to database. Returns person entity if
-     * created sucessfully
-     */
-    public Person addPerson(String email, String password, String firstName, String lastName, String typeInternalName) {
-        Person person = addPerson(email, firstName, lastName, typeInternalName);
-        if (person != null) {
-            String hashedPassoword = Hashing.sha256().hashString(password, Charsets.UTF_8).toString();
-            hashedPassoword = Hashing.sha256().hashString(hashedPassoword, Charsets.UTF_8).toString();
-            person.setPassword(hashedPassoword);
-        }
-
-        return person;
     }
 
     /**
@@ -600,6 +665,8 @@ public class DatabaseManager {
         } else {
             return null;
         }
+
+        house.getHouseimageList().add(newHouseimage);
 
         return newHouseimage;
     }
