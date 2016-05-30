@@ -28,7 +28,7 @@ and open the template in the editor.
                     <li id="summerhouses"><a href="/Labanoro_Draugai/Reservation/summerhouses.html" style="outline: 0">Vasarnamiai</a></li>
                     <li id="reservations"><a href="/Labanoro_Draugai/Reservation/allReservations.html" style="outline: 0">Rezervacijos</a></li>
                     <li id="profiles"><a href="/Labanoro_Draugai/user/profiles.html" style="outline: 0" >Klubo nariai</a></li>                 
-                    <li class="dropdown" style="#{userSession.isAdmin()?'':'display:none;'}">
+                    <li id="administration" class="dropdown" style="#{userSession.isAdmin()?'':'display:none;'}">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administravimas<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="/Labanoro_Draugai/Administration/houses.html">Vasarnamių administravimas</a></li>
@@ -40,13 +40,13 @@ and open the template in the editor.
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
+                    <li id="profile" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" 
                            aria-haspopup="true" aria-expanded="false">#{userSession.person.firstname} #{userSession.person.lastname}: #{userSession.person.points} tašk.<span class="caret"></span></a>
                         <ul class="dropdown-menu" style="width: 100%">
-                            <li id="profile"><a href="/Labanoro_Draugai/user/profile.html" style="outline: 0" >Mano paskyra</a></li>
-                            <li id="myReservations"><a href="/Labanoro_Draugai/Reservation/myReservations.html" style="outline: 0">Mano rezervacijos</a></li>
-                            <li id="buyPoints"><a href="/Labanoro_Draugai/Reservation/buy.html" style="outline: 0">Taškų pirkimas</a></li>
+                            <li ><a href="/Labanoro_Draugai/user/profile.html" style="outline: 0" >Mano paskyra</a></li>
+                            <li><a href="/Labanoro_Draugai/Reservation/myReservations.html" style="outline: 0">Mano rezervacijos</a></li>
+                            <li ><a href="/Labanoro_Draugai/Reservation/buy.html" style="outline: 0">Taškų pirkimas</a></li>
                         </ul>
                     </li>
                    
