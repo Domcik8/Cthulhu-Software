@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Houseimage;
+import lt.vu.mif.labanoro_draugai.entities.Service;
 import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import lt.vu.mif.labanoro_draugai.entities.Type;
 import org.primefaces.model.UploadedFile;
@@ -59,12 +60,12 @@ public class EditableHouse implements Serializable {
     DatabaseManager dbm;
     
     private List<String> images;
-    
     private UploadedFile file;
-    
     private String image;
-    
     private String currency;
+    
+    private List<String> selectedServices;
+    private Map<String, String> availableServices;
 
     //======================= CONSTRUCT ===========================
     
@@ -73,6 +74,8 @@ public class EditableHouse implements Serializable {
         house = getEditableHouse();
         initImages();
         initTypes();
+        initAvailableServices();
+        initSelectedServices();
         
         Systemparameter param = (Systemparameter) dbm.getEntity("SystemParameter", "internalName", "SystemParameter.Currency.Euro");
         if (param == null) {
@@ -422,5 +425,58 @@ public class EditableHouse implements Serializable {
         RequestContext requestContext = RequestContext.getCurrentInstance();  
         requestContext.execute("PF('deletionDialog').hide();");
         requestContext.execute("PF('deletionHouseDialog').hide();");
+    }
+    
+    //================== SERVICES =====================
+    
+    public void initAvailableServices() {
+        availableServices = new LinkedHashMap<String, String>();
+        List<Service> allServices = em.createNamedQuery("Service.findAll").getResultList();
+        
+        for (Service s : allServices) {
+            availableServices.put(s.getId().toString(), s.getTitle());
+        }
+    }
+    
+    public void initSelectedServices() {
+        selectedServices = new ArrayList<String>();
+        List<Service> allServices = house.getServiceList();
+        
+        for (Service s : allServices) {
+            selectedServices.add(/*s.getId().toString(), */s.getTitle());
+        }
+    }
+    
+    public void saveServices() throws IOException {
+        List<Service> services = new ArrayList<Service>();
+        
+        for (String srv : selectedServices) {
+            Service s = (Service) dbm.getEntity("Service", "Title", srv);
+            services.add(s);
+        }
+        
+        house.setServiceList(services);
+        house = (House) dbm.updateEntity(house);
+        dbm.persistAndFlush(house);
+        
+        //Reload the page:
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI()  + "?houseId=" + house.getId());
+    }
+    
+    public List<String> getSelectedServices() {
+        return selectedServices;
+    }
+    
+    public void setSelectedServices(List<String> srvcs) {
+        selectedServices = srvcs;
+    }
+    
+    public Map<String, String> getAvailableServices() {
+        return availableServices;
+    }
+    
+    public void setAvailableServices(Map<String, String> srvcs) {
+        availableServices = srvcs;
     }
 }

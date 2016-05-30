@@ -6,6 +6,7 @@
 package lt.vu.mif.labanoro_draugai.administration;
 
 import java.beans.*;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -13,12 +14,15 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
+import lt.vu.mif.labanoro_draugai.entities.Payment;
 import lt.vu.mif.labanoro_draugai.entities.Service;
 import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import lt.vu.mif.labanoro_draugai.entities.Type;
@@ -46,6 +50,8 @@ public class AdminServiceManager implements Serializable {
     
     private Map<String, String> serviceTypes;
     private String serviceType;
+    
+    private List<Service> selectedServices;
     
     @PostConstruct
     public void init() {
@@ -83,8 +89,25 @@ public class AdminServiceManager implements Serializable {
         dbm.persistAndFlush(srv);
     }
      
-    public void onRowCancel(RowEditEvent event) {
-        Service srv = (Service) event.getObject();
+    public void onRowCancel(RowEditEvent event) { }
+    
+    public void deleteChecked() throws IOException {
+        for (Service s : selectedServices) {
+            s.setIsdeleted(Boolean.TRUE);
+            s = (Service) dbm.updateEntity(s);
+            dbm.persistAndFlush(s);
+        }
+
+        //Reload the page:
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
+    }
+    
+    public void addService() throws IOException {
+        services.add(new Service());
+        //Reload the page:
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
     }
     
     public List<Service> getServices() {
@@ -121,5 +144,13 @@ public class AdminServiceManager implements Serializable {
     
     public String getServiceType() {
         return serviceType;
+    }
+    
+    public List<Service> getSelectedServices() {
+        return selectedServices;
+    }
+    
+    public void setSelectedServices(List<Service> services) {
+        selectedServices = services;
     }
 }

@@ -32,7 +32,8 @@ and open the template in the editor.
                     <p:dataTable id="mainTable" var="service" value="#{adminServiceManager.services}" widgetVar="servicesTable"
                          emptyMessage="Vartotojų nerasta" filteredValue="#{adminServiceManager.filteredServices}" paginator="true"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                         rowsPerPageTemplate="10,50,100" rows="10" currentPageReportTemplate="{currentPage} iš {totalPages}" tableStyle="table-layout: auto;" editable="true">
+                         rowsPerPageTemplate="10,50,100" rows="10" currentPageReportTemplate="{currentPage} iš {totalPages}" tableStyle="table-layout: auto;" 
+                         editable="true" selection="#{adminServiceManager.selectedServices}" rowKey="#{service.id}">
 
                         <f:facet name="header">
                             <p:outputPanel style="margin-top: 4px">
@@ -103,7 +104,7 @@ and open the template in the editor.
                             </p:cellEditor>
                         </p:column>
                         
-                        <p:column headerText="Sav. kaina (#{adminPaymentManager.currency})" sortBy="#{service.weekprice}">
+                        <p:column headerText="Sav. kaina (#{adminServiceManager.currency})" sortBy="#{service.weekprice}">
                             <p:cellEditor>
                                 <f:facet name="output">
                                     <h:outputText value="#{service.weekprice}">
@@ -128,6 +129,13 @@ and open the template in the editor.
                         <p:column style="width:32px">
                             <p:rowEditor />
                         </p:column>
+                        
+                        <p:column selectionMode="multiple" style="width:40px; text-align:center;"/>
+                        
+                        <f:facet name="footer">
+                        <p:commandButton action="#{adminServiceManager.deleteChecked}" value="Panaikinti pažymėtus"/>
+                        <p:commandButton action="#{adminServiceManager.addService}" value="Pridėti paslaugą"/>
+                    </f:facet>
                     </p:dataTable>
                 </h:form>
             </div>
