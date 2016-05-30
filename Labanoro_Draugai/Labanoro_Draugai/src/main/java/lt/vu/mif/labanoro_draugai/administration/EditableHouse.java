@@ -6,20 +6,15 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-import javax.ejb.ApplicationException;
 import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import org.omnifaces.cdi.ViewScoped;
@@ -30,22 +25,15 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
-import javax.persistence.Query;
 import javax.persistence.SynchronizationType;
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
 import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Houseimage;
-import lt.vu.mif.labanoro_draugai.entities.Payment;
 import lt.vu.mif.labanoro_draugai.entities.Systemparameter;
 import lt.vu.mif.labanoro_draugai.entities.Type;
 import org.primefaces.model.UploadedFile;
-import org.apache.commons.io.IOUtils;
-import org.eclipse.persistence.config.CacheUsage;
-import org.eclipse.persistence.config.QueryHints;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.FileUploadEvent;
 
 /**
  *
@@ -127,24 +115,25 @@ public class EditableHouse implements Serializable {
     }
     
     public String saveHouse() {
+        if (house.getSeasonenddate() != null && house.getSeasonstartdate() != null) {
+            if (house.getSeasonenddate().before(house.getSeasonstartdate())) {
+                showError("Netinkamai nustatytos sezono datos!");
+                return "";
+            }
+        }
         
-        if (house.getSeasonenddate().before(house.getSeasonstartdate())) {
-            showError("Netinkamai nustatytos sezono datos!");
-            return "";
+        boolean savingSuccess = true;
+        
+        if (house.getId() != null) {
+            savingSuccess = dbm.updateHouse(house);
         }
         else {
-            boolean savingSuccess = true;
-        
-            if (house.getId() != null) {
-                savingSuccess = dbm.updateHouse(house);
-            }
-            else {
-                house.setTypeid((Type)dbm.getEntity("Type", "id", Integer.parseInt(houseType)));
-                savingSuccess = insertHouse(house);
-            }
-
-            return "houses";
+            house.setTypeid((Type)dbm.getEntity("Type", "id", Integer.parseInt(houseType)));
+            house.setIsdeleted(false);
+            savingSuccess = insertHouse(house);
         }
+        
+        return "houses";
     }
 
     private String getParameter(String key) {

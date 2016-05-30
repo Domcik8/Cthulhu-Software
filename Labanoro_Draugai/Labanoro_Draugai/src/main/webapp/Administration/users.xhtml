@@ -68,7 +68,7 @@ and open the template in the editor.
                             <h:outputText value="#{user.address}" />
                         </p:column>
 
-                        <p:column headerText="Narys iki" sortBy="#{user.priority}">
+                        <p:column headerText="Narys iki" sortBy="#{user.membershipdue}">
                             <h:outputText value="#{user.membershipdue}">
                                 <f:convertDateTime pattern="yyyy-MM-dd" />
                             </h:outputText>
