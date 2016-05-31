@@ -138,6 +138,7 @@ public class DatabaseManager {
             person.setPoints(new BigDecimal(points));
             person.setPriority(priority);
             person.setMembershipdue(membershipDue);
+            person.setRecommendationstosend(0);
         }
 
         return person;
@@ -355,7 +356,7 @@ public class DatabaseManager {
         addHouseImage("Picture.HouseReg-7_1", "Images/House/Housereg-7.jpg", 1, "HouseReg-7", "Picture.House");
         addHouseImage("Picture.HouseReg-8_1", "Images/House/Housereg-8.jpg", 1, "HouseReg-8", "Picture.House");
         addHouseImage("Picture.HouseReg-9_1", "Images/House/Housereg-9.jpg", 1, "HouseReg-9", "Picture.House");
-        addHouseImage("Picture.HouseReg-10_1", "Images/House/Housereg-10.jpg", 1, "HouseReg-10", "Picture.House");
+        addHouseImage("Picture.HouseReg-10_1", "Images/House/Housereg-2.jpg", 1, "HouseReg-10", "Picture.House");
         addHouseImage("Picture.HouseReg-11_1", "Images/House/Housereg-10.jpg", 1, "HouseReg-11", "Picture.House");
         addHouseImage("Picture.HouseReg-11_2", "Images/House/Housereg-11.jpg", 2, "HouseReg-11", "Picture.House");
         addHouseImage("Picture.HouseReg-11_3", "Images/House/Housereg-12.jpg", 3, "HouseReg-11", "Picture.House");
@@ -559,17 +560,17 @@ public class DatabaseManager {
             return null;
         }
 
-        if (services != null) {
-            for (String serviceReg : services) {
-                Service service = (Service) getEntity("Service", "Servicereg", serviceReg);
-                if (service == null) {
-                    System.out.println(String.format("Service with registration '%s' does not exist", serviceReg));
-                    return null;
-                } else {
-                    newReservation.getServiceList().add(service);
-                }
-            }
-        }
+//        if (services != null) {
+//            for (String serviceReg : services) {
+//                Service service = (Service) getEntity("Service", "Servicereg", serviceReg);
+//                if (service == null) {
+//                    System.out.println(String.format("Service with registration '%s' does not exist", serviceReg));
+//                    return null;
+//                } else {
+//                    newReservation.getServiceList().add(service);
+//                }
+//            }
+//        }
 
         if (entityExists("Reservation", "Reservationreg", reservationReg)) {
             System.out.println(String.format("Reservation with registration '%s' already exists", reservationReg));

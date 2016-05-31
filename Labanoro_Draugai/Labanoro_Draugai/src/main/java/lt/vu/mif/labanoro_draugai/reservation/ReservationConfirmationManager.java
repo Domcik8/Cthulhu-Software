@@ -157,6 +157,17 @@ public class ReservationConfirmationManager implements Serializable {
         user.getReservationList().add(reservation);
         user.getPaymentList().add(pay);
         user = (Person) dbm.updateEntity(user);
+        
+//        house.setServiceList(new ArrayList<Service>());
+        
+//        if (selectedServices != null) {
+//            for (String serviceReg : selectedServices) {
+//                Service service = (Service) dbm.getEntity("Service", "Servicereg", serviceReg);
+//                    service.getReservationList().add(reservation);
+//                    service = (Service) dbm.updateEntity(service);
+//                    house.getServiceList().add(service);
+//            }
+//        }
 
         house.getReservationList().add(reservation);
         house = (House) dbm.updateEntity(house);
