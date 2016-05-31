@@ -80,7 +80,7 @@ public class Service implements Serializable {
     @Column(name = "ISDELETED")
     private Boolean isdeleted;
     @Column(name = "OPTLOCKVERSION")
-    @Version
+    //@Version
     private Integer optlockversion;
     @ManyToMany(mappedBy = "serviceList")
     private List<House> houseList;

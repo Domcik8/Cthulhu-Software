@@ -25,6 +25,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import lt.vu.mif.labanoro_draugai.business.DatabaseManager;
+import lt.vu.mif.labanoro_draugai.entities.House;
 import lt.vu.mif.labanoro_draugai.entities.Houseimage;
 import lt.vu.mif.labanoro_draugai.entities.Payment;
 import lt.vu.mif.labanoro_draugai.entities.Service;
@@ -109,7 +110,9 @@ public class AdminServiceManager implements Serializable {
         Service srv = (Service) event.getObject();
         srv.setTypeid((Type) dbm.getEntity("Type", "Id", Integer.parseInt(serviceType)));
         srv = (Service) dbm.updateEntity(srv);
-        dbm.persistAndFlush(srv);
+        for (House house : srv.getHouseList()) {
+            dbm.updateEntity(house);
+        }
     }
      
     public void onRowCancel(RowEditEvent event) { }
