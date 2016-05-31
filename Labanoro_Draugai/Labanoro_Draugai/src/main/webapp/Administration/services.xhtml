@@ -65,7 +65,7 @@ and open the template in the editor.
                             <p:cellEditor>
                                 <f:facet name="output"><h:outputText value="#{adminServiceManager.getType(service)}" /></f:facet>
                                 <f:facet name="input">
-                                    <h:selectOneMenu value="#{adminServiceManager.serviceType}" style="width:100%">
+                                    <h:selectOneMenu value="#{adminServiceManager.serviceType}" style="width:100%; color:black">
                                         <f:selectItems value="#{adminServiceManager.serviceTypes.entrySet()}" var="serv" itemLabel="#{serv.value}" itemValue="#{serv.key}" />
                                     </h:selectOneMenu>
                                 </f:facet>
